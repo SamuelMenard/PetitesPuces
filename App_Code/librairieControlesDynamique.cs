@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 /// <summary>
@@ -47,6 +48,31 @@ public static class LibrairieControlesDynamique
         return btn;
     }
 
+    static public Button btnDYN(Control conteneur, String strID, String strClass, String strValue, EventHandler onClick)
+    {
+        Button btn = new Button
+        {
+            ID = strID,
+            CssClass = strClass,
+            Text = strValue
+        };
+        btn.Click += onClick;
+        conteneur.Controls.Add(btn);
+        return btn;
+    }
+
+    static public HtmlButton htmlbtnDYN(Control conteneur, String strID, String strClass, String strValue, String strGlyphClass, EventHandler onClick)
+    {
+        HtmlButton hb = new HtmlButton();
+        hb.ID = strID;
+        hb.ServerClick += onClick;
+        hb.Attributes.Add("class", strClass);
+        hb.InnerHtml = strValue + "  " + "<span class=\"" + strGlyphClass + "\"></span>";
+
+        conteneur.Controls.Add(hb);
+        return hb;
+    }
+
 
 
 
@@ -70,6 +96,18 @@ public static class LibrairieControlesDynamique
         };
         Conteneur.Controls.Add(lbl);
         return lbl;
+    }
+
+    static public LinkButton lbDYN(Control Conteneur, String strID, String strValeur, EventHandler onClick)
+    {
+        LinkButton lb = new LinkButton()
+        {
+            ID = strID,
+            Text = strValeur
+        };
+        lb.Click += onClick;
+        Conteneur.Controls.Add(lb);
+        return lb;
     }
 
     static public Label lblDYN(Control Conteneur, String strID, String strValeur, String strClass)
@@ -116,6 +154,12 @@ public static class LibrairieControlesDynamique
         Literal hr = new Literal();
         hr.Text = "<hr>";
         Conteneur.Controls.Add(hr);
+    }
+    static public void aDYN(Control Conteneur, String strValeur, String URL)
+    {
+        Literal a = new Literal();
+        a.Text = "<a href=\"" + URL + "\">" + strValeur + "</a>";
+        Conteneur.Controls.Add(a);
     }
     static public void brDYN(Control Conteneur, Int16 intNb)
     {

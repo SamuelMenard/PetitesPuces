@@ -6,12 +6,17 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 {
+    static string prevPage = String.Empty;
+
     protected void Page_Load(object sender, EventArgs e)
     {
+        Page.MaintainScrollPositionOnPostBack = true;
         List<String> lstEntreprises = new List<string>();
         lstEntreprises.Add("Apple");
         lstEntreprises.Add("Microsoft");
 
+        // temporaire
+        int idItem = 0;
 
         for (int y = 0; y < lstEntreprises.Count; y++)
         {
@@ -19,6 +24,8 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             Double sousTotal = 0;
             Double TPS = 0;
             Double TVQ = 0;
+            Double pourcentageTVQ = 0.09975;
+            Double pourcentageTPS = 0.05;
 
             // Créer le panier du vendeur X
             Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_base", "panel panel-default");
@@ -32,7 +39,7 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 
 
             // Rajouter les produits dans le panier
-            int idItem = 0;
+            
             for (int i = 0; i < 3; i++)
             {
                 idItem++;
@@ -57,7 +64,8 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 
                 // Quantité sélectionné
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.tbDYN(colQuantite, nomEntreprise + "_quantite_" + idItem, quantiteSelectionne.ToString(), "form-control border-quantite");
+                LibrairieControlesDynamique.tbDYN(colQuantite, nomEntreprise + "quantite_" + idItem, quantiteSelectionne.ToString(), "form-control border-quantite");
+                LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + idItem, "Mettre à jour", update_click);
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2");
@@ -81,6 +89,10 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Afficher la TPS
+            // calculer le prix tps
+            TPS = sousTotal * pourcentageTPS;
+            TPS = Math.Round(TPS, 2);
+
             Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowTPS", "row");
             Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, nomEntreprise + "_colLabelTPS", "col-sm-2");
             LibrairieControlesDynamique.lblDYN(colLabelTPS, nomEntreprise + "_labelTPS", "TPS: ", "infos-payage");
@@ -91,6 +103,10 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Afficher la TVQ
+            // calculer le prix tvq
+            TVQ = sousTotal * pourcentageTVQ;
+            TVQ = Math.Round(TVQ, 2);
+
             Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowTVQ", "row");
             Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, nomEntreprise + "_colLabelTVQ", "col-sm-2");
             LibrairieControlesDynamique.lblDYN(colLabelTVQ, nomEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
@@ -109,8 +125,22 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             // Bouton commander
             Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowBtnCommander", "row");
             Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, nomEntreprise + "_colLabelBtnCommander", "col-sm-4");
-            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, nomEntreprise + "_btnCommander", "btn btn-warning", "Commander");
+            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, nomEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
         }
 
+    }
+
+    public void update_click(Object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        String itemID = btn.ID.Replace("update_", "");
+        System.Diagnostics.Debug.WriteLine(itemID);
+    }
+
+    public void commander_click(Object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+        String entrepriseID = btn.ID.Replace("_btnCommander", "");
+        System.Diagnostics.Debug.WriteLine(entrepriseID);
     }
 }
