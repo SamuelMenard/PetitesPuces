@@ -1,0 +1,35 @@
+﻿
+.border-quantite {
+    width:50px;
+    font-size:20px;
+}
+
+.prix_item {
+    font-size:25px;
+    font-family:Calibri;
+    font-weight:bold;
+}
+
+.img-size {
+    height:90px;
+    width:90px;
+}
+
+.nom-item {
+    font-size: 20px;
+}
+
+.nom-entreprise {
+    font-size: 25px;
+}
+
+.infos-payage {
+    font-size: 15px;
+    font-weight:bold;
+}
+
+.avertissement-livraison {
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff9430;
+}
