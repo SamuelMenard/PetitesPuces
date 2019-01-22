@@ -1,0 +1,70 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="PageMaster_MasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>
+        <%: Page.Title %> - Clémentine
+    </title>
+
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/static/style/navbar.css">
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/static/images/logo.png" />
+
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body id="body" runat="server">
+<!-- barre menu -->
+    
+    <form id="form1" runat="server">
+<nav class="navbar navbar-dark bg-primary"  style="background-color: #ff9430;">
+    <div class="collapse navbar-collapse">
+        <div class="navbar-header">
+            <a class="navbar-brand nav-color" href="../Pages/Accueil.aspx">Les Petites Puces</a>
+        </div>
+        <ul class="nav navbar-nav">
+            
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <div class="navbar-form navbar-left">
+
+                    &nbsp;&nbsp;
+                    <span class="glyphicon glyphicon-user"></span>
+                    &nbsp;
+                    <asp:Label id="lbl_user_connected" runat="server" Text="User" CssClass="user-connected"></asp:Label>
+                    &nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger" runat="server" id="Button1" style="width:75px;" causesvalidation="false">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                    </button>
+                </div>
+                    
+            </li>
+        </ul>
+    </div>
+</nav>
+<!-- barre menu -->
+
+    <div id="main-content" class="container">
+        <asp:ContentPlaceHolder id="contentBody" runat="server" />
+    </div>
+    </form>
+
+ <!-- Footer -->
+<footer class="page-footer font-small blue pt-4">
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2018 Copyright:
+      <a href="https://mdbootstrap.com/education/bootstrap/">DreamTeam</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <!-- Footer -->
+</body>
+</html>
