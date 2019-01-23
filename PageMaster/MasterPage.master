@@ -5,7 +5,7 @@
 <html>
 <head runat="server">
     <title>
-        <%: Page.Title %> - Clémentine
+        <%: Page.Title %> - Les Petites Puces
     </title>
 
 

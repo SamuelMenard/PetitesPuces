@@ -28,8 +28,20 @@
     font-weight:bold;
 }
 
+.infos-livraison {
+    font-size: 17px;
+}
+
 .avertissement-livraison {
     font-size: 15px;
     font-weight: bold;
     color: #ff9430;
+}
+
+.conteneur-remerciement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
 }
