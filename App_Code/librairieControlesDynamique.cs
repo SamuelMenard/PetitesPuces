@@ -161,6 +161,24 @@ public static class LibrairieControlesDynamique
         a.Text = "<a href=\"" + URL + "\">" + strValeur + "</a>";
         Conteneur.Controls.Add(a);
     }
+    static public void h4DYN(Control Conteneur, String strValeur)
+    {
+        Literal h4 = new Literal();
+        h4.Text = "<h4>" + strValeur + "</h4>";
+        Conteneur.Controls.Add(h4);
+    }
+    static public void pDYN(Control Conteneur, String strValeur)
+    {
+        Literal p = new Literal();
+        p.Text = "<p>" + strValeur + "</p>";
+        Conteneur.Controls.Add(p);
+    }
+    static public void spaceDYN(Control Conteneur)
+    {
+        Literal space = new Literal();
+        space.Text = "&nbsp;";
+        Conteneur.Controls.Add(space);
+    }
     static public void brDYN(Control Conteneur, Int16 intNb)
     {
 

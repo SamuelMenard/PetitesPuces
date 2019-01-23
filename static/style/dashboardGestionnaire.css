@@ -1,0 +1,7 @@
+﻿
+.panel-default:hover {
+    border-style: solid !important;
+    border-width: 2px !important;
+    border-color: orange !important;
+    box-shadow: 0px 5px 5px rgb(254, 128, 38) !important;
+}
