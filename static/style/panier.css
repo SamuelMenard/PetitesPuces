@@ -28,6 +28,10 @@
     font-weight:bold;
 }
 
+.infos-livraison {
+    font-size: 17px;
+}
+
 .avertissement-livraison {
     font-size: 15px;
     font-weight: bold;

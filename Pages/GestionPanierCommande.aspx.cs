@@ -11,16 +11,21 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
-        List<String> lstEntreprises = new List<string>();
-        lstEntreprises.Add("Apple");
-        lstEntreprises.Add("Microsoft");
+        List<int> lstEntreprises = new List<int>();
+        lstEntreprises.Add(1);
+        lstEntreprises.Add(2);
+
+        Dictionary<int, String> mapEntreprises = new Dictionary<int, string>();
+        mapEntreprises.Add(1, "Apple");
+        mapEntreprises.Add(2, "Microsoft");
 
         // temporaire
         int idItem = 0;
 
         for (int y = 0; y < lstEntreprises.Count; y++)
         {
-            String nomEntreprise = lstEntreprises[y];
+            int idEntreprise = lstEntreprises[y];
+            String nomEntreprise = mapEntreprises[idEntreprise];
             Double sousTotal = 0;
             Double TPS = 0;
             Double TVQ = 0;
@@ -28,14 +33,14 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             Double pourcentageTPS = 0.05;
 
             // Créer le panier du vendeur X
-            Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_base", "panel panel-default");
+            Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, idEntreprise + "_base", "panel panel-default");
 
             // Nom de l'entreprise
-            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_header", "panel-heading");
-            LibrairieControlesDynamique.lblDYN(panelHeader, nomEntreprise + "_nom", nomEntreprise, "nom-entreprise");
+            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
+            LibrairieControlesDynamique.lblDYN(panelHeader, idEntreprise + "_nom", nomEntreprise, "nom-entreprise");
 
             // Liste des items + le total
-            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_body", "panel-body");
+            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
 
 
             // Rajouter les produits dans le panier
@@ -52,39 +57,39 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
                 String nomProduit = "MacBook Air 13\", 256GB SSD - Rose Gold";
                 String urlImage = "../static/images/macbookair13.jpg";
 
-                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row");
+                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
 
                 // ajouter l'image
-                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img_" + idItem, urlImage, "img-size");
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colImg_" + idItem, "col-sm-2");
+                LibrairieControlesDynamique.imgDYN(colImg, idEntreprise + "_img_" + idItem, urlImage, "img-size");
 
                 // Nom du produit
-                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.lblDYN(colNom, nomEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
+                LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
 
                 // Quantité sélectionné
-                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.tbDYN(colQuantite, nomEntreprise + "quantite_" + idItem, quantiteSelectionne.ToString(), "form-control border-quantite");
+                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
+                LibrairieControlesDynamique.tbDYN(colQuantite, idEntreprise + "quantite_" + idItem, quantiteSelectionne.ToString(), "form-control border-quantite");
                 LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + idItem, "Mettre à jour", update_click);
 
                 // Prix item
-                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "$" + prix.ToString(), "prix_item");
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
+                LibrairieControlesDynamique.lblDYN(colPrix, idEntreprise + "_prix_" + idItem, "$" + prix.ToString(), "prix_item");
 
                 // Bouton retirer
-                Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowBtnRetirer_" + idItem, "row");
-                Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, nomEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.btnDYN(colBtnRetirer, nomEntreprise + "_btnRetirer_" + idItem, "btn btn-default", "RETIRER");
+                Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
+                Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, idEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
+                LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + idItem, "btn btn-default", "RETIRER", retirer_click);
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
 
             // Afficher le sous total
-            Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowSousTotal", "row");
-            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, nomEntreprise + "_colLabelSousTotal", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colLabelSousTotal, nomEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
+            Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowSousTotal", "row");
+            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-2");
+            LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
 
-            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, nomEntreprise + "_colMontantSousTotal", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, nomEntreprise + "_montantSousTotal", "$" + sousTotal.ToString(), "infos-payage");
+            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2");
+            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + sousTotal.ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
@@ -93,12 +98,12 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             TPS = sousTotal * pourcentageTPS;
             TPS = Math.Round(TPS, 2);
 
-            Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowTPS", "row");
-            Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, nomEntreprise + "_colLabelTPS", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colLabelTPS, nomEntreprise + "_labelTPS", "TPS: ", "infos-payage");
+            Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
+            Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-2");
+            LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
 
-            Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, nomEntreprise + "_colMontantTPS", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colMontantTPS, nomEntreprise + "_montantTPS", "$" + TPS.ToString(), "infos-payage");
+            Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2");
+            LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + TPS.ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
@@ -107,27 +112,34 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             TVQ = sousTotal * pourcentageTVQ;
             TVQ = Math.Round(TVQ, 2);
 
-            Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowTVQ", "row");
-            Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, nomEntreprise + "_colLabelTVQ", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colLabelTVQ, nomEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
+            Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
+            Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-2");
+            LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
 
-            Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, nomEntreprise + "_colMontantTVQ", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colMontantTVQ, nomEntreprise + "_montantTVQ", "$" + TVQ.ToString(), "infos-payage");
+            Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2");
+            LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + TVQ.ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Frais livraison
-            Panel rowLivraison = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowLivraison", "row");
-            Panel colLabelLivraison = LibrairieControlesDynamique.divDYN(rowLivraison, nomEntreprise + "_colLabelLivraison", "col-sm-4");
-            LibrairieControlesDynamique.lblDYN(colLabelLivraison, nomEntreprise + "_labelLivraison", "Des frais de livraison pourraient s'appliquer", "avertissement-livraison");
+            Panel rowLivraison = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowLivraison", "row");
+            Panel colLabelLivraison = LibrairieControlesDynamique.divDYN(rowLivraison, idEntreprise + "_colLabelLivraison", "col-sm-4");
+            LibrairieControlesDynamique.lblDYN(colLabelLivraison, idEntreprise + "_labelLivraison", "Des frais de livraison pourraient s'appliquer", "avertissement-livraison");
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Bouton commander
-            Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowBtnCommander", "row");
-            Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, nomEntreprise + "_colLabelBtnCommander", "col-sm-4");
-            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, nomEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
+            Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnCommander", "row");
+            Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, idEntreprise + "_colLabelBtnCommander", "col-sm-4");
+            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
         }
 
+    }
+
+    public void retirer_click(Object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+        String itemID = btn.ID.Replace("btnRetirer_", "");
+        System.Diagnostics.Debug.WriteLine(itemID);
     }
 
     public void update_click(Object sender, EventArgs e)
@@ -142,5 +154,8 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
         Button btn = (Button)sender;
         String entrepriseID = btn.ID.Replace("_btnCommander", "");
         System.Diagnostics.Debug.WriteLine(entrepriseID);
+
+        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + entrepriseID;
+        Response.Redirect(url, true);
     }
 }
