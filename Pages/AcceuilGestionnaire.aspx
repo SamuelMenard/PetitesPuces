@@ -29,16 +29,49 @@
                 </asp:Panel>
             </asp:LinkButton>
 
-        <asp:LinkButton ID="btn_gererInactivite" 
+        <asp:LinkButton ID="btn_gererInactiviteClients" 
                         runat="server"
-            OnClick="inactivite_click">
-                <asp:Panel ID="gererInactivite" CssClass="col-md-3" runat="server">
+            OnClick="inactiviteClients_click">
+                <asp:Panel ID="gererInactiviteClients" CssClass="col-md-3" runat="server">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
                         </div>
                         <div class="panel-footer">
-                            <h4>Gérer l'inactivité des clients et des vendeurs</h4>
+                            <h4>Gérer l'inactivité des clients</h4>
+                            <br />
+                        </div>
+                    </div>
+                </asp:Panel>
+        </asp:LinkButton>
+
+        <asp:LinkButton ID="btn_gererInactiviteVendeurs" 
+                        runat="server"
+            OnClick="inactiviteVendeurs_click">
+                <asp:Panel ID="gererInactiviteVendeurs" CssClass="col-md-3" runat="server">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+                        </div>
+                        <div class="panel-footer">
+                            <h4>Gérer l'inactivité des vendeurs</h4>
+                            <br />
+                        </div>
+                    </div>
+                </asp:Panel>
+        </asp:LinkButton>
+
+        <asp:LinkButton ID="btn_RendreInactif" 
+                        runat="server"
+            OnClick="rendreInactif_click">
+                <asp:Panel ID="rendreInactif" CssClass="col-md-3" runat="server">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+                        </div>
+                        <div class="panel-footer">
+                            <h4>Rendre inactif un client ou un vendeur</h4>
+                            <br />
                         </div>
                     </div>
                 </asp:Panel>
