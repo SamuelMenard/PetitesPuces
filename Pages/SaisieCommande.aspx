@@ -121,19 +121,46 @@
             </asp:LinkButton>
         </div>
     </asp:Panel>
+    
+    <asp:Panel ID="LESi_reussi" Visible="false" runat="server">
+        <div class="alert alert-success">
+            <strong>Réussi!</strong> Vous allez recevoir un bon de commande par courriel sous peu.
+        </div>
 
-    <asp:Panel ID="div_reponse_LESi" Visible="false" runat="server">
-        <asp:Panel ID="LESi_reussi" CssClass="alert alert-success" Visible="false" runat="server">
-          <strong>Réussi!</strong> Vous allez recevoir une confirmation par courriel sous peu.
+        <div class="text-center">
+            <div class="conteneur-remerciement">
+                <img src="../static/images/logo.png" alt="LOGO" height="200" width="200">
+                <h1>Merci d'avoir magasiné chez nous !</h1>
+                <h4>Pour toutes questions veuillez communiquer avec notre soutiens technique.</h4>
+            </div>
+        </div>
 
+        <br />
+        <br />
+        <br />
 
-        </asp:Panel>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <asp:Button ID="btnVisualiserBon" CssClass="btn btn-warning" Text="Visualiser le bon de commande" runat="server" OnClick="visualiserBon_click" />
+                    </div>
+                    <div class="col-md-2">
+                        <asp:LinkButton ID="btnImprimerBon" 
+                                    runat="server" 
+                                    CssClass="btn btn-warning"    
+                                    OnClick="imprimerBon_click">
+                            <span aria-hidden="true" class="glyphicon glyphicon-print"></span>
+                        </asp:LinkButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </asp:Panel>
 
-        <asp:Panel ID="LESi_echoue" CssClass="alert alert-danger" Visible="false" runat="server">
-          <strong>Échoué...</strong> Votre carte de crédit a été refusée.
-        </asp:Panel>
-
-
+    <asp:Panel ID="LESi_echoue" CssClass="alert alert-danger" Visible="false" runat="server">
+        <strong>Échoué...</strong> Votre carte de crédit a été refusée.
     </asp:Panel>
 
     <asp:Panel ID="div_paiement" Visible="false" runat="server">
@@ -219,8 +246,6 @@
                 </div>
             </div>
     </asp:Panel>
-
-    
 
     
 

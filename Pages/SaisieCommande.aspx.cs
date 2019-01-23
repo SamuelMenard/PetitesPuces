@@ -23,6 +23,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         {
             case "panier": afficherPanier(); break;
             case "livraison": afficherLivraison(); break;
+            case "bon": afficherBon(); break;
         }
 
     }
@@ -226,6 +227,28 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         div_paiement.Visible = true;
     }
 
+    public void afficherReponseLESi()
+    {
+        Boolean reussi = true;
+
+        // rendre visible la bonne div
+        if (reussi)
+        {
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon";
+            Response.Redirect(url, true);
+        }
+        else
+        {
+            LESi_echoue.Visible = true;
+            afficherPaiement();
+        }
+    }
+
+    public void afficherBon()
+    {
+        LESi_reussi.Visible = true;
+    }
+
     public Double getPrixLivraisonSelonPoids(Double poidsCommande, int typeLivraison)
     {
         // type livraison
@@ -305,18 +328,30 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     public void retourLivraison_click(Object sender, EventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("Retour");
+        LESi_echoue.Visible = false;
         afficherLivraison();
     }
 
     public void paiementLESi_click(Object sender, EventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("Paiement LESi");
+        afficherReponseLESi();
     }
 
     public void paiementSecurise_click(Object sender, EventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("Paiement");
         afficherPaiement();
+    }
+
+    public void visualiserBon_click(Object sender, EventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("Visualiser le bon");
+    }
+
+    public void imprimerBon_click(Object sender, EventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("Imprimer le bon");
     }
 
     public void livraison_changed(Object sender, EventArgs e)
