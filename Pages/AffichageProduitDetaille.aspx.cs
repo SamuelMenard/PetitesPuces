@@ -11,12 +11,15 @@ public partial class Pages_AffichageProduitDetaille : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            ViewState["RefUrl"] = Request.UrlReferrer.ToString();
+            if (Request.UrlReferrer != null)
+            {
+                ViewState["RefUrl"] = Request.UrlReferrer.ToString();
+            }
         }
 
 
         List<String> lstImages = new List<string>();       
-        lstImages.Add("500.99;Apple Watch 4;../static/images/appleWatch.jpg");
+        lstImages.Add("500,99;Apple Watch 4;../static/images/appleWatch.jpg");
        
 
         String nomEntreprise = "Apple";

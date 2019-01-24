@@ -48,18 +48,18 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
         lstImages.Clear();
         if (moisChoisis == 1)
         {
-            lstImages.Add("500.97;Apple Watch 4 x1;../static/images/orangeShop.png");
-            lstImages.Add("250.97;Airpods x1;../static/images/orangeShop.png");
+            lstImages.Add("500,97;Apple Watch 4 x1;../static/images/orangeShop.png");
+            lstImages.Add("250,97;Airpods x1;../static/images/orangeShop.png");
         }
         else if (moisChoisis == 2)
         {
-            lstImages.Add("1500.97;iPhone XS Max x1;../static/images/orangeShop.png");
-            lstImages.Add("450.97;Écouteurs beats x1;../static/images/orangeShop.png");
+            lstImages.Add("1500,97;iPhone XS Max x1;../static/images/orangeShop.png");
+            lstImages.Add("450,97;Écouteurs beats x1;../static/images/orangeShop.png");
         }
         else if (moisChoisis > 6)
         {
-            lstImages.Add("2200.97;MacBook Air 13\", 256GB SSD - Rose Gold x1<br>;../static/images/orangeShop.png");
-            lstImages.Add("350.97;Homepod - Blanc x1;../static/images/orangeShop.png");
+            lstImages.Add("2200,97;MacBook Air 13\", 256GB SSD - Rose Gold x1<br>;../static/images/orangeShop.png");
+            lstImages.Add("350,97;Homepod - Blanc x1;../static/images/orangeShop.png");
         }
 
         creerPage();

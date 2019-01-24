@@ -14,9 +14,9 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     {
 
         List<String> lstImages = new List<string>();
-        lstImages.Add("500.99;Apple Watch 4;../static/images/appleWatch.jpg");
-        lstImages.Add("1500.99;iPhone XS Max;../static/images/iPhone.jpg");
-        lstImages.Add("1300.99;MacBook Air 13\", 256GB SSD - Rose Gold;../static/images/macbookair13.jpg");
+        lstImages.Add("500,99;Apple Watch 4;../static/images/appleWatch.jpg");
+        lstImages.Add("1500,99;iPhone XS Max;../static/images/iPhone.jpg");
+        lstImages.Add("1300,99;MacBook Air 13\", 256GB SSD - Rose Gold;../static/images/macbookair13.jpg");
 
         String nomEntreprise = "Apple";
 
@@ -209,8 +209,8 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
         lstImages2.Clear();
 
-        lstImages2.Add("500.97;Apple Watch 4 x1;../static/images/orangeShop.png");
-        lstImages2.Add("250.97;Airpods x1;../static/images/orangeShop.png");
+        lstImages2.Add("500,97;Apple Watch 4 x1;../static/images/orangeShop.png");
+        lstImages2.Add("250,97;Airpods x1;../static/images/orangeShop.png");
      
         
         panelBody2.Controls.Clear();

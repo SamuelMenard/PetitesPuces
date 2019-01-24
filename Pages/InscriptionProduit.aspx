@@ -2,14 +2,18 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 <style>
-   .container-fluid {
+   .containerForm {
       width: 100%;
       max-width: 500px;
+   }
+   .Orange{
+       color: white;
+       background-color : orange;
    }
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="contentBody" Runat="Server">
-<div class="container-fluid">
+<div class="container-fluid containerForm">
    <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer les informations d'un produit</h1>
    <div class="form-group">
       <asp:DropDownList Id="ddlCategorie" CssClass="form-control" runat="server">
@@ -60,15 +64,15 @@
          <div class="input-group">
     			<label>Disponibilité 
             <div id="radioBtn" class="btn-group">
-    				<a class="btn btn-primary active" data-toggle="rbDisponibilite" data-title="O">Oui</a>
-    				<a class="btn btn-primary notActive" data-toggle="rbDisponibilite" data-title="N">Non</a>
+    				<a class="btn Orange active" data-toggle="rbDisponibilite" data-title="O">Oui</a>
+    				<a class="btn Orange notActive" data-toggle="rbDisponibilite" data-title="N">Non</a>
     		   </div>
     			<input type="hidden" name="rbDisponibilite" id="rbDisponibilite">
             </label>
     		</div>
       </div>
    </div>
-   <button class="btn btn-lg btn-primary btn-block" type="submit">Inscrire le produit</button>  
+   <button class="btn btn-lg Orange btn-block" type="submit">Inscrire le produit</button>  
 </div>
 <script type="text/javascript">
 	$('#radioBtn a').on('click', function() {

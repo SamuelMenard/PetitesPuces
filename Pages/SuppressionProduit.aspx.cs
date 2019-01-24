@@ -27,12 +27,12 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
         lstImages.Clear();
        
-        lstImages.Add("500.97;Apple Watch 4;../static/images/appleWatch.jpg");
-        lstImages.Add("250.97;Airpods;../static/images/airpods.jpg");      
-        lstImages.Add("1500.97;iPhone XS Max;../static/images/iPhone.jpg");
-        lstImages.Add("450.97;Écouteurs beats;../static/images/beats.jpg");
-        lstImages.Add("2200.97;MacBook Air 13\", 256GB SSD - Rose Gold<br>;../static/images/macbookair13.jpg");
-        lstImages.Add("350.97;Homepod - Blanc;../static/images/homepod.jpg");        
+        lstImages.Add("500,97;Apple Watch 4;../static/images/appleWatch.jpg");
+        lstImages.Add("250,97;Airpods;../static/images/airpods.jpg");      
+        lstImages.Add("1500,97;iPhone XS Max;../static/images/iPhone.jpg");
+        lstImages.Add("450,97;Écouteurs beats;../static/images/beats.jpg");
+        lstImages.Add("2200,97;MacBook Air 13\", 256GB SSD - Rose Gold<br>;../static/images/macbookair13.jpg");
+        lstImages.Add("350,97;Homepod - Blanc;../static/images/homepod.jpg");        
 
         creerPage();
     }
@@ -96,7 +96,7 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
     private void btnSupprimer_click(object sender, EventArgs e)
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
 

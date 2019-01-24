@@ -45,8 +45,8 @@ public partial class Pages_Connexion : System.Web.UI.Page
         else if (courriel == "vendeur")
         {
             Session["TypeUtilisateur"] = "V";
-            /*String url = "~/Pages/InscriptionVendeur.aspx?";
-            Response.Redirect(url, true);*/
+            String url = "~/Pages/ConnexionVendeur.aspx?";
+            Response.Redirect(url, true);
 
         }
         else if (courriel == "gestionnaire")
