@@ -1,0 +1,1134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BD6B8_424SModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="PPArticlesEnPanier">
+          <Key>
+            <PropertyRef Name="NoPanier" />
+          </Key>
+          <Property Name="NoPanier" Type="bigint" Nullable="false" />
+          <Property Name="NoClient" Type="bigint" />
+          <Property Name="NoVendeur" Type="bigint" />
+          <Property Name="NoProduit" Type="bigint" />
+          <Property Name="DateCreation" Type="smalldatetime" />
+          <Property Name="NbItems" Type="smallint" />
+        </EntityType>
+        <EntityType Name="PPCategories">
+          <Key>
+            <PropertyRef Name="NoCategorie" />
+          </Key>
+          <Property Name="NoCategorie" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+          <Property Name="Details" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="PPClients">
+          <Key>
+            <PropertyRef Name="NoClient" />
+          </Key>
+          <Property Name="NoClient" Type="bigint" Nullable="false" />
+          <Property Name="AdresseEmail" Type="varchar" MaxLength="100" />
+          <Property Name="MotDePasse" Type="varchar" MaxLength="50" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" />
+          <Property Name="Prenom" Type="varchar" MaxLength="50" />
+          <Property Name="Rue" Type="varchar" MaxLength="50" />
+          <Property Name="Ville" Type="varchar" MaxLength="50" />
+          <Property Name="Province" Type="char" MaxLength="2" />
+          <Property Name="CodePostal" Type="varchar" MaxLength="7" />
+          <Property Name="Pays" Type="varchar" MaxLength="10" />
+          <Property Name="Tel1" Type="varchar" MaxLength="20" />
+          <Property Name="Tel2" Type="varchar" MaxLength="20" />
+          <Property Name="DateCreation" Type="smalldatetime" />
+          <Property Name="DateMAJ" Type="smalldatetime" />
+          <Property Name="NbConnexions" Type="smallint" />
+          <Property Name="DateDerniereConnexion" Type="smalldatetime" />
+          <Property Name="Statut" Type="smallint" />
+        </EntityType>
+        <EntityType Name="PPCommandes">
+          <Key>
+            <PropertyRef Name="NoCommande" />
+          </Key>
+          <Property Name="NoCommande" Type="bigint" Nullable="false" />
+          <Property Name="NoClient" Type="bigint" />
+          <Property Name="NoVendeur" Type="bigint" />
+          <Property Name="DateCommande" Type="smalldatetime" />
+          <Property Name="CoutLivraison" Type="smallmoney" />
+          <Property Name="TypeLivraison" Type="smallint" />
+          <Property Name="MontantTotAvantTaxes" Type="smallmoney" />
+          <Property Name="TPS" Type="smallmoney" />
+          <Property Name="TVQ" Type="smallmoney" />
+          <Property Name="PoidsTotal" Type="numeric" Precision="8" Scale="1" />
+          <Property Name="Statut" Type="char" MaxLength="1" />
+          <Property Name="NoAutorisation" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PPDetailsCommandes">
+          <Key>
+            <PropertyRef Name="NoDetailCommandes" />
+          </Key>
+          <Property Name="NoDetailCommandes" Type="bigint" Nullable="false" />
+          <Property Name="NoCommande" Type="bigint" />
+          <Property Name="NoProduit" Type="bigint" />
+          <Property Name="PrixVente" Type="smallmoney" />
+          <Property Name="Quantité" Type="smallint" />
+        </EntityType>
+        <EntityType Name="PPHistoriquePaiements">
+          <Key>
+            <PropertyRef Name="NoHistorique" />
+          </Key>
+          <Property Name="NoHistorique" Type="bigint" Nullable="false" />
+          <Property Name="MontantVenteAvantLivraison" Type="smallmoney" />
+          <Property Name="NoVendeur" Type="bigint" />
+          <Property Name="NoClient" Type="bigint" />
+          <Property Name="NoCommande" Type="bigint" />
+          <Property Name="DateVente" Type="smalldatetime" />
+          <Property Name="NoAutorisation" Type="varchar" MaxLength="50" />
+          <Property Name="FraisLesi" Type="smallmoney" />
+          <Property Name="Redevance" Type="smallmoney" />
+          <Property Name="FraisLivraison" Type="smallmoney" />
+          <Property Name="FraisTPS" Type="smallmoney" />
+          <Property Name="FraisTVQ" Type="smallmoney" />
+        </EntityType>
+        <EntityType Name="PPPoidsLivraisons">
+          <Key>
+            <PropertyRef Name="CodeLivraison" />
+            <PropertyRef Name="CodePoids" />
+          </Key>
+          <Property Name="CodeLivraison" Type="smallint" Nullable="false" />
+          <Property Name="CodePoids" Type="smallint" Nullable="false" />
+          <Property Name="Tarif" Type="smallmoney" />
+        </EntityType>
+        <EntityType Name="PPProduits">
+          <Key>
+            <PropertyRef Name="NoProduit" />
+          </Key>
+          <Property Name="NoProduit" Type="bigint" Nullable="false" />
+          <Property Name="NoVendeur" Type="bigint" />
+          <Property Name="NoCategorie" Type="int" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" />
+          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="Photo" Type="varchar" MaxLength="50" />
+          <Property Name="PrixDemande" Type="smallmoney" />
+          <Property Name="NombreItems" Type="smallint" />
+          <Property Name="Disponibilité" Type="bit" />
+          <Property Name="DateVente" Type="smalldatetime" />
+          <Property Name="PrixVente" Type="smallmoney" />
+          <Property Name="Poids" Type="numeric" Precision="8" Scale="1" />
+          <Property Name="DateCreation" Type="smalldatetime" />
+          <Property Name="DateMAJ" Type="smalldatetime" />
+        </EntityType>
+        <EntityType Name="PPTaxeFederale">
+          <Key>
+            <PropertyRef Name="NoTPS" />
+          </Key>
+          <Property Name="NoTPS" Type="tinyint" Nullable="false" />
+          <Property Name="DateEffectiveTPS" Type="smalldatetime" />
+          <Property Name="TauxTPS" Type="numeric" Precision="4" Scale="2" />
+        </EntityType>
+        <EntityType Name="PPTaxeProvinciale">
+          <Key>
+            <PropertyRef Name="NoTVQ" />
+          </Key>
+          <Property Name="NoTVQ" Type="tinyint" Nullable="false" />
+          <Property Name="DateEffectiveTVQ" Type="smalldatetime" />
+          <Property Name="TauxTVQ" Type="numeric" Precision="5" Scale="3" />
+        </EntityType>
+        <EntityType Name="PPTypesLivraison">
+          <Key>
+            <PropertyRef Name="CodeLivraison" />
+          </Key>
+          <Property Name="CodeLivraison" Type="smallint" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="PPTypesPoids">
+          <Key>
+            <PropertyRef Name="CodePoids" />
+          </Key>
+          <Property Name="CodePoids" Type="smallint" Nullable="false" />
+          <Property Name="PoidsMin" Type="numeric" Precision="8" Scale="1" />
+          <Property Name="PoidsMax" Type="numeric" Precision="8" Scale="1" />
+        </EntityType>
+        <EntityType Name="PPVendeurs">
+          <Key>
+            <PropertyRef Name="NoVendeur" />
+          </Key>
+          <Property Name="NoVendeur" Type="bigint" Nullable="false" />
+          <Property Name="NomAffaires" Type="varchar" MaxLength="50" />
+          <Property Name="Nom" Type="varchar" MaxLength="50" />
+          <Property Name="Prenom" Type="varchar" MaxLength="50" />
+          <Property Name="Rue" Type="varchar" MaxLength="50" />
+          <Property Name="Ville" Type="varchar" MaxLength="50" />
+          <Property Name="Province" Type="char" MaxLength="2" />
+          <Property Name="CodePostal" Type="varchar" MaxLength="7" />
+          <Property Name="Pays" Type="varchar" MaxLength="10" />
+          <Property Name="Tel1" Type="varchar" MaxLength="20" />
+          <Property Name="Tel2" Type="varchar" MaxLength="20" />
+          <Property Name="AdresseEmail" Type="varchar" MaxLength="100" />
+          <Property Name="MotDePasse" Type="varchar" MaxLength="50" />
+          <Property Name="PoidsMaxLivraison" Type="int" />
+          <Property Name="LivraisonGratuite" Type="smallmoney" />
+          <Property Name="Taxes" Type="bit" />
+          <Property Name="Pourcentage" Type="numeric" Precision="4" Scale="2" />
+          <Property Name="Configuration" Type="varchar" MaxLength="512" />
+          <Property Name="DateCreation" Type="smalldatetime" />
+          <Property Name="DateMAJ" Type="smalldatetime" />
+          <Property Name="Statut" Type="smallint" />
+        </EntityType>
+        <EntityType Name="PPVendeursClients">
+          <Key>
+            <PropertyRef Name="NoVendeur" />
+            <PropertyRef Name="NoClient" />
+            <PropertyRef Name="DateVisite" />
+          </Key>
+          <Property Name="NoVendeur" Type="bigint" Nullable="false" />
+          <Property Name="NoClient" Type="bigint" Nullable="false" />
+          <Property Name="DateVisite" Type="smalldatetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_PPArticlesEnPanier_PPClients">
+          <End Role="PPClients" Type="Self.PPClients" Multiplicity="0..1" />
+          <End Role="PPArticlesEnPanier" Type="Self.PPArticlesEnPanier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPClients">
+              <PropertyRef Name="NoClient" />
+            </Principal>
+            <Dependent Role="PPArticlesEnPanier">
+              <PropertyRef Name="NoClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPArticlesEnPanier_PPProduits">
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="0..1" />
+          <End Role="PPArticlesEnPanier" Type="Self.PPArticlesEnPanier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPProduits">
+              <PropertyRef Name="NoProduit" />
+            </Principal>
+            <Dependent Role="PPArticlesEnPanier">
+              <PropertyRef Name="NoProduit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPArticlesEnPanier_PPVendeurs">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="0..1" />
+          <End Role="PPArticlesEnPanier" Type="Self.PPArticlesEnPanier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPArticlesEnPanier">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPCommandes_PPClients">
+          <End Role="PPClients" Type="Self.PPClients" Multiplicity="0..1" />
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPClients">
+              <PropertyRef Name="NoClient" />
+            </Principal>
+            <Dependent Role="PPCommandes">
+              <PropertyRef Name="NoClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPCommandes_PPTypesLivraison">
+          <End Role="PPTypesLivraison" Type="Self.PPTypesLivraison" Multiplicity="0..1" />
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPTypesLivraison">
+              <PropertyRef Name="CodeLivraison" />
+            </Principal>
+            <Dependent Role="PPCommandes">
+              <PropertyRef Name="TypeLivraison" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPCommandes_PPVendeurs">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="0..1" />
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPCommandes">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPDetailsCommandes_PPCommandes">
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="0..1" />
+          <End Role="PPDetailsCommandes" Type="Self.PPDetailsCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPCommandes">
+              <PropertyRef Name="NoCommande" />
+            </Principal>
+            <Dependent Role="PPDetailsCommandes">
+              <PropertyRef Name="NoCommande" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPDetailsCommandes_PPProduits">
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="0..1" />
+          <End Role="PPDetailsCommandes" Type="Self.PPDetailsCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPProduits">
+              <PropertyRef Name="NoProduit" />
+            </Principal>
+            <Dependent Role="PPDetailsCommandes">
+              <PropertyRef Name="NoProduit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPPoidsLivraisons_PPTypesLivraison">
+          <End Role="PPTypesLivraison" Type="Self.PPTypesLivraison" Multiplicity="1" />
+          <End Role="PPPoidsLivraisons" Type="Self.PPPoidsLivraisons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPTypesLivraison">
+              <PropertyRef Name="CodeLivraison" />
+            </Principal>
+            <Dependent Role="PPPoidsLivraisons">
+              <PropertyRef Name="CodeLivraison" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPPoidsLivraisons_PPTypesPoids">
+          <End Role="PPTypesPoids" Type="Self.PPTypesPoids" Multiplicity="1" />
+          <End Role="PPPoidsLivraisons" Type="Self.PPPoidsLivraisons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPTypesPoids">
+              <PropertyRef Name="CodePoids" />
+            </Principal>
+            <Dependent Role="PPPoidsLivraisons">
+              <PropertyRef Name="CodePoids" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPProduits_PPCategories">
+          <End Role="PPCategories" Type="Self.PPCategories" Multiplicity="0..1" />
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPCategories">
+              <PropertyRef Name="NoCategorie" />
+            </Principal>
+            <Dependent Role="PPProduits">
+              <PropertyRef Name="NoCategorie" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPProduits_PPVendeurs1">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="0..1" />
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPProduits">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPVendeursClients_PPClients">
+          <End Role="PPClients" Type="Self.PPClients" Multiplicity="1" />
+          <End Role="PPVendeursClients" Type="Self.PPVendeursClients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPClients">
+              <PropertyRef Name="NoClient" />
+            </Principal>
+            <Dependent Role="PPVendeursClients">
+              <PropertyRef Name="NoClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPVendeursClients_PPVendeurs">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="1" />
+          <End Role="PPVendeursClients" Type="Self.PPVendeursClients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPVendeursClients">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BD6B8_424SModelStoreContainer">
+          <EntitySet Name="PPArticlesEnPanier" EntityType="Self.PPArticlesEnPanier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPCategories" EntityType="Self.PPCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPClients" EntityType="Self.PPClients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPCommandes" EntityType="Self.PPCommandes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPDetailsCommandes" EntityType="Self.PPDetailsCommandes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPHistoriquePaiements" EntityType="Self.PPHistoriquePaiements" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPPoidsLivraisons" EntityType="Self.PPPoidsLivraisons" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPProduits" EntityType="Self.PPProduits" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPTaxeFederale" EntityType="Self.PPTaxeFederale" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPTaxeProvinciale" EntityType="Self.PPTaxeProvinciale" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPTypesLivraison" EntityType="Self.PPTypesLivraison" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPTypesPoids" EntityType="Self.PPTypesPoids" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPVendeurs" EntityType="Self.PPVendeurs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPVendeursClients" EntityType="Self.PPVendeursClients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_PPArticlesEnPanier_PPClients" Association="Self.FK_PPArticlesEnPanier_PPClients">
+            <End Role="PPClients" EntitySet="PPClients" />
+            <End Role="PPArticlesEnPanier" EntitySet="PPArticlesEnPanier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPArticlesEnPanier_PPProduits" Association="Self.FK_PPArticlesEnPanier_PPProduits">
+            <End Role="PPProduits" EntitySet="PPProduits" />
+            <End Role="PPArticlesEnPanier" EntitySet="PPArticlesEnPanier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPArticlesEnPanier_PPVendeurs" Association="Self.FK_PPArticlesEnPanier_PPVendeurs">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPArticlesEnPanier" EntitySet="PPArticlesEnPanier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPCommandes_PPClients" Association="Self.FK_PPCommandes_PPClients">
+            <End Role="PPClients" EntitySet="PPClients" />
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPCommandes_PPTypesLivraison" Association="Self.FK_PPCommandes_PPTypesLivraison">
+            <End Role="PPTypesLivraison" EntitySet="PPTypesLivraison" />
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPCommandes_PPVendeurs" Association="Self.FK_PPCommandes_PPVendeurs">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPDetailsCommandes_PPCommandes" Association="Self.FK_PPDetailsCommandes_PPCommandes">
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+            <End Role="PPDetailsCommandes" EntitySet="PPDetailsCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPDetailsCommandes_PPProduits" Association="Self.FK_PPDetailsCommandes_PPProduits">
+            <End Role="PPProduits" EntitySet="PPProduits" />
+            <End Role="PPDetailsCommandes" EntitySet="PPDetailsCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPPoidsLivraisons_PPTypesLivraison" Association="Self.FK_PPPoidsLivraisons_PPTypesLivraison">
+            <End Role="PPTypesLivraison" EntitySet="PPTypesLivraison" />
+            <End Role="PPPoidsLivraisons" EntitySet="PPPoidsLivraisons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPPoidsLivraisons_PPTypesPoids" Association="Self.FK_PPPoidsLivraisons_PPTypesPoids">
+            <End Role="PPTypesPoids" EntitySet="PPTypesPoids" />
+            <End Role="PPPoidsLivraisons" EntitySet="PPPoidsLivraisons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPProduits_PPCategories" Association="Self.FK_PPProduits_PPCategories">
+            <End Role="PPCategories" EntitySet="PPCategories" />
+            <End Role="PPProduits" EntitySet="PPProduits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPProduits_PPVendeurs1" Association="Self.FK_PPProduits_PPVendeurs1">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPProduits" EntitySet="PPProduits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPVendeursClients_PPClients" Association="Self.FK_PPVendeursClients_PPClients">
+            <End Role="PPClients" EntitySet="PPClients" />
+            <End Role="PPVendeursClients" EntitySet="PPVendeursClients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPVendeursClients_PPVendeurs" Association="Self.FK_PPVendeursClients_PPVendeurs">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPVendeursClients" EntitySet="PPVendeursClients" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BD6B8_424SModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="PPArticlesEnPanier">
+          <Key>
+            <PropertyRef Name="NoPanier" />
+          </Key>
+          <Property Name="NoPanier" Type="Int64" Nullable="false" />
+          <Property Name="NoClient" Type="Int64" />
+          <Property Name="NoVendeur" Type="Int64" />
+          <Property Name="NoProduit" Type="Int64" />
+          <Property Name="DateCreation" Type="DateTime" Precision="0" />
+          <Property Name="NbItems" Type="Int16" />
+          <NavigationProperty Name="PPClients" Relationship="Self.FK_PPArticlesEnPanier_PPClients" FromRole="PPArticlesEnPanier" ToRole="PPClients" />
+          <NavigationProperty Name="PPProduits" Relationship="Self.FK_PPArticlesEnPanier_PPProduits" FromRole="PPArticlesEnPanier" ToRole="PPProduits" />
+          <NavigationProperty Name="PPVendeurs" Relationship="Self.FK_PPArticlesEnPanier_PPVendeurs" FromRole="PPArticlesEnPanier" ToRole="PPVendeurs" />
+        </EntityType>
+        <EntityType Name="PPCategories">
+          <Key>
+            <PropertyRef Name="NoCategorie" />
+          </Key>
+          <Property Name="NoCategorie" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PPProduits" Relationship="Self.FK_PPProduits_PPCategories" FromRole="PPCategories" ToRole="PPProduits" />
+        </EntityType>
+        <EntityType Name="PPClients">
+          <Key>
+            <PropertyRef Name="NoClient" />
+          </Key>
+          <Property Name="NoClient" Type="Int64" Nullable="false" />
+          <Property Name="AdresseEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MotDePasse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Prenom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Rue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Ville" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Province" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="CodePostal" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="Pays" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Tel1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Tel2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DateCreation" Type="DateTime" Precision="0" />
+          <Property Name="DateMAJ" Type="DateTime" Precision="0" />
+          <Property Name="NbConnexions" Type="Int16" />
+          <Property Name="DateDerniereConnexion" Type="DateTime" Precision="0" />
+          <Property Name="Statut" Type="Int16" />
+          <NavigationProperty Name="PPArticlesEnPanier" Relationship="Self.FK_PPArticlesEnPanier_PPClients" FromRole="PPClients" ToRole="PPArticlesEnPanier" />
+          <NavigationProperty Name="PPCommandes" Relationship="Self.FK_PPCommandes_PPClients" FromRole="PPClients" ToRole="PPCommandes" />
+          <NavigationProperty Name="PPVendeursClients" Relationship="Self.FK_PPVendeursClients_PPClients" FromRole="PPClients" ToRole="PPVendeursClients" />
+        </EntityType>
+        <EntityType Name="PPCommandes">
+          <Key>
+            <PropertyRef Name="NoCommande" />
+          </Key>
+          <Property Name="NoCommande" Type="Int64" Nullable="false" />
+          <Property Name="NoClient" Type="Int64" />
+          <Property Name="NoVendeur" Type="Int64" />
+          <Property Name="DateCommande" Type="DateTime" Precision="0" />
+          <Property Name="CoutLivraison" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="TypeLivraison" Type="Int16" />
+          <Property Name="MontantTotAvantTaxes" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="TPS" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="TVQ" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="PoidsTotal" Type="Decimal" Precision="8" Scale="1" />
+          <Property Name="Statut" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NoAutorisation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PPClients" Relationship="Self.FK_PPCommandes_PPClients" FromRole="PPCommandes" ToRole="PPClients" />
+          <NavigationProperty Name="PPTypesLivraison" Relationship="Self.FK_PPCommandes_PPTypesLivraison" FromRole="PPCommandes" ToRole="PPTypesLivraison" />
+          <NavigationProperty Name="PPVendeurs" Relationship="Self.FK_PPCommandes_PPVendeurs" FromRole="PPCommandes" ToRole="PPVendeurs" />
+          <NavigationProperty Name="PPDetailsCommandes" Relationship="Self.FK_PPDetailsCommandes_PPCommandes" FromRole="PPCommandes" ToRole="PPDetailsCommandes" />
+        </EntityType>
+        <EntityType Name="PPDetailsCommandes">
+          <Key>
+            <PropertyRef Name="NoDetailCommandes" />
+          </Key>
+          <Property Name="NoDetailCommandes" Type="Int64" Nullable="false" />
+          <Property Name="NoCommande" Type="Int64" />
+          <Property Name="NoProduit" Type="Int64" />
+          <Property Name="PrixVente" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="Quantité" Type="Int16" />
+          <NavigationProperty Name="PPCommandes" Relationship="Self.FK_PPDetailsCommandes_PPCommandes" FromRole="PPDetailsCommandes" ToRole="PPCommandes" />
+          <NavigationProperty Name="PPProduits" Relationship="Self.FK_PPDetailsCommandes_PPProduits" FromRole="PPDetailsCommandes" ToRole="PPProduits" />
+        </EntityType>
+        <EntityType Name="PPHistoriquePaiements">
+          <Key>
+            <PropertyRef Name="NoHistorique" />
+          </Key>
+          <Property Name="NoHistorique" Type="Int64" Nullable="false" />
+          <Property Name="MontantVenteAvantLivraison" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="NoVendeur" Type="Int64" />
+          <Property Name="NoClient" Type="Int64" />
+          <Property Name="NoCommande" Type="Int64" />
+          <Property Name="DateVente" Type="DateTime" Precision="0" />
+          <Property Name="NoAutorisation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FraisLesi" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="Redevance" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="FraisLivraison" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="FraisTPS" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="FraisTVQ" Type="Decimal" Precision="10" Scale="4" />
+        </EntityType>
+        <EntityType Name="PPPoidsLivraisons">
+          <Key>
+            <PropertyRef Name="CodeLivraison" />
+            <PropertyRef Name="CodePoids" />
+          </Key>
+          <Property Name="CodeLivraison" Type="Int16" Nullable="false" />
+          <Property Name="CodePoids" Type="Int16" Nullable="false" />
+          <Property Name="Tarif" Type="Decimal" Precision="10" Scale="4" />
+          <NavigationProperty Name="PPTypesLivraison" Relationship="Self.FK_PPPoidsLivraisons_PPTypesLivraison" FromRole="PPPoidsLivraisons" ToRole="PPTypesLivraison" />
+          <NavigationProperty Name="PPTypesPoids" Relationship="Self.FK_PPPoidsLivraisons_PPTypesPoids" FromRole="PPPoidsLivraisons" ToRole="PPTypesPoids" />
+        </EntityType>
+        <EntityType Name="PPProduits">
+          <Key>
+            <PropertyRef Name="NoProduit" />
+          </Key>
+          <Property Name="NoProduit" Type="Int64" Nullable="false" />
+          <Property Name="NoVendeur" Type="Int64" />
+          <Property Name="NoCategorie" Type="Int32" />
+          <Property Name="Nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Photo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PrixDemande" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="NombreItems" Type="Int16" />
+          <Property Name="Disponibilité" Type="Boolean" />
+          <Property Name="DateVente" Type="DateTime" Precision="0" />
+          <Property Name="PrixVente" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="Poids" Type="Decimal" Precision="8" Scale="1" />
+          <Property Name="DateCreation" Type="DateTime" Precision="0" />
+          <Property Name="DateMAJ" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="PPArticlesEnPanier" Relationship="Self.FK_PPArticlesEnPanier_PPProduits" FromRole="PPProduits" ToRole="PPArticlesEnPanier" />
+          <NavigationProperty Name="PPCategories" Relationship="Self.FK_PPProduits_PPCategories" FromRole="PPProduits" ToRole="PPCategories" />
+          <NavigationProperty Name="PPDetailsCommandes" Relationship="Self.FK_PPDetailsCommandes_PPProduits" FromRole="PPProduits" ToRole="PPDetailsCommandes" />
+          <NavigationProperty Name="PPVendeurs" Relationship="Self.FK_PPProduits_PPVendeurs1" FromRole="PPProduits" ToRole="PPVendeurs" />
+        </EntityType>
+        <EntityType Name="PPTaxeFederale">
+          <Key>
+            <PropertyRef Name="NoTPS" />
+          </Key>
+          <Property Name="NoTPS" Type="Byte" Nullable="false" />
+          <Property Name="DateEffectiveTPS" Type="DateTime" Precision="0" />
+          <Property Name="TauxTPS" Type="Decimal" Precision="4" Scale="2" />
+        </EntityType>
+        <EntityType Name="PPTaxeProvinciale">
+          <Key>
+            <PropertyRef Name="NoTVQ" />
+          </Key>
+          <Property Name="NoTVQ" Type="Byte" Nullable="false" />
+          <Property Name="DateEffectiveTVQ" Type="DateTime" Precision="0" />
+          <Property Name="TauxTVQ" Type="Decimal" Precision="5" Scale="3" />
+        </EntityType>
+        <EntityType Name="PPTypesLivraison">
+          <Key>
+            <PropertyRef Name="CodeLivraison" />
+          </Key>
+          <Property Name="CodeLivraison" Type="Int16" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="PPCommandes" Relationship="Self.FK_PPCommandes_PPTypesLivraison" FromRole="PPTypesLivraison" ToRole="PPCommandes" />
+          <NavigationProperty Name="PPPoidsLivraisons" Relationship="Self.FK_PPPoidsLivraisons_PPTypesLivraison" FromRole="PPTypesLivraison" ToRole="PPPoidsLivraisons" />
+        </EntityType>
+        <EntityType Name="PPTypesPoids">
+          <Key>
+            <PropertyRef Name="CodePoids" />
+          </Key>
+          <Property Name="CodePoids" Type="Int16" Nullable="false" />
+          <Property Name="PoidsMin" Type="Decimal" Precision="8" Scale="1" />
+          <Property Name="PoidsMax" Type="Decimal" Precision="8" Scale="1" />
+          <NavigationProperty Name="PPPoidsLivraisons" Relationship="Self.FK_PPPoidsLivraisons_PPTypesPoids" FromRole="PPTypesPoids" ToRole="PPPoidsLivraisons" />
+        </EntityType>
+        <EntityType Name="PPVendeurs">
+          <Key>
+            <PropertyRef Name="NoVendeur" />
+          </Key>
+          <Property Name="NoVendeur" Type="Int64" Nullable="false" />
+          <Property Name="NomAffaires" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Nom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Prenom" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Rue" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Ville" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Province" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="CodePostal" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="Pays" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Tel1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Tel2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AdresseEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MotDePasse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PoidsMaxLivraison" Type="Int32" />
+          <Property Name="LivraisonGratuite" Type="Decimal" Precision="10" Scale="4" />
+          <Property Name="Taxes" Type="Boolean" />
+          <Property Name="Pourcentage" Type="Decimal" Precision="4" Scale="2" />
+          <Property Name="Configuration" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="DateCreation" Type="DateTime" Precision="0" />
+          <Property Name="DateMAJ" Type="DateTime" Precision="0" />
+          <Property Name="Statut" Type="Int16" />
+          <NavigationProperty Name="PPArticlesEnPanier" Relationship="Self.FK_PPArticlesEnPanier_PPVendeurs" FromRole="PPVendeurs" ToRole="PPArticlesEnPanier" />
+          <NavigationProperty Name="PPCommandes" Relationship="Self.FK_PPCommandes_PPVendeurs" FromRole="PPVendeurs" ToRole="PPCommandes" />
+          <NavigationProperty Name="PPProduits" Relationship="Self.FK_PPProduits_PPVendeurs1" FromRole="PPVendeurs" ToRole="PPProduits" />
+          <NavigationProperty Name="PPVendeursClients" Relationship="Self.FK_PPVendeursClients_PPVendeurs" FromRole="PPVendeurs" ToRole="PPVendeursClients" />
+        </EntityType>
+        <EntityType Name="PPVendeursClients">
+          <Key>
+            <PropertyRef Name="NoVendeur" />
+            <PropertyRef Name="NoClient" />
+            <PropertyRef Name="DateVisite" />
+          </Key>
+          <Property Name="NoVendeur" Type="Int64" Nullable="false" />
+          <Property Name="NoClient" Type="Int64" Nullable="false" />
+          <Property Name="DateVisite" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="PPClients" Relationship="Self.FK_PPVendeursClients_PPClients" FromRole="PPVendeursClients" ToRole="PPClients" />
+          <NavigationProperty Name="PPVendeurs" Relationship="Self.FK_PPVendeursClients_PPVendeurs" FromRole="PPVendeursClients" ToRole="PPVendeurs" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_PPArticlesEnPanier_PPClients">
+          <End Role="PPClients" Type="Self.PPClients" Multiplicity="0..1" />
+          <End Role="PPArticlesEnPanier" Type="Self.PPArticlesEnPanier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPClients">
+              <PropertyRef Name="NoClient" />
+            </Principal>
+            <Dependent Role="PPArticlesEnPanier">
+              <PropertyRef Name="NoClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPArticlesEnPanier_PPProduits">
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="0..1" />
+          <End Role="PPArticlesEnPanier" Type="Self.PPArticlesEnPanier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPProduits">
+              <PropertyRef Name="NoProduit" />
+            </Principal>
+            <Dependent Role="PPArticlesEnPanier">
+              <PropertyRef Name="NoProduit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPArticlesEnPanier_PPVendeurs">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="0..1" />
+          <End Role="PPArticlesEnPanier" Type="Self.PPArticlesEnPanier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPArticlesEnPanier">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPProduits_PPCategories">
+          <End Role="PPCategories" Type="Self.PPCategories" Multiplicity="0..1" />
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPCategories">
+              <PropertyRef Name="NoCategorie" />
+            </Principal>
+            <Dependent Role="PPProduits">
+              <PropertyRef Name="NoCategorie" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPCommandes_PPClients">
+          <End Role="PPClients" Type="Self.PPClients" Multiplicity="0..1" />
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPClients">
+              <PropertyRef Name="NoClient" />
+            </Principal>
+            <Dependent Role="PPCommandes">
+              <PropertyRef Name="NoClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPVendeursClients_PPClients">
+          <End Role="PPClients" Type="Self.PPClients" Multiplicity="1" />
+          <End Role="PPVendeursClients" Type="Self.PPVendeursClients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPClients">
+              <PropertyRef Name="NoClient" />
+            </Principal>
+            <Dependent Role="PPVendeursClients">
+              <PropertyRef Name="NoClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPCommandes_PPTypesLivraison">
+          <End Role="PPTypesLivraison" Type="Self.PPTypesLivraison" Multiplicity="0..1" />
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPTypesLivraison">
+              <PropertyRef Name="CodeLivraison" />
+            </Principal>
+            <Dependent Role="PPCommandes">
+              <PropertyRef Name="TypeLivraison" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPCommandes_PPVendeurs">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="0..1" />
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPCommandes">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPDetailsCommandes_PPCommandes">
+          <End Role="PPCommandes" Type="Self.PPCommandes" Multiplicity="0..1" />
+          <End Role="PPDetailsCommandes" Type="Self.PPDetailsCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPCommandes">
+              <PropertyRef Name="NoCommande" />
+            </Principal>
+            <Dependent Role="PPDetailsCommandes">
+              <PropertyRef Name="NoCommande" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPDetailsCommandes_PPProduits">
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="0..1" />
+          <End Role="PPDetailsCommandes" Type="Self.PPDetailsCommandes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPProduits">
+              <PropertyRef Name="NoProduit" />
+            </Principal>
+            <Dependent Role="PPDetailsCommandes">
+              <PropertyRef Name="NoProduit" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPPoidsLivraisons_PPTypesLivraison">
+          <End Role="PPTypesLivraison" Type="Self.PPTypesLivraison" Multiplicity="1" />
+          <End Role="PPPoidsLivraisons" Type="Self.PPPoidsLivraisons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPTypesLivraison">
+              <PropertyRef Name="CodeLivraison" />
+            </Principal>
+            <Dependent Role="PPPoidsLivraisons">
+              <PropertyRef Name="CodeLivraison" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPPoidsLivraisons_PPTypesPoids">
+          <End Role="PPTypesPoids" Type="Self.PPTypesPoids" Multiplicity="1" />
+          <End Role="PPPoidsLivraisons" Type="Self.PPPoidsLivraisons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPTypesPoids">
+              <PropertyRef Name="CodePoids" />
+            </Principal>
+            <Dependent Role="PPPoidsLivraisons">
+              <PropertyRef Name="CodePoids" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPProduits_PPVendeurs1">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="0..1" />
+          <End Role="PPProduits" Type="Self.PPProduits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPProduits">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PPVendeursClients_PPVendeurs">
+          <End Role="PPVendeurs" Type="Self.PPVendeurs" Multiplicity="1" />
+          <End Role="PPVendeursClients" Type="Self.PPVendeursClients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PPVendeurs">
+              <PropertyRef Name="NoVendeur" />
+            </Principal>
+            <Dependent Role="PPVendeursClients">
+              <PropertyRef Name="NoVendeur" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BD6B8_424SEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PPArticlesEnPanier" EntityType="Self.PPArticlesEnPanier" />
+          <EntitySet Name="PPCategories" EntityType="Self.PPCategories" />
+          <EntitySet Name="PPClients" EntityType="Self.PPClients" />
+          <EntitySet Name="PPCommandes" EntityType="Self.PPCommandes" />
+          <EntitySet Name="PPDetailsCommandes" EntityType="Self.PPDetailsCommandes" />
+          <EntitySet Name="PPHistoriquePaiements" EntityType="Self.PPHistoriquePaiements" />
+          <EntitySet Name="PPPoidsLivraisons" EntityType="Self.PPPoidsLivraisons" />
+          <EntitySet Name="PPProduits" EntityType="Self.PPProduits" />
+          <EntitySet Name="PPTaxeFederale" EntityType="Self.PPTaxeFederale" />
+          <EntitySet Name="PPTaxeProvinciale" EntityType="Self.PPTaxeProvinciale" />
+          <EntitySet Name="PPTypesLivraison" EntityType="Self.PPTypesLivraison" />
+          <EntitySet Name="PPTypesPoids" EntityType="Self.PPTypesPoids" />
+          <EntitySet Name="PPVendeurs" EntityType="Self.PPVendeurs" />
+          <EntitySet Name="PPVendeursClients" EntityType="Self.PPVendeursClients" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <AssociationSet Name="FK_PPArticlesEnPanier_PPClients" Association="Self.FK_PPArticlesEnPanier_PPClients">
+            <End Role="PPClients" EntitySet="PPClients" />
+            <End Role="PPArticlesEnPanier" EntitySet="PPArticlesEnPanier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPArticlesEnPanier_PPProduits" Association="Self.FK_PPArticlesEnPanier_PPProduits">
+            <End Role="PPProduits" EntitySet="PPProduits" />
+            <End Role="PPArticlesEnPanier" EntitySet="PPArticlesEnPanier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPArticlesEnPanier_PPVendeurs" Association="Self.FK_PPArticlesEnPanier_PPVendeurs">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPArticlesEnPanier" EntitySet="PPArticlesEnPanier" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPProduits_PPCategories" Association="Self.FK_PPProduits_PPCategories">
+            <End Role="PPCategories" EntitySet="PPCategories" />
+            <End Role="PPProduits" EntitySet="PPProduits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPCommandes_PPClients" Association="Self.FK_PPCommandes_PPClients">
+            <End Role="PPClients" EntitySet="PPClients" />
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPVendeursClients_PPClients" Association="Self.FK_PPVendeursClients_PPClients">
+            <End Role="PPClients" EntitySet="PPClients" />
+            <End Role="PPVendeursClients" EntitySet="PPVendeursClients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPCommandes_PPTypesLivraison" Association="Self.FK_PPCommandes_PPTypesLivraison">
+            <End Role="PPTypesLivraison" EntitySet="PPTypesLivraison" />
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPCommandes_PPVendeurs" Association="Self.FK_PPCommandes_PPVendeurs">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPDetailsCommandes_PPCommandes" Association="Self.FK_PPDetailsCommandes_PPCommandes">
+            <End Role="PPCommandes" EntitySet="PPCommandes" />
+            <End Role="PPDetailsCommandes" EntitySet="PPDetailsCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPDetailsCommandes_PPProduits" Association="Self.FK_PPDetailsCommandes_PPProduits">
+            <End Role="PPProduits" EntitySet="PPProduits" />
+            <End Role="PPDetailsCommandes" EntitySet="PPDetailsCommandes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPPoidsLivraisons_PPTypesLivraison" Association="Self.FK_PPPoidsLivraisons_PPTypesLivraison">
+            <End Role="PPTypesLivraison" EntitySet="PPTypesLivraison" />
+            <End Role="PPPoidsLivraisons" EntitySet="PPPoidsLivraisons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPPoidsLivraisons_PPTypesPoids" Association="Self.FK_PPPoidsLivraisons_PPTypesPoids">
+            <End Role="PPTypesPoids" EntitySet="PPTypesPoids" />
+            <End Role="PPPoidsLivraisons" EntitySet="PPPoidsLivraisons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPProduits_PPVendeurs1" Association="Self.FK_PPProduits_PPVendeurs1">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPProduits" EntitySet="PPProduits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PPVendeursClients_PPVendeurs" Association="Self.FK_PPVendeursClients_PPVendeurs">
+            <End Role="PPVendeurs" EntitySet="PPVendeurs" />
+            <End Role="PPVendeursClients" EntitySet="PPVendeursClients" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BD6B8_424SModelStoreContainer" CdmEntityContainer="BD6B8_424SEntities">
+          <EntitySetMapping Name="PPArticlesEnPanier">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPArticlesEnPanier">
+              <MappingFragment StoreEntitySet="PPArticlesEnPanier">
+                <ScalarProperty Name="NoPanier" ColumnName="NoPanier" />
+                <ScalarProperty Name="NoClient" ColumnName="NoClient" />
+                <ScalarProperty Name="NoVendeur" ColumnName="NoVendeur" />
+                <ScalarProperty Name="NoProduit" ColumnName="NoProduit" />
+                <ScalarProperty Name="DateCreation" ColumnName="DateCreation" />
+                <ScalarProperty Name="NbItems" ColumnName="NbItems" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPCategories">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPCategories">
+              <MappingFragment StoreEntitySet="PPCategories">
+                <ScalarProperty Name="NoCategorie" ColumnName="NoCategorie" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPClients">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPClients">
+              <MappingFragment StoreEntitySet="PPClients">
+                <ScalarProperty Name="NoClient" ColumnName="NoClient" />
+                <ScalarProperty Name="AdresseEmail" ColumnName="AdresseEmail" />
+                <ScalarProperty Name="MotDePasse" ColumnName="MotDePasse" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Prenom" ColumnName="Prenom" />
+                <ScalarProperty Name="Rue" ColumnName="Rue" />
+                <ScalarProperty Name="Ville" ColumnName="Ville" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="CodePostal" ColumnName="CodePostal" />
+                <ScalarProperty Name="Pays" ColumnName="Pays" />
+                <ScalarProperty Name="Tel1" ColumnName="Tel1" />
+                <ScalarProperty Name="Tel2" ColumnName="Tel2" />
+                <ScalarProperty Name="DateCreation" ColumnName="DateCreation" />
+                <ScalarProperty Name="DateMAJ" ColumnName="DateMAJ" />
+                <ScalarProperty Name="NbConnexions" ColumnName="NbConnexions" />
+                <ScalarProperty Name="DateDerniereConnexion" ColumnName="DateDerniereConnexion" />
+                <ScalarProperty Name="Statut" ColumnName="Statut" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPCommandes">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPCommandes">
+              <MappingFragment StoreEntitySet="PPCommandes">
+                <ScalarProperty Name="NoCommande" ColumnName="NoCommande" />
+                <ScalarProperty Name="NoClient" ColumnName="NoClient" />
+                <ScalarProperty Name="NoVendeur" ColumnName="NoVendeur" />
+                <ScalarProperty Name="DateCommande" ColumnName="DateCommande" />
+                <ScalarProperty Name="CoutLivraison" ColumnName="CoutLivraison" />
+                <ScalarProperty Name="TypeLivraison" ColumnName="TypeLivraison" />
+                <ScalarProperty Name="MontantTotAvantTaxes" ColumnName="MontantTotAvantTaxes" />
+                <ScalarProperty Name="TPS" ColumnName="TPS" />
+                <ScalarProperty Name="TVQ" ColumnName="TVQ" />
+                <ScalarProperty Name="PoidsTotal" ColumnName="PoidsTotal" />
+                <ScalarProperty Name="Statut" ColumnName="Statut" />
+                <ScalarProperty Name="NoAutorisation" ColumnName="NoAutorisation" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPDetailsCommandes">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPDetailsCommandes">
+              <MappingFragment StoreEntitySet="PPDetailsCommandes">
+                <ScalarProperty Name="NoDetailCommandes" ColumnName="NoDetailCommandes" />
+                <ScalarProperty Name="NoCommande" ColumnName="NoCommande" />
+                <ScalarProperty Name="NoProduit" ColumnName="NoProduit" />
+                <ScalarProperty Name="PrixVente" ColumnName="PrixVente" />
+                <ScalarProperty Name="Quantité" ColumnName="Quantité" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPHistoriquePaiements">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPHistoriquePaiements">
+              <MappingFragment StoreEntitySet="PPHistoriquePaiements">
+                <ScalarProperty Name="NoHistorique" ColumnName="NoHistorique" />
+                <ScalarProperty Name="MontantVenteAvantLivraison" ColumnName="MontantVenteAvantLivraison" />
+                <ScalarProperty Name="NoVendeur" ColumnName="NoVendeur" />
+                <ScalarProperty Name="NoClient" ColumnName="NoClient" />
+                <ScalarProperty Name="NoCommande" ColumnName="NoCommande" />
+                <ScalarProperty Name="DateVente" ColumnName="DateVente" />
+                <ScalarProperty Name="NoAutorisation" ColumnName="NoAutorisation" />
+                <ScalarProperty Name="FraisLesi" ColumnName="FraisLesi" />
+                <ScalarProperty Name="Redevance" ColumnName="Redevance" />
+                <ScalarProperty Name="FraisLivraison" ColumnName="FraisLivraison" />
+                <ScalarProperty Name="FraisTPS" ColumnName="FraisTPS" />
+                <ScalarProperty Name="FraisTVQ" ColumnName="FraisTVQ" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPPoidsLivraisons">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPPoidsLivraisons">
+              <MappingFragment StoreEntitySet="PPPoidsLivraisons">
+                <ScalarProperty Name="CodeLivraison" ColumnName="CodeLivraison" />
+                <ScalarProperty Name="CodePoids" ColumnName="CodePoids" />
+                <ScalarProperty Name="Tarif" ColumnName="Tarif" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPProduits">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPProduits">
+              <MappingFragment StoreEntitySet="PPProduits">
+                <ScalarProperty Name="NoProduit" ColumnName="NoProduit" />
+                <ScalarProperty Name="NoVendeur" ColumnName="NoVendeur" />
+                <ScalarProperty Name="NoCategorie" ColumnName="NoCategorie" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="PrixDemande" ColumnName="PrixDemande" />
+                <ScalarProperty Name="NombreItems" ColumnName="NombreItems" />
+                <ScalarProperty Name="Disponibilité" ColumnName="Disponibilité" />
+                <ScalarProperty Name="DateVente" ColumnName="DateVente" />
+                <ScalarProperty Name="PrixVente" ColumnName="PrixVente" />
+                <ScalarProperty Name="Poids" ColumnName="Poids" />
+                <ScalarProperty Name="DateCreation" ColumnName="DateCreation" />
+                <ScalarProperty Name="DateMAJ" ColumnName="DateMAJ" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPTaxeFederale">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPTaxeFederale">
+              <MappingFragment StoreEntitySet="PPTaxeFederale">
+                <ScalarProperty Name="NoTPS" ColumnName="NoTPS" />
+                <ScalarProperty Name="DateEffectiveTPS" ColumnName="DateEffectiveTPS" />
+                <ScalarProperty Name="TauxTPS" ColumnName="TauxTPS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPTaxeProvinciale">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPTaxeProvinciale">
+              <MappingFragment StoreEntitySet="PPTaxeProvinciale">
+                <ScalarProperty Name="NoTVQ" ColumnName="NoTVQ" />
+                <ScalarProperty Name="DateEffectiveTVQ" ColumnName="DateEffectiveTVQ" />
+                <ScalarProperty Name="TauxTVQ" ColumnName="TauxTVQ" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPTypesLivraison">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPTypesLivraison">
+              <MappingFragment StoreEntitySet="PPTypesLivraison">
+                <ScalarProperty Name="CodeLivraison" ColumnName="CodeLivraison" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPTypesPoids">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPTypesPoids">
+              <MappingFragment StoreEntitySet="PPTypesPoids">
+                <ScalarProperty Name="CodePoids" ColumnName="CodePoids" />
+                <ScalarProperty Name="PoidsMin" ColumnName="PoidsMin" />
+                <ScalarProperty Name="PoidsMax" ColumnName="PoidsMax" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPVendeurs">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPVendeurs">
+              <MappingFragment StoreEntitySet="PPVendeurs">
+                <ScalarProperty Name="NoVendeur" ColumnName="NoVendeur" />
+                <ScalarProperty Name="NomAffaires" ColumnName="NomAffaires" />
+                <ScalarProperty Name="Nom" ColumnName="Nom" />
+                <ScalarProperty Name="Prenom" ColumnName="Prenom" />
+                <ScalarProperty Name="Rue" ColumnName="Rue" />
+                <ScalarProperty Name="Ville" ColumnName="Ville" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="CodePostal" ColumnName="CodePostal" />
+                <ScalarProperty Name="Pays" ColumnName="Pays" />
+                <ScalarProperty Name="Tel1" ColumnName="Tel1" />
+                <ScalarProperty Name="Tel2" ColumnName="Tel2" />
+                <ScalarProperty Name="AdresseEmail" ColumnName="AdresseEmail" />
+                <ScalarProperty Name="MotDePasse" ColumnName="MotDePasse" />
+                <ScalarProperty Name="PoidsMaxLivraison" ColumnName="PoidsMaxLivraison" />
+                <ScalarProperty Name="LivraisonGratuite" ColumnName="LivraisonGratuite" />
+                <ScalarProperty Name="Taxes" ColumnName="Taxes" />
+                <ScalarProperty Name="Pourcentage" ColumnName="Pourcentage" />
+                <ScalarProperty Name="Configuration" ColumnName="Configuration" />
+                <ScalarProperty Name="DateCreation" ColumnName="DateCreation" />
+                <ScalarProperty Name="DateMAJ" ColumnName="DateMAJ" />
+                <ScalarProperty Name="Statut" ColumnName="Statut" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPVendeursClients">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPVendeursClients">
+              <MappingFragment StoreEntitySet="PPVendeursClients">
+                <ScalarProperty Name="NoVendeur" ColumnName="NoVendeur" />
+                <ScalarProperty Name="NoClient" ColumnName="NoClient" />
+                <ScalarProperty Name="DateVisite" ColumnName="DateVisite" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

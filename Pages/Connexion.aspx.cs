@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_Connexion : System.Web.UI.Page
 {
+    private BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+
     protected void Page_Load(object sender, EventArgs e)
     {
 
@@ -33,10 +35,12 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
     public void connexion_click(Object sender, EventArgs e)
     {
+        var clients = dataContext.PPClients;
+
         String courriel = tbCourriel.Text;
         String MDP = tbMDP.Text;
 
-        if (courriel == "client")
+        if (clients.Where(client => client.AdresseEmail == courriel).Any())
         {
             Session["TypeUtilisateur"] = "C";
             String url = "~/Pages/AccueilClient.aspx?";
