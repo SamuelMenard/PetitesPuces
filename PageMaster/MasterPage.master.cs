@@ -34,6 +34,9 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageClient()
     {
         lbDeconnexion.Visible = true;
+        lbPanier.Visible = true;
+        lbInscriptionVendeur.Visible = true;
+        lbInfosPersos.Visible = true;
     }
 
     public void affichageVendeur()
@@ -65,6 +68,24 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         Response.Redirect(url, true);
     }
 
+    public void panier_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/GestionPanierCommande.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void inscriptionVendeur_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/InscriptionVendeur.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void infosPersos_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/SaisieModificationProfil.aspx?";
+        Response.Redirect(url, true);
+    }
+
     public void accueil_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/AccueilInternaute.aspx?";
@@ -73,7 +94,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         {
             switch (Session["TypeUtilisateur"].ToString())
             {
-                //case "C": url = "~/Pages/AccueilInternaute.aspx?"; break;
+                case "C": url = "~/Pages/AccueilClient.aspx?"; break;
                 //case "V": url = "~/Pages/AccueilInternaute.aspx?"; break;
                 case "G": url = "~/Pages/AcceuilGestionnaire.aspx?"; break;
             }

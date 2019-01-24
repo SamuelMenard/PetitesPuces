@@ -28,11 +28,6 @@
             <div class="navbar-header">
                 <asp:LinkButton ID="lbAccueil" CssClass="navbar-brand nav-color" runat="server" OnClick="accueil_click">Les Petites Puces</asp:LinkButton>
             </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#">Page 1</a></li>
-                <li><a href="#">Page 2</a></li>
-            </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><asp:LinkButton ID="lbInscription" CssClass="nav-color" runat="server" OnClick="inscription_click" Visible="false">
                     <span class="glyphicon glyphicon-user nav-color"></span> S'inscrire</asp:LinkButton></li>
@@ -40,6 +35,12 @@
                     <span class="glyphicon glyphicon-log-in nav-color"></span> Se connecter</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbDeconnexion" CssClass="nav-color" runat="server" OnClick="deconnexion_click" Visible="false">
                     <span class="glyphicon glyphicon-log-out nav-color"></span> Se déconnecter</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbPanier" CssClass="nav-color" runat="server" OnClick="panier_click" Visible="false">
+                    <span class="glyphicon glyphicon-shopping-cart nav-color"></span> Panier</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbInscriptionVendeur" CssClass="nav-color" runat="server" OnClick="inscriptionVendeur_click" Visible="false">
+                    <span class="glyphicon glyphicon-briefcase nav-color"></span> Devenir vendeur</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbInfosPersos" CssClass="nav-color" runat="server" OnClick="infosPersos_click" Visible="false">
+                    <span class="glyphicon glyphicon-cog nav-color"></span> Gérer mon profil</asp:LinkButton></li>
             </ul>
             </div>
         </nav>
