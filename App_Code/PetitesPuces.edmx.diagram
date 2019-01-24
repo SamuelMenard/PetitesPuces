@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8027914379194e7c88754411064ccb67" Name="Diagram1">
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPArticlesEnPanier" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPCategories" Width="1.5" PointX="0.75" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPClients" Width="1.5" PointX="0.75" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPCommandes" Width="1.5" PointX="6" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPDetailsCommandes" Width="1.5" PointX="8.25" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPHistoriquePaiements" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPPoidsLivraisons" Width="1.5" PointX="6" PointY="15.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPProduits" Width="1.5" PointX="3" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPTaxeFederale" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPTaxeProvinciale" Width="1.5" PointX="8.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPTypesLivraison" Width="1.5" PointX="3.75" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPTypesPoids" Width="1.5" PointX="3.75" PointY="18.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPVendeurs" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPVendeursClients" Width="1.5" PointX="3" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.sysdiagrams" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPArticlesEnPanier_PPClients" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPArticlesEnPanier_PPProduits" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPArticlesEnPanier_PPVendeurs" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPProduits_PPCategories" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPCommandes_PPClients" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPVendeursClients_PPClients" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPCommandes_PPTypesLivraison" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPCommandes_PPVendeurs" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPDetailsCommandes_PPCommandes" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPDetailsCommandes_PPProduits" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPPoidsLivraisons_PPTypesLivraison" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPPoidsLivraisons_PPTypesPoids" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPProduits_PPVendeurs1" ManuallyRouted="false" />
+        <AssociationConnector Association="BD6B8_424SModel.FK_PPVendeursClients_PPVendeurs" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
