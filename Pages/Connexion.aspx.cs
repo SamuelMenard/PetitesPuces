@@ -22,6 +22,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
     public void accueil_click(Object sender, EventArgs e)
     {
+        Session.RemoveAll();
         String url = "~/Pages/AccueilInternaute.aspx?";
         Response.Redirect(url, true);
     }
