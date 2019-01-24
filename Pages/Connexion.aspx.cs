@@ -18,6 +18,12 @@ public partial class Pages_Connexion : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
+    public void accueil_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/AccueilInternaute.aspx?";
+        Response.Redirect(url, true);
+    }
+
     public void inscriptionVendeur_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/InscriptionVendeur.aspx?";

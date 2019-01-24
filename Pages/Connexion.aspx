@@ -50,6 +50,7 @@
                         <div class="col-md-5">
                             <asp:Button ID="btnInscriptionClient" Text="Inscription Client" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="inscriptionClient_click" />
                             <asp:Button ID="btnInscriptionVendeur" Text="Inscription Vendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="inscriptionVendeur_click" />
+                            <asp:Button ID="btnAccueil" Text="Accueil" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="accueil_click" />
                         </div>
               </div>
         </form>
