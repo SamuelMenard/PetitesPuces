@@ -11,9 +11,9 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
     {
 
         List<String> lstImages = new List<string>();
-        lstImages.Add("500.99;Apple Watch 4;../static/images/appleWatch.jpg");
-        lstImages.Add("1500.99;iPhone XS Max;../static/images/iPhone.jpg");
-        lstImages.Add("1300.99;MacBook Air 13\", 256GB SSD - Rose Gold;../static/images/macbookair13.jpg");
+        lstImages.Add("500,99;Apple Watch 4;../static/images/appleWatch.jpg");
+        lstImages.Add("1500,99;iPhone XS Max;../static/images/iPhone.jpg");
+        lstImages.Add("1300,99;MacBook Air 13\", 256GB SSD - Rose Gold;../static/images/macbookair13.jpg");
 
         String nomEntreprise = "Apple";
 
@@ -114,9 +114,9 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         LibrairieControlesDynamique.hrDYN(panelBody);
 
         List<String> lstImages2 = new List<string>();
-        lstImages2.Add("219.99;Airpods;../static/images/airpods.jpg");
-        lstImages2.Add("399.99;Écouteurs Beats;../static/images/beats.jpg");
-        lstImages2.Add("449.99;Homepod - Blanc ;../static/images/homepod.jpg");
+        lstImages2.Add("219,99;Airpods;../static/images/airpods.jpg");
+        lstImages2.Add("399,99;Écouteurs Beats;../static/images/beats.jpg");
+        lstImages2.Add("449,99;Homepod - Blanc ;../static/images/homepod.jpg");
         // Rajouter les produits dans le panier
         int idItem2 = 3;
         for (int i = 3; i < 6; i++)

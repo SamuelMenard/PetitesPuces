@@ -41,6 +41,15 @@
                     <span class="glyphicon glyphicon-briefcase nav-color"></span> Devenir vendeur</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbInfosPersos" CssClass="nav-color" runat="server" OnClick="infosPersos_click" Visible="false">
                     <span class="glyphicon glyphicon-cog nav-color"></span> Gérer mon profil</asp:LinkButton></li>
+
+                <li><asp:LinkButton ID="lbGererCommandes" CssClass="nav-color" runat="server" OnClick="gererCommandes_click" Visible="false">
+                    <span class="glyphicon glyphicon-cog nav-color"></span> Gérer commandes</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbPaniersInactifs" CssClass="nav-color" runat="server" OnClick="paniersInactifs_click" Visible="false">
+                    <span class="glyphicon glyphicon-cog nav-color"></span> Gérer les paniers</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbAjoutProduit" CssClass="nav-color" runat="server" OnClick="ajoutProduit_click" Visible="false">
+                    <span class="glyphicon glyphicon-cog nav-color"></span> Ajout produit</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbSupprimerProduit" CssClass="nav-color" runat="server" OnClick="supprimerProduit_click" Visible="false">
+                    <span class="glyphicon glyphicon-cog nav-color"></span> Supprimer produit</asp:LinkButton></li>
             </ul>
             </div>
         </nav>

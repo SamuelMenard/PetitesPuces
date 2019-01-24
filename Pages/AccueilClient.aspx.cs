@@ -196,7 +196,6 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
     public void nomEntreprise_click(Object sender, EventArgs e)
     {
-        String url = "~/Pages/NouveauxProduits.aspx?";
-        Response.Redirect(url, true);
+        
     }
 }
