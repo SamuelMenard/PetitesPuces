@@ -5,8 +5,13 @@
     font-size:20px;
 }
 
+
+.nomClient {
+    font-size: 15px !important;
+    font-family: Calibri;  
+}
 .prix_item {
-    font-size:25px;
+    font-size:25px ;
     font-family:Calibri;
     font-weight:bold;
 }
@@ -88,5 +93,17 @@ input[type="radio"] {
     color: orange;
     border-width : 15px;
     border-color : orange;
+}
+
+.valign {
+    font-size: 0;
+}
+
+.valign > [class*="col"] {
+    display: inline-block;
+    float: none;
+    font-size: 14px;
+    font-size: 1rem;
+    vertical-align: middle;
 }
 
