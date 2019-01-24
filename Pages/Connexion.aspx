@@ -24,36 +24,32 @@
    <link href="/static/style/signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
-   <div class="container">
+   <form class="container-fluid" runat="server">
       <div class="row">
          <div class="col-md-12">
             <img class="mb-4" src="/static/images/logo.png" alt="" width="150" height="150">
          </div>
       </div>
-       <form  runat="server">
-              <div class="row">
-                     <div class="col-md-5">
-                        <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
-                         <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Nom d'utilisateur"></asp:TextBox>
-                         <asp:TextBox ID="tbMDP" runat="server" CssClass="form-control" placeholder="Mot de passe" TextMode="Password"></asp:TextBox>
-                        <div class="checkbox mb-3">
-                            <label>
-                                <input type="checkbox" value="cbSeSouvenir"> Se souvenir de moi
-                            </label>
-                        </div>
-                         <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="connexion_click" />
-                        <a href="#">Mot de passe oublié?</a>
-                      </div>
-                         <div class="col-md-2">
-                             <span class="border"></span>
-                         </div>
-                        <div class="col-md-5">
-                            <asp:Button ID="btnInscriptionClient" Text="Inscription Client" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="inscriptionClient_click" />
-                            <asp:Button ID="btnInscriptionVendeur" Text="Inscription Vendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="inscriptionVendeur_click" />
-                            <asp:Button ID="btnAccueil" Text="Accueil" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="accueil_click" />
-                        </div>
-              </div>
-        </form>
-   </div>
+      <div class="row">
+         <div class="form-signin col-md-6">
+            <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
+            <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Nom d'utilisateur"></asp:TextBox>
+            <asp:TextBox ID="tbMDP" runat="server" CssClass="form-control" placeholder="Mot de passe" TextMode="Password"></asp:TextBox>
+            <div class="checkbox mb-3">
+               <label>
+                  <input type="checkbox" value="cbSeSouvenir"> Se souvenir de moi
+               </label>
+            </div>
+            <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="connexion_click" />
+            <a style="color: orange;" href="#">Mot de passe oublié?</a>
+         </div>
+         <span style="border-left: 2px solid orange"></span>
+         <div class="form-signin col-md-6">
+            <asp:Button ID="btnInscriptionClient" Text="Inscription Client" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="inscriptionClient_click" />
+            <asp:Button ID="btnInscriptionVendeur" Text="Inscription Vendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="inscriptionVendeur_click" />
+            <asp:Button ID="btnAccueil" Text="Accueil" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="accueil_click" />
+         </div>
+      </div>
+   </form>
 </body>
 </html>
