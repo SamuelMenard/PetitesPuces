@@ -67,7 +67,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
 
     public void deconnexion_click(Object sender, EventArgs e)
     {
-        Session.Remove("TypeUtilisateur");
+        Session.RemoveAll();
         String url = "~/Pages/Connexion.aspx?";
         Response.Redirect(url, true);
     }
