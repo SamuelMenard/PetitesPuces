@@ -43,7 +43,6 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         Double apresTaxes = 0;
         Double pourcentageTVQ = 0.09975;
         Double pourcentageTPS = 0.05;
-
         Double pourcentageTaxes = pourcentageTVQ + pourcentageTPS + 1;
 
         // Créer le panier du vendeur X
