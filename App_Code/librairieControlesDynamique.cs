@@ -17,7 +17,14 @@ public static class LibrairieControlesDynamique
         Conteneur.Controls.Add(panel);
         return panel;
     }
-
+    static public DropDownList ddlDYN(Control Conteneur, String strID, String strStyle)
+    {
+        DropDownList dropDownList = new DropDownList();
+        dropDownList.ID = strID;
+        dropDownList.CssClass = strStyle;            
+        Conteneur.Controls.Add(dropDownList);
+        return dropDownList;
+    }
     static public Panel divDYN(Control Conteneur, String strID, String strStyle)
     {
         Panel panel = divDYN(Conteneur, strID);
@@ -155,10 +162,24 @@ public static class LibrairieControlesDynamique
         hr.Text = "<hr>";
         Conteneur.Controls.Add(hr);
     }
+
+    static public void hrDYN(Control Conteneur, String strStyle, int size)
+    {
+        Literal hr = new Literal();        
+        hr.Text = "<hr size="+size+" class="+strStyle+">";        
+        Conteneur.Controls.Add(hr);
+    }
     static public void aDYN(Control Conteneur, String strValeur, String URL)
     {
         Literal a = new Literal();
         a.Text = "<a href=\"" + URL + "\">" + strValeur + "</a>";
+        Conteneur.Controls.Add(a);
+    }
+
+    static public void aDYN(Control Conteneur, String strValeur, String URL,Boolean booToggle)
+    {
+        Literal a = new Literal();
+        a.Text = "<a data-toggle = \"collapse\" href=\"" + URL + "\">" + strValeur + "</a>";       
         Conteneur.Controls.Add(a);
     }
     static public void brDYN(Control Conteneur, Int16 intNb)
@@ -197,6 +218,14 @@ public static class LibrairieControlesDynamique
         TableRow t = new TableRow();
         Conteneur.Controls.Add(t);
         return t;
+    }
+
+    static public Literal litDYN(Control conteneur, String strID, String strValeur)
+    {
+        Literal ltrDyn = new Literal();
+        ltrDyn.Text = strValeur;
+        conteneur.Controls.Add(ltrDyn);
+        return ltrDyn;
     }
 
 }

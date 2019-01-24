@@ -1,0 +1,79 @@
+﻿
+
+.border-quantite {
+    width:50px;
+    font-size:20px;
+}
+
+.prix_item {
+    font-size:25px;
+    font-family:Calibri;
+    font-weight:bold;
+}
+.cat_item {
+    font-size: 20px;
+    font-family: Calibri;
+    font-weight: bold;
+}
+
+.description_item {
+    font-size: 15px;
+    font-family: Calibri;
+}
+
+.img-size {
+    height:90px;
+    width:90px;
+}
+
+.nom-item {
+    font-size: 20px;
+}
+
+.nom-entreprise {
+    font-size: 25px;
+}
+
+.infos-payage {
+    font-size: 15px;
+    font-weight:bold;
+}
+
+.avertissement-livraison {
+    font-size: 15px;
+    font-weight: bold;
+    color: #ff9430;
+}
+.top5 {
+    margin-top: 5px;
+}
+.top15 {
+    margin-top: 15px;
+}
+.bot20 {
+    margin-bottom: 20px;
+}
+.left15 {
+    margin-left: 15px;
+}
+
+.topBotPad {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.Retour a {
+    color: orange;
+    font-size: 20px;
+    font-family: Calibri;
+    font-weight: bold;
+}
+
+.LiensProduits a {
+    color: orange;   
+}
+
+.container-fluid {
+    max-width: 50%;
+}
+
