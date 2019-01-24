@@ -33,8 +33,8 @@ public partial class Pages_AcceuilGestionnaire : System.Web.UI.Page
 
     public void rendreInactif_click(Object sender, EventArgs e)
     {
-        /*String url = "~/Pages/DemandesVendeur.aspx?";
-        Response.Redirect(url, true);*/
+        String url = "~/Pages/RendreInactif.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void stats_click(Object sender, EventArgs e)

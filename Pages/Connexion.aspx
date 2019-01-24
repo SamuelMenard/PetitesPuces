@@ -24,32 +24,36 @@
    <link href="/static/style/signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
-   <div class="container-fluid">
+   <div class="container">
       <div class="row">
          <div class="col-md-12">
             <img class="mb-4" src="/static/images/logo.png" alt="" width="150" height="150">
          </div>
       </div>
-      <div class="row">
-         <form class="form-signin col-md-6">
-           <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
-           <input type="email" id="tbCourriel" class="form-control" placeholder="Courriel" required autofocus>
-           <input type="password" id="tbMotDePasse" class="form-control" placeholder="Mot de passe" required>
-            <div class="checkbox mb-3">
-               <label>
-                  <input type="checkbox" value="cbSeSouvenir"> Se souvenir de moi
-               </label>
-            </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Ouvrir une session</button>
-            <a href="#">Mot de passe oublié?</a>
-         </form>
-         <span class="border"></span>
-         <div class="form-signin col-md-6">
-            <button class="btn btn-lg btn-primary btn-block">Inscription client</button>
-            <button class="btn btn-lg btn-primary btn-block">Inscription vendeur</button>
-            <button class="btn btn-lg btn-primary btn-block">Modification mot de passe</button>
-         </div>
-      </div>
+       <form  runat="server">
+              <div class="row">
+                     <div class="col-md-5">
+                        <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
+                         <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Nom d'utilisateur"></asp:TextBox>
+                         <asp:TextBox ID="tbMDP" runat="server" CssClass="form-control" placeholder="Mot de passe" TextMode="Password"></asp:TextBox>
+                        <div class="checkbox mb-3">
+                            <label>
+                                <input type="checkbox" value="cbSeSouvenir"> Se souvenir de moi
+                            </label>
+                        </div>
+                         <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="connexion_click" />
+                        <a href="#">Mot de passe oublié?</a>
+                      </div>
+                         <div class="col-md-2">
+                             <span class="border"></span>
+                         </div>
+                        <div class="col-md-5">
+                            <asp:Button ID="btnInscriptionClient" Text="Inscription Client" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="inscriptionClient_click" />
+                            <asp:Button ID="btnInscriptionVendeur" Text="Inscription Vendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="inscriptionVendeur_click" />
+                            <asp:Button ID="btnAccueil" Text="Accueil" runat="server" CssClass="btn btn-lg btn-primary btn-block" OnClick="accueil_click" />
+                        </div>
+              </div>
+        </form>
    </div>
 </body>
 </html>

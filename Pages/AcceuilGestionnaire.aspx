@@ -55,7 +55,6 @@
                         </div>
                         <div class="panel-footer">
                             <h4>Gérer l'inactivité des vendeurs</h4>
-                            <br />
                         </div>
                     </div>
                 </asp:Panel>
@@ -71,7 +70,6 @@
                         </div>
                         <div class="panel-footer">
                             <h4>Rendre inactif un client ou un vendeur</h4>
-                            <br />
                         </div>
                     </div>
                 </asp:Panel>
