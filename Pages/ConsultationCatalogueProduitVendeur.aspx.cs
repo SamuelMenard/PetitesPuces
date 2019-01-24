@@ -37,9 +37,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         DropDownList ddlNbPages = LibrairieControlesDynamique.ddlDYN(panSearchFilter,"ddlNbParPage", "left15");
         ddlNbPages.Items.Insert(0, new ListItem("5", ""));
         ddlNbPages.Items.Insert(1, new ListItem("10", ""));
-        ddlNbPages.Items.Insert(2, new ListItem("15", ""));
-        //LibrairieControlesDynamique.btnDYN(panSearchFilter, "_btnSortNoProduit_", "btn btn-default left15 glyphicon glyphicon-sort","");
-        //LibrairieControlesDynamique.lblDYN(panSearchFilter, "_glyphFilter_", "glyphicon glyphicon-sort", "glyphicon glyphicon-sort");
+        ddlNbPages.Items.Insert(2, new ListItem("15", ""));      
 
 
         // Nom de l'entreprise
@@ -83,7 +81,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             // Nom du produit
             Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom_" + idItem, "col-sm-4 LiensProduits");
             LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom_" + idItem, nomProduit, link_ProduitDetail);
-            // LibrairieControlesDynamique.lblDYN(colNom, nomEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+            
 
             // Quantité restant
             Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-2");
@@ -96,13 +94,6 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             // Prix item
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2");
             LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "$" + prix.ToString(), "prix_item");
-
-            //Panel rowItem2 = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row");
-
-            // Bouton retirer
-           // Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowBtnRetirer_" + idItem, "row");
-           // Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, nomEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2 top5");
-           // LibrairieControlesDynamique.btnDYN(colBtnRetirer, nomEntreprise + "_btnRetirer_" + idItem, "btn btn-default center-block", "RETIRER");
             LibrairieControlesDynamique.hrDYN(panelBody);
         }
 
@@ -143,7 +134,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             // Nom du produit
             Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom_" + idItem2, "col-sm-4 LiensProduits");
             LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom_" + idItem2, nomProduit, null);
-            //LibrairieControlesDynamique.lblDYN(colNom, nomEntreprise + "_nom_" + idItem2, nomProduit, "nom-item");
+           
 
             // Quantité restant
             Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem2, "col-sm-2");
@@ -157,7 +148,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem2, "col-sm-2");
             LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem2, "$" + prix.ToString(), "prix_item");
 
-            //Panel rowItem2 = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row");
+            
             LibrairieControlesDynamique.hrDYN(panelBody);
 
         }      
@@ -165,9 +156,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
     }
     protected void link_ProduitDetail(object sender, EventArgs e)
     {
-        LinkButton linkProduit = (LinkButton)sender;
-        //Response.Write(linkProduit.ID);
-        Response.Redirect("~/Pages/AffichageProduitDetaille.aspx?productId=" + 10000001);
-        //linkProduit.PostBackUrl = "~/Pages/AffichageProduitDetaille.aspx?productId=" + 1;
+        LinkButton linkProduit = (LinkButton)sender;       
+        Response.Redirect("~/Pages/AffichageProduitDetaille.aspx?productId=" + 10000001);      
     }
 }
