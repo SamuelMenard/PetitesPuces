@@ -7,7 +7,6 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_Connexion : System.Web.UI.Page
 {
-    private BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -35,30 +34,47 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
     public void connexion_click(Object sender, EventArgs e)
     {
-        var clients = dataContext.PPClients;
-
+        String typeUtilisateur = ddlTypeUtilisateur.SelectedValue.ToString();
         String courriel = tbCourriel.Text;
         String MDP = tbMDP.Text;
 
-        if (clients.Where(client => client.AdresseEmail == courriel).Any())
+        bool verdictConnexion = false;
+        String url = "";
+
+        if (typeUtilisateur == "C" && LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur))
         {
+            verdictConnexion = true;
             Session["TypeUtilisateur"] = "C";
-            String url = "~/Pages/AccueilClient.aspx?";
-            Response.Redirect(url, true);
+            url = "~/Pages/AccueilClient.aspx?";
 
         }
-        else if (courriel == "vendeur")
+        else if (typeUtilisateur == "V" && LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur))
         {
+            verdictConnexion = true;
+            List<String> lstInfos = LibrairieLINQ.infosBaseVendeur(courriel);
             Session["TypeUtilisateur"] = "V";
-            String url = "~/Pages/ConnexionVendeur.aspx?";
-            Response.Redirect(url, true);
+            Session["NoVendeur"] = lstInfos[0];
+            Session["NomAffaire"] = lstInfos[1];
+            Session["Nom"] = lstInfos[2];
+            Session["Prenom"] = lstInfos[3];
+            url = "~/Pages/ConnexionVendeur.aspx?";
 
         }
-        else if (courriel == "gestionnaire")
+        else if (typeUtilisateur == "G" && LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur))
         {
+            verdictConnexion = true;
             Session["TypeUtilisateur"] = "G";
-            String url = "~/Pages/AcceuilGestionnaire.aspx?";
+            url = "~/Pages/AcceuilGestionnaire.aspx?";
+        }
+
+        if (verdictConnexion)
+        {
             Response.Redirect(url, true);
+        }
+        else
+        {
+            tbCourriel.CssClass = "form-control erreur";
+            tbMDP.CssClass = "form-control erreur";
         }
         
     }
