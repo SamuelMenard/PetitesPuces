@@ -48,28 +48,28 @@
    </style>
 </head>
 <body class="text-center">
-   <div class="container-fluid">
+   <form class="container-fluid" runat="server">
       <div class="row">
          <div class="col-md-12">
             <img class="mb-4" src="/static/images/logo.png" alt="" width="150" height="150">
          </div>
       </div>
       <div class="row">
-         <form class="form-group col-md-6">
+         <div class="form-group col-md-6">
            <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
            <input type="email" id="tbCourriel" class="form-control" style="margin-bottom: -1px;" placeholder="Courriel" required autofocus>
            <input type="email" id="tbConfimationCourriel" class="form-control" style="margin-bottom: 10px;" placeholder="Confimation courriel" required>
            <input type="password" id="tbMotDePasse" class="form-control" style="margin-bottom: -1px;" placeholder="Mot de passe" required>
            <input type="password" id="tbConfimationMotDePasse" class="form-control" style="margin-bottom: 10px;" placeholder="Confimation mot de passe" required>
-           <button class="btn btn-lg btn-primary btn-block" type="submit">S'inscrire</button>  
-         </form>
-         <span class="border"></span>
+           <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange" type="submit">S'inscrire</button>  
+         </div>
+         <span style="border-left: 2px solid orange"></span>
          <div class="form-group col-md-6">
-            <button class="btn btn-lg btn-primary btn-block">Inscription vendeur</button>
-            <button class="btn btn-lg btn-primary btn-block">Mot de passe oublié?</button>
-            <button class="btn btn-lg btn-primary btn-block">Modification mot de passe</button>
+            <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange">Inscription vendeur</button>
+            <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange">Mot de passe oublié?</button>
+            <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange">Modification mot de passe</button>
          </div>
       </div>
-   </div>
+   </form>
 </body>
 </html>
