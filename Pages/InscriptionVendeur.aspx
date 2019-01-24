@@ -48,14 +48,14 @@
    </style>
 </head>
 <body class="text-center">
-   <div class="container-fluid">
+   <form class="container-fluid" runat="server">
       <div class="row">
          <div class="col-md-12">
             <img class="mb-4" src="/static/images/logo.png" alt="" width="150" height="150">
          </div>
       </div>
       <div class="row">
-         <form class="form-group col-md-6" runat="server">
+         <div class="form-group col-md-6">
             <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
             <div class="mb-3">
                <input type="text" class="form-control" id="tbNomEntreprise" placeholder="Nom de l'entreprise" required>
@@ -119,15 +119,15 @@
                   Exemption taxes <input type="checkbox" value="cbTaxes">
                </label>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">S'inscrire</button>  
-         </form>
-         <span class="border"></span>
-         <div class="form-group col-md-4">
-            <button class="btn btn-lg btn-primary btn-block">Inscription client</button>
-            <button class="btn btn-lg btn-primary btn-block">Mot de passe oublié?</button>
-            <button class="btn btn-lg btn-primary btn-block">Modification mot de passe</button>
+            <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange" type="submit">S'inscrire</button>  
+         </div>
+         <span style="border-left: 2px solid orange"></span>
+         <div class="form-group col-md-6">
+            <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange">Inscription client</button>
+            <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange">Mot de passe oublié?</button>
+            <button class="btn btn-lg btn-primary btn-block" style="background-color: orange;border-color: orange">Modification mot de passe</button>
          </div>
       </div>
-   </div>
+   </form>
 </body>
 </html>
