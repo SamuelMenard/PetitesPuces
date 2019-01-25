@@ -46,6 +46,34 @@
         padding: 10px;
         font-size: 16px;
       }
+
+      .message {
+         width: 100%;
+         padding: 15px;
+         margin: auto;
+      }
+     
+      @media (max-width: 700px) {
+         .message {
+            max-width: 350px;
+         }
+      }
+
+      @media (min-width: 701px) {
+         .message {
+            max-width: 700px;
+         }
+      }
+
+      .barre-verticale-orange {
+        border-left: 1px solid orange;
+      }
+
+      @media (max-width: 700px) {
+         .barre-verticale-orange {
+            display: none;
+         }
+      }
    </style>
 </head>
 <body class="text-center">
@@ -56,23 +84,31 @@
          </div>
       </div>
       <div class="row">
-         <div class="form-group col-md-6">
+         <div class="message mx-auto">
+            <asp:Panel ID="divMessage" runat="server" Visible="False">
+               <asp:Label ID="lblMessage" runat="server" />
+               <br />
+            </asp:Panel>
+         </div>
+      </div>
+      <div class="row">
+         <div class="form-group col-md-6">           
            <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
-           <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" />
+           <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" EnableViewState="False" />
            <asp:Label ID="errCourriel" runat="server" CssClass="text-danger" style="display: none;" />
-           <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" />
+           <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" EnableViewState="False" />
            <asp:Label ID="errConfirmationCourriel" runat="server" CssClass="text-danger" style="display: none;" />
            <asp:TextBox ID="tbMotPasse" runat="server" TextMode="Password" CssClass="form-control" style="margin-top: 10px;" placeholder="Mot de passe" />
-            <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
+           <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
            <asp:TextBox ID="tbConfirmationMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Confimation mot de passe" />
-            <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
+           <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
            <asp:Button ID="btnInscription" runat="server"  CssClass="btn btn-lg btn-primary btn-block" style="margin-top: 10px;" BackColor="Orange" BorderColor="Orange" Text="S'inscrire" OnClick="btnInscription_Click" />
          </div>
-         <span style="border-left: 2px solid orange"></span>
+         <span class="barre-verticale-orange"></span>
          <div class="form-group col-md-6">
-            <asp:Button ID="btnInscriptionVendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Inscription vendeur" OnClick="btnInscriptionVendeur_Click" />
-            <asp:Button ID="btnMotDePasseOublie" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Mot de passe oublié?" OnClick="btnMotDePasseOublie_Click" />
-            <asp:Button ID="btnAcceuil" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Acceuil" OnClick="btnAcceuil_Click" />
+            <asp:Button ID="btnInscriptionVendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Inscription vendeur" PostBackUrl="~/Pages/InscriptionVendeur.aspx" />
+            <asp:Button ID="btnMotDePasseOublie" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Mot de passe oublié?" />
+            <asp:Button ID="btnAcceuil" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Acceuil"  PostBackUrl="~/Pages/AccueilInternaute.aspx" />
          </div>
       </div>
       <script>
