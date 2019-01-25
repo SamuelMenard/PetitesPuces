@@ -70,7 +70,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 sousTotal += prixUnitaire;
 
                 String nomProduit = article.PPProduits.Nom;
-                String urlImage = article.PPProduits.Photo;
+                String urlImage = "../static/images/" + article.PPProduits.Photo;
 
                 Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
 
