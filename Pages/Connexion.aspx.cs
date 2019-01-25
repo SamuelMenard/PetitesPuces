@@ -44,7 +44,12 @@ public partial class Pages_Connexion : System.Web.UI.Page
         if (typeUtilisateur == "C" && LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur))
         {
             verdictConnexion = true;
+            List<String> lstInfos = LibrairieLINQ.infosBaseClient(courriel);
             Session["TypeUtilisateur"] = "C";
+            Session["NoClient"] = lstInfos[0];
+            Session["Nom"] = lstInfos[1];
+            Session["Prenom"] = lstInfos[2];
+            Session["Courriel"] = lstInfos[3];
             url = "~/Pages/AccueilClient.aspx?";
 
         }
@@ -57,6 +62,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
             Session["NomAffaire"] = lstInfos[1];
             Session["Nom"] = lstInfos[2];
             Session["Prenom"] = lstInfos[3];
+            Session["Courriel"] = lstInfos[4];
             url = "~/Pages/ConnexionVendeur.aspx?";
 
         }
@@ -75,6 +81,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
         {
             tbCourriel.CssClass = "form-control erreur";
             tbMDP.CssClass = "form-control erreur";
+            alert_erreur.Visible = true;
         }
         
     }

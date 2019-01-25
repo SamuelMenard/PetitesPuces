@@ -10,6 +10,19 @@
     font-weight:bold;
 }
 
+.prix_unitaire {
+    font-size: 15px;
+    font-family: Calibri;
+    color:grey;
+}
+
+.rabais {
+    font-size: 15px;
+    font-family: Calibri;
+    font-weight: bold;
+    color:orange;
+}
+
 .img-size {
     height:90px;
     width:90px;

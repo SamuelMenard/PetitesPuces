@@ -10,6 +10,9 @@ public static class LibrairieLINQ
 {
     private static BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
 
+    public static object JSON { get; private set; }
+
+    // Pour la connexion
     public static bool connexionOK(String courriel, String mdp, String typeConnexion)
     {
         /*
@@ -35,6 +38,7 @@ public static class LibrairieLINQ
         return valide;
     }
 
+    // Avoir les infos de bases afin de les storer en variable de session
     public static List<String> infosBaseVendeur(String courriel)
     {
         List<String> lstInfos = new List<string>();
@@ -44,9 +48,57 @@ public static class LibrairieLINQ
                     select vendeur;
         foreach(var info in infos)
         {
-            string[] tab = { info.NoVendeur.ToString(), info.NomAffaires, info.Nom, info.Prenom };
+            string[] tab = { info.NoVendeur.ToString(), info.NomAffaires, info.Nom, info.Prenom, info.AdresseEmail };
             lstInfos.AddRange(tab);
         }
         return lstInfos;
+    }
+
+    // Avoir les infos de bases afin de les storer en variable de session
+    public static List<String> infosBaseClient(String courriel)
+    {
+        List<String> lstInfos = new List<string>();
+        var clients = dataContext.PPClients;
+        var infos = from client in clients
+                    where client.AdresseEmail == courriel
+                    select client;
+        foreach (var info in infos)
+        {
+            string[] tab = { info.NoClient.ToString(), info.Nom, info.Prenom, info.AdresseEmail };
+            lstInfos.AddRange(tab);
+        }
+        return lstInfos;
+    }
+
+    // aller chercher les paniers
+    public static Dictionary<Nullable<long>, List<PPArticlesEnPanier>> getPaniersClient(long noClient)
+    {
+        var articlesPanier = dataContext.PPArticlesEnPanier;
+
+        // retourner la liste des paniers
+        Dictionary<Nullable<long>, List<PPArticlesEnPanier>> lstPaniers = new Dictionary<Nullable<long>, List<PPArticlesEnPanier>>();
+
+        var articlesPanierClient = from articlePanier in articlesPanier
+                                   where articlePanier.NoClient == noClient
+                                   select articlePanier;
+
+        foreach(var articlePanier in articlesPanierClient)
+        {
+            List<PPArticlesEnPanier> lstTempo;
+            if (lstPaniers.TryGetValue(articlePanier.NoVendeur, out lstTempo))
+            {
+                lstTempo.Add(articlePanier);
+            }
+            else
+            {
+                List<PPArticlesEnPanier> lst = new List<PPArticlesEnPanier>();
+                    lst.Add(articlePanier);
+                lstPaniers.Add(articlePanier.NoVendeur, lst);
+            }
+        }
+
+
+        return lstPaniers;
+         
     }
 }

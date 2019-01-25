@@ -10,6 +10,7 @@
 
 
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="~/static/style/navbar.css">
@@ -19,7 +20,7 @@
     <asp:ContentPlaceHolder id="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
-<body id="body" runat="server">
+<body id="body" runat="server" data-spy="scroll" data-target="#myScrollspy" data-offset="15">
 <!-- barre menu -->
     
     <form id="form1" runat="server">
@@ -55,9 +56,9 @@
         </nav>
 <!-- barre menu -->
 
-    <div id="main-content" class="container">
+    <!--<div id="main-content" class="container">-->
         <asp:ContentPlaceHolder id="contentBody" runat="server" />
-    </div>
+   <!-- </div>-->
     </form>
 
  <!-- Footer -->

@@ -211,6 +211,16 @@ public static class LibrairieControlesDynamique
         }
         Conteneur.Controls.Add(br);
     }
+
+    static public void sectionDYN(Control Conteneur, String id)
+    {
+
+        Literal section = new Literal();
+        section.Text = "";
+        section.Text += "<section id=\"" + id + "\"></section>" ;
+        Conteneur.Controls.Add(section);
+    }
+
     static public Table tableDYN(Control Conteneur, String strID, String strStyle)
     {
         Table t = new Table()
@@ -221,6 +231,7 @@ public static class LibrairieControlesDynamique
         Conteneur.Controls.Add(t);
         return t;
     }
+
     static public TableCell tdDYN(TableRow Conteneur, String strID, String strStyle)
     {
         TableCell t = new TableCell()

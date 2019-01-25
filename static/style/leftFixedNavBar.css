@@ -1,0 +1,19 @@
+﻿
+
+body {
+    position: relative;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.affix {
+    top: 20px;
+    z-index: 9999 !important;
+}
+
+div.col-sm-9 div {
+    height: 250px;
+    font-size: 28px;
+}

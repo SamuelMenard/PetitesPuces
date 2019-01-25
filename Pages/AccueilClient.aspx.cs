@@ -10,33 +10,38 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
+
+        // Afficher message accueil avec nom
+
+        afficherMessageAccueil();
         afficherPaniers();
-        LibrairieControlesDynamique.hrDYN(phDynamique);
         afficherCategories();
+    }
+
+    public void afficherMessageAccueil()
+    {
+        String nomPrenom = "";
+        if (Session["Prenom"] != null && Session["Nom"] != null)
+        {
+            nomPrenom += Session["Prenom"].ToString() + " " + Session["Nom"].ToString();
+        }
+        lblBienvenue.Text = "Bienvenue " + nomPrenom + "!";
     }
 
     public void afficherPaniers()
     {
-        List<int> lstEntreprises = new List<int>();
-        lstEntreprises.Add(1);
-        lstEntreprises.Add(2);
+        Dictionary<Nullable<long>, List<PPArticlesEnPanier>> lstPaniers = LibrairieLINQ.getPaniersClient(long.Parse(Session["NoClient"].ToString()));
 
-        Dictionary<int, String> mapEntreprises = new Dictionary<int, string>();
-        mapEntreprises.Add(1, "Apple");
-        mapEntreprises.Add(2, "Microsoft");
-
-        // temporaire
-        int idItem = 0;
-
-        for (int y = 0; y < lstEntreprises.Count; y++)
+        foreach (KeyValuePair<Nullable<long>, List<PPArticlesEnPanier>> entry in lstPaniers)
         {
-            int idEntreprise = lstEntreprises[y];
-            String nomEntreprise = mapEntreprises[idEntreprise];
-            String nomVendeur = "Raphaël Benoït";
-            Double sousTotal = 0;
+            // do something with entry.Value or entry.Key
+            long? idEntreprise = entry.Key;
+            String nomEntreprise = entry.Value[0].PPVendeurs.NomAffaires;
+            String nomVendeur = entry.Value[0].PPVendeurs.Prenom + " " + entry.Value[0].PPVendeurs.Nom;
+            decimal? sousTotal = 0;
 
             // Créer le panier du vendeur X
-            Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, idEntreprise + "_base", "panel panel-default");
+            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, idEntreprise + "_base", "panel panel-default");
 
             // Nom de l'entreprise
             Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
@@ -48,17 +53,24 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
             // Rajouter les produits dans le panier
 
-            for (int i = 0; i < 3; i++)
+            foreach(PPArticlesEnPanier article in entry.Value)
             {
-                idItem++;
-                int quantiteSelectionne = 1;
-                Double prix = 1300.99;
+                long? idItem = article.NoProduit;
+                short? quantiteSelectionne = article.NbItems;
+                decimal? prixUnitaire = article.PPProduits.PrixVente;
+
+                decimal? prixAvecQuantites = article.PPProduits.PrixVente * article.NbItems;
+                decimal? montantRabais = article.PPProduits.PrixVente - article.PPProduits.PrixDemande;
+                System.Diagnostics.Debug.WriteLine(article.PPProduits.PrixVente);
+                System.Diagnostics.Debug.WriteLine(article.PPProduits.PrixDemande);
+
+                decimal? poids = article.PPProduits.Poids;
 
                 // sum au sous total
-                sousTotal += prix;
+                sousTotal += prixUnitaire;
 
-                String nomProduit = "MacBook Air 13\", 256GB SSD - Rose Gold";
-                String urlImage = "../static/images/macbookair13.jpg";
+                String nomProduit = article.PPProduits.Nom;
+                String urlImage = "../static/images/" + article.PPProduits.Photo;
 
                 Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
 
@@ -69,6 +81,8 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
                 LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                LibrairieControlesDynamique.brDYN(colNom);
+                LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
 
                 // Quantité sélectionné
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
@@ -77,7 +91,13 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.lblDYN(colPrix, idEntreprise + "_prix_" + idItem, "$" + prix.ToString(), "prix_item");
+                
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + prixAvecQuantites.ToString(), "prix_item");
+                LibrairieControlesDynamique.brDYN(colPrix);
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + prixUnitaire.ToString(), "prix_unitaire");
+                LibrairieControlesDynamique.brDYN(colPrix);
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0)?"Rabais de $" + montantRabais.ToString():"", "rabais");
+                
 
                 // Bouton retirer
                 Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
@@ -88,19 +108,20 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
             // Afficher le sous total
             Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowSousTotal", "row");
-            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-2");
+            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-10 text-right");
             LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
 
-            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2");
+            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
             LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + sousTotal.ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Bouton commander
             Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnCommander", "row");
-            Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, idEntreprise + "_colLabelBtnCommander", "col-sm-4");
+            Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, idEntreprise + "_colLabelBtnCommander", "col-sm-12 text-right");
             LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
         }
+        
     }
 
     public void afficherCategories()
@@ -117,7 +138,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
             String nomCategorie = lstCategories[i];
 
             // créer le panel pour la catégorie
-            Panel panelDefault = LibrairieControlesDynamique.divDYN(phDynamique, "", "panel panel-default");
+            Panel panelDefault = LibrairieControlesDynamique.divDYN(categoriesDynamique, "", "panel panel-default");
             Panel panelHeading = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-heading");
             Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
 
