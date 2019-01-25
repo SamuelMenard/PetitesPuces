@@ -12,7 +12,6 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     Panel panelBody2;
     protected void Page_Load(object sender, EventArgs e)
     {
-
         List<String> lstImages = new List<string>();
         lstImages.Add("500,99;Apple Watch 4;../static/images/appleWatch.jpg");
         lstImages.Add("1500,99;iPhone XS Max;../static/images/iPhone.jpg");

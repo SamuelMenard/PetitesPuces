@@ -42,3 +42,9 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.erreur {
+    border-style: solid !important;
+    border-width: 2px !important;
+    border-color: rgba(238, 25, 25, 0.50) !important;
+}

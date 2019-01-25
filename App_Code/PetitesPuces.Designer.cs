@@ -1,4 +1,4 @@
-﻿// La génération de code T4 est activée pour le modèle 'C:\Users\olivi\OneDrive - Cegep Gerald-Godin\Projet commerce électronique\PetitesPuces\App_Code\PetitesPuces.edmx'. 
+﻿// La génération de code T4 est activée pour le modèle 'D:\Dossier_Ecole\Session_6\ProjetPetitesPuces\PetitesPuces\App_Code\PetitesPuces.edmx'. 
 // Pour activer la génération de code héritée, définissez la valeur de la propriété
 // du concepteur 'Stratégie de génération de code' sur 'ObjectContext hérité'. Cette propriété est disponible dans la fenêtre Propriétés lorsque le modèle
 //  est ouvert dans le concepteur.
