@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Mail;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 public partial class Pages_InscriptionClient : System.Web.UI.Page
 {
@@ -13,9 +15,6 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
     protected void btnInscription_Click(object sender, EventArgs e)
     {
-        tbCourriel.Text = "";
-        tbConfirmationCourriel.Text = "";
-
         if (dbContext.PPClients.Where(c => c.AdresseEmail == tbCourriel.Text).Any())
         { 
             lblMessage.Text = "Il y a déjà un profil associé à ce courriel";
@@ -77,6 +76,9 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
             }
         }
 
+        foreach (Control controle in Page.Form.Controls)
+            if (controle is TextBox)
+                ((TextBox)controle).Text = "";
         divMessage.Visible = true;
     }
 }
