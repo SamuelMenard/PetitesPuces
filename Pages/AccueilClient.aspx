@@ -12,9 +12,7 @@
     <div class="container-fluid">
         <div class="row">
             <nav class="col-sm-2" id="myScrollspy">
-                <ul class="nav nav-pills nav-stacked" data-spy="affix" data-offset-top="50">
-                <li><a href="#panier">Mes Paniers</a></li>
-                <li><a href="#categories">Tous nos catégories</a></li>
+                <ul class="nav nav-pills nav-stacked" id="ulSideBar" data-spy="affix" data-offset-top="50" runat="server">
                 </ul>
             </nav>
 

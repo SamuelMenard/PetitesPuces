@@ -32,20 +32,29 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
     {
         Dictionary<Nullable<long>, List<PPArticlesEnPanier>> lstPaniers = LibrairieLINQ.getPaniersClient(long.Parse(Session["NoClient"].ToString()));
 
+        // ajouter le liens mes paniers
+        LibrairieControlesDynamique.liDYN(ulSideBar, "#panier", "Mes paniers", "section-header");
+
         foreach (KeyValuePair<Nullable<long>, List<PPArticlesEnPanier>> entry in lstPaniers)
         {
+            bool ruptureStock = false;
+            bool quantiteModif = false;
+
             // do something with entry.Value or entry.Key
             long? idEntreprise = entry.Key;
             String nomEntreprise = entry.Value[0].PPVendeurs.NomAffaires;
             String nomVendeur = entry.Value[0].PPVendeurs.Prenom + " " + entry.Value[0].PPVendeurs.Nom;
             decimal? sousTotal = 0;
 
+            // ajouter lien navbar
+            LibrairieControlesDynamique.liDYN(ulSideBar, "#" + "contentBody_panier" + idEntreprise, entry.Value[0].PPVendeurs.NomAffaires, "");
+
             // Créer le panier du vendeur X
-            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, idEntreprise + "_base", "panel panel-default");
+            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
 
             // Nom de l'entreprise
             Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
-            LibrairieControlesDynamique.lblDYN(panelHeader, idEntreprise + "_nom", nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise");
+            LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
 
             // Liste des items + le total
             Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
@@ -61,8 +70,6 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
                 decimal? prixAvecQuantites = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixVente - article.PPProduits.PrixDemande;
-                System.Diagnostics.Debug.WriteLine(article.PPProduits.PrixVente);
-                System.Diagnostics.Debug.WriteLine(article.PPProduits.PrixDemande);
 
                 decimal? poids = article.PPProduits.Poids;
 
@@ -83,11 +90,34 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
                 LibrairieControlesDynamique.brDYN(colNom);
                 LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
-
+                
                 // Quantité sélectionné
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.tbDYN(colQuantite, idEntreprise + "quantite_" + idItem, quantiteSelectionne.ToString(), "form-control border-quantite");
-                LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + idItem, "Mettre à jour", update_click);
+
+                TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem, 
+                    quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1)?"1": article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
+
+                // vérifier les quantites
+                if (article.PPProduits.NombreItems < 1)
+                {
+                    ruptureStock = true;
+                    tbQuantite.Enabled = false;
+                    LibrairieControlesDynamique.lblDYN(colQuantite, "", "Rupture de stock", "rupture-stock");
+                }
+                else
+                {
+                    if (article.PPProduits.NombreItems < article.NbItems)
+                    {
+                        LibrairieLINQ.modifierQuantitePanier(article.NoPanier, article.PPProduits.NombreItems.ToString());
+                        tbQuantite.Text = article.PPProduits.NombreItems.ToString();
+                        quantiteModif = true;
+                    }
+                    LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + article.NoPanier + ";" + idItem, "Mettre à jour", update_click);
+
+                }
+
+                
+                
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
@@ -102,7 +132,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 // Bouton retirer
                 Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
                 Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, idEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + idItem, "btn btn-default", "RETIRER", retirer_click);
+                LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + article.NoPanier, "btn btn-default", "RETIRER", retirer_click);
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
 
@@ -116,29 +146,58 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
+            // afficher message quantite modif (au besoins)
+            if (quantiteModif)
+            {
+                Panel rowModif = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colModif = LibrairieControlesDynamique.divDYN(rowModif, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colModif, "", "Certaines quantités ont été modifiées dû à la quantité en stock", "modif-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            // afficher message rupture (au besoins)
+            if (ruptureStock)
+            {
+                Panel rowRupture = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colRupture = LibrairieControlesDynamique.divDYN(rowRupture, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colRupture, "", "Veuillez retirer les articles en rupture de stock avant de pouvoir commander", "rupture-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
             // Bouton commander
             Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnCommander", "row");
             Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, idEntreprise + "_colLabelBtnCommander", "col-sm-12 text-right");
-            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
+            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnDetails", "btn btn-info", "Plus de détails", details_click);
+            LibrairieControlesDynamique.spaceDYN(colLabelBtnCommander);
+
+            if (!ruptureStock)
+            {
+                LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
+            }
         }
         
     }
 
     public void afficherCategories()
     {
-        List<String> lstCategories = new List<string>();
-        lstCategories.Add("Électronique");
-        lstCategories.Add("Maison");
-        lstCategories.Add("Extérieur");
+        Dictionary<Nullable<long>, List<PPVendeurs>>  lstCategories = LibrairieLINQ.getEntreprisesTriesParCategories();
 
-        int noVendeur = 0;
+        // ajouter le liens mes paniers
+        LibrairieControlesDynamique.liDYN(ulSideBar, "#categories", "Nos catégories", "section-header");
+        
 
-        for (int i = 0; i < lstCategories.Count; i++)
+        foreach(KeyValuePair<Nullable<long>, List<PPVendeurs>> entry in lstCategories)
         {
-            String nomCategorie = lstCategories[i];
+            String nomCategorie = LibrairieLINQ.getCategorie(entry.Key).Description;
+            long? noCategorie = entry.Key;
+
+            // ajouter lien navbar
+            LibrairieControlesDynamique.liDYN(ulSideBar, "#" + "contentBody_categorie" + noCategorie, nomCategorie, "");
 
             // créer le panel pour la catégorie
-            Panel panelDefault = LibrairieControlesDynamique.divDYN(categoriesDynamique, "", "panel panel-default");
+            Panel panelDefault = LibrairieControlesDynamique.divDYN(categoriesDynamique, "categorie" + noCategorie, "panel panel-default");
             Panel panelHeading = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-heading");
             Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
 
@@ -148,29 +207,19 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
             // créer la row
             Panel row = null;
 
-            List<String> lstEntreprises = new List<string>();
-            lstEntreprises.Add("Apple");
-            lstEntreprises.Add("Déco Découverte");
-            lstEntreprises.Add("Rona");
-            lstEntreprises.Add("Bureau En Gros");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-
-            for (int y = 0; y < lstEntreprises.Count; y++)
+            int nbEntres = 0;
+            foreach(PPVendeurs vendeur in entry.Value)
             {
-                noVendeur++;
-                int nbItems = 7;
+                long? noVendeur = vendeur.NoVendeur;
+                long? nbItems = LibrairieLINQ.getNbProduitsEntrepriseDansCategorie(entry.Key, vendeur.NoVendeur);
 
-                if (y % 6 == 0)
+                if (nbEntres % 6 == 0)
                 {
                     row = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
                     row.Style.Add("margin-bottom", "20 px");
                 }
 
-                String nomEntreprise = lstEntreprises[y];
+                String nomEntreprise = vendeur.NomAffaires;
                 String urlImg = "../static/images/videotron.png";
 
                 // rajouter les colonnes (entreprises)
@@ -181,11 +230,11 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 LibrairieControlesDynamique.brDYN(col);
 
                 // nom entreprise + nb produits
-                LinkButton lbNomEntreprise = LibrairieControlesDynamique.lbDYN(col, "lbNomEntreprise_" + noVendeur, nomEntreprise, nomEntreprise_click);
+                LinkButton lbNomEntreprise = LibrairieControlesDynamique.lbDYN(col, nomCategorie + ";" + noVendeur, nomEntreprise, nomEntreprise_click);
                 LibrairieControlesDynamique.spaceDYN(col);
                 LibrairieControlesDynamique.spaceDYN(col);
-                LibrairieControlesDynamique.lblDYN(col, "lblQuantiteItems_" + noVendeur, nbItems.ToString(), "badge");
-
+                LibrairieControlesDynamique.lblDYN(col, "", nbItems.ToString(), "badge");
+                nbEntres++;
             }
         }
 
@@ -194,15 +243,26 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
     public void retirer_click(Object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        String itemID = btn.ID.Replace("btnRetirer_", "");
-        System.Diagnostics.Debug.WriteLine(itemID);
+        String panierID = btn.ID.Replace("btnRetirer_", "");
+
+        LibrairieLINQ.retirerArticlePanier(long.Parse(panierID));
+
+        String url = "~/Pages/AccueilClient.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void update_click(Object sender, EventArgs e)
     {
         LinkButton btn = (LinkButton)sender;
-        String itemID = btn.ID.Replace("update_", "");
-        System.Diagnostics.Debug.WriteLine(itemID);
+        String[] tabIDs = btn.ID.Replace("update_", "").Split(';');
+        String panierID = tabIDs[0];
+        String itemID = tabIDs[1];
+
+        TextBox tb = (TextBox)categoriesDynamique.FindControl("quantite_" + itemID);
+
+        LibrairieLINQ.modifierQuantitePanier(long.Parse(panierID), tb.Text);
+        String url = "~/Pages/AccueilClient.aspx?#contentBody_quantite_" + itemID;
+        Response.Redirect(url, true);
     }
 
     public void commander_click(Object sender, EventArgs e)
@@ -215,8 +275,28 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
+    public void details_click(Object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+        String entrepriseID = btn.ID.Replace("_btnDetails", "");
+        System.Diagnostics.Debug.WriteLine(entrepriseID);
+
+        String url = "~/Pages/GestionPanierCommande.aspx?";
+        Response.Redirect(url, true);
+    }
+
     public void nomEntreprise_click(Object sender, EventArgs e)
     {
-        
+        LinkButton btn = (LinkButton)sender;
+        String[] tabID = btn.ID.Replace("lbNomEntreprise_", "").Split(';');
+        String entrepriseID = tabID[1];
+        System.Diagnostics.Debug.WriteLine(entrepriseID);
+    }
+
+    public void nomEntreprisePanier_click(Object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        String idVendeur = btn.ID.Replace("vendeur_", "");
+        System.Diagnostics.Debug.WriteLine(idVendeur);
     }
 }

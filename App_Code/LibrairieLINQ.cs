@@ -99,6 +99,113 @@ public static class LibrairieLINQ
 
 
         return lstPaniers;
-         
+    }
+
+    // aller chercher les compagnies de chaques catégories
+    public static Dictionary<Nullable<long>, List<PPVendeurs>> getEntreprisesTriesParCategories()
+    {
+        var tableProduits = dataContext.PPProduits;
+        var tableVendeurs = dataContext.PPVendeurs;
+        Dictionary<Nullable<long>, List<PPVendeurs>> lstCategories = new Dictionary<long?, List<PPVendeurs>>();
+
+        var produits = from produit in tableProduits
+                       group produit by new { produit.NoCategorie, produit.NoVendeur }
+                       into listeProduits select listeProduits;
+
+
+        foreach(var keys in produits)
+        {
+            List<PPVendeurs> lstTempo;
+            if (lstCategories.TryGetValue(keys.Key.NoCategorie, out lstTempo))
+            {
+                PPVendeurs vendeur = (from v in tableVendeurs
+                              where v.NoVendeur == keys.Key.NoVendeur
+                              select v).First();
+                lstTempo.Add(vendeur);
+            }
+            else
+            {
+                List<PPVendeurs> lst = new List<PPVendeurs>();
+                PPVendeurs vendeur = (from v in tableVendeurs
+                                      where v.NoVendeur == keys.Key.NoVendeur
+                                      select v).First();
+                lst.Add(vendeur);
+                lstCategories.Add(keys.Key.NoCategorie, lst);
+            }
+        }
+
+
+        /*foreach(var produit in produits)
+        {
+            List<PPProduits> lstTempo;
+            if (lstCategories.TryGetValue(produit.NoVendeur, out lstTempo))
+            {
+                lstTempo.Add(produit);
+            }
+            else
+            {
+                List<PPProduits> lst = new List<PPProduits>();
+                lst.Add(produit);
+                lstCategories.Add(produit.NoVendeur, lst);
+            }
+        }*/
+
+        return lstCategories;
+    }
+
+    // get le nb de produits d'un certain vendeur pour une certaine catégorie
+    public static int getNbProduitsEntrepriseDansCategorie(long? noCategorie, long? noVendeur)
+    {
+        var tableProduits = dataContext.PPProduits;
+        return (from produit in tableProduits
+                where produit.NoCategorie == noCategorie && produit.NoVendeur == noVendeur
+                select produit).Count();
+               
+    }
+
+    // get une catégorie spécifique
+    public static PPCategories getCategorie(long? noCategorie)
+    {
+        var tableCategorie = dataContext.PPCategories;
+        return (from c in tableCategorie
+                           where c.NoCategorie == noCategorie
+                           select c).First();
+    }
+
+    // retirer un item du panier
+    public static void retirerArticlePanier(long? noPanier)
+    {
+        var tablePaniers = dataContext.PPArticlesEnPanier;
+        var panier = (from p in tablePaniers where p.NoPanier == noPanier select p).First();
+        dataContext.PPArticlesEnPanier.Remove(panier);
+        dataContext.SaveChanges();
+    }
+
+    // modifier quantite dans panier
+    public static int modifierQuantitePanier(long? noPanier, String strNbItems)
+    {
+        // codes de retour
+        // 400 -> réussi sans erreur
+        // 401 -> pas une entrée valide
+        // 402 -> quantité en stock insuffisante
+        int code = 400;
+
+        var tablePaniers = dataContext.PPArticlesEnPanier;
+        var panier = (from p in tablePaniers where p.NoPanier == noPanier select p).First();
+
+        short nbItems = 0;
+        bool valide = short.TryParse(strNbItems, out nbItems);
+
+        if (!valide || nbItems < 1) { code = 401; }
+        else if (panier.PPProduits.NombreItems < nbItems) { code = 402; }
+        else
+        {
+            panier.NbItems = nbItems;
+            dataContext.SaveChanges();
+        }
+
+        System.Diagnostics.Debug.WriteLine("Code: " + code);
+
+        return code;
     }
 }

@@ -1,6 +1,6 @@
 ﻿
 .border-quantite {
-    width:50px;
+    width:80px;
     font-size:20px;
 }
 
@@ -39,6 +39,7 @@
 
 .nom-entreprise {
     font-size: 25px;
+    color:black !important;
 }
 
 .infos-payage {
@@ -62,4 +63,22 @@
     justify-content: center;
     flex-direction: column;
     width: 100%;
+}
+
+.rupture-stock {
+    font-size: 15px;
+    font-family: Calibri;
+    color: rgb(228, 28, 28);
+}
+
+.rupture-stock-message {
+    font-size: 15px;
+    font-family: Calibri;
+    color: rgb(228, 28, 28);
+}
+
+.modif-stock-message {
+    font-size: 15px;
+    font-family: Calibri;
+    color: orange;
 }
