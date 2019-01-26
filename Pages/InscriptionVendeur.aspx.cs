@@ -11,4 +11,9 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
     {
 
     }
+
+    protected void btnInscription_Click(object sender, EventArgs e)
+    {
+
+    }
 }
