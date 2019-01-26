@@ -94,13 +94,13 @@
       <div class="row">
          <div class="form-group col-md-6">           
            <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
-           <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" EnableViewState="False" />
+           <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" />
            <asp:Label ID="errCourriel" runat="server" CssClass="text-danger" style="display: none;" />
-           <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" EnableViewState="False" />
+           <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" MaxLength="100" />
            <asp:Label ID="errConfirmationCourriel" runat="server" CssClass="text-danger" style="display: none;" />
-           <asp:TextBox ID="tbMotPasse" runat="server" TextMode="Password" CssClass="form-control" style="margin-top: 10px;" placeholder="Mot de passe" />
+           <asp:TextBox ID="tbMotPasse" runat="server" TextMode="Password" CssClass="form-control" style="margin-top: 10px;" placeholder="Mot de passe" MaxLength="50" />
            <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
-           <asp:TextBox ID="tbConfirmationMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Confimation mot de passe" />
+           <asp:TextBox ID="tbConfirmationMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Confimation mot de passe" MaxLength="50" />
            <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
            <asp:Button ID="btnInscription" runat="server"  CssClass="btn btn-lg btn-primary btn-block" style="margin-top: 10px;" BackColor="Orange" BorderColor="Orange" Text="S'inscrire" OnClick="btnInscription_Click" />
          </div>
