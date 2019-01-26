@@ -117,6 +117,19 @@ public static class LibrairieControlesDynamique
         return lb;
     }
 
+    static public LinkButton lbDYN(Control Conteneur, String strID, String strValeur, String style, EventHandler onClick)
+    {
+        LinkButton lb = new LinkButton()
+        {
+            ID = strID,
+            Text = strValeur
+        };
+        lb.CssClass = style;
+        lb.Click += onClick;
+        Conteneur.Controls.Add(lb);
+        return lb;
+    }
+
     static public Label lblDYN(Control Conteneur, String strID, String strValeur, String strClass)
     {
         Label lbl = new Label()
@@ -147,6 +160,23 @@ public static class LibrairieControlesDynamique
             CssClass = strClass,
             Text = strValeur
         };
+        Conteneur.Controls.Add(tb);
+        return tb;
+    }
+
+    static public TextBox numericUpDownDYN(Control Conteneur, String strID, String strValeur, String max, String strClass)
+    {
+        TextBox tb = new TextBox()
+        {
+            ID = strID,
+            CssClass = strClass,
+            Text = strValeur,
+            MaxLength = 2
+        };
+        tb.Attributes["type"] = "number";
+        tb.Attributes["min"] = "1";
+        tb.Attributes["max"] = max;
+        tb.Attributes["step"] = "1";
         Conteneur.Controls.Add(tb);
         return tb;
     }
@@ -255,6 +285,20 @@ public static class LibrairieControlesDynamique
         ltrDyn.Text = strValeur;
         conteneur.Controls.Add(ltrDyn);
         return ltrDyn;
+    }
+
+    static public HtmlGenericControl liDYN(Control control, String href, String text, String style)
+    {
+        HtmlGenericControl li = new HtmlGenericControl("li");
+        control.Controls.Add(li);
+
+        HtmlGenericControl anchor = new HtmlGenericControl("a");
+        anchor.Attributes.Add("class", style);
+        anchor.Attributes.Add("href", href);
+        anchor.InnerText = text;
+
+        li.Controls.Add(anchor);
+        return li;
     }
 
 }
