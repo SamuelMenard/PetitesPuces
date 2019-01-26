@@ -176,7 +176,7 @@
          <span class="barre-verticale-orange"></span>
          <div class="form-group col-md-6">
             <asp:Button ID="btnInscriptionClient" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Inscription client" PostBackUrl="~/Pages/InscriptionClient.aspx" />
-            <asp:Button ID="btnMotDePasseOublie" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Mot de passe oublié?" />
+            <asp:Button ID="btnOuvrirSession" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Ouvrir une session"  PostBackUrl="~/Pages/Connexion.aspx" />
             <asp:Button ID="btnAcceuil" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Acceuil"  PostBackUrl="~/Pages/AccueilInternaute.aspx" />
          </div>
       </div>

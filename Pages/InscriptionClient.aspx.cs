@@ -13,13 +13,13 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
     protected void btnInscription_Click(object sender, EventArgs e)
     {
+        tbCourriel.Text = "";
+        tbConfirmationCourriel.Text = "";
+
         if (dbContext.PPClients.Where(c => c.AdresseEmail == tbCourriel.Text).Any())
-        {
-            tbCourriel.Text = "";
-            tbConfirmationCourriel.Text = "";
+        { 
             lblMessage.Text = "Il y a déjà un profil associé à ce courriel";
             divMessage.CssClass = "alert alert-danger alert-margins";
-            divMessage.Visible = true;
         }
         else
         {
@@ -58,25 +58,25 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
                 if (LibrairieCourriel.envoyerCourriel(message))
                 {
-                    tbCourriel.Text = "";
-                    tbConfirmationCourriel.Text = "";
                     lblMessage.Text = "Votre profil à été créé. Un rappel de vos informations de connexion vous a été envoyé par courriel.";
                     divMessage.CssClass = "alert alert-success alert-margins";
-                    divMessage.Visible = true;
                 }
                 else
                 {
+                    dbContext.PPClients.Remove(client);
+                    dbContext.SaveChanges();
 
+                    lblMessage.Text = "Votre profil n'a pas pu être créé. Assurez-vous que vous avez saisi correctement votre courriel et que celui-ci existe vraiment.";
+                    divMessage.CssClass = "alert alert-danger alert-margins";
                 }
             }
             else
             {
-                tbCourriel.Text = "";
-                tbConfirmationCourriel.Text = "";
-                lblMessage.Text = "Le profil n'a pas été créé";
+                lblMessage.Text = "Votre profil n'a pas pu être créé. Réessayez ultérieurement.";
                 divMessage.CssClass = "alert alert-danger alert-margins";
-                divMessage.Visible = true;
             }
         }
+
+        divMessage.Visible = true;
     }
 }
