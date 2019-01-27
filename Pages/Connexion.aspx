@@ -21,6 +21,16 @@
                 font-size: 3.5rem;
             }
         }
+
+        .barre-verticale-orange {
+            border-left: 1px solid orange;
+        }
+
+        @media (max-width: 700px) {
+            .barre-verticale-orange {
+               display: none;
+            }
+        }
     </style>
     <link href="/static/style/signin.css" rel="stylesheet">
 </head>
@@ -52,14 +62,14 @@
                     <asp:ListItem Value="G"> Gestionnaire </asp:ListItem>
                 </asp:DropDownList>
                 <br />
-                <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="connexion_click" />
+                <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="btnConnexion_click" />
                 <a style="color: orange;" href="#">Mot de passe oublié?</a>
             </div>
-            <span style="border-left: 2px solid orange"></span>
+            <span class="barre-verticale-orange"></span>
             <div class="form-signin col-md-6">
-                <asp:Button ID="btnInscriptionClient" Text="Inscription Client" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="inscriptionClient_click" />
-                <asp:Button ID="btnInscriptionVendeur" Text="Inscription Vendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="inscriptionVendeur_click" />
-                <asp:Button ID="btnAccueil" Text="Accueil" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="accueil_click" />
+                <asp:Button ID="btnInscriptionClient" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Inscription client" PostBackUrl="~/Pages/InscriptionClient.aspx" />
+                <asp:Button ID="btnInscriptionVendeur" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Inscription vendeur" PostBackUrl="~/Pages/InscriptionVendeur.aspx" />
+                <asp:Button ID="btnAcceuil" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Acceuil"  PostBackUrl="~/Pages/AccueilInternaute.aspx" />
             </div>
         </div>
     </form>

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Mail;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 
 public partial class Pages_InscriptionClient : System.Web.UI.Page
 {
@@ -13,12 +16,9 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
     protected void btnInscription_Click(object sender, EventArgs e)
     {
         if (dbContext.PPClients.Where(c => c.AdresseEmail == tbCourriel.Text).Any())
-        {
-            tbCourriel.Text = "";
-            tbConfirmationCourriel.Text = "";
+        { 
             lblMessage.Text = "Il y a déjà un profil associé à ce courriel";
             divMessage.CssClass = "alert alert-danger alert-margins";
-            divMessage.Visible = true;
         }
         else
         {
@@ -29,13 +29,56 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
             client.DateCreation = DateTime.Now;
 
             dbContext.PPClients.Add(client);
-            dbContext.SaveChanges();
 
-            tbCourriel.Text = "";
-            tbConfirmationCourriel.Text = "";
-            lblMessage.Text = "Le profil à été créé";
-            divMessage.CssClass = "alert alert-success alert-margins";
-            divMessage.Visible = true;
+            bool binOK = true;
+
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                binOK = false;
+            }
+
+            if (binOK)
+            {
+                MailMessage message = new MailMessage("ppuces@gmail.com", client.AdresseEmail);
+                message.Subject = "Création profil Les Petites Puces";
+                message.Body = string.Format("Bonjour,\n\n" +
+                                             "Suite à votre demande, votre profil Les Petites Puces a été créé. Votre numéro de client est {0}. Voici vos informations de connexion :\n" +
+                                             "Identifiant : {1}\n" +
+                                             "Mot de passe : {2}\n\n" +
+                                             "Merci de faire affaire avec nous,\n" +
+                                             "Les Petites Puces",
+                                             client.NoClient, 
+                                             client.AdresseEmail, 
+                                             client.MotDePasse);
+
+                if (LibrairieCourriel.envoyerCourriel(message))
+                {
+                    lblMessage.Text = "Votre profil à été créé. Un rappel de vos informations de connexion vous a été envoyé par courriel.";
+                    divMessage.CssClass = "alert alert-success alert-margins";
+                }
+                else
+                {
+                    dbContext.PPClients.Remove(client);
+                    dbContext.SaveChanges();
+
+                    lblMessage.Text = "Votre profil n'a pas pu être créé. Assurez-vous que vous avez saisi correctement votre courriel et que celui-ci existe vraiment.";
+                    divMessage.CssClass = "alert alert-danger alert-margins";
+                }
+            }
+            else
+            {
+                lblMessage.Text = "Votre profil n'a pas pu être créé. Réessayez ultérieurement.";
+                divMessage.CssClass = "alert alert-danger alert-margins";
+            }
         }
+
+        foreach (Control controle in Page.Form.Controls)
+            if (controle is TextBox)
+                ((TextBox)controle).Text = "";
+        divMessage.Visible = true;
     }
 }

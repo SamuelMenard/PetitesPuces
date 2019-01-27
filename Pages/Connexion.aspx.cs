@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 public partial class Pages_Connexion : System.Web.UI.Page
 {
@@ -13,26 +9,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
     }
 
-    public void inscriptionClient_click(Object sender, EventArgs e)
-    {
-        String url = "~/Pages/InscriptionClient.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void accueil_click(Object sender, EventArgs e)
-    {
-        Session.RemoveAll();
-        String url = "~/Pages/AccueilInternaute.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void inscriptionVendeur_click(Object sender, EventArgs e)
-    {
-        String url = "~/Pages/InscriptionVendeur.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void connexion_click(Object sender, EventArgs e)
+    public void btnConnexion_click(Object sender, EventArgs e)
     {
         String typeUtilisateur = ddlTypeUtilisateur.SelectedValue.ToString();
         String courriel = tbCourriel.Text;
