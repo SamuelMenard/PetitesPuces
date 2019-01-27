@@ -6,56 +6,76 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 {
-    static string prevPage = String.Empty;
-
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
-        List<int> lstEntreprises = new List<int>();
-        lstEntreprises.Add(1);
-        lstEntreprises.Add(2);
 
-        Dictionary<int, String> mapEntreprises = new Dictionary<int, string>();
-        mapEntreprises.Add(1, "Apple");
-        mapEntreprises.Add(2, "Microsoft");
+        // Afficher message accueil avec nom
 
-        // temporaire
-        int idItem = 0;
+        afficherMessageAccueil();
+        afficherPaniers();
+    }
 
-        for (int y = 0; y < lstEntreprises.Count; y++)
+    public void afficherMessageAccueil()
+    {
+        String nomPrenom = "";
+        if (Session["Prenom"] != null && Session["Nom"] != null)
         {
-            int idEntreprise = lstEntreprises[y];
-            String nomEntreprise = mapEntreprises[idEntreprise];
-            Double sousTotal = 0;
-            Double TPS = 0;
-            Double TVQ = 0;
-            Double pourcentageTVQ = 0.09975;
-            Double pourcentageTPS = 0.05;
+            nomPrenom += Session["Prenom"].ToString() + " " + Session["Nom"].ToString();
+        }
+        lblBienvenue.Text = "Bienvenue " + nomPrenom + "!";
+    }
+
+    public void afficherPaniers()
+    {
+        Dictionary<Nullable<long>, List<PPArticlesEnPanier>> lstPaniers = LibrairieLINQ.getPaniersClient(long.Parse(Session["NoClient"].ToString()));
+
+        // ajouter le liens mes paniers
+        LibrairieControlesDynamique.liDYN(ulSideBar, "#panier", "Mes paniers", "section-header");
+
+        foreach (KeyValuePair<Nullable<long>, List<PPArticlesEnPanier>> entry in lstPaniers)
+        {
+            bool ruptureStock = false;
+            bool quantiteModif = false;
+
+            // do something with entry.Value or entry.Key
+            long? idEntreprise = entry.Key;
+            String nomEntreprise = entry.Value[0].PPVendeurs.NomAffaires;
+            String nomVendeur = entry.Value[0].PPVendeurs.Prenom + " " + entry.Value[0].PPVendeurs.Nom;
+            decimal? sousTotal = 0;
+
+            // ajouter lien navbar
+            LibrairieControlesDynamique.liDYN(ulSideBar, "#" + "contentBody_panier" + idEntreprise, entry.Value[0].PPVendeurs.NomAffaires, "");
 
             // Créer le panier du vendeur X
-            Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, idEntreprise + "_base", "panel panel-default");
+            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
 
             // Nom de l'entreprise
             Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
-            LibrairieControlesDynamique.lblDYN(panelHeader, idEntreprise + "_nom", nomEntreprise, "nom-entreprise");
+            LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
 
             // Liste des items + le total
             Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
 
 
             // Rajouter les produits dans le panier
-            
-            for (int i = 0; i < 3; i++)
+
+            foreach (PPArticlesEnPanier article in entry.Value)
             {
-                idItem++;
-                int quantiteSelectionne = 1;
-                Double prix = 1300.99;
+                long? idItem = article.NoProduit;
+                short? quantiteSelectionne = article.NbItems;
+                decimal? prixUnitaire = article.PPProduits.PrixVente;
+
+                decimal? prixAvecQuantites = article.PPProduits.PrixVente * article.NbItems;
+                decimal? montantRabais = article.PPProduits.PrixVente - article.PPProduits.PrixDemande;
+
+                decimal? poids = article.PPProduits.Poids;
 
                 // sum au sous total
-                sousTotal += prix;
+                sousTotal += (prixUnitaire * article.NbItems);
 
-                String nomProduit = "MacBook Air 13\", 256GB SSD - Rose Gold";
-                String urlImage = "../static/images/macbookair13.jpg";
+                String nomProduit = article.PPProduits.Nom;
+                String urlImage = "../static/images/" + article.PPProduits.Photo;
 
                 Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
 
@@ -66,71 +86,121 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
                 LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                LibrairieControlesDynamique.brDYN(colNom);
+                LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
 
                 // Quantité sélectionné
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.tbDYN(colQuantite, idEntreprise + "quantite_" + idItem, quantiteSelectionne.ToString(), "form-control border-quantite");
-                LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + idItem, "Mettre à jour", update_click);
+
+                TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem,
+                    quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1) ? "1" : article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
+
+                // vérifier les quantites
+                if (article.PPProduits.NombreItems < 1)
+                {
+                    ruptureStock = true;
+                    tbQuantite.Enabled = false;
+                    LibrairieControlesDynamique.lblDYN(colQuantite, "", "Rupture de stock", "rupture-stock");
+                }
+                else
+                {
+                    if (article.PPProduits.NombreItems < article.NbItems)
+                    {
+                        LibrairieLINQ.modifierQuantitePanier(article.NoPanier, article.PPProduits.NombreItems.ToString());
+                        tbQuantite.Text = article.PPProduits.NombreItems.ToString();
+                        quantiteModif = true;
+                    }
+                    LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + article.NoPanier + ";" + idItem, "Mettre à jour", update_click);
+
+                }
+
+
+
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.lblDYN(colPrix, idEntreprise + "_prix_" + idItem, "$" + prix.ToString(), "prix_item");
+
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + prixAvecQuantites.ToString(), "prix_item");
+                LibrairieControlesDynamique.brDYN(colPrix);
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + prixUnitaire.ToString(), "prix_unitaire");
+                LibrairieControlesDynamique.brDYN(colPrix);
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + montantRabais.ToString() : "", "rabais");
+
 
                 // Bouton retirer
                 Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
                 Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, idEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + idItem, "btn btn-default", "RETIRER", retirer_click);
+                LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + article.NoPanier, "btn btn-default", "RETIRER", retirer_click);
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
 
             // Afficher le sous total
             Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowSousTotal", "row");
-            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-2");
+            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-10 text-right");
             LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
 
-            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2");
+            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
             LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + sousTotal.ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Afficher la TPS
-            // calculer le prix tps
-            TPS = sousTotal * pourcentageTPS;
-            TPS = Math.Round(TPS, 2);
+            Decimal? pctTPS = LibrairieLINQ.getPourcentageTaxes("TPS")/100;
+            Decimal? TPS = sousTotal * pctTPS;
 
             Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
-            Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-2");
+            Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-10 text-right");
             LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
 
-            Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2");
+            Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
             LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + TPS.ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
-            // Afficher la TVQ
-            // calculer le prix tvq
-            TVQ = sousTotal * pourcentageTVQ;
-            TVQ = Math.Round(TVQ, 2);
+            // Afficher la TVQ (si nécessaire)
+            if (entry.Value[0].PPVendeurs.Province == "QC")
+            {
+                Decimal? pctTVQ = LibrairieLINQ.getPourcentageTaxes("TVQ") / 100;
+                Decimal? TVQ = sousTotal * pctTVQ;
 
-            Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
-            Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
+                Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
+                Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-10 text-right");
+                LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
 
-            Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + TVQ.ToString(), "infos-payage");
+                Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2 text-right");
+                LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + TVQ.ToString(), "infos-payage");
 
-            LibrairieControlesDynamique.hrDYN(panelBody);
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
 
-            // Frais livraison
-            Panel rowLivraison = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowLivraison", "row");
-            Panel colLabelLivraison = LibrairieControlesDynamique.divDYN(rowLivraison, idEntreprise + "_colLabelLivraison", "col-sm-4");
-            LibrairieControlesDynamique.lblDYN(colLabelLivraison, idEntreprise + "_labelLivraison", "Des frais de livraison pourraient s'appliquer", "avertissement-livraison");
-            LibrairieControlesDynamique.hrDYN(panelBody);
+            // afficher message quantite modif (au besoins)
+            if (quantiteModif)
+            {
+                Panel rowModif = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colModif = LibrairieControlesDynamique.divDYN(rowModif, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colModif, "", "Certaines quantités ont été modifiées dû à la quantité en stock", "modif-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            // afficher message rupture (au besoins)
+            if (ruptureStock)
+            {
+                Panel rowRupture = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colRupture = LibrairieControlesDynamique.divDYN(rowRupture, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colRupture, "", "Veuillez retirer les articles en rupture de stock avant de pouvoir commander", "rupture-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
 
             // Bouton commander
             Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnCommander", "row");
-            Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, idEntreprise + "_colLabelBtnCommander", "col-sm-4");
-            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
+            Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, idEntreprise + "_colLabelBtnCommander", "col-sm-12 text-right");
+
+            if (!ruptureStock)
+            {
+                LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnCommander", "btn btn-warning", "Commander", commander_click);
+            }
         }
 
     }
@@ -138,15 +208,26 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
     public void retirer_click(Object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        String itemID = btn.ID.Replace("btnRetirer_", "");
-        System.Diagnostics.Debug.WriteLine(itemID);
+        String panierID = btn.ID.Replace("btnRetirer_", "");
+
+        LibrairieLINQ.retirerArticlePanier(long.Parse(panierID));
+
+        String url = "~/Pages/GestionPanierCommande.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void update_click(Object sender, EventArgs e)
     {
         LinkButton btn = (LinkButton)sender;
-        String itemID = btn.ID.Replace("update_", "");
-        System.Diagnostics.Debug.WriteLine(itemID);
+        String[] tabIDs = btn.ID.Replace("update_", "").Split(';');
+        String panierID = tabIDs[0];
+        String itemID = tabIDs[1];
+
+        TextBox tb = (TextBox)paniersDynamique.FindControl("quantite_" + itemID);
+
+        LibrairieLINQ.modifierQuantitePanier(long.Parse(panierID), tb.Text);
+        String url = "~/Pages/GestionPanierCommande.aspx?#contentBody_quantite_" + itemID;
+        Response.Redirect(url, true);
     }
 
     public void commander_click(Object sender, EventArgs e)
@@ -157,5 +238,20 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 
         String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + entrepriseID;
         Response.Redirect(url, true);
+    }
+
+    public void nomEntreprise_click(Object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        String[] tabID = btn.ID.Replace("lbNomEntreprise_", "").Split(';');
+        String entrepriseID = tabID[1];
+        System.Diagnostics.Debug.WriteLine(entrepriseID);
+    }
+
+    public void nomEntreprisePanier_click(Object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        String idVendeur = btn.ID.Replace("vendeur_", "");
+        System.Diagnostics.Debug.WriteLine(idVendeur);
     }
 }
