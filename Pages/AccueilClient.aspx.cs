@@ -74,7 +74,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 decimal? poids = article.PPProduits.Poids;
 
                 // sum au sous total
-                sousTotal += prixUnitaire;
+                sousTotal += (prixUnitaire * article.NbItems);
 
                 String nomProduit = article.PPProduits.Nom;
                 String urlImage = "../static/images/" + article.PPProduits.Photo;
@@ -169,7 +169,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
             // Bouton commander
             Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnCommander", "row");
             Panel colLabelBtnCommander = LibrairieControlesDynamique.divDYN(rowBtnCommander, idEntreprise + "_colLabelBtnCommander", "col-sm-12 text-right");
-            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, idEntreprise + "_btnDetails", "btn btn-info", "Plus de détails", details_click);
+            LibrairieControlesDynamique.btnDYN(colLabelBtnCommander, "btnDetails" + idEntreprise + ";" + "panier" + idEntreprise, "btn btn-info", "Plus de détails", details_click);
             LibrairieControlesDynamique.spaceDYN(colLabelBtnCommander);
 
             if (!ruptureStock)
@@ -258,7 +258,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
         String panierID = tabIDs[0];
         String itemID = tabIDs[1];
 
-        TextBox tb = (TextBox)categoriesDynamique.FindControl("quantite_" + itemID);
+        TextBox tb = (TextBox)paniersDynamique.FindControl("quantite_" + itemID);
 
         LibrairieLINQ.modifierQuantitePanier(long.Parse(panierID), tb.Text);
         String url = "~/Pages/AccueilClient.aspx?#contentBody_quantite_" + itemID;
@@ -278,10 +278,10 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
     public void details_click(Object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        String entrepriseID = btn.ID.Replace("_btnDetails", "");
-        System.Diagnostics.Debug.WriteLine(entrepriseID);
+        String[] tabInfos = btn.ID.Replace("btnDetails", "").Split(';');
+        String idDivPanier = tabInfos[1];
 
-        String url = "~/Pages/GestionPanierCommande.aspx?";
+        String url = "~/Pages/GestionPanierCommande.aspx?#contentBody_" + idDivPanier;
         Response.Redirect(url, true);
     }
 

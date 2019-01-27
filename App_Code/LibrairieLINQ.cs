@@ -208,4 +208,22 @@ public static class LibrairieLINQ
 
         return code;
     }
+
+    // get le pourcentage de taxes
+    public static Decimal? getPourcentageTaxes(String typeTaxe)
+    {
+        var tableTPS = dataContext.PPTaxeFederale;
+        var tableTVQ = dataContext.PPTaxeProvinciale;
+        Decimal? taxe = 0;
+        switch (typeTaxe)
+        {
+            case "TPS":
+                taxe = (from tps in tableTPS orderby tps.DateEffectiveTPS descending select tps).First().TauxTPS;
+                break;
+            case "TVQ":
+                taxe = (from tvq in tableTVQ orderby tvq.DateEffectiveTVQ descending select tvq).First().TauxTVQ;
+                break;
+        }
+        return taxe;
+    }
 }
