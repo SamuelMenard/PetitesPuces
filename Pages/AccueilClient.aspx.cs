@@ -66,10 +66,10 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
             {
                 long? idItem = article.NoProduit;
                 short? quantiteSelectionne = article.NbItems;
-                decimal? prixUnitaire = article.PPProduits.PrixVente;
+                decimal? prixUnitaire = article.PPProduits.PrixDemande;
 
-                decimal? prixAvecQuantites = article.PPProduits.PrixVente * article.NbItems;
-                decimal? montantRabais = article.PPProduits.PrixVente - article.PPProduits.PrixDemande;
+                decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
+                decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
                 decimal? poids = article.PPProduits.Poids;
 
@@ -122,11 +122,11 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
                 
-                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + prixAvecQuantites.ToString(), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix_item");
                 LibrairieControlesDynamique.brDYN(colPrix);
-                LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + prixUnitaire.ToString(), "prix_unitaire");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + Decimal.Round((Decimal)prixUnitaire, 2).ToString(), "prix_unitaire");
                 LibrairieControlesDynamique.brDYN(colPrix);
-                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0)?"Rabais de $" + montantRabais.ToString():"", "rabais");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0)?"Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
                 
 
                 // Bouton retirer
@@ -142,7 +142,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
             LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
 
             Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
-            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + sousTotal.ToString(), "infos-payage");
+            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 

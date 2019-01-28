@@ -6,10 +6,22 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">
     <!-- Contenu de la page -->
-    <asp:PlaceHolder id="phDynamique" runat="server" />
+    <div class="container">
+     <div id="panier">
+        <div class="progress">
+            <div id="progressBar" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:25%" runat="server">
+              <asp:Label ID="lblEtapeLivraison" runat="server"></asp:Label>
+            </div>
+            <span class="badge" style="background-color:white !important; z-index:10 !important; position:relative; right:10px;">
+                    <span class="glyphicon glyphicon-shopping-cart" style="color:orange !important"></span>
+                </span>
+          </div>
+        <asp:PlaceHolder id="paniersDynamique" runat="server" />
+    </div>           
+    
 
 
-    <asp:Panel ID="divLivraison" CssClass="row" Visible="false" runat="server">
+    <asp:Panel ID="divInfosPerso" CssClass="row" Visible="false" runat="server">
         <div class="col-md-12 order-md-1">
           <h4 class="mb-3">Informations de livraison</h4>
             <div class="row">
@@ -25,7 +37,7 @@
 
             <div class="mb-3">
               <label for="email">Courriel</label>
-                <asp:TextBox ID="email" Text="" CssClass="form-control" runat="server"/>
+                <asp:TextBox ID="email" Text="" CssClass="form-control" Enabled="false" runat="server"/>
             </div>
 
             <div class="row">
@@ -64,53 +76,67 @@
             <hr class="mb-4">
         </div>
 
-        <div class="col-md-12 order-md-1">
-            <h4 class="mb-3">Méthode de livraison</h4>
-            <div class="row">
-                <div class="col-md-12 mb-3">
-                    <div class="radio">
-                      <label class="infos-livraison"><asp:RadioButton id="rbRegulier" Checked="true" 
-                          runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Poste régulière</label>
-                    </div>
-                    <div class="radio">
-                      <label class="infos-livraison"><asp:RadioButton id="rbPrioritaire" 
-                          runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Poste prioritaire</label>
-                    </div>
-                    <div class="radio">
-                      <label class="infos-livraison"><asp:RadioButton id="rbCompagnie" 
-                          runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Compagnie de livraison</label>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="mb-4">
-
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <span class="infos-livraison">Poids de la commande:</span>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <asp:Label ID="poidsTotalCommande" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-                </div>
-            </div>
-
-            <hr class="mb-4">
-
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <span class="infos-livraison">Frais de transport:</span>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <asp:Label ID="fraisTransport" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-                </div>
-            </div>
-
-            <hr class="mb-4">
-        </div>
-
         
         <div class="col-md-1 order-md-1">
             <asp:Button ID="btnRetourPanier" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourPanier_click" />
+        </div>
+        <div class="col-md-2 order-md-1">
+            <asp:LinkButton ID="btnLivraison" 
+                        runat="server" 
+                        CssClass="btn btn-warning"    
+                        OnClick="livraison_click">
+                Livraison&nbsp;&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-plane"></span>
+            </asp:LinkButton>
+        </div>
+    </asp:Panel>
+
+    <asp:Panel ID="divLiv" runat="server" CssClass="row" Visible="false">
+        <div class="col-md-12 order-md-1">
+        <h4 class="mb-3">Méthode de livraison</h4>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <div class="radio">
+                    <label class="infos-livraison"><asp:RadioButton id="rbRegulier" Checked="true" 
+                        runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Poste régulière</label>
+                </div>
+                <div class="radio">
+                    <label class="infos-livraison"><asp:RadioButton id="rbPrioritaire" 
+                        runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Poste prioritaire</label>
+                </div>
+                <div class="radio">
+                    <label class="infos-livraison"><asp:RadioButton id="rbCompagnie" 
+                        runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Compagnie de livraison</label>
+                </div>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <span class="infos-livraison">Poids de la commande:</span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <asp:Label ID="poidsTotalCommande" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <span class="infos-livraison">Frais de transport:</span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <asp:Label ID="fraisTransport" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+    </div>
+
+        <div class="col-md-1 order-md-1">
+            <asp:Button ID="btnRetourInfosPerso" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourInfosPerso_click" />
         </div>
         <div class="col-md-2 order-md-1">
             <asp:LinkButton ID="btnPaiementSecurise" 
@@ -120,8 +146,8 @@
                 Paiement Sécurisé&nbsp;&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-credit-card"></span>
             </asp:LinkButton>
         </div>
-    </asp:Panel>
-    
+    </asp:Panel>   
+        
     <asp:Panel ID="LESi_reussi" Visible="false" runat="server">
         <div class="alert alert-success">
             <strong>Réussi!</strong> Vous allez recevoir un bon de commande par courriel sous peu.
@@ -247,6 +273,6 @@
             </div>
     </asp:Panel>
 
-    
+    </div>
 
 </asp:Content>
