@@ -27,11 +27,12 @@ public static class LibrairieLINQ
         switch (typeConnexion)
         {
             case "C": valide = clients.Where(client => client.AdresseEmail == courriel && client.MotDePasse == mdp).Any(); break;
-            case "V": valide = vendeurs.Where(vendeur => vendeur.AdresseEmail == courriel && vendeur.MotDePasse == mdp
-                            && vendeur.NoVendeur >= 10 && vendeur.NoVendeur <= 99).Any();
+            case "V":
+                valide = vendeurs.Where(vendeur => vendeur.AdresseEmail == courriel && vendeur.MotDePasse == mdp
+                      && vendeur.NoVendeur >= 10 && vendeur.NoVendeur <= 99).Any();
                 break;
             case "G":
-                valide = vendeurs.Where(gestionnaire => gestionnaire.AdresseEmail == courriel 
+                valide = vendeurs.Where(gestionnaire => gestionnaire.AdresseEmail == courriel
                             && gestionnaire.MotDePasse == mdp && gestionnaire.NoVendeur >= 100 && gestionnaire.NoVendeur <= 200).Any();
                 break;
         }
@@ -46,7 +47,7 @@ public static class LibrairieLINQ
         var infos = from vendeur in vendeurs
                     where vendeur.AdresseEmail == courriel
                     select vendeur;
-        foreach(var info in infos)
+        foreach (var info in infos)
         {
             string[] tab = { info.NoVendeur.ToString(), info.NomAffaires, info.Nom, info.Prenom, info.AdresseEmail };
             lstInfos.AddRange(tab);
@@ -82,7 +83,7 @@ public static class LibrairieLINQ
                                    where articlePanier.NoClient == noClient
                                    select articlePanier;
 
-        foreach(var articlePanier in articlesPanierClient)
+        foreach (var articlePanier in articlesPanierClient)
         {
             List<PPArticlesEnPanier> lstTempo;
             if (lstPaniers.TryGetValue(articlePanier.NoVendeur, out lstTempo))
@@ -92,7 +93,7 @@ public static class LibrairieLINQ
             else
             {
                 List<PPArticlesEnPanier> lst = new List<PPArticlesEnPanier>();
-                    lst.Add(articlePanier);
+                lst.Add(articlePanier);
                 lstPaniers.Add(articlePanier.NoVendeur, lst);
             }
         }
@@ -110,17 +111,18 @@ public static class LibrairieLINQ
 
         var produits = from produit in tableProduits
                        group produit by new { produit.NoCategorie, produit.NoVendeur }
-                       into listeProduits select listeProduits;
+                       into listeProduits
+                       select listeProduits;
 
 
-        foreach(var keys in produits)
+        foreach (var keys in produits)
         {
             List<PPVendeurs> lstTempo;
             if (lstCategories.TryGetValue(keys.Key.NoCategorie, out lstTempo))
             {
                 PPVendeurs vendeur = (from v in tableVendeurs
-                              where v.NoVendeur == keys.Key.NoVendeur
-                              select v).First();
+                                      where v.NoVendeur == keys.Key.NoVendeur
+                                      select v).First();
                 lstTempo.Add(vendeur);
             }
             else
@@ -160,7 +162,7 @@ public static class LibrairieLINQ
         return (from produit in tableProduits
                 where produit.NoCategorie == noCategorie && produit.NoVendeur == noVendeur
                 select produit).Count();
-               
+
     }
 
     // get une catégorie spécifique
@@ -168,8 +170,8 @@ public static class LibrairieLINQ
     {
         var tableCategorie = dataContext.PPCategories;
         return (from c in tableCategorie
-                           where c.NoCategorie == noCategorie
-                           select c).First();
+                where c.NoCategorie == noCategorie
+                select c).First();
     }
 
     // retirer un item du panier
@@ -226,4 +228,31 @@ public static class LibrairieLINQ
         }
         return taxe;
     }
+
+    // get les produits d'une compagnie spécifique pour un vendeur spécifique
+    public static List<PPArticlesEnPanier> getProduitsVendeurSpecifiqueClient(long? noClient, long? noVendeur)
+    {
+        var tableArticlesPanier = dataContext.PPArticlesEnPanier;
+        var articlesPanier = from ap in tableArticlesPanier
+                             where ap.NoClient == noClient && ap.NoVendeur == noVendeur
+                             select ap;
+        return articlesPanier.ToList();
+    }
+
+    // get informations client
+    public static PPClients getFicheInformationsClient(long? noClient)
+    {
+        var tableClients = dataContext.PPClients;
+        var client = (from c in tableClients
+                      where c.NoClient == noClient
+                      select c).First();
+        return (PPClients)client;
+    }
+
+    // enregistrer modifs du profil du client
+    public static void enregistrerModifsProfilClient()
+    {
+        dataContext.SaveChanges();
+    }
+    
 }

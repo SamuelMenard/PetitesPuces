@@ -64,10 +64,10 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             {
                 long? idItem = article.NoProduit;
                 short? quantiteSelectionne = article.NbItems;
-                decimal? prixUnitaire = article.PPProduits.PrixVente;
+                decimal? prixUnitaire = article.PPProduits.PrixDemande;
 
-                decimal? prixAvecQuantites = article.PPProduits.PrixVente * article.NbItems;
-                decimal? montantRabais = article.PPProduits.PrixVente - article.PPProduits.PrixDemande;
+                decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
+                decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
                 decimal? poids = article.PPProduits.Poids;
 
@@ -120,11 +120,11 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
 
-                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + prixAvecQuantites.ToString(), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix_item");
                 LibrairieControlesDynamique.brDYN(colPrix);
-                LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + prixUnitaire.ToString(), "prix_unitaire");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + Decimal.Round((Decimal)prixUnitaire, 2).ToString(), "prix_unitaire");
                 LibrairieControlesDynamique.brDYN(colPrix);
-                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + montantRabais.ToString() : "", "rabais");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
 
 
                 // Bouton retirer
@@ -140,7 +140,7 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
 
             Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
-            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + sousTotal.ToString(), "infos-payage");
+            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
@@ -153,7 +153,7 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
 
             Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
-            LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + TPS.ToString(), "infos-payage");
+            LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
@@ -168,7 +168,7 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
                 LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
 
                 Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2 text-right");
-                LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + TVQ.ToString(), "infos-payage");
+                LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + Decimal.Round((Decimal)TVQ, 2).ToString(), "infos-payage");
 
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
@@ -192,6 +192,12 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
+
+            Panel rowFraisTransport = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+            Panel colFraisTransport = LibrairieControlesDynamique.divDYN(rowFraisTransport, "", "col-sm-12 text-right");
+            LibrairieControlesDynamique.lblDYN(colFraisTransport, "", "Des frais de transport pourraient s'appliquer", "avertissement-livraison");
+
+            LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Bouton commander
             Panel rowBtnCommander = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnCommander", "row");
@@ -239,14 +245,7 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
         String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + entrepriseID;
         Response.Redirect(url, true);
     }
-
-    public void nomEntreprise_click(Object sender, EventArgs e)
-    {
-        LinkButton btn = (LinkButton)sender;
-        String[] tabID = btn.ID.Replace("lbNomEntreprise_", "").Split(';');
-        String entrepriseID = tabID[1];
-        System.Diagnostics.Debug.WriteLine(entrepriseID);
-    }
+    
 
     public void nomEntreprisePanier_click(Object sender, EventArgs e)
     {

@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_SaisieCommande : System.Web.UI.Page
 {
+    private static BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
     private int idEntreprise;
     private String etape;
 
@@ -22,7 +23,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         switch (etape)
         {
             case "panier": afficherPanier(); break;
-            case "livraison": afficherLivraison(); break;
+            case "livraison": afficherInfosPerso(); break;
             case "bon": afficherBon(); break;
         }
 
@@ -30,46 +31,54 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherPanier()
     {
+        // ajuster la bar de progression
+        progressBar.Style.Add("width", "25%");
+
+        List<PPArticlesEnPanier> lstArticlesEnPanier = LibrairieLINQ.getProduitsVendeurSpecifiqueClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
         // masquer le formulaire de livraison
-        divLivraison.Visible = false;
+        divInfosPerso.Visible = false;
 
         // masquer la div de paiement
         div_paiement.Visible = false;
 
-        String nomEntreprise = "Apple";
-        Double sousTotal = 0;
-        Double TPS = 0;
-        Double TVQ = 0;
-        Double apresTaxes = 0;
-        Double pourcentageTVQ = 0.09975;
-        Double pourcentageTPS = 0.05;
-        Double pourcentageTaxes = pourcentageTVQ + pourcentageTPS + 1;
+        bool ruptureStock = false;
+        bool quantiteModif = false;
+
+        // do something with entry.Value or entry.Key
+        long? idEntreprise = lstArticlesEnPanier[0].NoVendeur;
+        String nomEntreprise = lstArticlesEnPanier[0].PPVendeurs.NomAffaires;
+        String nomVendeur = lstArticlesEnPanier[0].PPVendeurs.Prenom + " " + lstArticlesEnPanier[0].PPVendeurs.Nom;
+        decimal? sousTotal = 0;
 
         // Créer le panier du vendeur X
-        Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, idEntreprise + "_base", "panel panel-default");
+        Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
 
         // Nom de l'entreprise
         Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
-        LibrairieControlesDynamique.lblDYN(panelHeader, idEntreprise + "_nom", nomEntreprise, "nom-entreprise");
+        LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
 
         // Liste des items + le total
         Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
 
 
         // Rajouter les produits dans le panier
-        // temporaire
-        int idItem = 0;
-        for (int i = 0; i < 3; i++)
+
+        foreach (PPArticlesEnPanier article in lstArticlesEnPanier)
         {
-            idItem++;
-            int quantiteSelectionne = 1;
-            Double prix = 1300.99;
+            long? idItem = article.NoProduit;
+            short? quantiteSelectionne = article.NbItems;
+            decimal? prixUnitaire = article.PPProduits.PrixDemande;
+
+            decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
+            decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
+
+            decimal? poids = article.PPProduits.Poids;
 
             // sum au sous total
-            sousTotal += prix;
+            sousTotal += (prixUnitaire * article.NbItems);
 
-            String nomProduit = "MacBook Air 13\", 256GB SSD - Rose Gold";
-            String urlImage = "../static/images/macbookair13.jpg";
+            String nomProduit = article.PPProduits.Nom;
+            String urlImage = "../static/images/" + article.PPProduits.Photo;
 
             Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
 
@@ -80,92 +89,158 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             // Nom du produit
             Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
             LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+            LibrairieControlesDynamique.brDYN(colNom);
+            LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
 
             // Quantité sélectionné
             Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
-            LibrairieControlesDynamique.tbDYN(colQuantite, idEntreprise + "quantite_" + idItem, quantiteSelectionne.ToString(), "form-control border-quantite");
-            LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + idItem, "Mettre à jour", update_click);
+
+            TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem,
+                quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1) ? "1" : article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
+
+            // vérifier les quantites
+            if (article.PPProduits.NombreItems < 1)
+            {
+                ruptureStock = true;
+                tbQuantite.Enabled = false;
+                LibrairieControlesDynamique.lblDYN(colQuantite, "", "Rupture de stock", "rupture-stock");
+            }
+            else
+            {
+                if (article.PPProduits.NombreItems < article.NbItems)
+                {
+                    LibrairieLINQ.modifierQuantitePanier(article.NoPanier, article.PPProduits.NombreItems.ToString());
+                    tbQuantite.Text = article.PPProduits.NombreItems.ToString();
+                    quantiteModif = true;
+                }
+                LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + article.NoPanier + ";" + idItem, "Mettre à jour", update_click);
+
+            }
+
+
+
 
             // Prix item
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colPrix, idEntreprise + "_prix_" + idItem, "$" + prix.ToString(), "prix_item");
+
+            LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix_item");
+            LibrairieControlesDynamique.brDYN(colPrix);
+            LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + Decimal.Round((Decimal)prixUnitaire, 2).ToString(), "prix_unitaire");
+            LibrairieControlesDynamique.brDYN(colPrix);
+            LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
+
 
             // Bouton retirer
             Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
             Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, idEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
-            LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + idItem, "btn btn-default", "RETIRER", retirer_click);
+            LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + article.NoPanier, "btn btn-default", "RETIRER", retirer_click);
             LibrairieControlesDynamique.hrDYN(panelBody);
         }
 
         // Afficher le sous total
         Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowSousTotal", "row");
-        Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-2");
+        Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-10 text-right");
         LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
 
-        Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2");
-        LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + sousTotal.ToString(), "infos-payage");
+        Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
+        LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
 
         LibrairieControlesDynamique.hrDYN(panelBody);
 
         // Afficher la TPS
-        // calculer le prix tps
-        TPS = sousTotal * pourcentageTPS;
-        TPS = Math.Round(TPS, 2);
+        Decimal? pctTPS = LibrairieLINQ.getPourcentageTaxes("TPS") / 100;
+        Decimal? TPS = sousTotal * pctTPS;
 
         Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
-        Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-2");
+        Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-10 text-right");
         LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
 
-        Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2");
-        LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + TPS.ToString(), "infos-payage");
+        Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
+        LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
 
         LibrairieControlesDynamique.hrDYN(panelBody);
 
-        // Afficher la TVQ
-        // calculer le prix tvq
-        TVQ = sousTotal * pourcentageTVQ;
-        TVQ = Math.Round(TVQ, 2);
+        // Afficher la TVQ (si nécessaire)
+        if (lstArticlesEnPanier[0].PPVendeurs.Province == "QC")
+        {
+            Decimal? pctTVQ = LibrairieLINQ.getPourcentageTaxes("TVQ") / 100;
+            Decimal? TVQ = sousTotal * pctTVQ;
 
-        Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
-        Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-2");
-        LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
+            Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
+            Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-10 text-right");
+            LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
 
-        Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2");
-        LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + TVQ.ToString(), "infos-payage");
+            Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2 text-right");
+            LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + Decimal.Round((Decimal)TVQ, 2).ToString(), "infos-payage");
 
-        LibrairieControlesDynamique.hrDYN(panelBody);
+            LibrairieControlesDynamique.hrDYN(panelBody);
+        }
 
-        // Afficher apres taxes
-        // calculer le montant apres taxes
-        apresTaxes = sousTotal * pourcentageTaxes;
-        apresTaxes = Math.Round(apresTaxes, 2);
+        // afficher message quantite modif (au besoins)
+        if (quantiteModif)
+        {
+            Panel rowModif = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+            Panel colModif = LibrairieControlesDynamique.divDYN(rowModif, "", "col-sm-12 text-right");
+            LibrairieControlesDynamique.lblDYN(colModif, "", "Certaines quantités ont été modifiées dû à la quantité en stock", "modif-stock-message");
 
-        Panel rowApresTaxes = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowApresTaxes", "row");
-        Panel colLabelApresTaxes = LibrairieControlesDynamique.divDYN(rowApresTaxes, idEntreprise + "_colLabelApresTaxes", "col-sm-2");
-        LibrairieControlesDynamique.lblDYN(colLabelApresTaxes, idEntreprise + "_labelApresTaxes", "Après taxes: ", "infos-payage");
+            LibrairieControlesDynamique.hrDYN(panelBody);
+        }
 
-        Panel colMontantApresTaxes = LibrairieControlesDynamique.divDYN(rowApresTaxes, idEntreprise + "_colMontantApresTaxes", "col-sm-2");
-        LibrairieControlesDynamique.lblDYN(colMontantApresTaxes, idEntreprise + "_montantApresTaxes", "$" + apresTaxes.ToString(), "infos-payage");
+        // afficher message rupture (au besoins)
+        if (ruptureStock)
+        {
+            Panel rowRupture = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+            Panel colRupture = LibrairieControlesDynamique.divDYN(rowRupture, "", "col-sm-12 text-right");
+            LibrairieControlesDynamique.lblDYN(colRupture, "", "Veuillez retirer les articles en rupture de stock avant de pouvoir commander", "rupture-stock-message");
 
-        LibrairieControlesDynamique.hrDYN(panelBody);
+            LibrairieControlesDynamique.hrDYN(panelBody);
+        }
 
-        // Frais livraison
-        Panel rowLivraison = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowLivraison", "row");
-        Panel colLabelLivraison = LibrairieControlesDynamique.divDYN(rowLivraison, idEntreprise + "_colLabelLivraison", "col-sm-4");
-        LibrairieControlesDynamique.lblDYN(colLabelLivraison, idEntreprise + "_labelLivraison", "Des frais de livraison pourraient s'appliquer", "avertissement-livraison");
+        Panel rowFraisTransport = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+        Panel colFraisTransport = LibrairieControlesDynamique.divDYN(rowFraisTransport, "", "col-sm-12 text-right");
+        LibrairieControlesDynamique.lblDYN(colFraisTransport, "", "Des frais de transport pourraient s'appliquer", "avertissement-livraison");
+
         LibrairieControlesDynamique.hrDYN(panelBody);
 
         // Bouton shipping
         Panel rowBtnShipping = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnShipping", "row");
         Panel colLabelBtnShipping = LibrairieControlesDynamique.divDYN(rowBtnShipping, idEntreprise + "_colLabelBtnShipping", "col-sm-2");
-        HtmlButton btnShipping = LibrairieControlesDynamique.htmlbtnDYN(colLabelBtnShipping, idEntreprise + "_BtnShipping", "btn btn-warning", "Informations de livraison", "glyphicon glyphicon-plane", shipping_click);
+        HtmlButton btnShipping = LibrairieControlesDynamique.htmlbtnDYN(colLabelBtnShipping, idEntreprise + "_BtnShipping", "btn btn-warning", "Informations de livraison", "glyphicon glyphicon-user", infosPerso_click);
+
+    }
+
+    public void afficherInfosPerso()
+    {
+        // ajuster la bar de progression
+        progressBar.Style.Add("width", "50%");
+
+        // masquer div livraison
+        divLiv.Visible = false;
+
+        // remplir les infos
+        if (!Page.IsPostBack)
+        {
+            remplirTbInfosClient();
+        }
+
+        // masquer la div de paiement
+        div_paiement.Visible = false;
+
+        // rendre visible la division
+        divInfosPerso.Visible = true;
 
     }
 
     public void afficherLivraison()
     {
-        // masquer la div de paiement
+        // ajuster la bar de progression
+        progressBar.Style.Add("width", "75%");
+
+        // masquer div paiement
         div_paiement.Visible = false;
+
+        // masquer div infos perso
+        divInfosPerso.Visible = false;
 
         // calculer le poids total
         Double poidsTotal = 4;
@@ -183,15 +258,20 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             fraisTransport.Text = "$" + prixLivraisonStandard.ToString();
         }
 
-        // rendre visible la division
-        divLivraison.Visible = true;
-
+        // rendre visible la div livraison
+        divLiv.Visible = true;
     }
 
     public void afficherPaiement()
     {
+        // ajuster la bar de progression
+        progressBar.Style.Add("width", "100%");
+
+        // masquer la div d'infos perso
+        divInfosPerso.Visible = false;
+
         // masquer la div de livraison
-        divLivraison.Visible = false;
+        divLiv.Visible = false;
 
         // afficher le sous total
         Double sousTotal = 3902.97;
@@ -228,7 +308,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherReponseLESi()
     {
-        Boolean reussi = true;
+        Boolean reussi = false;
 
         // rendre visible la bonne div
         if (reussi)
@@ -246,6 +326,32 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     public void afficherBon()
     {
         LESi_reussi.Visible = true;
+    }
+
+    public void remplirTbInfosClient()
+    {
+        // aller chercher les informations du client et les afficher dans les textbox
+        PPClients ficheClient = LibrairieLINQ.getFicheInformationsClient(long.Parse(Session["NoClient"].ToString()));
+        prenom.Text = (ficheClient.Prenom != null) ? ficheClient.Prenom.Trim() : "";
+        nomfamille.Text = (ficheClient.Nom != null) ? ficheClient.Nom.Trim() : "";
+        email.Text = (ficheClient.AdresseEmail != null) ? ficheClient.AdresseEmail.Trim() : "";
+        ville.Text = (ficheClient.Ville != null) ? ficheClient.Ville.Trim() : "";
+        codepostal.Text = (ficheClient.CodePostal != null) ? ficheClient.CodePostal.Trim() : "";
+        String[] tabCiviqueRue = ((ficheClient.Rue != null) ? ficheClient.Rue : "").Split(' ');
+
+        if (tabCiviqueRue.Length == 2)
+        {
+            noCivique.Text = tabCiviqueRue[0].Trim();
+            rue.Text = tabCiviqueRue[1].Trim();
+        }
+
+        if (ficheClient.Province != null)
+        {
+            province.SelectedValue = ficheClient.Province.Trim();
+        }
+
+        tel.Text = (ficheClient.Tel1 != null) ? ficheClient.Tel1.Trim() : "";
+        cell.Text = (ficheClient.Tel2 != null) ? ficheClient.Tel2.Trim() : "";
     }
 
     public Double getPrixLivraisonSelonPoids(Double poidsCommande, int typeLivraison)
@@ -300,21 +406,143 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     public void retirer_click(Object sender, EventArgs e)
     {
         Button btn = (Button)sender;
-        String itemID = btn.ID.Replace("btnRetirer_", "");
-        System.Diagnostics.Debug.WriteLine(itemID);
+        String panierID = btn.ID.Replace("btnRetirer_", "");
+
+        LibrairieLINQ.retirerArticlePanier(long.Parse(panierID));
+
+        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise;
+        Response.Redirect(url, true);
     }
 
     public void update_click(Object sender, EventArgs e)
     {
         LinkButton btn = (LinkButton)sender;
-        String itemID = btn.ID.Replace("update_", "");
-        System.Diagnostics.Debug.WriteLine(itemID);
+        String[] tabIDs = btn.ID.Replace("update_", "").Split(';');
+        String panierID = tabIDs[0];
+        String itemID = tabIDs[1];
+
+        TextBox tb = (TextBox)paniersDynamique.FindControl("quantite_" + itemID);
+
+        LibrairieLINQ.modifierQuantitePanier(long.Parse(panierID), tb.Text);
+        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "#contentBody_quantite_" + itemID;
+        Response.Redirect(url, true);
     }
 
-    public void shipping_click(Object sender, EventArgs e)
+    public void infosPerso_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
         Response.Redirect(url, true);
+    }
+
+    public void livraison_click(Object sender, EventArgs e)
+    {
+        bool valide = true;
+        if (!rfvPrenom.IsValid || !rePrenom.IsValid)
+        {
+            prenom.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            prenom.CssClass = "form-control";
+        }
+
+        if (!rfvNom.IsValid || !reNom.IsValid)
+        {
+            nomfamille.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            nomfamille.CssClass = "form-control";
+        }
+
+        if (!rfvEmail.IsValid)
+        {
+            email.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            email.CssClass = "form-control";
+        }
+
+        if (!rfvVille.IsValid || !reVille.IsValid)
+        {
+            ville.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            ville.CssClass = "form-control";
+        }
+
+        if (!rfvCodePostal.IsValid || !reCodePostal.IsValid)
+        {
+            codepostal.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            codepostal.CssClass = "form-control";
+        }
+
+        if (!rfvNoCivique.IsValid || !reNoCivique.IsValid)
+        {
+            noCivique.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            noCivique.CssClass = "form-control";
+        }
+
+        if (!rfvRue.IsValid || !reRue.IsValid)
+        {
+            rue.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            rue.CssClass = "form-control";
+        }
+
+        if (!rfvTel.IsValid || !reTel.IsValid)
+        {
+            tel.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            tel.CssClass = "form-control";
+        }
+
+        if (!reCell.IsValid)
+        {
+            cell.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            cell.CssClass = "form-control";
+        }
+
+
+        // si valide = continuer
+        if (valide){
+            afficherLivraison();
+            PPClients client =  LibrairieLINQ.getFicheInformationsClient(long.Parse(Session["NoClient"].ToString()));
+            client.Prenom = prenom.Text;
+            client.Nom = nomfamille.Text;
+            client.Ville = ville.Text;
+            client.CodePostal = codepostal.Text;
+            client.Rue = noCivique.Text + " " + rue.Text;
+            client.Tel1 = tel.Text;
+            client.Tel2 = (cell.Text != "")?cell.Text:null;
+            client.Province = province.SelectedValue;
+            LibrairieLINQ.enregistrerModifsProfilClient();
+        }
+
     }
 
     public void retourPanier_click(Object sender, EventArgs e)
@@ -322,6 +550,12 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         System.Diagnostics.Debug.WriteLine("Retour");
         String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise;
         Response.Redirect(url, true);
+    }
+
+    public void retourInfosPerso_click(Object sender, EventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("Retour");
+        afficherInfosPerso();
     }
 
     public void retourLivraison_click(Object sender, EventArgs e)
@@ -380,6 +614,16 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         {
             fraisTransport.Text = "$" + fraisLivraison.ToString();
         }
+
+        // masquer les autres div
+        divInfosPerso.Visible = false;
+        div_paiement.Visible = false;
+
+        // afficher la div livraison
+        divLiv.Visible = true;
+
+        // modifier panier
+        progressBar.Style.Add("width", "75%");
     }
 
     private void getIdEntreprise()
@@ -406,6 +650,13 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         {
             this.etape = Request.QueryString["Etape"];
         }
+    }
+
+    public void nomEntreprisePanier_click(Object sender, EventArgs e)
+    {
+        LinkButton btn = (LinkButton)sender;
+        String idVendeur = btn.ID.Replace("vendeur_", "");
+        System.Diagnostics.Debug.WriteLine(idVendeur);
     }
 
 }

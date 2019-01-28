@@ -82,3 +82,9 @@
     font-family: Calibri;
     color: orange;
 }
+
+.erreur {
+    border-style: solid !important;
+    border-width: 2px !important;
+    border-color: rgba(238, 25, 25, 0.50) !important;
+}
