@@ -191,7 +191,7 @@
             var exprCourriel = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
             var exprMotPasse = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/;
             var exprPoids = /^\d+$/;
-            var exprMontant = /^\d+.\d{2}$/;
+            var exprMontant = /^\d+\.\d{2}$/;
             $("#tbNomEntreprise").focusout(function () {
                if ($("#tbNomEntreprise").val() == '') {
                   $("#tbNomEntreprise").removeClass("border-success").addClass("border-danger");
