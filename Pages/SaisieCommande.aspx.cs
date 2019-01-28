@@ -8,6 +8,7 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_SaisieCommande : System.Web.UI.Page
 {
+    private static BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
     private int idEntreprise;
     private String etape;
 
@@ -216,6 +217,12 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // masquer div livraison
         divLiv.Visible = false;
 
+        // remplir les infos
+        if (!Page.IsPostBack)
+        {
+            remplirTbInfosClient();
+        }
+
         // masquer la div de paiement
         div_paiement.Visible = false;
 
@@ -321,6 +328,32 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         LESi_reussi.Visible = true;
     }
 
+    public void remplirTbInfosClient()
+    {
+        // aller chercher les informations du client et les afficher dans les textbox
+        PPClients ficheClient = LibrairieLINQ.getFicheInformationsClient(long.Parse(Session["NoClient"].ToString()));
+        prenom.Text = (ficheClient.Prenom != null) ? ficheClient.Prenom.Trim() : "";
+        nomfamille.Text = (ficheClient.Nom != null) ? ficheClient.Nom.Trim() : "";
+        email.Text = (ficheClient.AdresseEmail != null) ? ficheClient.AdresseEmail.Trim() : "";
+        ville.Text = (ficheClient.Ville != null) ? ficheClient.Ville.Trim() : "";
+        codepostal.Text = (ficheClient.CodePostal != null) ? ficheClient.CodePostal.Trim() : "";
+        String[] tabCiviqueRue = ((ficheClient.Rue != null) ? ficheClient.Rue : "").Split(' ');
+
+        if (tabCiviqueRue.Length == 2)
+        {
+            noCivique.Text = tabCiviqueRue[0].Trim();
+            rue.Text = tabCiviqueRue[1].Trim();
+        }
+
+        if (ficheClient.Province != null)
+        {
+            province.SelectedValue = ficheClient.Province.Trim();
+        }
+
+        tel.Text = (ficheClient.Tel1 != null) ? ficheClient.Tel1.Trim() : "";
+        cell.Text = (ficheClient.Tel2 != null) ? ficheClient.Tel2.Trim() : "";
+    }
+
     public Double getPrixLivraisonSelonPoids(Double poidsCommande, int typeLivraison)
     {
         // type livraison
@@ -403,7 +436,113 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void livraison_click(Object sender, EventArgs e)
     {
-        afficherLivraison();
+        bool valide = true;
+        if (!rfvPrenom.IsValid || !rePrenom.IsValid)
+        {
+            prenom.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            prenom.CssClass = "form-control";
+        }
+
+        if (!rfvNom.IsValid || !reNom.IsValid)
+        {
+            nomfamille.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            nomfamille.CssClass = "form-control";
+        }
+
+        if (!rfvEmail.IsValid)
+        {
+            email.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            email.CssClass = "form-control";
+        }
+
+        if (!rfvVille.IsValid || !reVille.IsValid)
+        {
+            ville.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            ville.CssClass = "form-control";
+        }
+
+        if (!rfvCodePostal.IsValid || !reCodePostal.IsValid)
+        {
+            codepostal.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            codepostal.CssClass = "form-control";
+        }
+
+        if (!rfvNoCivique.IsValid || !reNoCivique.IsValid)
+        {
+            noCivique.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            noCivique.CssClass = "form-control";
+        }
+
+        if (!rfvRue.IsValid || !reRue.IsValid)
+        {
+            rue.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            rue.CssClass = "form-control";
+        }
+
+        if (!rfvTel.IsValid || !reTel.IsValid)
+        {
+            tel.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            tel.CssClass = "form-control";
+        }
+
+        if (!reCell.IsValid)
+        {
+            cell.CssClass = "form-control erreur";
+            valide = false;
+        }
+        else
+        {
+            cell.CssClass = "form-control";
+        }
+
+
+        // si valide = continuer
+        if (valide){
+            afficherLivraison();
+            PPClients client =  LibrairieLINQ.getFicheInformationsClient(long.Parse(Session["NoClient"].ToString()));
+            client.Prenom = prenom.Text;
+            client.Nom = nomfamille.Text;
+            client.Ville = ville.Text;
+            client.CodePostal = codepostal.Text;
+            client.Rue = noCivique.Text + " " + rue.Text;
+            client.Tel1 = tel.Text;
+            client.Tel2 = (cell.Text != "")?cell.Text:null;
+            client.Province = province.SelectedValue;
+            LibrairieLINQ.enregistrerModifsProfilClient();
+        }
+
     }
 
     public void retourPanier_click(Object sender, EventArgs e)

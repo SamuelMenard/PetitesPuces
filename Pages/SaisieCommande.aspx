@@ -41,19 +41,143 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-4 mb-3">
+                <div class="col-sm-3 mb-3">
                     <label for="ville">Ville</label>
                     <asp:TextBox ID="ville" Text="" CssClass="form-control" runat="server"/>
                 </div>
-                <div class="col-sm-4 mb-3">
+                <div class="col-sm-3 mb-3">
+                    <label for="codepostal">Code postal</label>
+                    <asp:TextBox ID="codepostal" Text="" CssClass="form-control" runat="server" ToolTip="Format: A9A 9A9"/>
+                </div>
+                <div class="col-sm-2 mb-3">
+                    <label for="noCivique">No Civique</label>
+                    <asp:TextBox ID="noCivique" Text="" CssClass="form-control" runat="server"/>
+                </div>
+                <div class="col-sm-3 mb-3">
                     <label for="rue">Rue</label>
                     <asp:TextBox ID="rue" Text="" CssClass="form-control" runat="server"/>
                 </div>
-                <div class="col-sm-4 mb-3">
-                    <label for="codepostal">Code postal</label>
-                    <asp:TextBox ID="codepostal" Text="" CssClass="form-control" runat="server"/>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3 mb-3">
+                    <label for="tel">Téléphone</label>
+                    <asp:TextBox ID="tel" Text="" CssClass="form-control" runat="server" ToolTip="Format: (999)999-9999"/>
+                </div>
+                <div class="col-sm-3 mb-3">
+                    <label for="cell">Cellulaire</label>
+                    <asp:TextBox ID="cell" Text="" CssClass="form-control" runat="server" ToolTip="Format: (999)999-9999"/>
                 </div>
             </div>
+
+            <!-- validation controls: Required field validators -->
+            <asp:RequiredFieldValidator id="rfvPrenom"
+                    ControlToValidate="prenom"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/> 
+            <asp:RequiredFieldValidator id="rfvNom"
+                    ControlToValidate="nomfamille"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/>
+            <asp:RequiredFieldValidator id="rfvEmail"
+                    ControlToValidate="email"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/>
+            <asp:RequiredFieldValidator id="rfvVille"
+                    ControlToValidate="ville"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/>
+            <asp:RequiredFieldValidator id="rfvCodePostal"
+                    ControlToValidate="codepostal"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/>
+            <asp:RequiredFieldValidator id="rfvNoCivique"
+                    ControlToValidate="noCivique"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/>
+            <asp:RequiredFieldValidator id="rfvRue"
+                    ControlToValidate="rue"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/>
+            <asp:RequiredFieldValidator id="rfvTel"
+                    ControlToValidate="tel"
+                    Display="None"
+                ValidationGroup="grInfosPerso"
+                EnableClientScript="False" 
+                    runat="server"/>
+
+            <!-- validation controls: Reg ex -->
+            <asp:RegularExpressionValidator id="rePrenom" 
+                     ControlToValidate="prenom"
+                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            <asp:RegularExpressionValidator id="reNom" 
+                     ControlToValidate="nomfamille"
+                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            <asp:RegularExpressionValidator id="reVille" 
+                     ControlToValidate="ville"
+                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            <asp:RegularExpressionValidator id="reCodePostal" 
+                     ControlToValidate="codepostal"
+                     ValidationExpression="^[A-Z]\d[A-Z][ ]\d[A-Z]\d$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            <asp:RegularExpressionValidator id="reNoCivique" 
+                     ControlToValidate="noCivique"
+                     ValidationExpression="^\d{1,}$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            <asp:RegularExpressionValidator id="reRue" 
+                     ControlToValidate="Rue"
+                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            <asp:RegularExpressionValidator id="reTel" 
+                     ControlToValidate="tel"
+                     ValidationExpression="^\(\d{3}\)\d{3}-\d{4}$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            <asp:RegularExpressionValidator id="reCell" 
+                     ControlToValidate="cell"
+                     ValidationExpression="^\(\d{3}\)\d{3}-\d{4}$"
+                     Display="None"
+                     EnableClientScript="False" 
+                ValidationGroup="grInfosPerso"
+                     runat="server"/>
+            
 
             <div class="row">
               <div class="col-sm-4 mb-3">
@@ -64,7 +188,7 @@
                     </asp:DropDownList>
                 </div>
                 <div class="col-sm-4 mb-3">
-                    <label for="province">Rue</label>
+                    <label for="province">Province</label>
                     <asp:DropDownList id="province" CssClass="form-control"
                         runat="server">
                           <asp:ListItem Selected="True" Value="QC"> Québec </asp:ListItem>
@@ -84,7 +208,8 @@
             <asp:LinkButton ID="btnLivraison" 
                         runat="server" 
                         CssClass="btn btn-warning"    
-                        OnClick="livraison_click">
+                        OnClick="livraison_click"
+                ValidationGroup="grInfosPerso">
                 Livraison&nbsp;&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-plane"></span>
             </asp:LinkButton>
         </div>

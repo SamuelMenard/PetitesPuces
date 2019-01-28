@@ -238,4 +238,21 @@ public static class LibrairieLINQ
                              select ap;
         return articlesPanier.ToList();
     }
+
+    // get informations client
+    public static PPClients getFicheInformationsClient(long? noClient)
+    {
+        var tableClients = dataContext.PPClients;
+        var client = (from c in tableClients
+                      where c.NoClient == noClient
+                      select c).First();
+        return (PPClients)client;
+    }
+
+    // enregistrer modifs du profil du client
+    public static void enregistrerModifsProfilClient()
+    {
+        dataContext.SaveChanges();
+    }
+    
 }
