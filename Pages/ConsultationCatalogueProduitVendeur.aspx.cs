@@ -22,7 +22,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         Double TVQ = 0;
 
         // Créer le panier du vendeur X
-        Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_base", "panel panel-default");
+        Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_base", "panel panel-default container");
 
         Panel panSearchFilter = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_searchFilter_", "clearfix topBotPad center");
         LibrairieControlesDynamique.tbDYN(panSearchFilter, nomEntreprise + "_searchText", "col-sm-4 left15");       

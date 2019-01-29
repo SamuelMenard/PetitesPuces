@@ -11,12 +11,12 @@
     font-family: Calibri;  
 }
 .prix_item {
-    font-size:25px ;
+    font-size:15px !important;
     font-family:Calibri;
     font-weight:bold;
 }
 .cat_item {
-    font-size: 20px;
+    font-size: 15px;
     font-family: Calibri;
     font-weight: bold;
 }
@@ -59,6 +59,10 @@
     margin-left: 15px;
 }
 
+.right15 {
+    margin-right: 15px;
+}
+
 .topBotPad {
     margin-top: 15px;
     margin-bottom: 15px;
@@ -94,6 +98,11 @@ input[type="radio"] {
     border-width : 15px;
     border-color : orange;
 }
+.OrangeBorderPanier {
+    color: orange;
+    border-width: 2px;
+    border-color: orange;
+}
 
 .valign {
     font-size: 0;
@@ -107,3 +116,10 @@ input[type="radio"] {
     vertical-align: middle;
 }
 
+.border-left {
+    border-left:5px solid orange;
+}
+
+.panelAccord {
+    display: none;
+}
