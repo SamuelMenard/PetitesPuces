@@ -84,17 +84,18 @@
       </div>
       <div class="form-group col-sm-6"> 
          <div class="input-group">
-    			<label>Disponibilité 
+    	    <label>Disponibilité 
             <div id="radioBtn" class="btn-group">
-    				<a class="btn Orange active" data-toggle="rbDisponibilite" data-title="O">Oui</a>
-    				<a class="btn Orange notActive" data-toggle="rbDisponibilite" data-title="N">Non</a>
-    		   </div>
-    			<asp:HiddenField ID="rbDisponibilite" runat="server" Value="O" />
-            </label>
+    		    <asp:HyperLink ID="btnOui" runat="server" CssClass="btn Orange active" Text="Oui" data-toggle="rbDisponibilite" data-title="O" />
+    			<asp:HyperLink ID="btnNon" runat="server" CssClass="btn Orange notActive" Text="Non" data-toggle="rbDisponibilite" data-title="N" />
     		</div>
+    		<asp:HiddenField ID="rbDisponibilite" runat="server" Value="O" />
+            </label>
+    	</div>
       </div>
    </div>
    <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" OnClick="btnInscription_Click" />
+   <asp:Button ID="btnModifier" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" Visible="false" OnClick="btnModifier_Click" />
 </div>
 <script type="text/javascript">
    $(document).ready(function () {
