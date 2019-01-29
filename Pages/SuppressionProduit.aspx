@@ -2,7 +2,14 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="head" Runat="Server">
     <!-- Pour ajouter des imports dans le head -->
-     <link rel="stylesheet" href="../static/style/catalogueVendeur.css">
+    <link rel="stylesheet" href="../static/style/catalogueVendeur.css">
+
+    <style>
+       .message {
+          padding-left: 15px;
+          padding-right: 15px;
+       }
+    </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">
     <script type = "text/javascript">
@@ -19,11 +26,13 @@
         }
     </script>
     <!-- Contenu de la page -->
-    <div class="row">
-       <div class="message text-center">
-          <asp:Panel ID="divMessage" runat="server" Visible="False">
-             <asp:Label ID="lblMessage" runat="server" />
-          </asp:Panel>
+    <div class="container">
+       <div class="row">
+          <div class="message text-center">
+             <asp:Panel ID="divMessage" runat="server" Visible="False">
+                <asp:Label ID="lblMessage" runat="server" />
+             </asp:Panel>
+          </div>
        </div>
     </div>
     <asp:PlaceHolder id="phDynamique" EnableViewState="false" runat="server" />
