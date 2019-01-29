@@ -7,6 +7,13 @@
       max-width: 500px;
    }
 
+   .message {
+      width: 100%;
+      max-width: 500px;
+      padding-left: 15px;
+      padding-right: 15px;
+   }
+
    .Orange {
       color: white;
       background-color : orange;
@@ -27,6 +34,13 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="contentBody" Runat="Server">
 <div class="container-fluid containerForm">
+   <div class="row">
+      <div class="message text-center">
+         <asp:Panel ID="divMessage" runat="server" Visible="False">
+            <asp:Label ID="lblMessage" runat="server" />
+         </asp:Panel>
+      </div>
+   </div>
    <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer les informations d'un produit</h1>
    <div class="form-group">
       <asp:DropDownList Id="ddlCategorie" CssClass="form-control" runat="server">
@@ -95,11 +109,11 @@
       </div>
    </div>
    <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" OnClick="btnInscription_Click" />
-   <asp:Button ID="btnModifier" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" Visible="false" OnClick="btnModifier_Click" />
+   <asp:Button ID="btnModifier" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le produit" Visible="false" OnClick="btnModifier_Click" />
 </div>
 <script type="text/javascript">
    $(document).ready(function () {
-      /*var exprTexte = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
+      var exprTexte = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
       var exprMontant = /^\d+\.\d{2}$/;
       var exprNbItems = /^\d+$/;
       var dateAujourdhui = new Date();
@@ -208,7 +222,7 @@
             $('#contentBody_errPoids').text('').addClass('hidden');
          }
       });
-      $('#contentBody_btnInscription').click(function () {
+      /*$('#contentBody_btnInscription').click(function () {
          var binPageValide = true;
          if ($('#contentBody_ddlCategorie').val() == '') {
             $('#contentBody_ddlCategorie').removeClass('border-success').addClass('border-danger');
@@ -239,11 +253,6 @@
                $('#contentBody_errDescription').text('La description ne peut pas être vide').removeClass('hidden');
             else
                $('#contentBody_errDescription').text('La description n\'est pas dans un format valide').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($('#contentBody_fImage').val() == '') {
-            $('#contentBody_fImage').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errImage').text('Vous devez sélectionner une image').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbNbItems').val() == '' || !exprNbItems.test($('#contentBody_tbNbItems').val()) || $('#contentBody_tbNbItems').val() > 32767) {
