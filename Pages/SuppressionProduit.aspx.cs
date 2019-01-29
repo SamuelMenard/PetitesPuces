@@ -19,6 +19,23 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Request.QueryString["ResultatModif"] != null)
+        {
+            string resultat = Request.QueryString["ResultatModif"];
+            if (resultat == "OK")
+            {
+                lblMessage.Text = "Le produit a été modifié.";
+                divMessage.CssClass = "alert alert-success alert-margins";
+                divMessage.Visible = true;
+            }
+            else if (resultat == "PasOK")
+            {
+                lblMessage.Text = "Le produit n'a pas pu être modifié. Réessayez ultérieurement.";
+                divMessage.CssClass = "alert alert-danger alert-margins";
+                divMessage.Visible = true;
+            }
+        }
+
         nomVendeur = Session["Courriel"].ToString();
         nomEntreprise = Session["NomAffaire"].ToString();
         noVendeur = Convert.ToInt32((Session["NoVendeur"]));

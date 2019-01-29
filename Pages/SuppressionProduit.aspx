@@ -18,6 +18,13 @@
             document.forms[0].appendChild(confirm_value);
         }
     </script>
-     <!-- Contenu de la page -->
+    <!-- Contenu de la page -->
+    <div class="row">
+       <div class="message text-center">
+          <asp:Panel ID="divMessage" runat="server" Visible="False">
+             <asp:Label ID="lblMessage" runat="server" />
+          </asp:Panel>
+       </div>
+    </div>
     <asp:PlaceHolder id="phDynamique" EnableViewState="false" runat="server" />
 </asp:Content>
