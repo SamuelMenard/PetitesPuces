@@ -23,17 +23,18 @@ public static class LibrairieLINQ
          * */
         var clients = dataContext.PPClients;
         var vendeurs = dataContext.PPVendeurs;
+        var gestionnaires = dataContext.PPGestionnaires;
+
         bool valide = false;
         switch (typeConnexion)
         {
             case "C": valide = clients.Where(client => client.AdresseEmail == courriel && client.MotDePasse == mdp).Any(); break;
             case "V":
-                valide = vendeurs.Where(vendeur => vendeur.AdresseEmail == courriel && vendeur.MotDePasse == mdp
-                      && vendeur.NoVendeur >= 10 && vendeur.NoVendeur <= 99).Any();
+                valide = vendeurs.Where(vendeur => vendeur.AdresseEmail == courriel && vendeur.MotDePasse == mdp).Any();
                 break;
             case "G":
-                valide = vendeurs.Where(gestionnaire => gestionnaire.AdresseEmail == courriel
-                            && gestionnaire.MotDePasse == mdp && gestionnaire.NoVendeur >= 100 && gestionnaire.NoVendeur <= 200).Any();
+                valide = gestionnaires.Where(gestionnaire => gestionnaire.courriel == courriel
+                            && gestionnaire.motDePasse == mdp).Any();
                 break;
         }
         return valide;
@@ -418,6 +419,29 @@ public static class LibrairieLINQ
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableCommande = dataContext.PPCommandes;
         return (from c in tableCommande where c.NoCommande == noCommande select c).First();
+    }
+
+    // get nouvelles demandes de vendeur
+    public static List<PPVendeurs> getNouvellesDemandesVendeur()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+        List<PPVendeurs> lst = (from v in tableVendeurs where v.Statut == null select v).ToList();
+        
+        return lst;
+    }
+
+    // accepter ou delete la demande d'un vendeur
+    public static void accepterOuDeleteDemandeVendeur(long noVendeur, bool accepte)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+        PPVendeurs vendeur = (from v in tableVendeurs where v.NoVendeur == noVendeur select v).First();
+
+        if (accepte) { vendeur.Statut = 1; }
+        else { dataContext.PPVendeurs.Remove(vendeur); }
+        dataContext.SaveChanges();
+
     }
 
 

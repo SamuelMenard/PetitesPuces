@@ -8,30 +8,33 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_DemandesVendeur : System.Web.UI.Page
 {
+
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
         afficherDemandes();
     }
+    
 
     public void afficherDemandes()
     {
-        int idVendeur = 0;
+        List<PPVendeurs> lstVendeurs = LibrairieLINQ.getNouvellesDemandesVendeur();
 
-
-        for (int i = 0; i < 5; i++)
+        Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "rowDemandeurs", "row");
+        foreach(PPVendeurs vendeur in lstVendeurs)
         {
-            idVendeur++;
-            String nomVendeur = "Raphaël Benoît";
-            String nomEntreprise = "Skelton Brand";
-            String date = DateTime.Now.ToShortDateString();
+            long idVendeur = vendeur.NoVendeur;
+            String nomVendeur = vendeur.Prenom + " " + vendeur.Nom;
+            String nomEntreprise = vendeur.NomAffaires;
+            String date = vendeur.DateCreation.ToString();
             String urlImg = "../static/images/user-management.png";
 
-            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "row_" + idVendeur, "row");
+            
 
             // infos
-            Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + idVendeur, "col-md-8");
+            Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + idVendeur, "col-md-4");
             Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + idVendeur, "panel panel-default");
+            demandeBase.Style.Add("height", "200px");
             Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + idVendeur, "panel-body");
 
             Panel media = LibrairieControlesDynamique.divDYN(demandeBody, "media_" + idVendeur, "media");
@@ -39,20 +42,22 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
             Image img = LibrairieControlesDynamique.imgDYN(mediaLeft, "img_" + idVendeur, urlImg, "media-object");
             img.Style.Add("width", "75px");
             Panel mediaBody = LibrairieControlesDynamique.divDYN(media, "mediaBody_" + idVendeur, "media-body");
-            LibrairieControlesDynamique.h4DYN(mediaBody, nomVendeur);
+            LibrairieControlesDynamique.h4DYN(mediaBody, "h4_"+ idVendeur, nomVendeur);
             LibrairieControlesDynamique.pDYN(mediaBody, nomEntreprise);
             LibrairieControlesDynamique.pDYN(mediaBody, date);
 
             // btn oui
-            Panel colOuiNon = LibrairieControlesDynamique.divDYN(row, "colOuiNon_" + idVendeur, "col-sm-2");
-            HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(colOuiNon, "btnOui_" + idVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
-            btnOui.Style.Add("height", "130px");
+            HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(demandeBody, "btnOui_" + idVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
 
-            LibrairieControlesDynamique.spaceDYN(colOuiNon);
+            LibrairieControlesDynamique.spaceDYN(demandeBody);
 
             // btn non
-            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colOuiNon, "btnNon_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
-            btnNon.Style.Add("height", "130px");
+            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeBody, "btnNon_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+        }
+
+        if (lstVendeurs.Count() < 1)
+        {
+            divMessage.Visible = true;
         }
         
         
@@ -61,12 +66,20 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
 
     public void btnNon_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Refuser demande");
+        HtmlButton btn = (HtmlButton)sender;
+        String id = btn.ID.Replace("btnNon_", "");
+        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), false);
+        String url = "~/Pages/DemandesVendeur.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void btnOui_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Accepter demande");
+        HtmlButton btn = (HtmlButton)sender;
+        String id = btn.ID.Replace("btnOui_", "");
+        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true);
+        String url = "~/Pages/DemandesVendeur.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void retourDashboard_click(Object sender, EventArgs e)
@@ -77,14 +90,4 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
     }
 }
 
-/*
- <div class="media">
-  <div class="media-left">
-    <img src="img_avatar1.png" class="media-object" style="width:60px">
-  </div>
-  <div class="media-body">
-    <h4 class="media-heading">John Doe</h4>
-    <p>Lorem ipsum...</p>
-  </div>
-</div>
- * */
+
