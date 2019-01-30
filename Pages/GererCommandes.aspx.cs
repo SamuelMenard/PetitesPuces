@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml;
 
 public partial class Pages_GererCommandes : System.Web.UI.Page
 {
@@ -16,13 +17,13 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
     PPVendeurs leVendeur;
 
     protected void Page_Load(object sender, EventArgs e)
-    {
+    {      
         noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
         nomEntreprise = leVendeur.NomAffaires;
 
         // Créer le panier du vendeur X
-        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid");
+        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluid");
         Panel panelBase = LibrairieControlesDynamique.divDYN(panelGroup, nomEntreprise + "_base", "panel panel-default");
 
 
@@ -125,12 +126,23 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
             LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
 
             // Pooids total commande
-            Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids2_" + idItem, "col-sm-2 text-center");
+            Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids2_" + idItem, "col-sm-1 text-center");
             LibrairieControlesDynamique.lblDYN(colPoids, nomEntreprise + "_Poids2_" + idItem, "Poids <br>" + lstCommandesLivre[i].PoidsTotal + " lbs", "border-quantite prix_item");
 
             // Nom du client
-            Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient2_" + idItem, "col-sm-3 text-center");
+            Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient2_" + idItem, "col-sm-2 text-center");
             LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
+
+            List<PPDetailsCommandes> lstDetailsCommandes = dbContext.PPDetailsCommandes.Where(c => c.NoCommande == idItem).ToList();
+            int nbItems = 0;
+            for (int j = 0; j < lstDetailsCommandes.Count; j++)
+            {
+                nbItems++;
+            }
+
+            // Nom du client
+            Panel colNbItem = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNbItem_" + idItem, "col-sm-2 text-center");
+            LibrairieControlesDynamique.lblDYN(colNbItem, nomEntreprise + "_nbItems_" + idItem, "Nombres d'items<br>"+ nbItems, "nomClient prix_item");
 
             // Total avant taxes
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix2_" + idItem, "col-sm-2 text-center");
