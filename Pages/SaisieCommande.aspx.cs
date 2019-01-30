@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 public partial class Pages_SaisieCommande : System.Web.UI.Page
 {
     private static BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
-    private int idEntreprise;
+    private long idEntreprise;
     private String etape;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -41,171 +41,355 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // masquer la div de paiement
         div_paiement.Visible = false;
 
-        bool ruptureStock = false;
-        bool quantiteModif = false;
-
-        // do something with entry.Value or entry.Key
-        long? idEntreprise = lstArticlesEnPanier[0].NoVendeur;
-        String nomEntreprise = lstArticlesEnPanier[0].PPVendeurs.NomAffaires;
-        String nomVendeur = lstArticlesEnPanier[0].PPVendeurs.Prenom + " " + lstArticlesEnPanier[0].PPVendeurs.Nom;
-        decimal? sousTotal = 0;
-
-        // Créer le panier du vendeur X
-        Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
-
-        // Nom de l'entreprise
-        Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
-        LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
-
-        // Liste des items + le total
-        Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
-
-
-        // Rajouter les produits dans le panier
-
-        foreach (PPArticlesEnPanier article in lstArticlesEnPanier)
+        if (lstArticlesEnPanier.Count != 0)
         {
-            long? idItem = article.NoProduit;
-            short? quantiteSelectionne = article.NbItems;
-            decimal? prixUnitaire = article.PPProduits.PrixDemande;
+            bool ruptureStock = false;
+            bool quantiteModif = false;
 
-            decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
-            decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
+            // do something with entry.Value or entry.Key
+            long? idEntreprise = lstArticlesEnPanier[0].NoVendeur;
+            String nomEntreprise = lstArticlesEnPanier[0].PPVendeurs.NomAffaires;
+            String nomVendeur = lstArticlesEnPanier[0].PPVendeurs.Prenom + " " + lstArticlesEnPanier[0].PPVendeurs.Nom;
+            decimal? sousTotal = 0;
+            decimal poidsTotal = 0;
 
-            decimal? poids = article.PPProduits.Poids;
+            // Créer le panier du vendeur X
+            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
 
-            // sum au sous total
-            sousTotal += (prixUnitaire * article.NbItems);
+            // Nom de l'entreprise
+            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
+            LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
 
-            String nomProduit = article.PPProduits.Nom;
-            String urlImage = "../static/images/" + article.PPProduits.Photo;
+            // Liste des items + le total
+            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
 
-            Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
 
-            // ajouter l'image
-            Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colImg_" + idItem, "col-sm-2");
-            LibrairieControlesDynamique.imgDYN(colImg, idEntreprise + "_img_" + idItem, urlImage, "img-size");
+            // Rajouter les produits dans le panier
 
-            // Nom du produit
-            Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
-            LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
-            LibrairieControlesDynamique.brDYN(colNom);
-            LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
-
-            // Quantité sélectionné
-            Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
-
-            TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem,
-                quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1) ? "1" : article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
-
-            // vérifier les quantites
-            if (article.PPProduits.NombreItems < 1)
+            foreach (PPArticlesEnPanier article in lstArticlesEnPanier)
             {
-                ruptureStock = true;
-                tbQuantite.Enabled = false;
-                LibrairieControlesDynamique.lblDYN(colQuantite, "", "Rupture de stock", "rupture-stock");
-            }
-            else
-            {
-                if (article.PPProduits.NombreItems < article.NbItems)
+                long? idItem = article.NoProduit;
+                short? quantiteSelectionne = article.NbItems;
+                decimal? prixUnitaire = article.PPProduits.PrixDemande;
+
+                decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
+                decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
+                decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
+
+                decimal? poids = article.PPProduits.Poids;
+                poidsTotal += (Decimal)(poids * quantiteSelectionne);
+
+                // sum au sous total
+                sousTotal += prixAvecQuantitesAvecRabais;
+
+                String nomProduit = article.PPProduits.Nom;
+                String urlImage = "../static/images/" + article.PPProduits.Photo;
+
+                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
+
+                // ajouter l'image
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colImg_" + idItem, "col-sm-2");
+                LibrairieControlesDynamique.imgDYN(colImg, idEntreprise + "_img_" + idItem, urlImage, "img-size");
+
+                // Nom du produit
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
+                LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                LibrairieControlesDynamique.brDYN(colNom);
+                LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
+
+                // Quantité sélectionné
+                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
+
+                TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem,
+                    quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1) ? "1" : article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
+
+                // vérifier les quantites
+                if (article.PPProduits.NombreItems < 1)
                 {
-                    LibrairieLINQ.modifierQuantitePanier(article.NoPanier, article.PPProduits.NombreItems.ToString());
-                    tbQuantite.Text = article.PPProduits.NombreItems.ToString();
-                    quantiteModif = true;
+                    ruptureStock = true;
+                    tbQuantite.Enabled = false;
+                    LibrairieControlesDynamique.lblDYN(colQuantite, "", "Rupture de stock", "rupture-stock");
                 }
-                LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + article.NoPanier + ";" + idItem, "Mettre à jour", update_click);
+                else
+                {
+                    if (article.PPProduits.NombreItems < article.NbItems)
+                    {
+                        LibrairieLINQ.modifierQuantitePanier(article.NoPanier, article.PPProduits.NombreItems.ToString());
+                        tbQuantite.Text = article.PPProduits.NombreItems.ToString();
+                        quantiteModif = true;
+                    }
+                    LibrairieControlesDynamique.lbDYN(colQuantite, "update_" + article.NoPanier + ";" + idItem, "Mettre à jour", update_click);
 
+                }
+
+
+
+
+                // Prix item
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
+
+                if (montantRabais > 0)
+                {
+                    LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix-item-avant-rabais");
+                    LibrairieControlesDynamique.brDYN(colPrix);
+                }
+
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantitesAvecRabais, 2).ToString(), "prix_item");
+                LibrairieControlesDynamique.brDYN(colPrix);
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
+
+
+                // Bouton retirer
+                Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
+                Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, idEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
+                LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + article.NoPanier, "btn btn-default", "RETIRER", retirer_click);
+                LibrairieControlesDynamique.hrDYN(panelBody);
             }
 
+            // Afficher le sous total
+            Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowSousTotal", "row");
+            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-10 text-right");
+            LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
 
+            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
+            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
 
-
-            // Prix item
-            Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
-
-            LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix_item");
-            LibrairieControlesDynamique.brDYN(colPrix);
-            LibrairieControlesDynamique.lblDYN(colPrix, "", "Prix unitaire: $" + Decimal.Round((Decimal)prixUnitaire, 2).ToString(), "prix_unitaire");
-            LibrairieControlesDynamique.brDYN(colPrix);
-            LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
-
-
-            // Bouton retirer
-            Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
-            Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, idEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
-            LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + article.NoPanier, "btn btn-default", "RETIRER", retirer_click);
             LibrairieControlesDynamique.hrDYN(panelBody);
-        }
 
-        // Afficher le sous total
-        Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowSousTotal", "row");
-        Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-10 text-right");
-        LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
+            // Afficher la TPS
+            Decimal? pctTPS = LibrairieLINQ.getPourcentageTaxes("TPS", this.idEntreprise) / 100;
+            Decimal? TPS = sousTotal * pctTPS;
 
-        Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
-        LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
-
-        LibrairieControlesDynamique.hrDYN(panelBody);
-
-        // Afficher la TPS
-        Decimal? pctTPS = LibrairieLINQ.getPourcentageTaxes("TPS") / 100;
-        Decimal? TPS = sousTotal * pctTPS;
-
-        Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
-        Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-10 text-right");
-        LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
-
-        Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
-        LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
-
-        LibrairieControlesDynamique.hrDYN(panelBody);
-
-        // Afficher la TVQ (si nécessaire)
-        if (lstArticlesEnPanier[0].PPVendeurs.Province == "QC")
-        {
-            Decimal? pctTVQ = LibrairieLINQ.getPourcentageTaxes("TVQ") / 100;
+            // Afficher la TVQ
+            Decimal? pctTVQ = LibrairieLINQ.getPourcentageTaxes("TVQ", this.idEntreprise) / 100;
             Decimal? TVQ = sousTotal * pctTVQ;
 
-            Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
-            Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-10 text-right");
-            LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
+            if (pctTPS != 0)
+            {
+                Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
+                Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-10 text-right");
+                LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
 
-            Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2 text-right");
-            LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + Decimal.Round((Decimal)TVQ, 2).ToString(), "infos-payage");
+                Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
+                LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+            
+
+            // Afficher la TVQ (si nécessaire)
+            if (pctTVQ != 0)
+            {
+
+                Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
+                Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-10 text-right");
+                LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
+
+                Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2 text-right");
+                LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + Decimal.Round((Decimal)TVQ, 2).ToString(), "infos-payage");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            // afficher message quantite modif (au besoins)
+            if (quantiteModif)
+            {
+                Panel rowModif = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colModif = LibrairieControlesDynamique.divDYN(rowModif, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colModif, "", "Certaines quantités ont été modifiées dû à la quantité en stock", "modif-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            // vérifier limite de poids
+            bool limiteDePoidsDepasse = LibrairieLINQ.depassePoidsMax(this.idEntreprise, poidsTotal);
+            if (limiteDePoidsDepasse)
+            {
+                Panel rowPoidsDepasse = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colPoidsDepasse = LibrairieControlesDynamique.divDYN(rowPoidsDepasse, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colPoidsDepasse, "", "Le poids de la commande dépasse la limite établie par le vendeur (" + LibrairieLINQ.poidsMaximumLivraisonCompganie(this.idEntreprise) + " lbs)", "rupture-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            // afficher message rupture (au besoins)
+            if (ruptureStock)
+            {
+                Panel rowRupture = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colRupture = LibrairieControlesDynamique.divDYN(rowRupture, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colRupture, "", "Veuillez retirer les articles en rupture de stock avant de pouvoir commander", "rupture-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            Panel rowFraisTransport = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+            Panel colFraisTransport = LibrairieControlesDynamique.divDYN(rowFraisTransport, "", "col-sm-12 text-right");
+            LibrairieControlesDynamique.lblDYN(colFraisTransport, "", "Des frais de transport pourraient s'appliquer", "avertissement-livraison");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
-        }
 
-        // afficher message quantite modif (au besoins)
-        if (quantiteModif)
+            // Bouton shipping
+            Panel rowBtnShipping = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnShipping", "row");
+            Panel colLabelBtnShipping = LibrairieControlesDynamique.divDYN(rowBtnShipping, idEntreprise + "_colLabelBtnShipping", "col-sm-2");
+
+            System.Diagnostics.Debug.WriteLine("Rupture stock: " + ruptureStock);
+            System.Diagnostics.Debug.WriteLine("Limite depasse: " + ruptureStock);
+            if (!ruptureStock && !limiteDePoidsDepasse)
+            {
+                HtmlButton btnShipping = LibrairieControlesDynamique.htmlbtnDYN(colLabelBtnShipping, idEntreprise + "_BtnShipping", "btn btn-warning", "Informations de livraison", "glyphicon glyphicon-user", infosPerso_click);
+            }
+        }
+        else
         {
-            Panel rowModif = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
-            Panel colModif = LibrairieControlesDynamique.divDYN(rowModif, "", "col-sm-12 text-right");
-            LibrairieControlesDynamique.lblDYN(colModif, "", "Certaines quantités ont été modifiées dû à la quantité en stock", "modif-stock-message");
-
-            LibrairieControlesDynamique.hrDYN(panelBody);
+            String url = "~/Pages/AccueilClient.aspx?";
+            Response.Redirect(url, true);
         }
 
-        // afficher message rupture (au besoins)
-        if (ruptureStock)
+    }
+
+    public bool afficherResumePanier()
+    {
+        bool valide = true;
+        List<PPArticlesEnPanier> lstArticlesEnPanier = LibrairieLINQ.getProduitsVendeurSpecifiqueClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
+
+        if (lstArticlesEnPanier.Count != 0)
         {
-            Panel rowRupture = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
-            Panel colRupture = LibrairieControlesDynamique.divDYN(rowRupture, "", "col-sm-12 text-right");
-            LibrairieControlesDynamique.lblDYN(colRupture, "", "Veuillez retirer les articles en rupture de stock avant de pouvoir commander", "rupture-stock-message");
+            bool ruptureStock = false;
+            bool quantiteModif = false;
 
-            LibrairieControlesDynamique.hrDYN(panelBody);
+            // do something with entry.Value or entry.Key
+            long? idEntreprise = lstArticlesEnPanier[0].NoVendeur;
+            String nomEntreprise = lstArticlesEnPanier[0].PPVendeurs.NomAffaires;
+            String nomVendeur = lstArticlesEnPanier[0].PPVendeurs.Prenom + " " + lstArticlesEnPanier[0].PPVendeurs.Nom;
+            decimal? sousTotal = 0;
+            decimal poidsTotal = 0;
+
+            // Créer le panier du vendeur X
+            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
+
+            // Nom de l'entreprise
+            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
+            LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
+
+            // Liste des items + le total
+            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
+
+
+            // Rajouter les produits dans le panier
+
+            foreach (PPArticlesEnPanier article in lstArticlesEnPanier)
+            {
+                long? idItem = article.NoProduit;
+                short? quantiteSelectionne = article.NbItems;
+
+                decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
+                decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
+                decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
+
+                decimal? poids = article.PPProduits.Poids;
+                poidsTotal += (Decimal)(poids * quantiteSelectionne);
+
+                // sum au sous total
+                sousTotal += prixAvecQuantites;
+
+                String nomProduit = article.PPProduits.Nom;
+                String urlImage = "../static/images/" + article.PPProduits.Photo;
+
+                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
+
+                // ajouter l'image
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colImg_" + idItem, "col-sm-2");
+                LibrairieControlesDynamique.imgDYN(colImg, idEntreprise + "_img_" + idItem, urlImage, "img-size");
+
+                // Nom du produit
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
+                LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                LibrairieControlesDynamique.brDYN(colNom);
+                LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
+
+                // Quantité sélectionné
+                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
+
+                TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem,
+                    quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1) ? "1" : article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
+                tbQuantite.ReadOnly = true;
+
+                // vérifier les quantites
+                if (article.PPProduits.NombreItems < 1)
+                {
+                    ruptureStock = true;
+                    tbQuantite.Enabled = false;
+                    LibrairieControlesDynamique.lblDYN(colQuantite, "", "Rupture de stock", "rupture-stock");
+                }
+                else
+                {
+                    if (article.PPProduits.NombreItems < article.NbItems)
+                    {
+                        LibrairieLINQ.modifierQuantitePanier(article.NoPanier, article.PPProduits.NombreItems.ToString());
+                        tbQuantite.Text = article.PPProduits.NombreItems.ToString();
+                        quantiteModif = true;
+                    }
+                }
+
+
+
+
+                // Prix item
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
+
+                if (montantRabais > 0)
+                {
+                    LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix-item-avant-rabais");
+                    LibrairieControlesDynamique.brDYN(colPrix);
+                }
+                
+                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantitesAvecRabais, 2).ToString(), "prix_item");
+                LibrairieControlesDynamique.brDYN(colPrix);
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+            
+
+            // afficher message quantite modif (au besoins)
+            if (quantiteModif)
+            {
+                Panel rowModif = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colModif = LibrairieControlesDynamique.divDYN(rowModif, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colModif, "", "Certaines quantités ont été modifiées dû à la quantité en stock", "modif-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            // vérifier limite de poids
+            bool limiteDePoidsDepasse = LibrairieLINQ.depassePoidsMax(this.idEntreprise, poidsTotal);
+            if (limiteDePoidsDepasse)
+            {
+                Panel rowPoidsDepasse = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colPoidsDepasse = LibrairieControlesDynamique.divDYN(rowPoidsDepasse, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colPoidsDepasse, "", "Le poids de la commande dépasse la limite établie par le vendeur (" + LibrairieLINQ.poidsMaximumLivraisonCompganie(this.idEntreprise) + " lbs)", "rupture-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            // afficher message rupture (au besoins)
+            if (ruptureStock)
+            {
+                Panel rowRupture = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colRupture = LibrairieControlesDynamique.divDYN(rowRupture, "", "col-sm-12 text-right");
+                LibrairieControlesDynamique.lblDYN(colRupture, "", "Veuillez retirer les articles en rupture de stock avant de pouvoir commander", "rupture-stock-message");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+
+            if (ruptureStock || limiteDePoidsDepasse) { valide = false; }
         }
-
-        Panel rowFraisTransport = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
-        Panel colFraisTransport = LibrairieControlesDynamique.divDYN(rowFraisTransport, "", "col-sm-12 text-right");
-        LibrairieControlesDynamique.lblDYN(colFraisTransport, "", "Des frais de transport pourraient s'appliquer", "avertissement-livraison");
-
-        LibrairieControlesDynamique.hrDYN(panelBody);
-
-        // Bouton shipping
-        Panel rowBtnShipping = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnShipping", "row");
-        Panel colLabelBtnShipping = LibrairieControlesDynamique.divDYN(rowBtnShipping, idEntreprise + "_colLabelBtnShipping", "col-sm-2");
-        HtmlButton btnShipping = LibrairieControlesDynamique.htmlbtnDYN(colLabelBtnShipping, idEntreprise + "_BtnShipping", "btn btn-warning", "Informations de livraison", "glyphicon glyphicon-user", infosPerso_click);
+        else
+        {
+            String url = "~/Pages/AccueilClient.aspx?";
+            Response.Redirect(url, true);
+        }
+        return valide;
 
     }
 
@@ -233,6 +417,9 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherLivraison()
     {
+        // afficher resumé panier
+        btnPaiementSecurise.Visible = afficherResumePanier();
+
         // ajuster la bar de progression
         progressBar.Style.Add("width", "75%");
 
@@ -242,9 +429,11 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // masquer div infos perso
         divInfosPerso.Visible = false;
 
-        // calculer le poids total
-        Double poidsTotal = 4;
-        Double prixLivraisonStandard = getPrixLivraisonSelonPoids(poidsTotal, 1);
+        // poids total
+        Decimal poidsTotal = LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
+
+        // calculer le prix pour livraison
+        Decimal prixLivraisonStandard = Decimal.Round(getPrixLivraisonSelonPoids(poidsTotal, this.idEntreprise), 2);
 
         // mettre à jour les label de prix et poids
         poidsTotalCommande.Text = poidsTotal.ToString() + " lbs";
@@ -257,6 +446,25 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         {
             fraisTransport.Text = "$" + prixLivraisonStandard.ToString();
         }
+
+        // get sous total avec rabais
+        Decimal sousTotal = Decimal.Round(LibrairieLINQ.getSousTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise), 2);
+
+        // calculer TPS et TVQ
+        Decimal TPSPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TPS", this.idEntreprise) / 100;
+        Decimal TVQPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TVQ", this.idEntreprise) / 100;
+        Decimal TPS = Math.Round((sousTotal + prixLivraisonStandard) * TPSPourcentage, 2);
+        Decimal TVQ = Math.Round((sousTotal + prixLivraisonStandard) * TVQPourcentage, 2);
+
+        // afficher les autres infos
+        lblSousTotalLiv.Text = "$" + sousTotal.ToString();
+        if (TPSPourcentage != 0) { lblTPSLiv.Text = "$" + TPS.ToString(); }
+        else { divTPSLiv.Visible = false; }
+
+        if (TVQPourcentage != 0) { lblTVQLiv.Text = "$" + TVQ.ToString(); }
+        else { divTVQLiv.Visible = false; }
+
+        lblTotalLiv.Text = "$"+ (sousTotal + TPS + TVQ + prixLivraisonStandard).ToString();
 
         // rendre visible la div livraison
         divLiv.Visible = true;
@@ -273,34 +481,46 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // masquer la div de livraison
         divLiv.Visible = false;
 
-        // afficher le sous total
-        Double sousTotal = 3902.97;
+        // poids total
+        Decimal poidsTotal = LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
 
-        // calculer le prix de la livraison
-        Double poidsTotal = 4;
-        int type = 0;
+        // calculer le prix pour livraison
+        Decimal prixLivraisonStandard = Decimal.Round(getPrixLivraisonSelonPoids(poidsTotal, this.idEntreprise), 2);
 
-        if (rbRegulier.Checked == true) { type = 1; }
-        else if (rbPrioritaire.Checked == true) { type = 2; }
-        else if (rbCompagnie.Checked == true) { type = 3; }
+        // mettre à jour les label de prix et poids
+        lblPoidsPaiement.Text = poidsTotal.ToString() + " lbs";
 
-        Double prixLivraison = getPrixLivraisonSelonPoids(poidsTotal, type);
+        if (prixLivraisonStandard == 0)
+        {
+            lblFraisTransportPaiement.Text = "GRATUIT";
+        }
+        else
+        {
+            lblFraisTransportPaiement.Text = "$" + prixLivraisonStandard.ToString();
+        }
+
+        // get sous total avec rabais
+        Decimal sousTotal = Decimal.Round(LibrairieLINQ.getSousTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise), 2);
 
         // calculer TPS et TVQ
-        Double TPSPourcentage = 0.05;
-        Double TVQPourcentage = 0.0975;
-        Double TPS = Math.Round((sousTotal + prixLivraison) * TPSPourcentage, 2);
-        Double TVQ = Math.Round((sousTotal + prixLivraison) * TVQPourcentage, 2);
+        Decimal TPSPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TPS", this.idEntreprise) / 100;
+        Decimal TVQPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TVQ", this.idEntreprise) / 100;
+        Decimal TPS = Math.Round((sousTotal + prixLivraisonStandard) * TPSPourcentage, 2);
+        Decimal TVQ = Math.Round((sousTotal + prixLivraisonStandard) * TVQPourcentage, 2);
 
-        // Calculer le coût total
-        Double coutTotal = sousTotal + prixLivraison + TPS + TVQ;
+        // afficher les autres infos
+        lblSousTotalPaiement.Text = "$" + sousTotal.ToString();
 
-        // afficher les données
-        sousTotal_paiement.Text = "$" + sousTotal.ToString();
-        fraisLivraison_paiement.Text = (prixLivraison == 0)?"GRATUIT":"$" + prixLivraison.ToString();
-        TPS_paiement.Text = "$" + TPS.ToString();
-        TVQ_paiement.Text = "$" + TVQ.ToString();
-        total_paiement.Text = "$" + coutTotal.ToString();
+        if (TPSPourcentage != 0) { lblTPSPaiement.Text = "$" + TPS.ToString(); }
+        else { divTPSPaiement.Visible = false; }
+
+        if (TVQPourcentage != 0) { lblTVQPaiement.Text = "$" + TVQ.ToString(); }
+        else { divTVQPaiement.Visible = false; }
+
+        lblTotalPaiement.Text = "$" + (sousTotal + TPS + TVQ + prixLivraisonStandard).ToString();
+
+        // afficher resume paiement
+        btnLESi.Visible = afficherResumePanier();
 
         // afficher la div
         div_paiement.Visible = true;
@@ -308,11 +528,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherReponseLESi()
     {
-        Boolean reussi = false;
+        Boolean reussi = true;
 
         // rendre visible la bonne div
         if (reussi)
         {
+            // rajouter les infos de la commande dans la base de données
+            creerCommande();
+
             String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon";
             Response.Redirect(url, true);
         }
@@ -323,8 +546,170 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         }
     }
 
+    public void creerCommande()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableCommandes = dataContext.PPCommandes;
+        var tableDetailsCommande = dataContext.PPDetailsCommandes;
+        var tableHistoriqueCommande = dataContext.PPHistoriquePaiements;
+        var tableArticlesPanier = dataContext.PPArticlesEnPanier;
+        var tableDetailsCommandes = dataContext.PPDetailsCommandes;
+
+        var dernierHistorique = from h in tableHistoriqueCommande orderby h.NoHistorique descending select h;
+        var dernierDetailCommande = from dc in tableDetailsCommande orderby dc.NoDetailCommandes descending select dc;
+        var derniereCommande = from c in tableCommandes orderby c.NoCommande descending select c;
+        var articlesPanier = LibrairieLINQ.getProduitsVendeurSpecifiqueClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
+
+        // poids total
+        Decimal poidsTotal = LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
+
+        // calculer le prix pour livraison
+        Decimal prixLivraison = Decimal.Round(getPrixLivraisonSelonPoids(poidsTotal, this.idEntreprise), 2);
+
+        // get sous total avec rabais
+        Decimal sousTotal = Decimal.Round(LibrairieLINQ.getSousTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise), 2);
+
+        // calculer TPS et TVQ
+        Decimal TPSPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TPS", this.idEntreprise) / 100;
+        Decimal TVQPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TVQ", this.idEntreprise) / 100;
+        Decimal TPS = Math.Round((sousTotal + prixLivraison) * TPSPourcentage, 2);
+        Decimal TVQ = Math.Round((sousTotal + prixLivraison) * TVQPourcentage, 2);
+        
+
+        // code type livraison
+        short noTypeLivraison = 1;
+
+        if (rbRegulier.Checked == true)
+        {
+            noTypeLivraison = 1;
+        }
+        else if (rbPrioritaire.Checked == true)
+        {
+            noTypeLivraison = 2;
+        }
+        else if (rbCompagnie.Checked == true)
+        {
+            noTypeLivraison = 3;
+        }
+
+
+        // calculer un id de commande unique
+        long biggestCommandeID = 1;
+
+        if (derniereCommande.Count() > 0)
+        {
+            biggestCommandeID = derniereCommande.First().NoCommande + 1;
+        }
+
+        // calculer un no d'autorisation unique
+        long biggestNoAutorisation = 1000;
+        if (derniereCommande.Count() > 0)
+        {
+            biggestNoAutorisation = long.Parse(derniereCommande.First().NoAutorisation) + 1;
+        }
+
+        // calculer un id de détail de commande unique
+        long biggestNoDetailCommande = 1;
+        if (dernierDetailCommande.Count() > 0)
+        {
+            biggestNoDetailCommande = dernierDetailCommande.First().NoDetailCommandes + 1;
+        }
+
+        // calculer un id d'historique unique
+        long biggestHistoriqueID = 1;
+        if (dernierHistorique.Count() > 0)
+        {
+            biggestHistoriqueID = dernierHistorique.First().NoHistorique + 1;
+        }
+
+        // calculer redevance vendeur
+        Decimal? pourcentageRedevance = LibrairieLINQ.getRedevanceVendeur(this.idEntreprise);
+        Decimal redevanceArgent = (Decimal)((pourcentageRedevance != null) ? sousTotal * (pourcentageRedevance/100) : 0);
+
+        using (var dbTransaction = dataContext.Database.BeginTransaction())
+        {
+            try
+            {
+                // Faire la liste des produits
+                foreach (var article in articlesPanier)
+                {
+                    PPDetailsCommandes detailCommande = new PPDetailsCommandes
+                    {
+                        NoDetailCommandes = biggestNoDetailCommande,
+                        NoCommande = biggestCommandeID,
+                        NoProduit = article.NoProduit,
+                        PrixVente = article.PPProduits.PrixVente,
+                        Quantité = article.NbItems
+                    };
+                    dataContext.PPDetailsCommandes.Add(detailCommande);
+                    biggestNoDetailCommande++;
+                }
+
+
+                // PPCommandes
+                PPCommandes commande = new PPCommandes
+                {
+                    NoCommande = biggestCommandeID,
+                    NoClient = long.Parse(Session["NoClient"].ToString()),
+                    NoVendeur = this.idEntreprise,
+                    DateCommande = DateTime.Now,
+                    CoutLivraison = prixLivraison,
+                    TypeLivraison = noTypeLivraison,
+                    MontantTotAvantTaxes = sousTotal,
+                    TPS = TPS,
+                    TVQ = TVQ,
+                    PoidsTotal = poidsTotal,
+                    Statut = "0",
+                    NoAutorisation = biggestNoAutorisation.ToString()
+                };
+
+                dataContext.PPCommandes.Add(commande);
+
+                // creer la table PPHistorique
+                //PPHistoriquePaiements historique 
+                PPHistoriquePaiements historique = new PPHistoriquePaiements
+                {
+                    NoHistorique = biggestHistoriqueID,
+                    MontantVenteAvantLivraison = sousTotal,
+                    NoVendeur = this.idEntreprise,
+                    NoClient = long.Parse(Session["NoClient"].ToString()),
+                    NoCommande = biggestCommandeID,
+                    DateVente = DateTime.Now,
+                    NoAutorisation = biggestNoAutorisation.ToString(),
+                    FraisLesi = 10,
+                    Redevance = redevanceArgent,
+                    FraisLivraison = prixLivraison,
+                    FraisTPS = TPS,
+                    FraisTVQ = TVQ
+                };
+
+                dataContext.PPHistoriquePaiements.Add(historique);
+
+                // delete les paniers du client
+                long noClient = long.Parse(Session["NoClient"].ToString());
+                var tousLesArticlesClient = from ap in tableArticlesPanier
+                                            where ap.NoClient == noClient && ap.NoVendeur == idEntreprise
+                                            select ap;
+
+                foreach(var article in tousLesArticlesClient)
+                {
+                    dataContext.PPArticlesEnPanier.Remove(article);
+                }
+
+                dataContext.SaveChanges();
+                dbTransaction.Commit();
+            }
+            catch(Exception ex)
+            {
+                dbTransaction.Rollback();
+            }
+            
+        }
+    }
+
     public void afficherBon()
     {
+        divProgressBar.Visible = false;
         LESi_reussi.Visible = true;
     }
 
@@ -354,50 +739,34 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         cell.Text = (ficheClient.Tel2 != null) ? ficheClient.Tel2.Trim() : "";
     }
 
-    public Double getPrixLivraisonSelonPoids(Double poidsCommande, int typeLivraison)
+    public Decimal getPrixLivraisonSelonPoids(Decimal poids, long noVendeur)
     {
-        // type livraison
-        // 1 = standard
-        // 2 = prioritaire
-        // 3 = compagnie
-        Double prixLivraison = 0;
+        // code poids
+        int codePoids = LibrairieLINQ.getCodePoids(poids);
 
-        // calculer le prix pour livraison régulière
-        if (poidsCommande < 5)
+        // code type livraison
+        int noTypeLivraison = 1;
+
+        if (rbRegulier.Checked == true)
         {
-            switch (typeLivraison)
-            {
-                case 1: prixLivraison = 0; break;
-                case 2: prixLivraison = 5; break;
-                case 3: prixLivraison = 10; break;
-            }
+            noTypeLivraison = 1;
         }
-        else if (poidsCommande >= 5 && poidsCommande < 20)
+        else if (rbPrioritaire.Checked == true)
         {
-            switch (typeLivraison)
-            {
-                case 1: prixLivraison = 5; break;
-                case 2: prixLivraison = 10; break;
-                case 3: prixLivraison = 15; break;
-            }
+            noTypeLivraison = 2;
         }
-        else if (poidsCommande >= 20 && poidsCommande < 100)
+        else if (rbCompagnie.Checked == true)
         {
-            switch (typeLivraison)
-            {
-                case 1: prixLivraison = 10; break;
-                case 2: prixLivraison = 15; break;
-                case 3: prixLivraison = 20; break;
-            }
+            noTypeLivraison = 3;
         }
-        else if (poidsCommande >= 100)
+
+        Decimal sousTotal = LibrairieLINQ.getSousTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
+        Decimal prixLivraison = LibrairieLINQ.getPrixLivraison(codePoids, noTypeLivraison, noVendeur);
+        Decimal prixLivraisonGratuite = LibrairieLINQ.prixPourLivraisonGratuite(this.idEntreprise);
+
+        if (noTypeLivraison == 1 && sousTotal > prixLivraisonGratuite)
         {
-            switch (typeLivraison)
-            {
-                case 1: prixLivraison = 20; break;
-                case 2: prixLivraison = 25; break;
-                case 3: prixLivraison = 30; break;
-            }
+            prixLivraison = 0;
         }
 
         return prixLivraison;
@@ -430,8 +799,15 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void infosPerso_click(Object sender, EventArgs e)
     {
-        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
-        Response.Redirect(url, true);
+        // vérifier que le poids de la commande ne dépasse pas le maximum de la compagnie et qu'il n'y a pas d'articles en rupture de stock
+        bool depassePoids = LibrairieLINQ.depassePoidsMax(this.idEntreprise, LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise));
+        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()));
+
+        if (!depassePoids && !rupture)
+        {
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
+            Response.Redirect(url, true);
+        }
     }
 
     public void livraison_click(Object sender, EventArgs e)
@@ -531,16 +907,38 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // si valide = continuer
         if (valide){
             afficherLivraison();
-            PPClients client =  LibrairieLINQ.getFicheInformationsClient(long.Parse(Session["NoClient"].ToString()));
-            client.Prenom = prenom.Text;
-            client.Nom = nomfamille.Text;
-            client.Ville = ville.Text;
-            client.CodePostal = codepostal.Text;
-            client.Rue = noCivique.Text + " " + rue.Text;
-            client.Tel1 = tel.Text;
-            client.Tel2 = (cell.Text != "")?cell.Text:null;
-            client.Province = province.SelectedValue;
-            LibrairieLINQ.enregistrerModifsProfilClient();
+            BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+
+            using (var dbTransaction = dataContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    long noClient = long.Parse(Session["NoClient"].ToString());
+
+                    var tableClients = dataContext.PPClients;
+                    PPClients client = (from c in tableClients
+                                        where c.NoClient == noClient
+                                        select c).First();
+
+                    client.Prenom = prenom.Text;
+                    client.Nom = nomfamille.Text;
+                    client.Ville = ville.Text;
+                    client.CodePostal = codepostal.Text;
+                    client.Rue = noCivique.Text + " " + rue.Text;
+                    client.Tel1 = tel.Text;
+                    client.Tel2 = (cell.Text != "") ? cell.Text : null;
+                    client.Province = province.SelectedValue;
+                    dataContext.SaveChanges();
+                    dbTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    dbTransaction.Rollback();
+                }
+                
+            }
+            
+            
         }
 
     }
@@ -567,14 +965,34 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void paiementLESi_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Paiement LESi");
-        afficherReponseLESi();
+        // vérifier que le poids de la commande ne dépasse pas le maximum de la compagnie et qu'il n'y a pas d'articles en rupture de stock
+        bool depassePoids = LibrairieLINQ.depassePoidsMax(this.idEntreprise, LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise));
+        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()));
+
+        if (!depassePoids && !rupture)
+        {
+            afficherReponseLESi();
+        }
+        else
+        {
+            afficherPaiement();
+        }
     }
 
     public void paiementSecurise_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Paiement");
-        afficherPaiement();
+        // vérifier que le poids de la commande ne dépasse pas le maximum de la compagnie et qu'il n'y a pas d'articles en rupture de stock
+        bool depassePoids = LibrairieLINQ.depassePoidsMax(this.idEntreprise, LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise));
+        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()));
+
+        if (!depassePoids && !rupture)
+        {
+            afficherPaiement();
+        }
+        else
+        {
+            afficherLivraison();
+        }
     }
 
     public void visualiserBon_click(Object sender, EventArgs e)
@@ -589,41 +1007,21 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void livraison_changed(Object sender, EventArgs e)
     {
-        // calculer le nouveau coût de livraison
-        Double poidsCommande = 4;
-        Double fraisLivraison = 0;
+        // calculer le prix de la livraison
+        Decimal poidsTotal = LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
 
-        if (rbRegulier.Checked == true)
-        {
-            fraisLivraison = getPrixLivraisonSelonPoids(poidsCommande, 1);
-        }
-        else if (rbPrioritaire.Checked == true)
-        {
-            fraisLivraison = getPrixLivraisonSelonPoids(poidsCommande, 2);
-        }
-        else if (rbCompagnie.Checked == true)
-        {
-            fraisLivraison = getPrixLivraisonSelonPoids(poidsCommande, 3);
-        }
+        Decimal prixLivraison = getPrixLivraisonSelonPoids(poidsTotal, this.idEntreprise);
 
-        if (fraisLivraison == 0)
+        if (prixLivraison == 0)
         {
             fraisTransport.Text = "GRATUIT";
         }
         else
         {
-            fraisTransport.Text = "$" + fraisLivraison.ToString();
+            fraisTransport.Text = "$" + prixLivraison.ToString();
         }
 
-        // masquer les autres div
-        divInfosPerso.Visible = false;
-        div_paiement.Visible = false;
-
-        // afficher la div livraison
-        divLiv.Visible = true;
-
-        // modifier panier
-        progressBar.Style.Add("width", "75%");
+        afficherLivraison();
     }
 
     private void getIdEntreprise()

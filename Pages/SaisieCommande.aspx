@@ -8,7 +8,7 @@
     <!-- Contenu de la page -->
     <div class="container">
      <div id="panier">
-        <div class="progress">
+        <div class="progress" id="divProgressBar" runat="server">
             <div id="progressBar" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:25%" runat="server">
               <asp:Label ID="lblEtapeLivraison" runat="server"></asp:Label>
             </div>
@@ -216,10 +216,9 @@
     </asp:Panel>
 
     <asp:Panel ID="divLiv" runat="server" CssClass="row" Visible="false">
-        <div class="col-md-12 order-md-1">
-        <h4 class="mb-3">Méthode de livraison</h4>
-        <div class="row">
-            <div class="col-md-12 mb-3">
+        
+            <div class="col-md-6 mb-3">
+                <h4 class="mb-3">Méthode de livraison</h4>
                 <div class="radio">
                     <label class="infos-livraison"><asp:RadioButton id="rbRegulier" Checked="true" 
                         runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Poste régulière</label>
@@ -233,32 +232,69 @@
                         runat="server" GroupName="typeLivraison" OnCheckedChanged="livraison_changed" AutoPostBack="true"></asp:RadioButton>Compagnie de livraison</label>
                 </div>
             </div>
-        </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Poids de la commande:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="poidsTotalCommande" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Sous total:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblSousTotalLiv" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Frais de transport:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="fraisTransport" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row" id="divTPSLiv" runat="server">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">TPS:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblTPSLiv" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row" id="divTVQLiv" runat="server">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">TVQ:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblTVQLiv" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Total:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblTotalLiv" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
 
         <hr class="mb-4">
-
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <span class="infos-livraison">Poids de la commande:</span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <asp:Label ID="poidsTotalCommande" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-            </div>
-        </div>
-
-        <hr class="mb-4">
-
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <span class="infos-livraison">Frais de transport:</span>
-            </div>
-            <div class="col-md-4 mb-3">
-                <asp:Label ID="fraisTransport" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-            </div>
-        </div>
-
-        <hr class="mb-4">
-    </div>
 
         <div class="col-md-1 order-md-1">
             <asp:Button ID="btnRetourInfosPerso" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourInfosPerso_click" />
@@ -314,72 +350,85 @@
         <strong>Échoué...</strong> Votre carte de crédit a été refusée.
     </asp:Panel>
 
-    <asp:Panel ID="div_paiement" Visible="false" runat="server">
-        <div class="row">
-                <div class="col-md-12 mb-3">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <span class="infos-livraison">Sous total:</span>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <asp:Label ID="sousTotal_paiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-                                </div>
-                            </div>
-                            <hr class="mb-4">
+    <asp:Panel ID="div_paiement" Visible="false" runat="server" CssClass="row">
 
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <span class="infos-livraison">Livraison:</span>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <asp:Label ID="fraisLivraison_paiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-                                </div>
-                            </div>
-                            <hr class="mb-4">
-
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <span class="infos-livraison">TPS:</span>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <asp:Label ID="TPS_paiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-                                </div>
-                            </div>
-                            <hr class="mb-4">
-
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <span class="infos-livraison">TVQ:</span>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <asp:Label ID="TVQ_paiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-                                </div>
-                            </div>
-                            <hr class="mb-4">
-
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <span class="infos-livraison">Total:</span>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <asp:Label ID="total_paiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
-                                </div>
-                            </div>
+            <div class="col-md-6 mb-3">
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-credit-card"></i></span>
+                            <asp:TextBox ID="noCarte" CssClass="form-control" placeholder="000-000-000" runat="server"></asp:TextBox>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group">
+                            <asp:TextBox ID="tbCSV" CssClass="form-control" placeholder="000" runat="server"></asp:TextBox>
                         </div>
                     </div>
                 </div>
             </div>
-        <h4 class="mb-3">Méthode de paiment</h4>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-credit-card"></i></span>
-                        <asp:TextBox ID="noCarte" CssClass="form-control" placeholder="000-000-000" runat="server"></asp:TextBox>
-                      </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Poids de la commande:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblPoidsPaiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Sous total:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblSousTotalPaiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Frais de transport:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblFraisTransportPaiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row" id="divTPSPaiement" runat="server">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">TPS:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblTPSPaiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row" id="divTVQPaiement" runat="server">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">TVQ:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblTVQPaiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <span class="infos-livraison">Total:</span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <asp:Label ID="lblTotalPaiement" Text="" CssClass="infos-livraison" runat="server"></asp:Label>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
+
 
         <hr class="mb-4">
 
