@@ -85,7 +85,7 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom_" + idItem, "col-sm-3 LiensProduits nomClient");
-                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom_" + idItem, nomProduit, null);
+                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom_" + idItem, nomProduit, modifierProduit);
 
                 // Quantité restant
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-1");
@@ -114,6 +114,14 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
             }
         }
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorder", 30);
+    }
+
+    private void modifierProduit(object sender, EventArgs e)
+    {
+        LinkButton lb = (LinkButton)sender;
+        long idProduitMod = Convert.ToInt64(lb.ID.Replace(nomEntreprise + "_nom_", ""));
+        String url = "~/Pages/InscriptionProduit.aspx?NoProduit="+ idProduitMod;
+        Response.Redirect(url, true);
     }
 
     private void btnSupprimer_click(object sender, EventArgs e)

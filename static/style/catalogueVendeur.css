@@ -59,6 +59,10 @@
     margin-left: 15px;
 }
 
+.marginFluid {
+    padding-right: 50px;
+    padding-left: 50px;
+}
 .right15 {
     margin-right: 15px;
 }
@@ -83,6 +87,9 @@ input[type="radio"] {
     margin: 10px 10px 10px 40px;
 }
 
+.messageBackGround {
+    background-color: #f7a636 !important;
+}
 
 .Orange {
    color: orange;
@@ -114,6 +121,10 @@ input[type="radio"] {
     font-size: 14px;
     font-size: 1rem;
     vertical-align: middle;
+}
+
+.valignMessage {
+    vertical-align: middle !important;
 }
 
 .border-left {
