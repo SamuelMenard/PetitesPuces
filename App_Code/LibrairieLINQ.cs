@@ -357,13 +357,13 @@ public static class LibrairieLINQ
     }
 
     // voir si il y a un item qui est out of stock dans le panier du client
-    public static bool ruptureDeStockPanierClient(long? noClient)
+    public static bool ruptureDeStockPanierClient(long? noClient, long? noVendeur)
     {
         bool rupture = false;
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableArticlesPanier = dataContext.PPArticlesEnPanier;
         var tousLesPaniers = from ap in tableArticlesPanier
-                             where ap.NoClient == noClient
+                             where ap.NoClient == noClient && ap.NoVendeur == noVendeur
                              select ap;
 
         foreach(var panier in tousLesPaniers)
@@ -403,7 +403,23 @@ public static class LibrairieLINQ
         var tableVendeur = dataContext.PPVendeurs;
         return (Decimal)(from v in tableVendeur where v.NoVendeur == noVendeur select v).First().LivraisonGratuite;
     }
-    
+
+    // get infos vendeur
+    public static PPVendeurs getInfosVendeur(long? noVendeur)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeur = dataContext.PPVendeurs;
+        return (from v in tableVendeur where v.NoVendeur == noVendeur select v).First();
+    }
+
+    // get infos commande
+    public static PPCommandes getInfosCommande(long? noCommande)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableCommande = dataContext.PPCommandes;
+        return (from c in tableCommande where c.NoCommande == noCommande select c).First();
+    }
+
 
 
 }
