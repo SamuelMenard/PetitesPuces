@@ -23,7 +23,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
     protected bool validerPage(bool binModification = false)
     {
-        Regex exprTexte = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
+        Regex exprTexte = new Regex("^[\\w\\s!\"$%?&()\\-;:«»°,'.]+$");
         Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
         Regex exprNbItems = new Regex("^\\d+$");
         DateTime dateAujourdhui = DateTime.Now.Date;
@@ -290,10 +290,25 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 }
 
                 foreach (Control controle in Page.Form.Controls)
-                    if (controle is TextBox)
-                        ((TextBox)controle).Text = "";
-                    else if (controle is DropDownList)
-                        ((DropDownList)controle).ClearSelection();
+                {
+                    if (controle.HasControls())
+                    {
+                        foreach (Control controleEnfant in controle.Controls)
+                        {
+                            if (controleEnfant is TextBox)
+                                ((TextBox)controleEnfant).Text = "";
+                            else if (controleEnfant is DropDownList)
+                                ((DropDownList)controleEnfant).ClearSelection();
+                        }
+                    }
+                    else
+                    {
+                        if (controle is TextBox)
+                            ((TextBox)controle).Text = "";
+                        else if (controle is DropDownList)
+                            ((DropDownList)controle).ClearSelection();
+                    }
+                }
                 btnOui.CssClass = "btn Orange active";
                 btnNon.CssClass = "btn Orange notActive";
                 rbDisponibilite.Value = "O";
