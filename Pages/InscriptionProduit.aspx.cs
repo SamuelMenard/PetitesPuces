@@ -23,7 +23,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
     protected bool validerPage(bool binModification = false)
     {
-        Regex exprTexte = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
+        Regex exprTexte = new Regex("^[\\w\\s!\"$%?&()\\-;:«»°,'.]+$");
         Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
         Regex exprNbItems = new Regex("^\\d+$");
         DateTime dateAujourdhui = DateTime.Now.Date;
@@ -229,10 +229,16 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         if (validerPage())
         {
             bool binOK = true;
+            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+            long nbProduit = 0;
+            foreach (PPProduits produit in dbContext.PPProduits.Where(p => p.NoVendeur == noVendeur))
+                if (long.Parse(produit.NoProduit.ToString().Substring(2)) > nbProduit)
+                    nbProduit = long.Parse(produit.NoProduit.ToString().Substring(2));
+            long noProduit = long.Parse(string.Format("{0}{1:D5}", noVendeur, nbProduit + 1));
 
             try
             {
-                fImage.SaveAs(Server.MapPath("~/static/images/") + fImage.FileName);
+                fImage.SaveAs(Server.MapPath("~/static/images/") + noProduit + fImage.FileName.Substring(fImage.FileName.LastIndexOf(".")));
             }
             catch (Exception ex)
             {
@@ -244,9 +250,8 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
             if (binOK)
             {
-                long noVendeur = (long)Session["NoVendeur"];
                 PPProduits produit = new PPProduits();
-                produit.NoProduit = dbContext.PPProduits.Where(p => p.NoVendeur == noVendeur).Max(p => long.Parse(p.NoProduit.ToString().Substring(2)));
+                produit.NoProduit = noProduit;
                 produit.NoVendeur = noVendeur;
                 produit.NoCategorie = int.Parse(ddlCategorie.SelectedValue);
                 produit.Nom = tbNom.Text;
@@ -285,10 +290,25 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 }
 
                 foreach (Control controle in Page.Form.Controls)
-                    if (controle is TextBox)
-                        ((TextBox)controle).Text = "";
-                    else if (controle is DropDownList)
-                        ((DropDownList)controle).ClearSelection();
+                {
+                    if (controle.HasControls())
+                    {
+                        foreach (Control controleEnfant in controle.Controls)
+                        {
+                            if (controleEnfant is TextBox)
+                                ((TextBox)controleEnfant).Text = "";
+                            else if (controleEnfant is DropDownList)
+                                ((DropDownList)controleEnfant).ClearSelection();
+                        }
+                    }
+                    else
+                    {
+                        if (controle is TextBox)
+                            ((TextBox)controle).Text = "";
+                        else if (controle is DropDownList)
+                            ((DropDownList)controle).ClearSelection();
+                    }
+                }
                 btnOui.CssClass = "btn Orange active";
                 btnNon.CssClass = "btn Orange notActive";
                 rbDisponibilite.Value = "O";
@@ -302,12 +322,13 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         if (validerPage(true))
         {
             bool binOK = true;
+            long noProduit = long.Parse(Request.QueryString["NoProduit"]);
 
             if (fImage.HasFile)
             {
                 try
                 {
-                    fImage.SaveAs(Server.MapPath("~/static/images/") + fImage.FileName);
+                    fImage.SaveAs(Server.MapPath("~/static/images/") + noProduit + fImage.FileName.Substring(fImage.FileName.LastIndexOf(".")));
                 }
                 catch (Exception ex)
                 {
@@ -320,7 +341,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
             if (binOK)
             {
-                long noProduit = long.Parse(Request.QueryString["NoProduit"]);
                 PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
                 produit.NoCategorie = int.Parse(ddlCategorie.SelectedValue);
                 produit.Nom = tbNom.Text;

@@ -113,7 +113,7 @@
 </div>
 <script type="text/javascript">
    $(document).ready(function () {
-      var exprTexte = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
+      var exprTexte = /^[\w\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF\s!"$%?&()\-;:«»°,'.]+$/;
       var exprMontant = /^\d+\.\d{2}$/;
       var exprNbItems = /^\d+$/;
       var dateAujourdhui = new Date();
@@ -222,7 +222,7 @@
             $('#contentBody_errPoids').text('').addClass('hidden');
          }
       });
-      /*$('#contentBody_btnInscription').click(function () {
+      $('#contentBody_btnInscription').click(function () {
          var binPageValide = true;
          if ($('#contentBody_ddlCategorie').val() == '') {
             $('#contentBody_ddlCategorie').removeClass('border-success').addClass('border-danger');
@@ -292,7 +292,7 @@
             binPageValide = false;
          }
          return binPageValide;
-      });*/
+      });
       $('#radioBtn a').on('click', function () {
          var sel = $(this).data('title');
          var tog = $(this).data('toggle');
