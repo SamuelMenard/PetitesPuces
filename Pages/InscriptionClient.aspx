@@ -113,8 +113,8 @@
       </div>
       <script>
          $(document).ready(function () {
-            var exprCourriel = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-            var exprMotPasse = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/;
+            var exprCourriel = /^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\.[a-z]+$/;
+            var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
             $("#tbCourriel").focusout(function () {
                if ($("#tbCourriel").val() == '') {
                   $("#tbCourriel").removeClass("border-success").addClass("border-danger");

@@ -16,8 +16,8 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
     protected void btnInscription_Click(object sender, EventArgs e)
     {
-        Regex exprCourriel = new Regex("^\\w + ([-+.]\\w +)*@\\w + ([-.]\\w +)*\\.\\w + ([-.]\\w +)*$");
-        Regex exprMotPasse = new Regex("^ (?=.*[a - z])(?=.*[A - Z])(?=.*[0 - 9])(?=.{ 8,})");
+        Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
+        Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
         if (tbCourriel.Text == "" || !exprCourriel.IsMatch(tbCourriel.Text) ||
             tbConfirmationCourriel.Text == "" || !exprCourriel.IsMatch(tbConfirmationCourriel.Text) || tbConfirmationCourriel.Text != tbCourriel.Text ||
             tbMotPasse.Text == "" || !exprMotPasse.IsMatch(tbMotPasse.Text) ||
