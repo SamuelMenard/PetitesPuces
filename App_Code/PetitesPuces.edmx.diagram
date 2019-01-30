@@ -34,6 +34,7 @@
         <AssociationConnector Association="BD6B8_424SModel.FK_PPPoidsLivraisons_PPTypesPoids" ManuallyRouted="false" />
         <AssociationConnector Association="BD6B8_424SModel.FK_PPProduits_PPVendeurs1" ManuallyRouted="false" />
         <AssociationConnector Association="BD6B8_424SModel.FK_PPVendeursClients_PPVendeurs" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BD6B8_424SModel.PPGestionnaires" Width="1.5" PointX="10.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

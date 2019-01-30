@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BD6B8_424SModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BD6B8_424SModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="PPArticlesEnPanier">
           <Key>
             <PropertyRef Name="NoPanier" />
@@ -72,6 +72,14 @@
           <Property Name="NoProduit" Type="bigint" />
           <Property Name="PrixVente" Type="smallmoney" />
           <Property Name="Quantité" Type="smallint" />
+        </EntityType>
+        <EntityType Name="PPGestionnaires">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="courriel" Type="varchar" MaxLength="100" />
+          <Property Name="motDePasse" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="PPHistoriquePaiements">
           <Key>
@@ -369,6 +377,7 @@
           <EntitySet Name="PPClients" EntityType="Self.PPClients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPCommandes" EntityType="Self.PPCommandes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPDetailsCommandes" EntityType="Self.PPDetailsCommandes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PPGestionnaires" EntityType="Self.PPGestionnaires" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPHistoriquePaiements" EntityType="Self.PPHistoriquePaiements" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPPoidsLivraisons" EntityType="Self.PPPoidsLivraisons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PPProduits" EntityType="Self.PPProduits" Schema="dbo" store:Type="Tables" />
@@ -436,8 +445,7 @@
             <End Role="PPVendeursClients" EntitySet="PPVendeursClients" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BD6B8_424SModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -899,7 +907,16 @@
             <End Role="PPVendeurs" EntitySet="PPVendeurs" />
             <End Role="PPVendeursClients" EntitySet="PPVendeursClients" />
           </AssociationSet>
+          <EntitySet Name="PPGestionnaires" EntityType="BD6B8_424SModel.PPGestionnaires" />
         </EntityContainer>
+        <EntityType Name="PPGestionnaires">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="courriel" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="motDePasse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1105,6 +1122,15 @@
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PPGestionnaires">
+            <EntityTypeMapping TypeName="BD6B8_424SModel.PPGestionnaires">
+              <MappingFragment StoreEntitySet="PPGestionnaires">
+                <ScalarProperty Name="motDePasse" ColumnName="motDePasse" />
+                <ScalarProperty Name="courriel" ColumnName="courriel" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
