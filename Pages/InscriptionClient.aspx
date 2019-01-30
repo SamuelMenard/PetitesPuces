@@ -95,13 +95,13 @@
          <div class="form-group col-md-6">           
            <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
            <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" />
-           <asp:Label ID="errCourriel" runat="server" CssClass="text-danger" style="display: none;" />
+           <asp:Label ID="errCourriel" runat="server" CssClass="text-danger d-none" />
            <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" MaxLength="100" />
-           <asp:Label ID="errConfirmationCourriel" runat="server" CssClass="text-danger" style="display: none;" />
+           <asp:Label ID="errConfirmationCourriel" runat="server" CssClass="text-danger d-none" />
            <asp:TextBox ID="tbMotPasse" runat="server" TextMode="Password" CssClass="form-control" style="margin-top: 10px;" placeholder="Mot de passe" MaxLength="50" />
-           <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
+           <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger d-none" />
            <asp:TextBox ID="tbConfirmationMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Confimation mot de passe" MaxLength="50" />
-           <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger" style="display: none;" />
+           <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger d-none" />
            <asp:Button ID="btnInscription" runat="server"  CssClass="btn btn-lg btn-primary btn-block" style="margin-top: 10px;" BackColor="Orange" BorderColor="Orange" Text="S'inscrire" OnClick="btnInscription_Click" />
          </div>
          <span class="barre-verticale-orange"></span>
@@ -118,20 +118,20 @@
             $("#tbCourriel").focusout(function () {
                if ($("#tbCourriel").val() == '') {
                   $("#tbCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errCourriel").text('Le courriel ne peut pas être vide').show();
+                  $("#errCourriel").text('Le courriel ne peut pas être vide').removeClass('d-none');
                } else if (!exprCourriel.test($("#tbCourriel").val())) {
                   $("#tbCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errCourriel").text('Le courriel n\'est pas dans un format valide').show();
+                  $("#errCourriel").text('Le courriel n\'est pas dans un format valide').removeClass('d-none');
                } else {
                   $("#tbCourriel").removeClass("border-danger").addClass("border-success");
-                  $("#errCourriel").text('').hide();
+                  $("#errCourriel").text('').addClass('d-none');
                   if ($("#tbConfirmationCourriel").val() != '' && exprCourriel.test($("#tbConfirmationCourriel").val())) {
                      if ($("#tbConfirmationCourriel").val() != $("#tbCourriel").val()) {
                         $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                        $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').show();
+                        $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');
                      } else {
                         $("#tbConfirmationCourriel").removeClass("border-danger").addClass("border-success");
-                        $("#errConfirmationCourriel").text('').hide();
+                        $("#errConfirmationCourriel").text('').addClass('d-none');
                      }
                   }
                }
@@ -139,35 +139,35 @@
             $("#tbConfirmationCourriel").focusout(function () {
                if ($("#tbConfirmationCourriel").val() == '') {
                   $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').show();
+                  $("#errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').removeClass('d-none');
                } else if (!exprCourriel.test($("#tbConfirmationCourriel").val())) {
                   $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').show();
+                  $("#errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').removeClass('d-none');
                } else if ($("#tbConfirmationCourriel").val() != $("#tbCourriel").val()) {
                   $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').show();
+                  $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');
                } else {
                   $("#tbConfirmationCourriel").removeClass("border-danger").addClass("border-success");
-                  $("#errConfirmationCourriel").text('').hide();
+                  $("#errConfirmationCourriel").text('').addClass('d-none');
                }
             });
             $("#tbMotPasse").focusout(function () {
                if ($("#tbMotPasse").val() == '') {
                   $("#tbMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errMotPasse").text('Le mot de passe ne peut pas être vide').show();
+                  $("#errMotPasse").text('Le mot de passe ne peut pas être vide').removeClass('d-none');
                } else if (!exprMotPasse.test($("#tbMotPasse").val())) {
                   $("#tbMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').show();
+                  $("#errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('d-none');
                } else {
                   $("#tbMotPasse").removeClass("border-danger").addClass("border-success");
-                  $("#errMotPasse").text('').hide();
+                  $("#errMotPasse").text('').addClass('d-none');
                   if ($("#tbConfirmationMotPasse").val() != '') {
                      if ($("#tbConfirmationMotPasse").val() != $("#tbMotPasse").val()) {
                         $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                        $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').show();
+                        $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                      } else {
                         $("#tbConfirmationMotPasse").removeClass("border-danger").addClass("border-success");
-                        $("#errConfirmationMotPasse").text('').hide();
+                        $("#errConfirmationMotPasse").text('').addClass('d-none');
                      }
                   }
                }
@@ -175,13 +175,13 @@
             $("#tbConfirmationMotPasse").focusout(function () {
                if ($("#tbConfirmationMotPasse").val() == '') {
                   $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').show();
+                  $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').removeClass('d-none');
                } else if ($("#tbConfirmationMotPasse").val() != $("#tbMotPasse").val()) {
                   $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').show();
+                  $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                } else {
                   $("#tbConfirmationMotPasse").removeClass("border-danger").addClass("border-success");
-                  $("#errConfirmationMotPasse").text('').hide();
+                  $("#errConfirmationMotPasse").text('').addClass('d-none');
                }
             });
             $("#btnInscription").click(function () {
@@ -189,35 +189,35 @@
                if ($("#tbCourriel").val() == '' || !exprCourriel.test($("#tbCourriel").val())) {
                   $("#tbCourriel").removeClass("border-success").addClass("border-danger");
                   if ($("#tbCourriel").val() == '')
-                     $("#errCourriel").text('Le courriel ne peut pas être vide').show();
+                     $("#errCourriel").text('Le courriel ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errCourriel").text('Le courriel n\'est pas dans un format valide').show();
+                     $("#errCourriel").text('Le courriel n\'est pas dans un format valide').removeClass('d-none');
                   binPageValide = false;
                }
                if ($("#tbConfirmationCourriel").val() == '' || !exprCourriel.test($("#tbConfirmationCourriel").val()) || $("#tbConfirmationCourriel").val() != $("#tbCourriel").val()) {
                   $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
                   if ($("#tbConfirmationCourriel").val() == '')
-                     $("#errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').show();
+                     $("#errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').removeClass('d-none');
                   else if (!exprCourriel.test($("#tbConfirmationCourriel").val()))
-                     $("#errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').show();
+                     $("#errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').removeClass('d-none');
                   else
-                     $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').show();                                   
+                     $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');                                   
                   binPageValide = false;
                }
                if ($("#tbMotPasse").val() == '' || !exprMotPasse.test($("#tbMotPasse").val())) {
                   $("#tbMotPasse").removeClass("border-success").addClass("border-danger");
                   if ($("#tbMotPasse").val() == '')
-                     $("#errMotPasse").text('Le mot de passe ne peut pas être vide').show();
+                     $("#errMotPasse").text('Le mot de passe ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').show();
+                     $("#errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('d-none');
                   binPageValide = false;
                }
                if ($("#tbConfirmationMotPasse").val() == '' || $("#tbConfirmationMotPasse").val() != $("#tbMotPasse").val()) {
                   $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
                   if ($("#tbConfirmationMotPasse").val() == '')
-                     $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').show();
+                     $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').show();
+                     $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                   binPageValide = false;
                }
                return binPageValide;
