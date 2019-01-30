@@ -116,6 +116,13 @@ public partial class PPDetailsCommandes
     public virtual PPProduits PPProduits { get; set; }
 }
 
+public partial class PPGestionnaires
+{
+    public long ID { get; set; }
+    public string courriel { get; set; }
+    public string motDePasse { get; set; }
+}
+
 public partial class PPHistoriquePaiements
 {
     public long NoHistorique { get; set; }
