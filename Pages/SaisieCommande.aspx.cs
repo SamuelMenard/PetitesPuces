@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using IronPdf;
 
 public partial class Pages_SaisieCommande : System.Web.UI.Page
 {
@@ -698,13 +699,194 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
                 dataContext.SaveChanges();
                 dbTransaction.Commit();
+
+                // creer PDF
+                String fluxHTML = "";
+                String urlPDF = "~/static/pdf/" + biggestCommandeID + ".pdf";
+
+                // créer le flux de données HTML
+                PPClients clientPDF = LibrairieLINQ.getFicheInformationsClient(noClient);
+                PPVendeurs vendeurPDF = LibrairieLINQ.getInfosVendeur(this.idEntreprise);
+                PPCommandes commandePDF = LibrairieLINQ.getInfosCommande(biggestCommandeID);
+
+
+
+                fluxHTML += genererTableFlux(clientPDF, vendeurPDF, commandePDF);
+
+                creerCommandePDF(fluxHTML, urlPDF);
             }
             catch(Exception ex)
             {
-                dbTransaction.Rollback();
+              dbTransaction.Rollback();
             }
-            
+
         }
+    }
+
+    public void creerCommandePDF(String fluxHTML, String urlPDF)
+    {
+        IronPdf.HtmlToPdf Renderer = new IronPdf.HtmlToPdf();
+        Renderer.PrintOptions.CustomCssUrl = new Uri(HttpContext.Current.Server.MapPath("~/static/style/pdfCommande.css"));
+        Renderer.PrintOptions.DPI = 300;
+        // There are many advanced  PDF Settings
+
+        // Render an HTML document or snippet as a string  
+        Renderer.RenderHtmlAsPdf(fluxHTML).SaveAs(HttpContext.Current.Server.MapPath(urlPDF));
+    }
+
+    public String genererTableFlux(PPClients client, PPVendeurs vendeur, PPCommandes commande)
+    {
+        String flux = "";
+
+        // infos vendeur
+        flux += "<div class=\"div-bot-margin\">";
+
+        flux += "<p>";
+        flux += "<h2>" + vendeur.NomAffaires + "</h2>";
+        flux += vendeur.Prenom + " " + vendeur.Nom;
+        flux += "<br/>";
+        flux += "Tel: " + vendeur.Tel1;
+        flux += "<br/>";
+        flux += vendeur.AdresseEmail;
+        flux += "<br/>";
+        flux += vendeur.Rue + ", " + vendeur.Ville + ", " + vendeur.Province + ", " + vendeur.Pays;
+        flux += "</p>";
+
+        flux += "</div>";
+
+        // infos client
+        flux += "<div class=\"div-bot-margin round-border div-padding\">";
+
+        flux += "<p>";
+        flux += "<h4>No client: " + client.NoClient + "</h4>";
+        flux += client.Prenom + " " + client.Nom;
+        flux += "<br/>";
+        flux += "Tel: " + client.Tel1;
+        flux += "<br/>";
+        flux += client.AdresseEmail;
+        flux += "<br/>";
+        flux += vendeur.Rue + ", " + vendeur.Ville + ", " + vendeur.Province + ", " + vendeur.Pays;
+        flux += "</p>";
+
+        flux += "</div>";
+
+        // no commande avec date
+        flux += "<br/>";
+        flux += "<div class=\"div-bot-margin div-right-margin\">";
+
+        flux += "<p>";
+        flux += "<h3>No commande: " + commande.NoCommande + "</h3>";
+        flux += "No authorisation: " + commande.NoAutorisation;
+        flux += "<br/>";
+        flux += commande.DateCommande;
+        flux += "</p>";
+
+        flux += "</div>";
+
+        // détails commande
+        String[] titreColonnes = { "Nom du produit", "No produit", "Prix de vente (unitaire)", "Quantité", "Total" };
+        flux += "<div class=\"div-bot-margin\">";
+        flux += "<table class=\"table-width-full\">";
+
+        // headers
+        flux += "<tr>";
+        foreach(string str in titreColonnes)
+        {
+            flux += "<th>";
+            flux += str;
+            flux += "</th>";
+        }
+        flux += "</tr>";
+
+        // rows avec produits
+        
+        foreach(PPDetailsCommandes detail in commande.PPDetailsCommandes)
+        {
+            flux += "<tr>";
+
+            flux += "<td>";
+            flux += detail.PPProduits.Nom;
+            flux += "</td>";
+
+            flux += "<td>";
+            flux += detail.PPProduits.NoProduit;
+            flux += "</td>";
+
+            flux += "<td>";
+            flux += detail.PPProduits.PrixVente;
+            flux += "</td>";
+
+            flux += "<td>";
+            flux += detail.Quantité;
+            flux += "</td>";
+
+            flux += "<td>";
+            flux += detail.PPProduits.PrixVente * detail.Quantité;
+            flux += "</td>";
+
+            flux += "</tr>";
+        }
+
+        flux += "</table>";
+        flux += "</div>";
+
+        // afficher le résumé de la commande avec total, tops, tvq, frais transport
+        flux += "<div>";
+
+        flux += "<table class=\"table-float\">";
+
+        flux += "<tr>";
+        flux += "<th>";
+        flux += "Sous total";
+        flux += "</th>";
+        flux += "<td>";
+        flux += commande.MontantTotAvantTaxes;
+        flux += "</td>";
+        flux += "</tr>";
+
+        flux += "<tr>";
+        flux += "<th>";
+        flux += "Frais livraison";
+        flux += "</th>";
+        flux += "<td>";
+        flux += commande.CoutLivraison;
+        flux += "</td>";
+        flux += "</tr>";
+
+        flux += "<tr>";
+        flux += "<th>";
+        flux += "TPS";
+        flux += "</th>";
+        flux += "<td>";
+        flux += commande.TPS;
+        flux += "</td>";
+        flux += "</tr>";
+
+        flux += "<tr>";
+        flux += "<th>";
+        flux += "TVQ";
+        flux += "</th>";
+        flux += "<td>";
+        flux += commande.TVQ;
+        flux += "</td>";
+        flux += "</tr>";
+
+        flux += "<tr>";
+        flux += "<th>";
+        flux += "Total";
+        flux += "</th>";
+        flux += "<td>";
+        flux += commande.MontantTotAvantTaxes + commande.CoutLivraison + commande.TPS + commande.TVQ;
+        flux += "</td>";
+        flux += "</tr>";
+
+        flux += "</table>";
+
+        flux += "</div>";
+        
+
+
+        return flux;
     }
 
     public void afficherBon()
@@ -801,7 +983,10 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     {
         // vérifier que le poids de la commande ne dépasse pas le maximum de la compagnie et qu'il n'y a pas d'articles en rupture de stock
         bool depassePoids = LibrairieLINQ.depassePoidsMax(this.idEntreprise, LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise));
-        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()));
+        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
+
+        System.Diagnostics.Debug.WriteLine("Depasse poids: " + depassePoids);
+        System.Diagnostics.Debug.WriteLine("Rupture: " + rupture);
 
         if (!depassePoids && !rupture)
         {
@@ -967,7 +1152,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     {
         // vérifier que le poids de la commande ne dépasse pas le maximum de la compagnie et qu'il n'y a pas d'articles en rupture de stock
         bool depassePoids = LibrairieLINQ.depassePoidsMax(this.idEntreprise, LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise));
-        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()));
+        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
 
         if (!depassePoids && !rupture)
         {
@@ -983,7 +1168,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     {
         // vérifier que le poids de la commande ne dépasse pas le maximum de la compagnie et qu'il n'y a pas d'articles en rupture de stock
         bool depassePoids = LibrairieLINQ.depassePoidsMax(this.idEntreprise, LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise));
-        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()));
+        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
 
         if (!depassePoids && !rupture)
         {
