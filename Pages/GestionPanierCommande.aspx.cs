@@ -145,23 +145,28 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Afficher la TPS
-            Decimal? pctTPS = LibrairieLINQ.getPourcentageTaxes("TPS")/100;
+            Decimal? pctTPS = LibrairieLINQ.getPourcentageTaxes("TPS", idEntreprise) /100;
             Decimal? TPS = sousTotal * pctTPS;
 
-            Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
-            Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-10 text-right");
-            LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
+            Decimal? pctTVQ = LibrairieLINQ.getPourcentageTaxes("TVQ", idEntreprise) / 100;
+            Decimal? TVQ = sousTotal * pctTVQ;
 
-            Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
-            LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
+            if (pctTPS != 0)
+            {
+                Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
+                Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-10 text-right");
+                LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
 
-            LibrairieControlesDynamique.hrDYN(panelBody);
+                Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
+                LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
+
+                LibrairieControlesDynamique.hrDYN(panelBody);
+            }
+            
 
             // Afficher la TVQ (si nécessaire)
-            if (entry.Value[0].PPVendeurs.Province == "QC")
+            if (pctTVQ != 0)
             {
-                Decimal? pctTVQ = LibrairieLINQ.getPourcentageTaxes("TVQ") / 100;
-                Decimal? TVQ = sousTotal * pctTVQ;
 
                 Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
                 Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-10 text-right");

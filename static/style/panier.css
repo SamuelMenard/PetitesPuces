@@ -10,6 +10,13 @@
     font-weight:bold;
 }
 
+.prix-item-avant-rabais {
+    font-size: 15px;
+    font-family: Calibri;
+    font-weight: bold;
+    text-decoration: line-through;
+}
+
 .prix_unitaire {
     font-size: 15px;
     font-family: Calibri;
