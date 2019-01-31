@@ -57,10 +57,10 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         ddlCategorie.Items.Clear();       
         if (Request.QueryString["NoVendeur"] != null)
         {
-           // noVendeur = Convert.ToInt64(Request.QueryString["NoVendeur"]);           
+           noVendeur = Convert.ToInt64(Request.QueryString["NoVendeur"]);           
         }
         nomEntreprise = Session["NomAffaire"].ToString();
-        noVendeur = Convert.ToInt32((Session["NoVendeur"]));
+        //noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         //creerPage();            
         getVariables();
         List<int> lstCategories = dbContext.PPProduits.Where(c => c.NoVendeur == noVendeur).GroupBy(c => c.NoCategorie).Select(c => c.Key.Value).ToList();
