@@ -12,14 +12,14 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        getNbMois();         
+       // getNbMois();         
         creerPage();
     }
 
 
     protected void Page_LoadComplete(object sender, EventArgs e)
     {
-        ddlNbMois.SelectedValue = this.moisChoisis.ToString();
+        //ddlNbMois.SelectedValue = this.moisChoisis.ToString();
     }
 
     private void creerPage()
@@ -40,9 +40,9 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
         LibrairieControlesDynamique.lblDYN(colDDLInactif, nomEntreprise + "_nbParPage", "Nombre de mois inactifs : ", "left15");
         ddlNbMois = LibrairieControlesDynamique.ddlDYN(colDDLInactif, "ddlMoisInactifs", "left15");
         ddlNbMois.Items.Clear();
-        ddlNbMois.AutoPostBack = true;
+        //ddlNbMois.AutoPostBack = true;
         //ddlNbMois.ViewStateMode = ViewStateMode.Enabled;
-        ddlNbMois.SelectedIndexChanged += valeursPanier;
+        //ddlNbMois.SelectedIndexChanged += valeursPanier;
         //ddlNbMois.AppendDataBoundItems = true;
         ddlNbMois.Items.Insert(0, new ListItem(String.Empty, String.Empty));
         ddlNbMois.Items.Insert(1, new ListItem("1", "1"));

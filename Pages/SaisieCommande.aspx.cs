@@ -11,6 +11,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 {
     private static BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
     private long idEntreprise;
+    private long numCommande;
     private String etape;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -25,7 +26,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         {
             case "panier": afficherPanier(); break;
             case "livraison": afficherInfosPerso(); break;
-            case "bon": afficherBon(); break;
+            case "bon": afficherBon(); getNumCommande(); break;
         }
 
     }
@@ -535,9 +536,9 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         if (reussi)
         {
             // rajouter les infos de la commande dans la base de données
-            creerCommande();
+            long noCommande = creerCommande();
 
-            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon";
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon&Commande=" + noCommande;
             Response.Redirect(url, true);
         }
         else
@@ -547,7 +548,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         }
     }
 
-    public void creerCommande()
+    public long creerCommande()
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableCommandes = dataContext.PPCommandes;
@@ -601,6 +602,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         {
             biggestCommandeID = derniereCommande.First().NoCommande + 1;
         }
+        this.numCommande = biggestCommandeID;
 
         // calculer un no d'autorisation unique
         long biggestNoAutorisation = 1000;
@@ -714,6 +716,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 fluxHTML += genererTableFlux(clientPDF, vendeurPDF, commandePDF);
 
                 creerCommandePDF(fluxHTML, urlPDF);
+                return biggestCommandeID;
             }
             catch(Exception ex)
             {
@@ -721,6 +724,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             }
 
         }
+        return -1;
     }
 
     public void creerCommandePDF(String fluxHTML, String urlPDF)
@@ -761,11 +765,11 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "<h4>No client: " + client.NoClient + "</h4>";
         flux += client.Prenom + " " + client.Nom;
         flux += "<br/>";
+        flux += vendeur.Rue + ", " + vendeur.Ville + ", " + vendeur.Province + ", " + vendeur.Pays;
+        flux += "<br/>";
         flux += "Tel: " + client.Tel1;
         flux += "<br/>";
         flux += client.AdresseEmail;
-        flux += "<br/>";
-        flux += vendeur.Rue + ", " + vendeur.Ville + ", " + vendeur.Province + ", " + vendeur.Pays;
         flux += "</p>";
 
         flux += "</div>";
@@ -777,6 +781,10 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "<p>";
         flux += "<h3>No commande: " + commande.NoCommande + "</h3>";
         flux += "No authorisation: " + commande.NoAutorisation;
+        flux += "<br/>";
+        flux += "Poids total: " + commande.PoidsTotal + " lbs";
+        flux += "<br/>";
+        flux += "Type livraison: " + commande.PPTypesLivraison.Description;
         flux += "<br/>";
         flux += commande.DateCommande;
         flux += "</p>";
@@ -813,7 +821,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             flux += "</td>";
 
             flux += "<td>";
-            flux += detail.PPProduits.PrixVente;
+            flux += "$" + Decimal.Round((decimal)detail.PPProduits.PrixVente, 2);
             flux += "</td>";
 
             flux += "<td>";
@@ -821,7 +829,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             flux += "</td>";
 
             flux += "<td>";
-            flux += detail.PPProduits.PrixVente * detail.Quantité;
+            flux += "$" + Decimal.Round((decimal)(detail.PPProduits.PrixVente * detail.Quantité), 2);
             flux += "</td>";
 
             flux += "</tr>";
@@ -840,7 +848,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "Sous total";
         flux += "</th>";
         flux += "<td>";
-        flux += commande.MontantTotAvantTaxes;
+        flux += "$" + Decimal.Round((decimal)commande.MontantTotAvantTaxes, 2);
         flux += "</td>";
         flux += "</tr>";
 
@@ -849,7 +857,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "Frais livraison";
         flux += "</th>";
         flux += "<td>";
-        flux += commande.CoutLivraison;
+        flux += "$" + Decimal.Round((decimal)commande.CoutLivraison, 2);
         flux += "</td>";
         flux += "</tr>";
 
@@ -858,7 +866,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "TPS";
         flux += "</th>";
         flux += "<td>";
-        flux += commande.TPS;
+        flux += "$" + Decimal.Round((decimal)commande.TPS, 2);
         flux += "</td>";
         flux += "</tr>";
 
@@ -867,7 +875,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "TVQ";
         flux += "</th>";
         flux += "<td>";
-        flux += commande.TVQ;
+        flux += "$" + Decimal.Round((decimal)commande.TVQ, 2);
         flux += "</td>";
         flux += "</tr>";
 
@@ -876,7 +884,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "Total";
         flux += "</th>";
         flux += "<td>";
-        flux += commande.MontantTotAvantTaxes + commande.CoutLivraison + commande.TPS + commande.TVQ;
+        flux += "$" + Decimal.Round((decimal)(commande.MontantTotAvantTaxes + commande.CoutLivraison + commande.TPS + commande.TVQ), 2);
         flux += "</td>";
         flux += "</tr>";
 
@@ -1182,12 +1190,16 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void visualiserBon_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Visualiser le bon");
+        System.Diagnostics.Debug.WriteLine("Visualiser le bon de: " + this.numCommande);
+        String url = "../static/pdf/" + this.numCommande + ".pdf";
+        Response.Write("<script>window.open ('" + url + "','_blank');</script>");
     }
 
     public void imprimerBon_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Imprimer le bon");
+        System.Diagnostics.Debug.WriteLine("Visualiser le bon de: " + this.numCommande);
+        String url = "../static/pdf/" + this.numCommande + ".pdf";
+        Response.Write("<script>window.open ('" + url + "','_blank');</script>");
     }
 
     public void livraison_changed(Object sender, EventArgs e)
@@ -1235,11 +1247,25 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         }
     }
 
+    private void getNumCommande()
+    {
+        long n;
+        if (Request.QueryString["Commande"] == null || !long.TryParse(Request.QueryString["Commande"], out n))
+        {
+            this.numCommande = 0;
+        }
+        else
+        {
+            this.numCommande = n;
+        }
+    }
+
     public void nomEntreprisePanier_click(Object sender, EventArgs e)
     {
         LinkButton btn = (LinkButton)sender;
         String idVendeur = btn.ID.Replace("vendeur_", "");
-        System.Diagnostics.Debug.WriteLine(idVendeur);
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?NoVendeur=" + idVendeur;
+        Response.Redirect(url, true);
     }
 
 }
