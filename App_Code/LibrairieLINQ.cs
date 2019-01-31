@@ -444,6 +444,73 @@ public static class LibrairieLINQ
 
     }
 
+    // get les clients inactifs depuis la période sélectionnée
+    public static List<PPClients> getClientsInactifsDepuis(int nbMois)
+    {
+
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableClient = dataContext.PPClients;
+        
+        List<PPClients> lstClientsInactifs = new List<PPClients>();
+        foreach(PPClients client in tableClient)
+        {
+            bool inactifPanier = false;
+            bool inactifCommande = false;
+            DateTime date = DateTime.Today;
+            date = date.AddMonths(nbMois * -1);
+
+            // vérifier les panier
+            var panierPlusRecent = from ap in client.PPArticlesEnPanier orderby ap.DateCreation descending select ap;
+            if (panierPlusRecent.Count() > 0)
+            {
+                if (panierPlusRecent.First().DateCreation < date)
+                {
+                    inactifPanier = true;
+                }
+            }
+            else
+            {
+                inactifPanier = true;
+            }
+
+            // vérifier les commandes
+            var commandesPlusRecentes = from c in client.PPCommandes orderby c.DateCommande descending select c;
+            if (commandesPlusRecentes.Count() > 0)
+            {
+                if (commandesPlusRecentes.First().DateCommande < date)
+                {
+                    inactifCommande = true;
+                }
+            }
+            else
+            {
+                inactifCommande = true;
+            }
+
+            if (inactifCommande && inactifPanier) { lstClientsInactifs.Add(client); }
+
+            // rapport test
+            System.Diagnostics.Debug.WriteLine("Client: " + client.Nom + " " + client.Prenom);
+            System.Diagnostics.Debug.WriteLine("Articles en panier inactif: " + inactifPanier);
+            System.Diagnostics.Debug.WriteLine("Commandes inactif: " + inactifCommande);
+            System.Diagnostics.Debug.WriteLine("____________________________");
+
+        }
+        return lstClientsInactifs;
+
+    }
+
+    // désactiver compte client
+    public static void desactiverCompteClient(long noClient)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableClient = dataContext.PPClients;
+        PPClients client = (from c in tableClient where c.NoClient == noClient select c).First();
+        client.Statut = 0;
+        dataContext.SaveChanges();
+
+    }
+
 
 
 }
