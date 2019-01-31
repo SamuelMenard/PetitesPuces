@@ -59,7 +59,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         {
            noVendeur = Convert.ToInt64(Request.QueryString["NoVendeur"]);           
         }
-        nomEntreprise = Session["NomAffaire"].ToString();
+        nomEntreprise = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First().NomAffaires;
         //noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         //creerPage();            
         getVariables();

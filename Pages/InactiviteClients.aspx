@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="head" Runat="Server">
     <!-- Pour ajouter des imports dans le head -->
+    <link rel="stylesheet" href="../static/style/checkbox.css">
     <script>
         function search() {
             var input, row, filter, h4;
@@ -57,6 +58,18 @@
                   <input id="tbSearch" type="text" class="form-control" name="tbSearch" placeholder="Recherche" onkeyup="search()">
                 </div>
             </div>
+
+            <div class="col-sm-2 mb-3">
+                <div class="input-group">
+                  <asp:Button ID="btnSelectionnerTout" CssClass="btn btn-warning" Text="Sélectionner tout" runat="server" OnClick="selectiontout_click" />
+                </div>
+            </div>
+
+            <div class="col-sm-2 mb-3">
+                <div class="input-group">
+                  <asp:Button ID="btnSupprimerSelection" CssClass="btn btn-warning" Text="Supprimer les sélections" runat="server" OnClick="supprimerselections_click" />
+                </div>
+            </div>
         </div>
 
         <br />
@@ -64,7 +77,7 @@
         <asp:PlaceHolder id="phDynamique" runat="server" />
 
         <div id="divMessage" class="alert alert-warning" visible="false" runat="server">
-          <strong>Il n'y a aucune nouvelle demande de vendeur</strong>
+          <strong>Il n'y a aucun client inactif depuis la période sélectionné</strong>
         </div>
     </div>
     

@@ -460,7 +460,7 @@ public static class LibrairieLINQ
             date = date.AddMonths(nbMois * -1);
 
             // si déjà désactivé ignorer
-            if (client.Statut != 0)
+            if (client.Statut == 1)
             {
                 // vérifier les panier
                 var panierPlusRecent = from ap in client.PPArticlesEnPanier orderby ap.DateCreation descending select ap;
@@ -505,7 +505,48 @@ public static class LibrairieLINQ
         var tableVendeurs = dataContext.PPVendeurs;
 
         List<PPVendeurs> lstVendeursInactifs = new List<PPVendeurs>();
-        return null;
+        foreach(PPVendeurs vendeur in tableVendeurs)
+        {
+            bool inactifProduits = false;
+            bool inactifCommande = false;
+            DateTime date = DateTime.Today;
+            date = date.AddMonths(nbMois * -1);
+
+            if (vendeur.Statut == 1)
+            {
+                // produits
+                var produitPlusRecent = from produit in vendeur.PPProduits orderby produit.DateCreation descending select produit;
+                if (produitPlusRecent.Count() > 0)
+                {
+                    if (produitPlusRecent.First().DateCreation < date)
+                    {
+                        inactifProduits = true;
+                    }
+                }
+                else
+                {
+                    inactifProduits = true;
+                }
+
+                // commandes
+                var commandePlusRecente = from commande in vendeur.PPCommandes orderby commande.DateCommande select commande;
+                if (commandePlusRecente.Count() > 0)
+                {
+                    if (commandePlusRecente.First().DateCommande < date)
+                    {
+                        inactifCommande = true;
+                    }
+                }
+                else
+                {
+                    inactifCommande = true;
+                }
+            }
+
+            if (inactifProduits && inactifCommande) { lstVendeursInactifs.Add(vendeur); }
+            
+        }
+        return lstVendeursInactifs;
     }
 
     // désactiver compte client
@@ -515,6 +556,17 @@ public static class LibrairieLINQ
         var tableClient = dataContext.PPClients;
         PPClients client = (from c in tableClient where c.NoClient == noClient select c).First();
         client.Statut = 0;
+        dataContext.SaveChanges();
+
+    }
+
+    // désactiver compte client
+    public static void desactiverCompteVendeur(long noVendeur)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeur = dataContext.PPVendeurs;
+        PPVendeurs vendeur = (from v in tableVendeur where v.NoVendeur == noVendeur select v).First();
+        vendeur.Statut = 0;
         dataContext.SaveChanges();
 
     }

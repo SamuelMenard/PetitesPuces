@@ -37,7 +37,7 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
             // infos
             Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + idClient, "col-md-4");
             Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + idClient, "panel panel-default");
-            demandeBase.Style.Add("height", "150px");
+            demandeBase.Style.Add("height", "170px");
             Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + idClient, "panel-body");
             Panel demandeFooter = LibrairieControlesDynamique.divDYN(demandeBase, "footer_" + idClient, "panel-footer");
 
@@ -51,9 +51,13 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
 
 
             // btn non
-            CheckBox cb = LibrairieControlesDynamique.cb(demandeFooter, "checkbox_" + idClient, "");
+            Panel divBotRow = LibrairieControlesDynamique.divDYN(demandeFooter, "", "row");
+            Panel divColBotCheck = LibrairieControlesDynamique.divDYN(divBotRow, "", "col-md-2");
+            CheckBox cb = LibrairieControlesDynamique.cb(divColBotCheck, "checkbox_" + idClient, "", "checkmark");
             lstCheckBox.Add(cb);
-            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnNon_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+
+            Panel divBotColBtn = LibrairieControlesDynamique.divDYN(divBotRow, "", "col-md-2");
+            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(divBotColBtn, "btnNon_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
         }
 
         if (lstClientsInactifs.Count() < 1)
@@ -75,6 +79,44 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
         String id = btn.ID.Replace("btnNon_", "");
         LibrairieLINQ.desactiverCompteClient(long.Parse(id));
         String url = "~/Pages/InactiviteClients.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void selectiontout_click(Object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+
+        if (btn.Text == "Sélectionner tout")
+        {
+            btn.Text = "Désélectionner tout";
+            foreach (CheckBox c in lstCheckBox)
+            {
+                c.Checked = true;
+            }
+        }
+        else
+        {
+            btn.Text = "Sélectionner tout";
+            foreach (CheckBox c in lstCheckBox)
+            {
+                c.Checked = false;
+            }
+        }
+        
+    }
+
+    public void supprimerselections_click(Object sender, EventArgs e)
+    {
+        foreach(CheckBox c in lstCheckBox)
+        {
+            if (c.Checked)
+            {
+                String idClient = c.ID.Replace("checkbox_", "");
+                LibrairieLINQ.desactiverCompteClient(long.Parse(idClient));
+            }
+        }
+
+        String url = "~/Pages/InactiviteClients.aspx?NbMois=" + mois.SelectedValue;
         Response.Redirect(url, true);
     }
 
