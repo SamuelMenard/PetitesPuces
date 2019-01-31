@@ -297,6 +297,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
     {
         LinkButton btn = (LinkButton)sender;
         String idVendeur = btn.ID.Replace("vendeur_", "");
-        System.Diagnostics.Debug.WriteLine(idVendeur);
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?NoVendeur=" + idVendeur;
+        Response.Redirect(url, true);
     }
 }
