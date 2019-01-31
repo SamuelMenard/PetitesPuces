@@ -10,6 +10,7 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
 {
 
     private int nbMois;
+    private List<CheckBox> lstCheckBox = new List<CheckBox>();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -31,13 +32,14 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
         {
             long idClient = client.NoClient;
             String nomclient = client.Prenom + " " + client.Nom;
-            String urlImg = "../static/images/user-management.png";
+            String urlImg = "../static/images/client.png";
 
             // infos
             Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + idClient, "col-md-4");
             Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + idClient, "panel panel-default");
             demandeBase.Style.Add("height", "150px");
             Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + idClient, "panel-body");
+            Panel demandeFooter = LibrairieControlesDynamique.divDYN(demandeBase, "footer_" + idClient, "panel-footer");
 
             Panel media = LibrairieControlesDynamique.divDYN(demandeBody, "media_" + idClient, "media");
             Panel mediaLeft = LibrairieControlesDynamique.divDYN(media, "mediaLeft_" + idClient, "media-left");
@@ -49,7 +51,9 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
 
 
             // btn non
-            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeBody, "btnNon_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+            CheckBox cb = LibrairieControlesDynamique.cb(demandeFooter, "checkbox_" + idClient, "");
+            lstCheckBox.Add(cb);
+            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnNon_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
         }
 
         if (lstClientsInactifs.Count() < 1)

@@ -36,6 +36,7 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
             Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + idVendeur, "panel panel-default");
             demandeBase.Style.Add("height", "200px");
             Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + idVendeur, "panel-body");
+            Panel demandeFooter = LibrairieControlesDynamique.divDYN(demandeBase, "footer_" + idVendeur, "panel-footer");
 
             Panel media = LibrairieControlesDynamique.divDYN(demandeBody, "media_" + idVendeur, "media");
             Panel mediaLeft = LibrairieControlesDynamique.divDYN(media, "mediaLeft_" + idVendeur, "media-left");
@@ -47,12 +48,12 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
             LibrairieControlesDynamique.pDYN(mediaBody, date);
 
             // btn oui
-            HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(demandeBody, "btnOui_" + idVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
+            HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnOui_" + idVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
 
-            LibrairieControlesDynamique.spaceDYN(demandeBody);
+            LibrairieControlesDynamique.spaceDYN(demandeFooter);
 
             // btn non
-            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeBody, "btnNon_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnNon_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
         }
 
         if (lstVendeurs.Count() < 1)

@@ -459,45 +459,53 @@ public static class LibrairieLINQ
             DateTime date = DateTime.Today;
             date = date.AddMonths(nbMois * -1);
 
-            // vérifier les panier
-            var panierPlusRecent = from ap in client.PPArticlesEnPanier orderby ap.DateCreation descending select ap;
-            if (panierPlusRecent.Count() > 0)
+            // si déjà désactivé ignorer
+            if (client.Statut != 0)
             {
-                if (panierPlusRecent.First().DateCreation < date)
+                // vérifier les panier
+                var panierPlusRecent = from ap in client.PPArticlesEnPanier orderby ap.DateCreation descending select ap;
+                if (panierPlusRecent.Count() > 0)
+                {
+                    if (panierPlusRecent.First().DateCreation < date)
+                    {
+                        inactifPanier = true;
+                    }
+                }
+                else
                 {
                     inactifPanier = true;
                 }
-            }
-            else
-            {
-                inactifPanier = true;
-            }
 
-            // vérifier les commandes
-            var commandesPlusRecentes = from c in client.PPCommandes orderby c.DateCommande descending select c;
-            if (commandesPlusRecentes.Count() > 0)
-            {
-                if (commandesPlusRecentes.First().DateCommande < date)
+                // vérifier les commandes
+                var commandesPlusRecentes = from c in client.PPCommandes orderby c.DateCommande descending select c;
+                if (commandesPlusRecentes.Count() > 0)
+                {
+                    if (commandesPlusRecentes.First().DateCommande < date)
+                    {
+                        inactifCommande = true;
+                    }
+                }
+                else
                 {
                     inactifCommande = true;
                 }
-            }
-            else
-            {
-                inactifCommande = true;
-            }
 
-            if (inactifCommande && inactifPanier) { lstClientsInactifs.Add(client); }
-
-            // rapport test
-            System.Diagnostics.Debug.WriteLine("Client: " + client.Nom + " " + client.Prenom);
-            System.Diagnostics.Debug.WriteLine("Articles en panier inactif: " + inactifPanier);
-            System.Diagnostics.Debug.WriteLine("Commandes inactif: " + inactifCommande);
-            System.Diagnostics.Debug.WriteLine("____________________________");
+                if (inactifCommande && inactifPanier) { lstClientsInactifs.Add(client); }
+            }
 
         }
         return lstClientsInactifs;
 
+    }
+
+    // get vendeurs inactifs depuis
+    public static List<PPVendeurs> getVendeursInactifsDepuis(int nbMois)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+
+        List<PPVendeurs> lstVendeursInactifs = new List<PPVendeurs>();
+        return null;
     }
 
     // désactiver compte client
