@@ -198,6 +198,12 @@ public static class LibrairieControlesDynamique
         h4.Text = "<h4>" + strValeur + "</h4>";
         Conteneur.Controls.Add(h4);
     }
+    static public void h4DYN(Control Conteneur, String id, String strValeur)
+    {
+        Literal h4 = new Literal();
+        h4.Text = "<h4 id=\"" + id + "\" >" + strValeur + "</h4>";
+        Conteneur.Controls.Add(h4);
+    }
     static public void pDYN(Control Conteneur, String strValeur)
     {
         Literal p = new Literal();

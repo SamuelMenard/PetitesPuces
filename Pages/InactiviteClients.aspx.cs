@@ -10,11 +10,12 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
 {
 
     private int nbMois;
+    private List<CheckBox> lstCheckBox = new List<CheckBox>();
 
     protected void Page_Load(object sender, EventArgs e)
     {
         getNbMois();
-        afficherClientsInactifs(nbMois);
+        afficherClientsInactifs();
     }
 
     protected void Page_LoadComplete(object sender, EventArgs e)
@@ -22,65 +23,42 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
         mois.SelectedValue = this.nbMois.ToString();
     }
 
-    public void afficherClientsInactifs(int nbMois)
+    public void afficherClientsInactifs()
     {
-        List<String> lstClients1 = new List<string>();
-        lstClients1.Add("Raphaël Benoït");
-        lstClients1.Add("Samuel Ménard");
-        lstClients1.Add("Olivier Brodeur");
-        lstClients1.Add("Francis Perreault");
-        lstClients1.Add("Raphaël Benoït");
-        lstClients1.Add("Raphaël Benoït");
-        lstClients1.Add("Samuel Ménard");
-        lstClients1.Add("Raphaël Benoït");
+        List<PPClients> lstClientsInactifs = LibrairieLINQ.getClientsInactifsDepuis(this.nbMois);
 
-        List<String> lstClients3 = new List<string>();
-        lstClients3.Add("Raphaël Benoït");
-        lstClients3.Add("Raphaël Benoït");
-        lstClients3.Add("Samuel Ménard");
-
-        List<String> lstClients24 = new List<string>();
-        lstClients24.Add("Raphaël Benoït");
-
-        List<String> lstClients = new List<string>();
-        if (nbMois == 1) { lstClients = lstClients1; }
-        else if (nbMois >= 3 && nbMois < 24) { lstClients = lstClients3; }
-        else if (nbMois == 24) { lstClients = lstClients24; }
-
-        int noClient = 0;
-
-        for (int i = 0; i < lstClients.Count; i++)
+        Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "rowDemandeurs", "row");
+        foreach (PPClients client in lstClientsInactifs)
         {
-            noClient++;
-            String nomClient = lstClients[i];
+            long idClient = client.NoClient;
+            String nomclient = client.Prenom + " " + client.Nom;
             String urlImg = "../static/images/client.png";
 
-            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "row_" + noClient, "row");
-
             // infos
-            Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + noClient, "col-md-10");
-            Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + noClient, "panel panel-default");
-            Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + noClient, "panel-body");
+            Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + idClient, "col-md-4");
+            Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + idClient, "panel panel-default");
+            demandeBase.Style.Add("height", "150px");
+            Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + idClient, "panel-body");
+            Panel demandeFooter = LibrairieControlesDynamique.divDYN(demandeBase, "footer_" + idClient, "panel-footer");
 
-            Panel media = LibrairieControlesDynamique.divDYN(demandeBody, "media_" + noClient, "media");
-            Panel mediaLeft = LibrairieControlesDynamique.divDYN(media, "mediaLeft_" + noClient, "media-left");
-            Image img = LibrairieControlesDynamique.imgDYN(mediaLeft, "img_" + noClient, urlImg, "media-object");
+            Panel media = LibrairieControlesDynamique.divDYN(demandeBody, "media_" + idClient, "media");
+            Panel mediaLeft = LibrairieControlesDynamique.divDYN(media, "mediaLeft_" + idClient, "media-left");
+            Image img = LibrairieControlesDynamique.imgDYN(mediaLeft, "img_" + idClient, urlImg, "media-object");
             img.Style.Add("width", "75px");
-            Panel mediaBody = LibrairieControlesDynamique.divDYN(media, "mediaBody_" + noClient, "media-body");
-            LibrairieControlesDynamique.h4DYN(mediaBody, nomClient);
-            LibrairieControlesDynamique.pDYN(mediaBody, "No. " + noClient);
-            
-            Panel colSupprimer = LibrairieControlesDynamique.divDYN(row, "colSupprimer" + noClient, "col-sm-2");
+            Panel mediaBody = LibrairieControlesDynamique.divDYN(media, "mediaBody_" + idClient, "media-body");
+            LibrairieControlesDynamique.h4DYN(mediaBody, "h4_" + idClient, nomclient);
+            LibrairieControlesDynamique.pDYN(mediaBody, client.AdresseEmail);
+
+
             // btn non
-            HtmlButton btnSupprimer = LibrairieControlesDynamique.htmlbtnDYN(colSupprimer, "btnSupprimer_" + noClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnSupprimer_click);
-            btnSupprimer.Style.Add("height", "105px");
+            CheckBox cb = LibrairieControlesDynamique.cb(demandeFooter, "checkbox_" + idClient, "");
+            lstCheckBox.Add(cb);
+            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnNon_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
         }
 
-        // si il n'y a pas de clients dans la liste
-        if (lstClients.Count == 0)
+        if (lstClientsInactifs.Count() < 1)
         {
-            Panel alert = LibrairieControlesDynamique.divDYN(phDynamique, "", "alert alert-warning");
-            LibrairieControlesDynamique.lblDYN(alert, "", "Il n'y a pas de clients inactif depuis plus de " + nbMois + " mois");
+            divMessage.Visible = true;
         }
     }
 
@@ -91,9 +69,13 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
-    public void btnSupprimer_click(Object sender, EventArgs e)
+    public void btnNon_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Supprimer");
+        HtmlButton btn = (HtmlButton)sender;
+        String id = btn.ID.Replace("btnNon_", "");
+        LibrairieLINQ.desactiverCompteClient(long.Parse(id));
+        String url = "~/Pages/InactiviteClients.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void ddlChanged(Object sender, EventArgs e)

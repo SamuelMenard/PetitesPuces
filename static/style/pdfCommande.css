@@ -1,0 +1,40 @@
+﻿
+table {
+    border-collapse: collapse;
+    text-align:right;
+}
+
+.table-width-full {
+    width: 100%;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
+.div-bot-margin {
+    margin-bottom:10px;
+}
+
+.div-right-margin {
+    margin-right:10px;
+}
+
+.round-border {
+    border-style:solid;
+    border-width:1px;
+    border-radius:17px;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.div-padding {
+    padding:10px;
+}
+
+.table-float {
+    float: right;
+}
+

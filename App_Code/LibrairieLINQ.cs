@@ -23,17 +23,18 @@ public static class LibrairieLINQ
          * */
         var clients = dataContext.PPClients;
         var vendeurs = dataContext.PPVendeurs;
+        var gestionnaires = dataContext.PPGestionnaires;
+
         bool valide = false;
         switch (typeConnexion)
         {
             case "C": valide = clients.Where(client => client.AdresseEmail == courriel && client.MotDePasse == mdp).Any(); break;
             case "V":
-                valide = vendeurs.Where(vendeur => vendeur.AdresseEmail == courriel && vendeur.MotDePasse == mdp
-                      && vendeur.NoVendeur >= 10 && vendeur.NoVendeur <= 99).Any();
+                valide = vendeurs.Where(vendeur => vendeur.AdresseEmail == courriel && vendeur.MotDePasse == mdp).Any();
                 break;
             case "G":
-                valide = vendeurs.Where(gestionnaire => gestionnaire.AdresseEmail == courriel
-                            && gestionnaire.MotDePasse == mdp && gestionnaire.NoVendeur >= 100 && gestionnaire.NoVendeur <= 200).Any();
+                valide = gestionnaires.Where(gestionnaire => gestionnaire.courriel == courriel
+                            && gestionnaire.motDePasse == mdp).Any();
                 break;
         }
         return valide;
@@ -357,13 +358,13 @@ public static class LibrairieLINQ
     }
 
     // voir si il y a un item qui est out of stock dans le panier du client
-    public static bool ruptureDeStockPanierClient(long? noClient)
+    public static bool ruptureDeStockPanierClient(long? noClient, long? noVendeur)
     {
         bool rupture = false;
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableArticlesPanier = dataContext.PPArticlesEnPanier;
         var tousLesPaniers = from ap in tableArticlesPanier
-                             where ap.NoClient == noClient
+                             where ap.NoClient == noClient && ap.NoVendeur == noVendeur
                              select ap;
 
         foreach(var panier in tousLesPaniers)
@@ -403,7 +404,121 @@ public static class LibrairieLINQ
         var tableVendeur = dataContext.PPVendeurs;
         return (Decimal)(from v in tableVendeur where v.NoVendeur == noVendeur select v).First().LivraisonGratuite;
     }
-    
+
+    // get infos vendeur
+    public static PPVendeurs getInfosVendeur(long? noVendeur)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeur = dataContext.PPVendeurs;
+        return (from v in tableVendeur where v.NoVendeur == noVendeur select v).First();
+    }
+
+    // get infos commande
+    public static PPCommandes getInfosCommande(long? noCommande)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableCommande = dataContext.PPCommandes;
+        return (from c in tableCommande where c.NoCommande == noCommande select c).First();
+    }
+
+    // get nouvelles demandes de vendeur
+    public static List<PPVendeurs> getNouvellesDemandesVendeur()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+        List<PPVendeurs> lst = (from v in tableVendeurs where v.Statut == null select v).ToList();
+        
+        return lst;
+    }
+
+    // accepter ou delete la demande d'un vendeur
+    public static void accepterOuDeleteDemandeVendeur(long noVendeur, bool accepte)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+        PPVendeurs vendeur = (from v in tableVendeurs where v.NoVendeur == noVendeur select v).First();
+
+        if (accepte) { vendeur.Statut = 1; }
+        else { dataContext.PPVendeurs.Remove(vendeur); }
+        dataContext.SaveChanges();
+
+    }
+
+    // get les clients inactifs depuis la période sélectionnée
+    public static List<PPClients> getClientsInactifsDepuis(int nbMois)
+    {
+
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableClient = dataContext.PPClients;
+        
+        List<PPClients> lstClientsInactifs = new List<PPClients>();
+        foreach(PPClients client in tableClient)
+        {
+            bool inactifPanier = false;
+            bool inactifCommande = false;
+            DateTime date = DateTime.Today;
+            date = date.AddMonths(nbMois * -1);
+
+            // si déjà désactivé ignorer
+            if (client.Statut != 0)
+            {
+                // vérifier les panier
+                var panierPlusRecent = from ap in client.PPArticlesEnPanier orderby ap.DateCreation descending select ap;
+                if (panierPlusRecent.Count() > 0)
+                {
+                    if (panierPlusRecent.First().DateCreation < date)
+                    {
+                        inactifPanier = true;
+                    }
+                }
+                else
+                {
+                    inactifPanier = true;
+                }
+
+                // vérifier les commandes
+                var commandesPlusRecentes = from c in client.PPCommandes orderby c.DateCommande descending select c;
+                if (commandesPlusRecentes.Count() > 0)
+                {
+                    if (commandesPlusRecentes.First().DateCommande < date)
+                    {
+                        inactifCommande = true;
+                    }
+                }
+                else
+                {
+                    inactifCommande = true;
+                }
+
+                if (inactifCommande && inactifPanier) { lstClientsInactifs.Add(client); }
+            }
+
+        }
+        return lstClientsInactifs;
+
+    }
+
+    // get vendeurs inactifs depuis
+    public static List<PPVendeurs> getVendeursInactifsDepuis(int nbMois)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+
+        List<PPVendeurs> lstVendeursInactifs = new List<PPVendeurs>();
+        return null;
+    }
+
+    // désactiver compte client
+    public static void desactiverCompteClient(long noClient)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableClient = dataContext.PPClients;
+        PPClients client = (from c in tableClient where c.NoClient == noClient select c).First();
+        client.Statut = 0;
+        dataContext.SaveChanges();
+
+    }
+
 
 
 }

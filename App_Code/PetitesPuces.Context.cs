@@ -38,4 +38,5 @@ public partial class BD6B8_424SEntities : DbContext
     public virtual DbSet<PPVendeurs> PPVendeurs { get; set; }
     public virtual DbSet<PPVendeursClients> PPVendeursClients { get; set; }
     public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+    public virtual DbSet<PPGestionnaires> PPGestionnaires { get; set; }
 }

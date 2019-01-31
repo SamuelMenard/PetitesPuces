@@ -6,12 +6,13 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">
     <!-- Contenu de la page -->
-    <h1>Tableau de bord du gestionnaire</h1>
-    <br />
-    <br />
-    <br />
+    <div class="container">
+        <div class="row">
 
-    <div class="row">
+        <div class="jumbotron">
+                <h1>Tableau de bord du gestionnaire</h1> 
+                <p>Vous pouvez retrouver ci-bas des liens vers les différents outils d'administration</p> 
+        </div>
 
         <asp:LinkButton ID="btn_gererDemandes" 
                         runat="server"
@@ -108,5 +109,7 @@
         </asp:LinkButton>
         
 
+        </div>
     </div>
+    
 </asp:Content>
