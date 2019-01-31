@@ -302,6 +302,16 @@ public static class LibrairieControlesDynamique
         return cb;
     }
 
+    static public CheckBox cb(Control conteneur, String strID, String strValeur, String strCss)
+    {
+        CheckBox cb = new CheckBox();
+        cb.ID = strID;
+        cb.Text = strValeur;
+        cb.CssClass = strCss;
+        conteneur.Controls.Add(cb);
+        return cb;
+    }
+
     static public HtmlGenericControl liDYN(Control control, String href, String text, String style)
     {
         HtmlGenericControl li = new HtmlGenericControl("li");

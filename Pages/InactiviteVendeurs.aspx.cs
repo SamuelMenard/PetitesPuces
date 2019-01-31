@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 public partial class Pages_InactiviteVendeurs : System.Web.UI.Page
 {
     private int nbMois;
+    private List<CheckBox> lstCheckBox = new List<CheckBox>();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -23,35 +24,42 @@ public partial class Pages_InactiviteVendeurs : System.Web.UI.Page
 
     public void afficherVendeursInactifs()
     {
-        List<PPClients> lstClientsInactifs = LibrairieLINQ.getClientsInactifsDepuis(this.nbMois);
+        List<PPVendeurs> lstVendeursInactifs = LibrairieLINQ.getVendeursInactifsDepuis(this.nbMois);
 
         Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "rowDemandeurs", "row");
-        foreach (PPClients client in lstClientsInactifs)
+        foreach (PPVendeurs Vendeur in lstVendeursInactifs)
         {
-            long idClient = client.NoClient;
-            String nomclient = client.Prenom + " " + client.Nom;
-            String urlImg = "../static/images/client.png";
+            long idVendeur = Vendeur.NoVendeur;
+            String nomVendeur = Vendeur.Prenom + " " + Vendeur.Nom;
+            String urlImg = "../static/images/vendeur.jpg";
 
             // infos
-            Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + idClient, "col-md-4");
-            Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + idClient, "panel panel-default");
-            demandeBase.Style.Add("height", "150px");
-            Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + idClient, "panel-body");
+            Panel colInfos = LibrairieControlesDynamique.divDYN(row, "colInfos_" + idVendeur, "col-md-4");
+            Panel demandeBase = LibrairieControlesDynamique.divDYN(colInfos, "base_" + idVendeur, "panel panel-default");
+            demandeBase.Style.Add("height", "170px");
+            Panel demandeBody = LibrairieControlesDynamique.divDYN(demandeBase, "body_" + idVendeur, "panel-body");
+            Panel demandeFooter = LibrairieControlesDynamique.divDYN(demandeBase, "footer_" + idVendeur, "panel-footer");
 
-            Panel media = LibrairieControlesDynamique.divDYN(demandeBody, "media_" + idClient, "media");
-            Panel mediaLeft = LibrairieControlesDynamique.divDYN(media, "mediaLeft_" + idClient, "media-left");
-            Image img = LibrairieControlesDynamique.imgDYN(mediaLeft, "img_" + idClient, urlImg, "media-object");
+            Panel media = LibrairieControlesDynamique.divDYN(demandeBody, "media_" + idVendeur, "media");
+            Panel mediaLeft = LibrairieControlesDynamique.divDYN(media, "mediaLeft_" + idVendeur, "media-left");
+            Image img = LibrairieControlesDynamique.imgDYN(mediaLeft, "img_" + idVendeur, urlImg, "media-object");
             img.Style.Add("width", "75px");
-            Panel mediaBody = LibrairieControlesDynamique.divDYN(media, "mediaBody_" + idClient, "media-body");
-            LibrairieControlesDynamique.h4DYN(mediaBody, "h4_" + idClient, nomclient);
-            LibrairieControlesDynamique.pDYN(mediaBody, client.AdresseEmail);
+            Panel mediaBody = LibrairieControlesDynamique.divDYN(media, "mediaBody_" + idVendeur, "media-body");
+            LibrairieControlesDynamique.h4DYN(mediaBody, "h4_" + idVendeur, nomVendeur);
+            LibrairieControlesDynamique.pDYN(mediaBody, Vendeur.AdresseEmail);
 
 
             // btn non
-            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeBody, "btnNon_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+            Panel divBotRow = LibrairieControlesDynamique.divDYN(demandeFooter, "", "row");
+            Panel divColBotCheck = LibrairieControlesDynamique.divDYN(divBotRow, "", "col-md-2");
+            CheckBox cb = LibrairieControlesDynamique.cb(divColBotCheck, "checkbox_" + idVendeur, "", "checkmark");
+            lstCheckBox.Add(cb);
+
+            Panel divBotColBtn = LibrairieControlesDynamique.divDYN(divBotRow, "", "col-md-2");
+            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(divBotColBtn, "btnNon_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
         }
 
-        if (lstClientsInactifs.Count() < 1)
+        if (lstVendeursInactifs.Count() < 1)
         {
             divMessage.Visible = true;
         }
@@ -68,21 +76,59 @@ public partial class Pages_InactiviteVendeurs : System.Web.UI.Page
     {
         HtmlButton btn = (HtmlButton)sender;
         String id = btn.ID.Replace("btnNon_", "");
-        /*LibrairieLINQ.desactiverCompteClient(long.Parse(id));
-        String url = "~/Pages/InactiviteClients.aspx?";
-        Response.Redirect(url, true);*/
+        LibrairieLINQ.desactiverCompteVendeur(long.Parse(id));
+        String url = "~/Pages/InactiviteVendeurs.aspx?NbMois=" + mois.SelectedValue;
+        Response.Redirect(url, true);
+    }
+
+    public void selectiontout_click(Object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+
+        if (btn.Text == "Sélectionner tout")
+        {
+            btn.Text = "Désélectionner tout";
+            foreach (CheckBox c in lstCheckBox)
+            {
+                c.Checked = true;
+            }
+        }
+        else
+        {
+            btn.Text = "Sélectionner tout";
+            foreach (CheckBox c in lstCheckBox)
+            {
+                c.Checked = false;
+            }
+        }
+
+    }
+
+    public void supprimerselections_click(Object sender, EventArgs e)
+    {
+        foreach (CheckBox c in lstCheckBox)
+        {
+            if (c.Checked)
+            {
+                String idVendeur = c.ID.Replace("checkbox_", "");
+                LibrairieLINQ.desactiverCompteVendeur(long.Parse(idVendeur));
+            }
+        }
+
+        String url = "~/Pages/InactiviteVendeurs.aspx?NbMois=" + mois.SelectedValue;
+        Response.Redirect(url, true);
     }
 
     public void ddlChanged(Object sender, EventArgs e)
     {
-        String url = "~/Pages/InactiviteVendeurs.aspx?NbAnnees=" + mois.SelectedValue;
+        String url = "~/Pages/InactiviteVendeurs.aspx?NbMois=" + mois.SelectedValue;
         Response.Redirect(url, true);
     }
 
     private void getNbMois()
     {
         int n;
-        if (Request.QueryString["NbAnnees"] == null || !int.TryParse(Request.QueryString["NbAnnees"], out n))
+        if (Request.QueryString["NbMois"] == null || !int.TryParse(Request.QueryString["NbMois"], out n))
         {
             this.nbMois = 1;
         }
