@@ -134,3 +134,26 @@ input[type="radio"] {
 .panelAccord {
     display: none;
 }
+
+.AFfichangeCat {
+    padding: 15px;
+    margin-bottom: 20px;
+  
+    background-color:
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;   
+}
+
+.flex-container > div {
+    background-color: #FFD278;
+    width: 50%;
+    margin: 10px;
+    text-align: center;
+    line-height: 50px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 30px;
+}
