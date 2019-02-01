@@ -11,14 +11,6 @@
                 <h1>Fiche du vendeur</h1> 
                 <p>Appuyez sur le (X) rouge pour refuser une demande ou sur le (✔) vert pour accepter la demande</p> 
         </div>
-        <div class="row">
-            <div class="col-md-2">
-                <asp:Button ID="btnRetourDash" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourDashboard_click" />
-            </div>
-        </div>
-        
-        <br />
-        <br />
 
         <asp:PlaceHolder id="phDynamique" runat="server" />
     </div>

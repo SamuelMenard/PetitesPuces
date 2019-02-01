@@ -9,9 +9,21 @@ using System.Web.UI.WebControls;
 public partial class Pages_DemandesVendeur : System.Web.UI.Page
 {
 
+    private String notification;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
+        getNotification();
+
+        if (notification == "accepte")
+        {
+            divAccepte.Visible = true;
+        }
+        else if (notification == "refuse")
+        {
+            divRefuse.Visible = true;
+        }
         afficherDemandes();
     }
     
@@ -68,24 +80,6 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
 
     }
 
-    public void btnNon_click(Object sender, EventArgs e)
-    {
-        HtmlButton btn = (HtmlButton)sender;
-        String id = btn.ID.Replace("btnNon_", "");
-        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), false);
-        String url = "~/Pages/DemandesVendeur.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void btnOui_click(Object sender, EventArgs e)
-    {
-        HtmlButton btn = (HtmlButton)sender;
-        String id = btn.ID.Replace("btnOui_", "");
-        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true);
-        String url = "~/Pages/DemandesVendeur.aspx?";
-        Response.Redirect(url, true);
-    }
-
     public void plusDetails_click(Object sender, EventArgs e)
     {
         HtmlButton btn = (HtmlButton)sender;
@@ -99,6 +93,18 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
         System.Diagnostics.Debug.WriteLine("Retour");
         String url = "~/Pages/AcceuilGestionnaire.aspx?";
         Response.Redirect(url, true);
+    }
+
+    private void getNotification()
+    {
+        if (Request.QueryString["Notification"] == null)
+        {
+            this.notification = "";
+        }
+        else
+        {
+            this.notification = Request.QueryString["Notification"];
+        }
     }
 }
 

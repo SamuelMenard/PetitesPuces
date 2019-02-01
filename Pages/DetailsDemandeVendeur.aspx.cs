@@ -9,15 +9,30 @@ using System.Web.UI.WebControls;
 public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
 {
     private long noVendeur;
+    private String etape;
+    private TextBox tbRedevance;
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        getEtape();
         getNoVendeur();
-        afficherInfosClient();
+        if (etape == "")
+        {
+            afficherInfosClient();
+        }
+        else if (etape == "redevance")
+        {
+            afficherFormRedevance();
+        }
+        
     }
 
     public void afficherInfosClient()
     {
+        LibrairieControlesDynamique.btnDYN(phDynamique, "", "btn btn-warning", "Retour", retourDashboard_click);
+        LibrairieControlesDynamique.brDYN(phDynamique);
+        LibrairieControlesDynamique.brDYN(phDynamique);
+
         PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
 
         // créer le tableau avec les infos
@@ -49,12 +64,12 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         LibrairieControlesDynamique.lblDYN(colNom, "", vendeur.Prenom + " " + vendeur.Nom, "autres-infos");
 
         Panel colLBLEmail = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-4");
-        LibrairieControlesDynamique.lblDYN(colLBLEmail, "", "Courriel::", "autres-infos");
+        LibrairieControlesDynamique.lblDYN(colLBLEmail, "", "Courriel:", "autres-infos");
         Panel colEmail = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-8");
         LibrairieControlesDynamique.lblDYN(colEmail, "", vendeur.AdresseEmail, "autres-infos");
 
         Panel colLBLTel = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-4");
-        LibrairieControlesDynamique.lblDYN(colLBLTel, "", "Courriel::", "autres-infos");
+        LibrairieControlesDynamique.lblDYN(colLBLTel, "", "Téléphone:", "autres-infos");
         Panel colTel = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-8");
         LibrairieControlesDynamique.lblDYN(colTel, "", vendeur.Tel1, "autres-infos");
 
@@ -79,7 +94,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Panel colLBLLivGratuite = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-4");
         LibrairieControlesDynamique.lblDYN(colLBLLivGratuite, "", "Livraison gratuite:", "autres-infos");
         Panel colLivGratuite = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-8");
-        LibrairieControlesDynamique.lblDYN(colLivGratuite, "", vendeur.LivraisonGratuite.ToString(), "autres-infos");
+        LibrairieControlesDynamique.lblDYN(colLivGratuite, "", (vendeur.LivraisonGratuite != null) ? Decimal.Round((decimal)vendeur.LivraisonGratuite, 2).ToString() : "", "autres-infos");
 
         Panel colLBLTaxes = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-4");
         LibrairieControlesDynamique.lblDYN(colLBLTaxes, "", "Taxes:", "autres-infos");
@@ -96,18 +111,63 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Panel colBtnNon = LibrairieControlesDynamique.divDYN(rowBoutons, "", "col-md-1");
 
         // btn oui
-        HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(colBtnOui, "", "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
+        HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(colBtnOui, "btnOui_" + vendeur.NoVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
 
         LibrairieControlesDynamique.spaceDYN(rowBoutons);
 
         // btn non
-        HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtnNon, "", "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+        HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtnNon, "btnNon_" + vendeur.NoVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+        
+
+    }
+
+    public void afficherFormRedevance()
+    {
+        LibrairieControlesDynamique.btnDYN(phDynamique, "", "btn btn-warning", "Retour", retourDetails_click);
+        LibrairieControlesDynamique.brDYN(phDynamique);
+        LibrairieControlesDynamique.brDYN(phDynamique);
+
+        PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
+
+        // créer le tableau avec les infos
+        Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, "", "panel panel-default");
+        Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, "", "panel-body");
+
+        Panel row = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+        Panel colNomEntreprise = LibrairieControlesDynamique.divDYN(row, "", "col-md-12");
+        LibrairieControlesDynamique.lblDYN(colNomEntreprise, "", vendeur.NomAffaires, "header-nom");
+
+        Panel divHR = LibrairieControlesDynamique.divDYN(row, "", "col-md-12");
+        LibrairieControlesDynamique.hrDYN(divHR);
+
+        
+        Panel colLblRedevances = LibrairieControlesDynamique.divDYN(row, "", "col-md-12");
+        Panel rowPourcentage = LibrairieControlesDynamique.divDYN(colLblRedevances, "", "row");
+
+        Panel colLBL = LibrairieControlesDynamique.divDYN(rowPourcentage, "", "col-md-3");
+        LibrairieControlesDynamique.lblDYN(colLBL, "", "Redevances par commande", "autres-infos");
+        LibrairieControlesDynamique.spaceDYN(colLblRedevances);
+
+        Panel colTB = LibrairieControlesDynamique.divDYN(rowPourcentage, "", "col-md-2");
+        Panel div = LibrairieControlesDynamique.divDYN(colTB, "", "input-group");
+        LibrairieControlesDynamique.lblDYN(div, "", "%", "input-group-addon");
+        TextBox tb = LibrairieControlesDynamique.numericUpDownDYN(div, "", "", "0", "100", "form-control");
+        tb.Style.Add("width", "70px");
+        tb.MaxLength = 3;
+
+        this.tbRedevance = tb;
 
 
+        Panel colMessageConfirmation = LibrairieControlesDynamique.divDYN(row, "", "col-md-12");
+        LibrairieControlesDynamique.brDYN(colMessageConfirmation);
+        LibrairieControlesDynamique.brDYN(colMessageConfirmation);
+        LibrairieControlesDynamique.lblDYN(colMessageConfirmation, "", "En continuant vous acceptez que " + vendeur.Prenom + " " + vendeur.Nom + 
+            " ait un accès complet comme vendeur sur le site Les Petites Puces.", "autres-infos");
 
-
-
-
+        LibrairieControlesDynamique.brDYN(colMessageConfirmation);
+        LibrairieControlesDynamique.brDYN(colMessageConfirmation);
+        
+        LibrairieControlesDynamique.btnDYN(LibrairieControlesDynamique.divDYN(row, "", "col-md-12"), "btnConf_" + vendeur.NoVendeur, "btn btn-warning", "Confirmer", confirmer_click);
     }
 
     public void retourDashboard_click(Object sender, EventArgs e)
@@ -117,12 +177,19 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
+    public void retourDetails_click(Object sender, EventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("Retour");
+        String url = "~/Pages/DetailsDemandeVendeur.aspx?NoVendeur=" + this.noVendeur;
+        Response.Redirect(url, true);
+    }
+
     public void btnNon_click(Object sender, EventArgs e)
     {
         HtmlButton btn = (HtmlButton)sender;
         String id = btn.ID.Replace("btnNon_", "");
-        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), false);
-        String url = "~/Pages/DemandesVendeur.aspx?";
+        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), false, "");
+        String url = "~/Pages/DemandesVendeur.aspx?Notification=refuse";
         Response.Redirect(url, true);
     }
 
@@ -130,9 +197,25 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
     {
         HtmlButton btn = (HtmlButton)sender;
         String id = btn.ID.Replace("btnOui_", "");
-        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true);
-        String url = "~/Pages/DemandesVendeur.aspx?";
+        String url = "~/Pages/DetailsDemandeVendeur.aspx?NoVendeur=" + this.noVendeur + "&Etape=redevance";
         Response.Redirect(url, true);
+    }
+
+    public void confirmer_click(Object sender, EventArgs e)
+    {
+        Button btn = (Button)sender;
+        String id = btn.ID.Replace("btnConf_", "");
+        Decimal n;
+        if (Decimal.TryParse(this.tbRedevance.Text, out n) && n >= 0 && n <= 100)
+        {
+            LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true, this.tbRedevance.Text);
+            String url = "~/Pages/DemandesVendeur.aspx?Notification=accepte";
+            Response.Redirect(url, true);
+        }
+        else
+        {
+            this.tbRedevance.CssClass = "form-control erreur";
+        }
     }
 
     private void getNoVendeur()
@@ -146,6 +229,18 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         else
         {
             this.noVendeur = n;
+        }
+    }
+
+    private void getEtape()
+    {
+        if (Request.QueryString["Etape"] == null)
+        {
+            this.etape = "";
+        }
+        else
+        {
+            this.etape = Request.QueryString["Etape"];
         }
     }
 }
