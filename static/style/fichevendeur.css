@@ -1,0 +1,16 @@
+﻿
+
+.header-nom {
+    font-size:30px;
+}
+
+.autres-infos {
+    font-size: 18px;
+}
+
+.erreur {
+    border-style:solid;
+    border-width:1px;
+    border-color:rgba(255, 0, 0, 0.61);
+}
+

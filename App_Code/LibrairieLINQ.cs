@@ -432,13 +432,13 @@ public static class LibrairieLINQ
     }
 
     // accepter ou delete la demande d'un vendeur
-    public static void accepterOuDeleteDemandeVendeur(long noVendeur, bool accepte)
+    public static void accepterOuDeleteDemandeVendeur(long noVendeur, bool accepte, String redevance)
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableVendeurs = dataContext.PPVendeurs;
         PPVendeurs vendeur = (from v in tableVendeurs where v.NoVendeur == noVendeur select v).First();
 
-        if (accepte) { vendeur.Statut = 1; }
+        if (accepte) { vendeur.Statut = 1; vendeur.Pourcentage = Decimal.Parse(redevance); }
         else { dataContext.PPVendeurs.Remove(vendeur); }
         dataContext.SaveChanges();
 

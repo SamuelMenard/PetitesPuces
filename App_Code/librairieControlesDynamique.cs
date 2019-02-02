@@ -180,6 +180,23 @@ public static class LibrairieControlesDynamique
         Conteneur.Controls.Add(tb);
         return tb;
     }
+
+    static public TextBox numericUpDownDYN(Control Conteneur, String strID, String strValeur, String min, String max, String strClass)
+    {
+        TextBox tb = new TextBox()
+        {
+            ID = strID,
+            CssClass = strClass,
+            Text = strValeur,
+            MaxLength = 2
+        };
+        tb.Attributes["type"] = "number";
+        tb.Attributes["min"] = min;
+        tb.Attributes["max"] = max;
+        tb.Attributes["step"] = "1";
+        Conteneur.Controls.Add(tb);
+        return tb;
+    }
     static public void brDYN(Control Conteneur)
     {
         Literal br = new Literal();

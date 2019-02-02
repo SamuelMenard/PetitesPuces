@@ -9,9 +9,21 @@ using System.Web.UI.WebControls;
 public partial class Pages_DemandesVendeur : System.Web.UI.Page
 {
 
+    private String notification;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         Page.MaintainScrollPositionOnPostBack = true;
+        getNotification();
+
+        if (notification == "accepte")
+        {
+            divAccepte.Visible = true;
+        }
+        else if (notification == "refuse")
+        {
+            divRefuse.Visible = true;
+        }
         afficherDemandes();
     }
     
@@ -47,13 +59,16 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
             LibrairieControlesDynamique.pDYN(mediaBody, nomEntreprise);
             LibrairieControlesDynamique.pDYN(mediaBody, date);
 
-            // btn oui
-            HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnOui_" + idVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
+            // boutons plus de détails
+            HtmlButton btnPlusDetails = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnDetails_" + idVendeur, "btn btn-info", "Plus de détails", "glyphicon glyphicon-info-sign", plusDetails_click);
 
-            LibrairieControlesDynamique.spaceDYN(demandeFooter);
+            // btn oui
+            //HtmlButton btnOui = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnOui_" + idVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnOui_click);
+
+            // LibrairieControlesDynamique.spaceDYN(demandeFooter);
 
             // btn non
-            HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnNon_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+            // HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(demandeFooter, "btnNon_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
         }
 
         if (lstVendeurs.Count() < 1)
@@ -65,21 +80,11 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
 
     }
 
-    public void btnNon_click(Object sender, EventArgs e)
+    public void plusDetails_click(Object sender, EventArgs e)
     {
         HtmlButton btn = (HtmlButton)sender;
-        String id = btn.ID.Replace("btnNon_", "");
-        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), false);
-        String url = "~/Pages/DemandesVendeur.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void btnOui_click(Object sender, EventArgs e)
-    {
-        HtmlButton btn = (HtmlButton)sender;
-        String id = btn.ID.Replace("btnOui_", "");
-        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true);
-        String url = "~/Pages/DemandesVendeur.aspx?";
+        String id = btn.ID.Replace("btnDetails_", "");
+        String url = "~/Pages/DetailsDemandeVendeur.aspx?NoVendeur=" + id;
         Response.Redirect(url, true);
     }
 
@@ -88,6 +93,18 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
         System.Diagnostics.Debug.WriteLine("Retour");
         String url = "~/Pages/AcceuilGestionnaire.aspx?";
         Response.Redirect(url, true);
+    }
+
+    private void getNotification()
+    {
+        if (Request.QueryString["Notification"] == null)
+        {
+            this.notification = "";
+        }
+        else
+        {
+            this.notification = Request.QueryString["Notification"];
+        }
     }
 }
 
