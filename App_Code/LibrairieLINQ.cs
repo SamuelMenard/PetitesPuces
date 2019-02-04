@@ -571,6 +571,22 @@ public static class LibrairieLINQ
 
     }
 
+    // get tout les clients
+    public static List<PPClients> getListeClients()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableClient = dataContext.PPClients;
+        return (from client in tableClient select client).ToList();
+    }
+
+    // get tout les vendeurs
+    public static List<PPVendeurs> getListeVendeurs()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeur = dataContext.PPVendeurs;
+        return (from vendeur in tableVendeur select vendeur).ToList();
+    }
+
 
 
 }
