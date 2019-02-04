@@ -7,22 +7,22 @@
             var input, row, filter, h4;
             input = document.getElementById("tbSearch");
             filter = input.value.toUpperCase();
-            row = document.getElementById("contentBody_rowDemandeurs");
-            h4 = row.getElementsByTagName("h4");
+            row = document.getElementById("contentBody_row_utilisateurs");
+            span = row.getElementsByTagName("span");
 
-            for (i = 0; i < h4.length; i++) {
-                txtValue = h4[i].innerHTML;
-                var idVendeur = h4[i].id.replace("h4_", "");
+            for (i = 0; i < span.length; i++) {
+                txtValue = span[i].innerHTML;
+                var id = span[i].id.replace("contentBody_lbl_", "");
+                var idDIV = "contentBody_col_" + id;
 
-                var idDIV = "contentBody_colInfos_" + idVendeur;
-                var div = document.getElementById(idDIV);
-
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-
-                    console.log(div.id);
-                    div.style.display = "";
-                } else {
-                    div.style.display = "none";
+                if (id != "") {
+                    var div = document.getElementById(idDIV);
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    
+                        div.style.display = "";
+                    } else {
+                        div.style.display = "none";
+                    }
                 }
             }
         }

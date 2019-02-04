@@ -555,7 +555,30 @@ public static class LibrairieLINQ
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableClient = dataContext.PPClients;
         PPClients client = (from c in tableClient where c.NoClient == noClient select c).First();
-        client.Statut = 0;
+
+        // delete le compte s'il n'a jamais visité de vendeur
+        if (client.PPVendeursClients.Count() == 0)
+        {
+            dataContext.PPClients.Remove(client);
+        }
+        else if (client.PPCommandes.Count() == 0)
+        {
+            foreach(PPArticlesEnPanier ap in client.PPArticlesEnPanier.ToList())
+            {
+                dataContext.PPArticlesEnPanier.Remove(ap);
+            }
+            dataContext.PPClients.Remove(client);
+        }
+        else
+        {
+            foreach (PPArticlesEnPanier ap in client.PPArticlesEnPanier.ToList())
+            {
+                dataContext.PPArticlesEnPanier.Remove(ap);
+            }
+            client.Statut = 0;
+        }
+
+        
         dataContext.SaveChanges();
 
     }
@@ -566,6 +589,19 @@ public static class LibrairieLINQ
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableVendeur = dataContext.PPVendeurs;
         PPVendeurs vendeur = (from v in tableVendeur where v.NoVendeur == noVendeur select v).First();
+
+        foreach(PPProduits produit in vendeur.PPProduits.ToList())
+        {
+            if (produit.PPDetailsCommandes.Count() == 0)
+            {
+                dataContext.PPProduits.Remove(produit);
+            }
+            else
+            {
+                produit.Disponibilité = false;
+            }
+        }
+
         vendeur.Statut = 0;
         dataContext.SaveChanges();
 
@@ -576,7 +612,7 @@ public static class LibrairieLINQ
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableClient = dataContext.PPClients;
-        return (from client in tableClient select client).ToList();
+        return (from client in tableClient where client.Statut == 1 select client).ToList();
     }
 
     // get tout les vendeurs
@@ -584,7 +620,7 @@ public static class LibrairieLINQ
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableVendeur = dataContext.PPVendeurs;
-        return (from vendeur in tableVendeur select vendeur).ToList();
+        return (from vendeur in tableVendeur where vendeur.Statut == 1 select vendeur).ToList();
     }
 
 

@@ -29,12 +29,12 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
         {
             urlImg = "../static/images/client.png";
             List<PPClients> lstClients = LibrairieLINQ.getListeClients();
-            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "", "row");
+            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "row_utilisateurs", "row");
             foreach(PPClients client in lstClients)
             {
                 long idClient = client.NoClient;
                 String nomUtil = client.Prenom + " " + client.Nom;
-                Panel colUser = LibrairieControlesDynamique.divDYN(row, "", "col-md-2");
+                Panel colUser = LibrairieControlesDynamique.divDYN(row, "col_" + idClient, "col-md-2");
                 Panel panelDefault = LibrairieControlesDynamique.divDYN(colUser, "", "panel panel-default");
                 Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
                 LibrairieControlesDynamique.imgDYN(panelBody, "", urlImg, "img-responsive");
@@ -45,19 +45,19 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-8");
 
                 HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtn, "btnNonClient_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
-                LibrairieControlesDynamique.lblDYN(colNom, "", nomUtil);
+                LibrairieControlesDynamique.lblDYN(colNom, "lbl_" + idClient, nomUtil);
             }
         }
         else if (this.typeUtilisateurCourant == "V")
         {
             urlImg = "../static/images/vendeur.jpg";
             List<PPVendeurs> lstVendeurs = LibrairieLINQ.getListeVendeurs();
-            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "", "row");
+            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "row_utilisateurs", "row");
             foreach (PPVendeurs vendeur in lstVendeurs)
             {
                 long idVendeur = vendeur.NoVendeur;
                 String nomUtil = vendeur.Prenom + " " + vendeur.Nom;
-                Panel colUser = LibrairieControlesDynamique.divDYN(row, "", "col-md-2");
+                Panel colUser = LibrairieControlesDynamique.divDYN(row, "col_" + idVendeur, "col-md-2");
                 Panel panelDefault = LibrairieControlesDynamique.divDYN(colUser, "", "panel panel-default");
                 Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
                 LibrairieControlesDynamique.imgDYN(panelBody, "", urlImg, "img-responsive");
@@ -68,7 +68,7 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-8");
 
                 HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtn, "btnNonVendeur_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
-                LibrairieControlesDynamique.lblDYN(colNom, "", nomUtil);
+                LibrairieControlesDynamique.lblDYN(colNom, "lbl_" + idVendeur, nomUtil);
             }
         }
 
@@ -88,8 +88,19 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
     public void btnNon_click(Object sender, EventArgs e)
     {
         HtmlButton btn = (HtmlButton)sender;
-        String id = btn.ID.Replace("btnNon_", "");
-        LibrairieLINQ.desactiverCompteVendeur(long.Parse(id));
+        String id = "";
+
+        if (this.typeUtilisateurCourant == "C")
+        {
+            id = btn.ID.Replace("btnNonClient_", "");
+            LibrairieLINQ.desactiverCompteClient(long.Parse(id));
+        }
+        else if (this.typeUtilisateurCourant == "V")
+        {
+            id = btn.ID.Replace("btnNonVendeur_", "");
+            LibrairieLINQ.desactiverCompteVendeur(long.Parse(id));
+        }
+
         String url = "~/Pages/RendreInactif.aspx?TypeUtilisateur=" + typeUtilisateur.SelectedValue;
         Response.Redirect(url, true);
     }
