@@ -1269,7 +1269,10 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         System.Diagnostics.Debug.WriteLine("ALLER VISITER LE CATALOGUE");
         LinkButton btn = (LinkButton)sender;
         String idVendeur = btn.ID.Replace("vendeur_", "");
-        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?NoVendeur=" + idVendeur;
+
+        Session["NoVendeurCatalogue"] = idVendeur;
+
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
         Response.Redirect(url, true);
     }
     
