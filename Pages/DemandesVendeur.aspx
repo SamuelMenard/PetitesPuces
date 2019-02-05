@@ -50,6 +50,14 @@
         <br />
         <br />
 
+        <div id="divAccepte" class="alert alert-success" visible="false" runat="server">
+          <strong>Le vendeur est maintenant actif !</strong>
+        </div>
+
+        <div id="divRefuse" class="alert alert-success" visible="false" runat="server">
+          <strong>Le vendeur a été refusé avec succès</strong>
+        </div>
+
         <asp:PlaceHolder id="phDynamique" runat="server" />
 
         <div id="divMessage" class="alert alert-warning" visible="false" runat="server">

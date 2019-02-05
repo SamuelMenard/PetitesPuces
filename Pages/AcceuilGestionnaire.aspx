@@ -101,7 +101,23 @@
                             <img src="../static/images/payroll.png" alt="LOGO" class="img-responsive">
                         </div>
                         <div class="panel-footer">
-                            <h4>Visualiser les redevances</h4>
+                            <h4>Gestion des redevances</h4>
+                            <br />
+                        </div>
+                    </div>
+                </asp:Panel>
+        </asp:LinkButton>
+
+            <asp:LinkButton ID="LinkButton1" 
+                        runat="server"
+            OnClick="email_click">
+                <asp:Panel ID="Panel1" CssClass="col-md-3" runat="server">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img src="../static/images/email-logo.png" alt="LOGO" class="img-responsive">
+                        </div>
+                        <div class="panel-footer">
+                            <h4>Gestion des redevances</h4>
                             <br />
                         </div>
                     </div>

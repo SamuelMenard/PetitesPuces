@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 public partial class Pages_RendreInactif : System.Web.UI.Page
 {
     private String typeUtilisateurCourant;
-    private String recherche;
 
     protected void Page_Load(object sender, EventArgs e)
     {
         getTypeUtilisateur();
-        getRecherche();
 
         afficherUtilisateurs();
     }
@@ -21,60 +20,60 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
     protected void Page_LoadComplete(object sender, EventArgs e)
     {
         typeUtilisateur.SelectedValue = this.typeUtilisateurCourant;
-        tbSearch.Text = this.recherche;
     }
 
     public void afficherUtilisateurs()
     {
-        List<String> lstClients = new List<string>();
-        lstClients.Add("Louis Porte");
-        lstClients.Add("Louis Parte");
-        lstClients.Add("Louis Papa");
-        lstClients.Add("Louis Blou");
-        lstClients.Add("Louis Blusse");
-        lstClients.Add("Louis Ménard");
-        lstClients.Add("Louis Lapierre");
-        lstClients.Add("Louis Gagner");
-        lstClients.Add("John Porte");
-        lstClients.Add("Jacques Porte");
-        lstClients.Add("George Porte");
-
-        List<String> lstVendeurs = new List<string>();
-        lstVendeurs.Add("Antoine Laroche");
-        lstVendeurs.Add("Antoine Parle");
-        lstVendeurs.Add("Antoine Meloche");
-        lstVendeurs.Add("Jeff Meloche");
-        lstVendeurs.Add("Lolipop Meloche");
-
         String urlImg = "";
-
-        List<String> lstUtilisateurs = new List<string>();
-        if (this.typeUtilisateurCourant == "C") { lstUtilisateurs = lstClients; urlImg = "../static/images/client.png"; }
-        else if (this.typeUtilisateurCourant == "V") { lstUtilisateurs = lstVendeurs; urlImg = "../static/images/vendeur.jpg"; }
-
-
-        Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "", "row");
-        for (int i = 0; i < lstUtilisateurs.Count; i++)
+        if (this.typeUtilisateurCourant == "C")
         {
-            String nomUtil = lstUtilisateurs[i];
-            bool afficher = true;
-
-            if (this.recherche != "")
+            urlImg = "../static/images/client.png";
+            List<PPClients> lstClients = LibrairieLINQ.getListeClients();
+            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "row_utilisateurs", "row");
+            foreach(PPClients client in lstClients)
             {
-                afficher = nomUtil.Contains(this.recherche);
-            }
-
-            if (afficher)
-            {
-                Panel colUser = LibrairieControlesDynamique.divDYN(row, "", "col-md-2");
+                long idClient = client.NoClient;
+                String nomUtil = client.Prenom + " " + client.Nom;
+                Panel colUser = LibrairieControlesDynamique.divDYN(row, "col_" + idClient, "col-md-2");
                 Panel panelDefault = LibrairieControlesDynamique.divDYN(colUser, "", "panel panel-default");
                 Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
                 LibrairieControlesDynamique.imgDYN(panelBody, "", urlImg, "img-responsive");
                 Panel panelFooter = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-footer");
-                LibrairieControlesDynamique.lblDYN(panelFooter, "", nomUtil);
-            }
 
+                Panel rowNomBtn = LibrairieControlesDynamique.divDYN(panelFooter, "", "row");
+                Panel colBtn = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-4");
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-8");
+
+                HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtn, "btnNonClient_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+                LibrairieControlesDynamique.lblDYN(colNom, "lbl_" + idClient, nomUtil);
+            }
         }
+        else if (this.typeUtilisateurCourant == "V")
+        {
+            urlImg = "../static/images/vendeur.jpg";
+            List<PPVendeurs> lstVendeurs = LibrairieLINQ.getListeVendeurs();
+            Panel row = LibrairieControlesDynamique.divDYN(phDynamique, "row_utilisateurs", "row");
+            foreach (PPVendeurs vendeur in lstVendeurs)
+            {
+                long idVendeur = vendeur.NoVendeur;
+                String nomUtil = vendeur.Prenom + " " + vendeur.Nom;
+                Panel colUser = LibrairieControlesDynamique.divDYN(row, "col_" + idVendeur, "col-md-2");
+                Panel panelDefault = LibrairieControlesDynamique.divDYN(colUser, "", "panel panel-default");
+                Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
+                LibrairieControlesDynamique.imgDYN(panelBody, "", urlImg, "img-responsive");
+                Panel panelFooter = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-footer");
+
+                Panel rowNomBtn = LibrairieControlesDynamique.divDYN(panelFooter, "", "row");
+                Panel colBtn = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-4");
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-8");
+
+                HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtn, "btnNonVendeur_" + idVendeur, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+                LibrairieControlesDynamique.lblDYN(colNom, "lbl_" + idVendeur, nomUtil);
+            }
+        }
+
+
+        
         
 
     }
@@ -86,16 +85,29 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
-    public void recherche_click(Object sender, EventArgs e)
+    public void btnNon_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Retour");
-        String url = "~/Pages/RendreInactif.aspx?Recherche=" + tbSearch.Text + "&TypeUtilisateur=" + typeUtilisateur.SelectedValue;
+        HtmlButton btn = (HtmlButton)sender;
+        String id = "";
+
+        if (this.typeUtilisateurCourant == "C")
+        {
+            id = btn.ID.Replace("btnNonClient_", "");
+            LibrairieLINQ.desactiverCompteClient(long.Parse(id));
+        }
+        else if (this.typeUtilisateurCourant == "V")
+        {
+            id = btn.ID.Replace("btnNonVendeur_", "");
+            LibrairieLINQ.desactiverCompteVendeur(long.Parse(id));
+        }
+
+        String url = "~/Pages/RendreInactif.aspx?TypeUtilisateur=" + typeUtilisateur.SelectedValue;
         Response.Redirect(url, true);
     }
 
     public void type_changed(Object sender, EventArgs e)
     {
-        String url = "~/Pages/RendreInactif.aspx?Recherche=" + tbSearch.Text + "&TypeUtilisateur=" + typeUtilisateur.SelectedValue;
+        String url = "~/Pages/RendreInactif.aspx?TypeUtilisateur=" + typeUtilisateur.SelectedValue;
         Response.Redirect(url, true);
     }
 
@@ -116,18 +128,6 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
                 this.typeUtilisateurCourant = Request.QueryString["TypeUtilisateur"];
             }
             
-        }
-    }
-
-    private void getRecherche()
-    {
-        if (Request.QueryString["Recherche"] == null)
-        {
-            this.recherche = "";
-        }
-        else
-        {
-            this.recherche = Request.QueryString["Recherche"];
         }
     }
 }

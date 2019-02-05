@@ -56,14 +56,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             decimal poidsTotal = 0;
 
             // Créer le panier du vendeur X
-            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
+            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "", "panel panel-default");
 
             // Nom de l'entreprise
-            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
+            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, "", "panel-heading");
             LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
 
             // Liste des items + le total
-            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
+            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, "", "panel-body");
 
 
             // Rajouter les produits dans le panier
@@ -78,6 +78,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
+
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
 
@@ -87,20 +89,20 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 String nomProduit = article.PPProduits.Nom;
                 String urlImage = "../static/images/" + article.PPProduits.Photo;
 
-                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
+                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
 
                 // ajouter l'image
-                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colImg_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.imgDYN(colImg, idEntreprise + "_img_" + idItem, urlImage, "img-size");
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-2");
+                LibrairieControlesDynamique.imgDYN(colImg, "", urlImage, "img-size");
 
                 // Nom du produit
-                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
+                LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item");
                 LibrairieControlesDynamique.brDYN(colNom);
                 LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
 
                 // Quantité sélectionné
-                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
+                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
 
                 TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem,
                     quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1) ? "1" : article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
@@ -128,7 +130,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
 
                 // Prix item
-                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-2");
 
                 if (montantRabais > 0)
                 {
@@ -142,19 +144,19 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
 
                 // Bouton retirer
-                Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnRetirer_" + idItem, "row");
-                Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, idEntreprise + "_colBtnRetirer_" + idItem, "col-sm-2");
+                Panel rowBtnRetirer = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colBtnRetirer = LibrairieControlesDynamique.divDYN(rowBtnRetirer, "", "col-sm-2");
                 LibrairieControlesDynamique.btnDYN(colBtnRetirer, "btnRetirer_" + article.NoPanier, "btn btn-default", "RETIRER", retirer_click);
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
 
             // Afficher le sous total
-            Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowSousTotal", "row");
-            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colLabelSousTotal", "col-sm-10 text-right");
-            LibrairieControlesDynamique.lblDYN(colLabelSousTotal, idEntreprise + "_labelSousTotal", "Sous total: ", "infos-payage");
+            Panel rowSousTotal = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+            Panel colLabelSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, "", "col-sm-10 text-right");
+            LibrairieControlesDynamique.lblDYN(colLabelSousTotal, "", "Sous total: ", "infos-payage");
 
-            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, idEntreprise + "_colMontantSousTotal", "col-sm-2 text-right");
-            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, idEntreprise + "_montantSousTotal", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
+            Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, "", "col-sm-2 text-right");
+            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, "", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
@@ -168,12 +170,12 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
             if (pctTPS != 0)
             {
-                Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTPS", "row");
-                Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colLabelTPS", "col-sm-10 text-right");
-                LibrairieControlesDynamique.lblDYN(colLabelTPS, idEntreprise + "_labelTPS", "TPS: ", "infos-payage");
+                Panel rowTPS = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colLabelTPS = LibrairieControlesDynamique.divDYN(rowTPS, "", "col-sm-10 text-right");
+                LibrairieControlesDynamique.lblDYN(colLabelTPS, "", "TPS: ", "infos-payage");
 
-                Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, idEntreprise + "_colMontantTPS", "col-sm-2 text-right");
-                LibrairieControlesDynamique.lblDYN(colMontantTPS, idEntreprise + "_montantTPS", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
+                Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, "", "col-sm-2 text-right");
+                LibrairieControlesDynamique.lblDYN(colMontantTPS, "", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
 
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
@@ -183,12 +185,12 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             if (pctTVQ != 0)
             {
 
-                Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowTVQ", "row");
-                Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colLabelTVQ", "col-sm-10 text-right");
-                LibrairieControlesDynamique.lblDYN(colLabelTVQ, idEntreprise + "_labelTVQ", "TVQ: ", "infos-payage");
+                Panel rowTVQ = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+                Panel colLabelTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, "", "col-sm-10 text-right");
+                LibrairieControlesDynamique.lblDYN(colLabelTVQ, "", "TVQ: ", "infos-payage");
 
-                Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, idEntreprise + "_colMontantTVQ", "col-sm-2 text-right");
-                LibrairieControlesDynamique.lblDYN(colMontantTVQ, idEntreprise + "_montantTVQ", "$" + Decimal.Round((Decimal)TVQ, 2).ToString(), "infos-payage");
+                Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, "", "col-sm-2 text-right");
+                LibrairieControlesDynamique.lblDYN(colMontantTVQ, "", "$" + Decimal.Round((Decimal)TVQ, 2).ToString(), "infos-payage");
 
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
@@ -231,14 +233,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             LibrairieControlesDynamique.hrDYN(panelBody);
 
             // Bouton shipping
-            Panel rowBtnShipping = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowBtnShipping", "row");
-            Panel colLabelBtnShipping = LibrairieControlesDynamique.divDYN(rowBtnShipping, idEntreprise + "_colLabelBtnShipping", "col-sm-2");
+            Panel rowBtnShipping = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
+            Panel colLabelBtnShipping = LibrairieControlesDynamique.divDYN(rowBtnShipping, "", "col-sm-2");
 
             System.Diagnostics.Debug.WriteLine("Rupture stock: " + ruptureStock);
             System.Diagnostics.Debug.WriteLine("Limite depasse: " + ruptureStock);
             if (!ruptureStock && !limiteDePoidsDepasse)
             {
-                HtmlButton btnShipping = LibrairieControlesDynamique.htmlbtnDYN(colLabelBtnShipping, idEntreprise + "_BtnShipping", "btn btn-warning", "Informations de livraison", "glyphicon glyphicon-user", infosPerso_click);
+                HtmlButton btnShipping = LibrairieControlesDynamique.htmlbtnDYN(colLabelBtnShipping, "", "btn btn-warning", "Informations de livraison", "glyphicon glyphicon-user", infosPerso_click);
             }
         }
         else
@@ -267,14 +269,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             decimal poidsTotal = 0;
 
             // Créer le panier du vendeur X
-            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "panier" + idEntreprise, "panel panel-default");
+            Panel panelBase = LibrairieControlesDynamique.divDYN(paniersDynamique, "", "panel panel-default");
 
             // Nom de l'entreprise
-            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_header", "panel-heading");
-            LibrairieControlesDynamique.lbDYN(panelHeader, "vendeur_" + idEntreprise, nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise", nomEntreprisePanier_click);
+            Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, "", "panel-heading");
+            Label lblVendeur = LibrairieControlesDynamique.lblDYN(panelHeader, "", nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise");
 
             // Liste des items + le total
-            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, idEntreprise + "_body", "panel-body");
+            Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, "", "panel-body");
 
 
             // Rajouter les produits dans le panier
@@ -288,6 +290,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
+
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
 
@@ -297,22 +301,22 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 String nomProduit = article.PPProduits.Nom;
                 String urlImage = "../static/images/" + article.PPProduits.Photo;
 
-                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, idEntreprise + "_rowItem_" + idItem, "row");
+                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
 
                 // ajouter l'image
-                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colImg_" + idItem, "col-sm-2");
-                LibrairieControlesDynamique.imgDYN(colImg, idEntreprise + "_img_" + idItem, urlImage, "img-size");
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-2");
+                LibrairieControlesDynamique.imgDYN(colImg, "", urlImage, "img-size");
 
                 // Nom du produit
-                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
+                LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item");
                 LibrairieControlesDynamique.brDYN(colNom);
                 LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
 
                 // Quantité sélectionné
-                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colQuantite_" + idItem, "col-sm-4");
+                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
 
-                TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem,
+                TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "",
                     quantiteSelectionne.ToString(), (article.PPProduits.NombreItems < 1) ? "1" : article.PPProduits.NombreItems.ToString(), "form-control border-quantite");
                 tbQuantite.ReadOnly = true;
 
@@ -337,7 +341,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
 
                 // Prix item
-                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colPrix_" + idItem, "col-sm-2");
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-2");
 
                 if (montantRabais > 0)
                 {
@@ -1262,10 +1266,15 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void nomEntreprisePanier_click(Object sender, EventArgs e)
     {
+        System.Diagnostics.Debug.WriteLine("ALLER VISITER LE CATALOGUE");
         LinkButton btn = (LinkButton)sender;
         String idVendeur = btn.ID.Replace("vendeur_", "");
-        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?NoVendeur=" + idVendeur;
+
+        Session["NoVendeurCatalogue"] = idVendeur;
+
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
         Response.Redirect(url, true);
     }
+    
 
 }
