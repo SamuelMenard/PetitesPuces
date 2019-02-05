@@ -18,7 +18,9 @@ public partial class Pages_Connexion : System.Web.UI.Page
         bool verdictConnexion = false;
         String url = "";
 
-        if (typeUtilisateur == "C" && LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur))
+        int codeErreur = LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur);
+
+        if (typeUtilisateur == "C" && codeErreur == 400)
         {
             verdictConnexion = true;
             List<String> lstInfos = LibrairieLINQ.infosBaseClient(courriel);
@@ -30,7 +32,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
             url = "~/Pages/AccueilClient.aspx?";
 
         }
-        else if (typeUtilisateur == "V" && LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur))
+        else if (typeUtilisateur == "V" && codeErreur == 400)
         {
             verdictConnexion = true;
             List<String> lstInfos = LibrairieLINQ.infosBaseVendeur(courriel);
@@ -43,7 +45,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
             url = "~/Pages/ConnexionVendeur.aspx?";
 
         }
-        else if (typeUtilisateur == "G" && LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur))
+        else if (typeUtilisateur == "G" && codeErreur == 400)
         {
             verdictConnexion = true;
             Session["TypeUtilisateur"] = "G";
@@ -58,7 +60,10 @@ public partial class Pages_Connexion : System.Web.UI.Page
         {
             tbCourriel.CssClass = "form-control erreur";
             tbMDP.CssClass = "form-control erreur";
+
             alert_erreur.Visible = true;
+            if (codeErreur == 401) { lblMessageErreur.Text = "Courriel ou mot de passe incorrect"; }
+            else if (codeErreur == 402) { lblMessageErreur.Text = "Le compte a été désactivé"; }
         }
         
     }

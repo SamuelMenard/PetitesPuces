@@ -7,8 +7,26 @@ using System.Web.UI.WebControls;
 public partial class Pages_AffichageProduitDetaille : System.Web.UI.Page
 {
     string prevPage = String.Empty;
+    private int noProduit = 0;
+
+    private void getNbMois()
+    {
+
+        if (Request.QueryString["NoProduit"] == null)
+        {
+           
+        }
+        else
+        {
+            this.noProduit = Convert.ToInt32(Request.QueryString["NoProduit"]);           
+        }
+       
+      
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
+        getNbMois();
         if (!IsPostBack)
         {
             if (Request.UrlReferrer != null)
@@ -78,8 +96,7 @@ public partial class Pages_AffichageProduitDetaille : System.Web.UI.Page
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2");
                 LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "$" + prix.ToString(), "prix_item");
-
-                //Panel rowItem2 = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row");
+               
 
             // Bouton retirer
             Panel rowBtnAjout = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowBtnRetirer_" + idItem, "row");

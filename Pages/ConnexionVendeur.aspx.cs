@@ -74,7 +74,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
                 //Button Facture Commande
                 Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture_" + idItem, "col-sm-2 text-center");
-                LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture", "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
+                LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
 
                 // Pooids total commande
                 Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids_" + idItem, "col-sm-1 text-center");
@@ -201,7 +201,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom2_" + idItem, "col-sm-3 LiensProduits nomClient");
-                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idItem, nomProduit, null);
+                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idItem, nomProduit, descriptionProduit);
 
                 // Quantité restant
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite2_" + idItem, "col-sm-2 text-right");
@@ -230,5 +230,11 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
     }
 
-
+    private void descriptionProduit(object sender, EventArgs e)
+    {
+        LinkButton lb = (LinkButton)sender;
+        string strNoProduit = lb.ID.Replace(nomEntreprise + "_nom2_", "");
+        String url = "~/Pages/AffichageProduitDetaille.aspx?NoProduit="+ strNoProduit;
+        Response.Redirect(url, true);     
+    }
 }

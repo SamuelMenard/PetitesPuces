@@ -78,6 +78,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
+
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
 
@@ -287,6 +289,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
+
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
 
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
@@ -1265,7 +1269,10 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         System.Diagnostics.Debug.WriteLine("ALLER VISITER LE CATALOGUE");
         LinkButton btn = (LinkButton)sender;
         String idVendeur = btn.ID.Replace("vendeur_", "");
-        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?NoVendeur=" + idVendeur;
+
+        Session["NoVendeurCatalogue"] = idVendeur;
+
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
         Response.Redirect(url, true);
     }
     

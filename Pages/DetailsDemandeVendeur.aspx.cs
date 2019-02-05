@@ -208,6 +208,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Decimal n;
         if (Decimal.TryParse(this.tbRedevance.Text, out n) && n >= 0 && n <= 100)
         {
+            this.tbRedevance.CssClass = "form-control";
             LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true, this.tbRedevance.Text);
             String url = "~/Pages/DemandesVendeur.aspx?Notification=accepte";
             Response.Redirect(url, true);

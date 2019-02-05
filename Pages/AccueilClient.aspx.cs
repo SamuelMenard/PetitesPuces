@@ -71,6 +71,8 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                 decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; }
+
                 decimal? poids = article.PPProduits.Poids;
 
                 // sum au sous total
@@ -291,13 +293,21 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
         String[] tabID = btn.ID.Replace("lbNomEntreprise_", "").Split(';');
         String entrepriseID = tabID[1];
         System.Diagnostics.Debug.WriteLine(entrepriseID);
+
+        Session["NoVendeurCatalogue"] = entrepriseID;
+
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void nomEntreprisePanier_click(Object sender, EventArgs e)
     {
         LinkButton btn = (LinkButton)sender;
         String idVendeur = btn.ID.Replace("vendeur_", "");
-        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?NoVendeur=" + idVendeur;
+
+        Session["NoVendeurCatalogue"] = idVendeur;
+
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
         Response.Redirect(url, true);
     }
 }
