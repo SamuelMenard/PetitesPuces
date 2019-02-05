@@ -1,0 +1,2260 @@
+<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>IronPdf</name>
+  </assembly>
+  <members>
+    <member name="T:IronPdf.NamespaceDoc">
+      <summary>
+            IronPDF is a.NET library allowing the  generation and manipulation of PDF files in C# and other .Net projects.
+            </summary>
+    </member>
+    <member name="T:IronPdf.Installation">
+      <summary>
+            Global installation and setup preferences for all instances of IronPDF 
+            </summary>
+    </member>
+    <member name="P:IronPdf.Installation.TempFolderPath">
+      <summary>
+            The temporary folder path which temporary files and rendering engine DLLs will be deployed to where necessary.
+            The default location is the system temp folder which is appropriate for most use cases. 
+            </summary>
+    </member>
+    <member name="T:IronPdf.Util">
+      <summary>
+            Useful methods for working with HTML and PDF files.
+            </summary>
+    </member>
+    <member name="M:IronPdf.Util.ImageToDataUri(System.Drawing.Image,System.Boolean)">
+      <summary>
+             Turns a System.Drawing.Image or System.Drawing.Bitmapinto a DataUri which can used to embed the Image directly into an HTML document.
+              <para>Read standard <see href="https://en.wikipedia.org/wiki/Data_URI_scheme">https://en.wikipedia.org/wiki/Data_URI_scheme</see></para></summary>
+      <param name="Image">A non-null System.Drawing.Image or System.Drawing.Bitmap</param>
+      <param name="Rasterize">Optional flag to flatten the image to raw pixels to increase compatibility with HTML (may affect PDF file size and rendering time)</param>
+      <returns> A data URL which can be used as the src attribute of an HTML &lt;img tag</returns>
+    </member>
+    <member name="T:IronPdf.HtmlToPdf">
+      <summary>
+            IronPdf.HtmlToPdf allows any web page or Html 'snippet' to be turned into a PDF document.
+            </summary>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.StaticRenderUrlAsPdf(System.Uri,IronPdf.PdfPrintOptions,IronPdf.HttpLoginCredentials)">
+      <summary>    Static version of the <see cref="M:IronPdf.HtmlToPdf.RenderUrlAsPdf(System.Uri)" /> function.  Renders all Html and assets at a given Url into a PDF file.</summary>
+      <param name="Url">              An absolute Uri.  Points to the Html document to be rendered as a PDF. </param>
+      <param name="PrintOptions">     Instance of  <see cref="T:IronPdf.PdfPrintOptions" />. Optional print
+                                             options and settings. </param>
+      <param name="LoginCredentials"> Instance of  <see cref="T:IronPdf.HttpLoginCredentials" />.
+                                             Optional login credentials for Windows, Linux and Html Form
+                                             login environments. </param>
+      <returns> A <see cref="T:IronPdf.PdfDocument" /></returns>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.StaticRenderUrlAsPdf(System.String,IronPdf.PdfPrintOptions,IronPdf.HttpLoginCredentials)">
+      <summary>    Static version of the <see cref="M:IronPdf.HtmlToPdf.RenderUrlAsPdf(System.String)" /> function.  Renders all Html and assets at a given Url into a PDF file.</summary>
+      <param name="UrlOrPath">        An absolute Url or file path.  Points to the Html document to be rendered as a PDF. </param>
+      <param name="PrintOptions">     Instance of  <see cref="T:IronPdf.PdfPrintOptions" />. Optional print
+                                             options and settings. </param>
+      <param name="LoginCredentials"> Instance of  <see cref="T:IronPdf.HttpLoginCredentials" />.
+                                             Optional login credentials for Windows, Linux and Html Form
+                                             login environments. </param>
+      <returns> A <see cref="T:IronPdf.PdfDocument" /></returns>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.StaticRenderHTMLFileAsPdf(System.String,IronPdf.PdfPrintOptions)">
+      <summary>   Renders an HTML file as PDF binary data. </summary>
+      <param name="FilePath">  Path to an Html file.</param>
+      <param name="PrintOptions">     Instance of  <see cref="T:IronPdf.PdfPrintOptions" />. Optional print options and settings. </param>
+      <returns>   A <see cref="T:IronPdf.PdfDocument" /></returns>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.StaticRenderHtmlAsPdf(System.String,System.String,IronPdf.PdfPrintOptions,System.String)">
+      <summary>
+                 Static version of the <see cref="M:IronPdf.HtmlToPdf.RenderHtmlAsPdf(System.String,System.String,System.String)" /> function.  Renders any Html strings into a
+                 PDF document.
+             </summary>
+      <param name="Html">     Html to be turned into a PDF. </param>
+      <param name="BaseUrlOrPath">  Setting the BaseUrlOrPath property gives the Html a relative for content links such as hyper-links, images, CSS and JavaScript files.</param>
+      <param name="PrintOptions">     Instance of  <see cref="T:IronPdf.PdfPrintOptions" />. Optional print options and settings. </param>
+      <param name="Proxy"> Specifies an Http proxy server.   Use the pattern: http(s)://user-name:password@host:port/</param>
+      <returns> A <see cref="T:IronPdf.PdfDocument" /></returns>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.StaticRenderHtmlAsPdf(System.String,System.Uri,IronPdf.PdfPrintOptions,System.String)">
+      <summary>
+                 Static version of the <see cref="M:IronPdf.HtmlToPdf.RenderHtmlAsPdf(System.String,System.Uri,System.String)" /> function.  Renders any Html strings into a
+                 PDF document.
+             </summary>
+      <param name="Html">     Html to be turned into a PDF. </param>
+      <param name="BaseUrl">  Setting the BaseURL property gives the Html a relative for content links such as hyper-links, images, CSS and JavaScript files.</param>
+      <param name="PrintOptions">     Instance of  <see cref="T:IronPdf.PdfPrintOptions" />. Optional print options and settings. </param>
+      <param name="Proxy"> Specifies an Http proxy server.   Use the pattern: http(s)://user-name:password@host:port/</param>
+      <returns> A <see cref="T:IronPdf.PdfDocument" /></returns>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.RenderUrlAsPdf(System.Uri)">
+      <summary>   Renders the URL as PDF binary data. </summary>
+      <param name="Url"> An absolute Uri.  Points to the Html document to be rendered as a PDF. </param>
+      <returns>   A <see cref="T:IronPdf.PdfDocument" /></returns>
+      <example>
+        <code>HtmlToPdf myHtmlToPdf = new IronPdf.HtmlToPdf();
+                  Uri  myUri = new Uri("http://www.example.com");
+                  myHtmlToPdf.RenderUrlAsPdf(myUri).SaveAs(@"Path\File.Pdf");
+                 </code>
+      </example>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.RenderUrlAsPdf(System.String)">
+      <summary>   Renders the URL as PDF binary data. </summary>
+      <param name="UrlOrPath"> A url or file path.</param>
+      <returns>   A <see cref="T:IronPdf.PdfDocument" /></returns>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.RenderHTMLFileAsPdf(System.String)">
+      <summary>   Renders an HTML file  as PDF binary data. </summary>
+      <param name="FilePath">  Path to an Html file.</param>
+      <returns>   A <see cref="T:IronPdf.PdfDocument" /></returns>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.RenderHtmlAsPdf(System.String,System.Uri,System.String)">
+      <summary>
+            Creates a PDF file from an Html string, and returns it as an  IronPdf.PdfDocument
+            </summary>
+      <param name="Html">The Html to be rendered as a PDF.</param>
+      <param name="BaseUrl">Setting the BaseURL property gives the relative context for hyper-links, images, CSS and JavaScript files.</param>
+      <param name="Proxy">Specifies an Http proxy server. Use the pattern: http(s)://user-name:password@host:port</param>
+      <returns>
+            A <see cref="T:IronPdf.PdfDocument" /></returns>
+      <example>
+        <code>HtmlToPdf myHtmlToPdf = new IronPdf.HtmlToPdf();
+            myHtmlToPdf.RenderHtmlAsPdf("&lt;p&gt;html&lt;/p&gt;").SaveAs(@"Path\File.Pdf");
+            </code>
+      </example>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.RenderHtmlAsPdf(System.String,System.String,System.String)">
+      <summary>
+            Creates a PDF file from an Html string, and returns it as an  IronPdf.PdfDocument
+            </summary>
+      <param name="Html">The Html to be rendered as a PDF.</param>
+      <param name="BaseUrlOrPath">Setting the BaseUrlOrPath property gives the relative context for hyper-links, images, CSS and JavaScript files.</param>
+      <param name="Proxy">Specifies an Http proxy server. Use the pattern: http(s)://user-name:password@host:port</param>
+      <returns>
+            A <see cref="T:IronPdf.PdfDocument" /></returns>
+      <example>
+        <code>HtmlToPdf myHtmlToPdf = new IronPdf.HtmlToPdf();
+            myHtmlToPdf.RenderHtmlAsPdf("&lt;p&gt;html&lt;/p&gt;").SaveAs(@"Path\File.Pdf");
+            </code>
+      </example>
+    </member>
+    <member name="F:IronPdf.HtmlToPdf.PrintOptions">
+      <summary>
+            An instance of the <see cref="T:IronPdf.PdfPrintOptions" />  class.
+            Sets PDF output options such as Paper-Size, DPI, Headers and Footers.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlToPdf.LoginCredentials">
+      <summary>
+             An instance of the <see cref="T:IronPdf.HttpLoginCredentials" />  class.  Allows developers to specify login credentials using  Windows, Linux or Html Forms based authentication.
+             This allows PDFs to be printed, even if they reside on private Intranets, Extranets or within 'login' areas of websites.
+            
+             </summary>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.#ctor">
+      <summary>
+            The IronPdf.HtmlToPdf allows developers to create PDF files from any web page or Html Snippet
+            </summary>
+    </member>
+    <member name="M:IronPdf.HtmlToPdf.#ctor(IronPdf.PdfPrintOptions)">
+      <param name="PrintOptions">Sets PDF output options such as paper-size, DPI, headers and footers using an instance of the IronPdf.PdfPrintOptions Class.</param>
+    </member>
+    <member name="T:IronPdf.AspxToPdf">
+      <summary>
+                 Renders any .Net Web Page (ASPX) into a PDF Document. Simply add it to  the Page_Load
+                 event.
+             </summary>
+    </member>
+    <member name="T:IronPdf.AspxToPdf.FileBehavior">
+      <summary>
+                 Determines the web browser behavior towards a PDF document. 
+             </summary>
+    </member>
+    <member name="F:IronPdf.AspxToPdf.FileBehavior.Attachment">
+      <summary>Instructs the user's web-browser to download the PDF as a file.</summary>
+    </member>
+    <member name="F:IronPdf.AspxToPdf.FileBehavior.InBrowser">
+      <summary>Instructs the user's web-browser to render the PDF wherever possible.</summary>
+    </member>
+    <member name="M:IronPdf.AspxToPdf.RenderThisPageAsPdf(IronPdf.AspxToPdf.FileBehavior,System.String,IronPdf.PdfPrintOptions)">
+      <summary>
+                 Automatically renders any ASPX page into PDF instead of Html.  Use it in the Page_Load
+                 Event.
+                   <para>Example:</para><code>protected void Page_Load(object sender, EventArgs e){ 
+                   IronPdf.AspxToPdf.RenderThisPageAsPdf(FileBehavior.Attachment, "MyPdf.pdf", new  PdfPrintOptions(){ Dpi = 300 });
+                 }
+                 </code></summary>
+      <param name="PdfBehavior"> Specifies if the PDF file should be downloaded as an attachment,
+                                         or displayed directly in the browser of users. </param>
+      <param name="PdfFileName">  The file-name of the PDF.  If no name is set, a suitable name
+                                         will be automatically assigned chosen based on the Html title,
+                                         PrintOptions or name of the ASPX page. </param>
+      <param name="PrintOptions"> Sets PDF output options such as PDF Title, paper-size, DPI,
+                                         headers and footers. </param>
+    </member>
+    <member name="T:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.DocumentColorMode">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.DocumentColorMode.Color">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.DocumentColorMode.Grayscale">
+      <exclude />
+    </member>
+    <member name="T:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.DocumentOutputFormat">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.DocumentOutputFormat.PDF">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.DocumentOutputFormat.PS">
+      <exclude />
+    </member>
+    <member name="T:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.PaperOrientation">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.PaperOrientation.Portrait">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.ChromeRenderingGlobalSettings.PaperOrientation.Landscape">
+      <exclude />
+    </member>
+    <member name="T:IronPdf.ThreadSaftyManager.NamespaceDoc">
+      <exclude />
+    </member>
+    <member name="T:IronPdf.ThreadSaftyManager.LoadSettings.ContentErrorHandling">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.LoadSettings.ContentErrorHandling.Abort">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.LoadSettings.ContentErrorHandling.Skip">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.ThreadSaftyManager.LoadSettings.ContentErrorHandling.Ignore">
+      <exclude />
+    </member>
+    <member name="T:IronPdf.HtmlHeaderFooter">
+      <summary>
+            A Html Header or Footer which will be printed onto every page of the PDF.    This can be used to override <see cref="F:IronPdf.PdfPrintOptions.Header" /> and <see cref="F:IronPdf.PdfPrintOptions.Footer" /><para>When using HtmlHeaderFooter it is important to set <see cref="F:IronPdf.HtmlHeaderFooter.HtmlFragment" /> and <see cref="F:IronPdf.HtmlHeaderFooter.Height" /></para><para> Merge meta-data into your html using any of these placeholder strings: {page} {total-pages} {url} {date} {time} {html-title} {pdf-title}</para></summary>
+      <seealso cref="F:IronPdf.PdfPrintOptions.Header" />
+      <seealso cref="F:IronPdf.PdfPrintOptions.Footer" />
+    </member>
+    <member name="F:IronPdf.HtmlHeaderFooter.LeftText">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.HtmlHeaderFooter.CenterText">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.HtmlHeaderFooter.RightText">
+      <exclude />
+    </member>
+    <member name="M:IronPdf.HtmlHeaderFooter.Clone">
+      <summary>
+            Clones this instance.
+            </summary>
+      <returns>System.Object of type HtmlHeaderFooter</returns>
+    </member>
+    <member name="F:IronPdf.HtmlHeaderFooter.Height">
+      <summary>
+            Height of the Html Header / Footer in millimeters.  This value must be set sufficiently high to display the full html header / footer content.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlHeaderFooter.HtmlFragment">
+      <summary>
+            The Html which will be use to render the Header / Footer.  Should be  an HTML snippet rather than a complete document.  May contain styles &amp; images.
+            <para> Merge meta-data into the HtmlFragment by putting any of these placeholder strings into the text: {page} {total-pages} {url} {date} {time} {html-title} {pdf-title}.  An alternative mail-merge style using the pattern &lt;span class='total-pages'&gt;&lt;/span&gt; also workd</para></summary>
+    </member>
+    <member name="F:IronPdf.HtmlHeaderFooter.BaseUrl">
+      <summary>
+            The Base URL all URLS in the <see cref="F:IronPdf.HtmlHeaderFooter.HtmlFragment">HtmlFragment</see> will be relative to.
+            This includes src attributives on images, scripts, style-sheets and also hrefs on hyper-links.
+            </summary>
+    </member>
+    <member name="T:IronPdf.SimpleHeaderFooter">
+      <summary>
+            Defines PDF Header and Footer display options.
+            </summary>
+    </member>
+    <member name="M:IronPdf.SimpleHeaderFooter.Clone">
+      <summary>
+            Clones this instance.
+            </summary>
+      <returns>System.Object of type SimpleHeaderFooter</returns>
+    </member>
+    <member name="F:IronPdf.SimpleHeaderFooter.LeftText">
+      <summary>
+            Sets the left hand side header text for the PDF document.
+            <para> Merge meta-data into your header using any of these placeholder strings: {page} {total-pages} {url} {date} {time} {html-title} {pdf-title}</para></summary>
+    </member>
+    <member name="F:IronPdf.SimpleHeaderFooter.CenterText">
+      <summary>
+            Sets the centered header text for the PDF document.
+            <para> Merge meta-data into your header using any of these placeholder strings: {page} {total-pages} {url} {date} {time} {html-title} {pdf-title}</para></summary>
+    </member>
+    <member name="F:IronPdf.SimpleHeaderFooter.RightText">
+      <summary>
+            Sets the right hand side header text for the PDF document.
+            <para> Merge meta-data into your header using any of these placeholder strings: {page} {total-pages} {url} {date} {time} {html-title} {pdf-title}</para></summary>
+    </member>
+    <member name="F:IronPdf.SimpleHeaderFooter.FontFamily">
+      <summary>
+             Font used to render the PDF header.
+            </summary>
+    </member>
+    <member name="F:IronPdf.SimpleHeaderFooter.FontSize">
+      <summary>
+             Font size in px.
+            </summary>
+    </member>
+    <member name="F:IronPdf.SimpleHeaderFooter.DrawDividerLine">
+      <summary>
+            Adds a horizontal line divider between the header / footer and the page content on every page of the PDF document.
+            </summary>
+    </member>
+    <member name="F:IronPdf.SimpleHeaderFooter.Spacing">
+      <summary>
+            Space between the header and page content in millimeters.
+            </summary>
+    </member>
+    <member name="T:IronPdf.HttpLoginCredentials">
+      <summary>   Provides credentials for IronPdf to log-in to an intranet, extranet or website, impersonating a user.  
+                         This allows a unique ability to render web-pages as PDFs even on secure intranets, extranets and websites.            
+                         </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.NetworkUsername">
+      <summary>
+            Optional: User-name credential for Windows / Linux network security authentication.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.NetworkPassword">
+      <summary>
+            Optional: Password credential for Windows / Linux network security authentication.
+            </summary>
+    </member>
+    <member name="P:IronPdf.HttpLoginCredentials.UserAgent">
+      <summary>
+            The Http User-Agent header which will be used to fetch any remote HTML.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.LoginFormUrl">
+      <summary>
+             Optional:  Gives the URL to post website login-form authentication.  Should be the absolute Url which the form's action attribute specifies.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.LoginFormPostVariables">
+      <summary>
+             Optional:  Specifies a collection of HTTP form variables to post/submit to <see cref="F:IronPdf.HttpLoginCredentials.LoginFormUrl" />.  
+            </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.CustomPostVariables">
+      <summary>
+             Optional:  Specifies a collection of HTTP 'POST' variables to submit on every PDF rendering request.  
+             <para>Note: The 'key' is the name of the post field, The 'value' is its value.  UrlEncoding is not required.</para></summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.CustomPostFiles">
+      <summary>
+             Optional, Advanced Usage:  Specifies a collection files to summited on every PDF rendering request.  Allows images and documents to be submitted to forms such that the output will be rendered as an PDF.
+              <para>Note: The Key is the name of the post field, The value is the full file path.. UrlEncoding is not required.</para></summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.CustomCookies">
+      <summary>
+            A Dictionary which allows custom cookies to be posted with every login request, and HTTP request made by RenderUriToHml methods.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.EnableCookies">
+      <summary>
+            Enables cookies to be stored and sent when using RenderUriToHml methods.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.Proxy">
+      <summary>e
+            Specifies an Http proxy server.   Use the pattern: http(s)://user-name:password@host:port/
+            </summary>
+    </member>
+    <member name="F:IronPdf.HttpLoginCredentials.CustomHttpHeaders">
+      <summary>
+            A dictionary of custom HTTP headers to be sent with every HTTP Request
+            </summary>
+    </member>
+    <member name="M:IronPdf.HttpLoginCredentials.Finalize">
+      <summary>
+            Destructor cleans up all temporary cookies files for the  HttpLoginCredentials instance.
+            </summary>
+    </member>
+    <member name="T:IronPdf.ImageToPdfConvetrer">
+      <summary>
+             The ImageToPdfConvetrer class can be used to create PDF documents from images.  It accepts both image files and <see cref="T:System.Drawing.Image" /> objects as input.
+             <para> The ImageToPdf static methods create simple PDF documents containing each image as one page of the created PDF.</para><para> To rasterize PDF documents as images (the reverse operation), see <see cref="M:IronPdf.PdfDocument.ToBitmap" /> and <see cref="M:IronPdf.PdfDocument.RasterizeToImageFiles(System.String,IronPdf.ImageType)" /></para></summary>
+    </member>
+    <member name="M:IronPdf.ImageToPdfConvetrer.ImageToPdf(System.String)">
+      <summary>
+            Converts a single image file to an identical PDF document of matching dimensions. 
+            </summary>
+      <param name="ImageFileName">File path of the image file.</param>
+      <returns>
+            Returns a <see cref="T:IronPdf.PdfDocument" /> document which can then be edited, saved or served over the web.
+            </returns>
+    </member>
+    <member name="M:IronPdf.ImageToPdfConvetrer.ImageToPdf(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>
+            Converts multiple image files to a PDF document.  Each image creates 1 page which matches the image dimensions.
+            </summary>
+      <param name="ImageFileNames">The image file path names.</param>
+      <returns>
+            Returns a <see cref="T:IronPdf.PdfDocument" /> document which can then be edited, saved or served over the web.
+            </returns>
+    </member>
+    <member name="M:IronPdf.ImageToPdfConvetrer.ImageToPdf(System.Drawing.Image)">
+      <summary>
+            Converts a single <see cref="T:System.Drawing.Image" /> object or Bitmap to a PDF document of matching dimensions.
+            </summary>
+      <param name="Image">The image object.   Requires a project reference to the System.Drawing Assembly.</param>
+      <returns>
+            Returns a <see cref="T:IronPdf.PdfDocument" /> document which can then be edited, saved or served over the web.
+            </returns>
+    </member>
+    <member name="M:IronPdf.ImageToPdfConvetrer.ImageToPdf(System.Collections.Generic.IEnumerable{System.Drawing.Image})">
+      <summary>
+            Converts multiple  <see cref="T:System.Drawing.Image" /> objects or Bitmaps  into a PDF document.  Each image creates 1 page which matches the image dimensions.
+            </summary>
+      <param name="Images">The image objects.   Requires a project reference to the System.Drawing Assembly.</param>
+      <returns>
+            Returns a <see cref="T:IronPdf.PdfDocument" /> document which can then be edited, saved or served over the web.
+            </returns>
+    </member>
+    <member name="T:IronPdf.HtmlStamp">
+      <summary>
+            Class HtmlStamp.  Used With the <see cref="M:IronPdf.PdfDocument.StampHTML(IronPdf.HtmlStamp)" /> methods to edit PDF documents by 'stamping' additional content into the foreground or background.
+            </summary>
+    </member>
+    <member name="M:IronPdf.HtmlStamp.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:IronPdf.HtmlStamp" /> class.
+            </summary>
+    </member>
+    <member name="M:IronPdf.HtmlStamp.#ctor(System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:IronPdf.HtmlStamp" /> class.
+            </summary>
+      <param name="Html">The HTML fragment which will be stamped onto your PDF.</param>
+    </member>
+    <member name="M:IronPdf.HtmlStamp.#ctor(System.String,System.Int32,System.Int32)">
+      <summary>
+            Initializes a new instance of the <see cref="T:IronPdf.HtmlStamp" /> class.
+            </summary>
+      <param name="Html">The HTML fragment which will be stamped onto your PDF.</param>
+      <param name="WidthInMM">The width of the stamp in mm.</param>
+      <param name="HeightInMM">The height  of the stamp in mm.</param>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Width">
+      <summary>
+            The width of the stamp in mm.  Stamps can not automatically detect their own size based on their content.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Height">
+      <summary>
+            The height of the stamp in mm.  Stamps can not automatically detect their own size based on their content.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Html">
+      <summary>
+            The HTML fragment which will be stamped onto your PDF.  All external  references to javascript, CSS and image files will be relative to <see cref="F:IronPdf.HtmlStamp.HtmlBaseUrl" />.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Top">
+      <summary>
+            The position of the stamp from the Top edge of the PDF document in mm.  If Top or Bottom is not set, the stamp will be vertically centered in the document. 
+            </summary>f
+        </member>
+    <member name="F:IronPdf.HtmlStamp.Bottom">
+      <summary>
+            The position of the stamp from the Bottom edge  of the PDF document in mm.  If Top or Bottom is not set, the stamp will be vertically centered in the document. 
+            </summary>f
+        </member>
+    <member name="F:IronPdf.HtmlStamp.Left">
+      <summary>
+            The position of the stamp from the Left of the PDF document in mm.  If Left or Right is not set, the stamp will be horizontally centered in the document. 
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Right">
+      <summary>
+            The position of the stamp from the Right of the PDF document in mm.  If Left or Right is not set, the stamp will be horizontally centered in the document. 
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Opacity">
+      <summary>
+            Allows the stamp to be transparent. 0 is invisible, 100 if fully opaque.
+            </summary>
+    </member>
+    <member name="P:IronPdf.HtmlStamp.Opactity">
+      <exclude />
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Rotation">
+      <summary>
+            Rotates the stamp clockwise from 0 to 360 degrees as specified.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.Hyperlink">
+      <summary>
+            Makes the entire stamp link to a web hyperlink. Note that HTML links created by &lt;a href=''&gt; tags are not reserved by stamping.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.AutoCenterStampContentOnStampCanvas">
+      <summary>
+            The automatic centers stamp content within stamp canvas as defined by Width and Height.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.HtmlBaseUrl">
+      <summary>
+            The HTML base URL for which references to external CSS, Javascript and Image files will be relative.
+            <para>A trick to make references relative to a your project file is <code>HtmlBaseUrl = new Uri(System.Reflection.Assembly.GetEntryAssembly().Location).AbsoluteUri</code></para></summary>
+    </member>
+    <member name="T:IronPdf.HtmlStamp.StampLayer">
+      <summary>
+             Defines if a stamp should be placed behind or on-top of existing PDF contents.
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.StampLayer.BehindExistingPDFContent">
+      <summary>
+            Stamp in the background
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.StampLayer.OnTopOfExistingPDFContent">
+      <summary>
+            Stamp in the foreground
+            </summary>
+    </member>
+    <member name="F:IronPdf.HtmlStamp.ZIndex">
+      <summary>
+             Defines if this stamp should be placed behind or on-top of existing PDF contents.
+            </summary>
+    </member>
+    <member name="T:IronPdf.PdfDocument">
+      <summary>
+            A PDF Document
+            </summary>
+    </member>
+    <member name="P:IronPdf.PdfDocument.Form">
+      <summary>
+            Gets an object returning any PDF editable form fields which can have their values both read and set programmatically.
+            </summary>
+      <value>
+            The form.
+            </value>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddHeaders(IronPdf.SimpleHeaderFooter,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders page headers to an existing PDF File
+            <para>Margin spacing on the PDF page for the header are set to default values of 25mm. An overload method allow header margins to be chosen specifically or set to zero.</para></summary>
+      <param name="Header">An new instance of IronPdf.SimpleHeaderFooter that defines the header content and layout.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a header.</param>
+      <param name="PageIndexesToAddHeadersTo">Optional.  The PageIndexes (zero-based page numbers) to which the header will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddHeaders(IronPdf.SimpleHeaderFooter,System.Double,System.Double,System.Double,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders page headers to an existing PDF File
+            </summary>
+      <param name="Header">An new instance of IronPdf.SimpleHeaderFooter that defines the header content and layout.</param>
+      <param name="MarginLeft">The left margin of the header on the page in mm.</param>
+      <param name="MarginRight">The right margin of the header on the page in mm.</param>
+      <param name="MarginTop">The top margin of the header on the page in mm.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a header.</param>
+      <param name="PageIndexesToAddHeadersTo">Optional.  The PageIndexes (zero-based page numbers) to which the header will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddFooters(IronPdf.SimpleHeaderFooter,System.Double,System.Double,System.Double,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders page footers to an existing PDF File
+            </summary>
+      <param name="Footer">An new instance of IronPdf.SimpleHeaderFooter that defines the footer content and layout.</param>
+      <param name="MarginLeft">The left margin of the footer on the page in mm.</param>
+      <param name="MarginRight">The right margin of the footer on the page in mm.</param>
+      <param name="MarginBottom">The bottom margin of the footer on the page in mm.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a footer.</param>
+      <param name="PageIndexesToAddFootersTo">Optional.  The PageIndexes (zero-based page numbers) to which the footer will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddFooters(IronPdf.SimpleHeaderFooter,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders page footers to an existing PDF File
+            <para>Margin spacing on the PDF page for the footer are set to default values of 25mm. An overload method allow footer margins to be chosen specifically or set to zero.</para></summary>
+      <param name="Footer">An new instance of IronPdf.SimpleHeaderFooter that defines the footer content and layout.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a footer.</param>
+      <param name="PageIndexesToAddFootersTo">Optional.  The PageIndexes (zero-based page numbers) to which the footer will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddHTMLHeaders(IronPdf.HtmlHeaderFooter,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders HTML page headers to an existing PDF File
+            <para>Margin spacing on the PDF page for the header are set to default values of 25mm. An overload method allow header margins to be chosen specifically or set to zero.</para></summary>
+      <param name="Header">An new instance of IronPdf.HtmlHeaderFooter that defines the header content and layout.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a header.</param>
+      <param name="PageIndexesToAddHeadersTo">Optional.  The PageIndexes (zero-based page numbers) to which the header will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddHTMLHeaders(IronPdf.HtmlHeaderFooter,System.Double,System.Double,System.Double,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders HTML page headers to an existing PDF File
+            </summary>
+      <param name="Header">An new instance of IronPdf.HtmlHeaderFooter that defines the header content and layout.</param>
+      <param name="MarginLeft">The left margin of the header on the page in mm.</param>
+      <param name="MarginRight">The right margin of the header on the page in mm.</param>
+      <param name="MarginTop">The top margin of the header on the page in mm.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a header.</param>
+      <param name="PageIndexesToAddHeadersTo">Optional.  The PageIndexes (zero-based page numbers) to which the header will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddHTMLFooters(IronPdf.HtmlHeaderFooter,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders HTML page footers to an existing PDF File
+             <para>Margin spacing on the PDF page for the footer are set to default values of 25mm. An overload method allow footer margins to be chosen specifically or set to zero.</para></summary>
+      <param name="Footer">An new instance of IronPdf.HtmlHeaderFooter that defines the footer content and layout.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a footer.</param>
+      <param name="PageIndexesToAddFootersTo">Optional.  The PageIndexes (zero-based page numbers) to which the footer will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.HtmlHeaderFooter(IronPdf.HtmlHeaderFooter,System.Double,System.Double,System.Double,System.Boolean,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders HTML page footers to an existing PDF File
+            </summary>
+      <param name="Footer">An new instance of IronPdf.HtmlHeaderFooter that defines the footer content and layout.</param>
+      <param name="MarginLeft">The left margin of the footer on the page in mm.</param>
+      <param name="MarginRight">The right margin of the footer on the page in mm.</param>
+      <param name="MarginBottom">The bottom margin of the footer on the page in mm.</param>
+      <param name="SkipFirstPage">if set to <c>true</c>, the first (cover) page is not counted or stamped with a footer.</param>
+      <param name="PageIndexesToAddFootersTo">Optional.  The PageIndexes (zero-based page numbers) to which the footer will be added.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdf(System.String,System.Int32)">
+      <summary>
+            Adds a background to each page of this PDF. The background is copied from a page in another PDF document.
+            </summary>
+      <param name="BackgroundPdfPath">The background PDF's file path.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdfToPage(System.Int32,System.String,System.Int32)">
+      <summary>
+            Adds the background to one page of this PDF.  The background is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndex">Index (zero-based page number) of the page of this PDF to which the background will be applied to.</param>
+      <param name="BackgroundPdfPath">The background PDF path.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdfToPageRange(System.Collections.Generic.IEnumerable{System.Int32},System.String,System.Int32)">
+      <summary>
+            Adds the background to specified pages of this PDF.  The background is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndexes">A list of Indexes (zero-based page numbers) of pages in this PDF to which the background will be applied to.</param>
+      <param name="BackgroundPdfPath">The background PDF path.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdfToPageRange(System.Int32,System.Int32,System.String,System.Int32)">
+      <summary>
+            Adds the background to a range of pages in this PDF.  The background is copied from a page in another PDF document.
+            </summary>
+      <param name="StartPageIndex">First index  (zero-based page number) to start adding backgrounds to .</param>
+      <param name="EndPageIndex">Last index  (zero-based page number) to end adding backgrounds to.</param>
+      <param name="BackgroundPdfPath">The background PDF path.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdf(IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds a background to each page of this PDF. The background is copied from a page in another PDF document.
+            </summary>
+      <param name="BackgroundPdf">The Background PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdfToPage(System.Int32,IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds the background to one page of this PDF.  The background is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndex">Index (zero-based page number) of the page of this PDF to which the background will be applied to.</param>
+      <param name="BackgroundPdf">The Background PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdfToPageRange(System.Int32,System.Int32,IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds the background to a range of pages in this PDF.  The background is copied from a page in another PDF document.
+            </summary>
+      <param name="StartPageIndex">First index  (zero-based page number) to start adding backgrounds to .</param>
+      <param name="EndPageIndex">Last index  (zero-based page number) to end adding backgrounds to.</param>
+      <param name="BackgroundPdf">The Background PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddBackgroundPdfToPageRange(System.Collections.Generic.IEnumerable{System.Int32},IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds the background to specified pages of this PDF.  The background is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndexes">A list of Indexes (zero-based page numbers) of pages in this PDF to which the background will be applied to.</param>
+      <param name="BackgroundPdf">The Background PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="BackgroundPdfPageIndex">Index (zero-based page number) to copy from the BackgroundPdf.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdf(System.String,System.Int32)">
+      <summary>
+            Adds an overlay to each page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="OverlayPdfPath">The background PDF's file path.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdfToPage(System.Int32,System.String,System.Int32)">
+      <summary>
+            Adds an overlay to one page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndex">Index (zero-based page number) of the page of this PDF to which the foreground will be applied to.</param>
+      <param name="OverlayPdfPath">The overlay PDF path.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdfToPageRange(System.Collections.Generic.IEnumerable{System.Int32},System.String,System.Int32)">
+      <summary>
+            Adds an overlay to a range page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndexes">A list of Indexes (zero-based page numbers) of pages in this PDF to which the overlay will be applied to.</param>
+      <param name="OverlayPdfPath">The overlay PDF path.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdfToPageRange(System.Int32,System.Int32,System.String,System.Int32)">
+      <summary>
+            Adds an overlay to a range page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="StartPageIndex">First index  (zero-based page number) to start adding overlays to .</param>
+      <param name="EndPageIndex">Last index  (zero-based page number) to end adding overlays to.</param>
+      <param name="OverlayPdfPath">The overlay PDF path.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdf(IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds an overlay to each page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="OverlayPdf">The overlay PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdfToPage(System.Int32,IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds an overlay to one page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndex">Index (zero-based page number) of the page of this PDF to which the foreground will be applied to.</param>
+      <param name="OverlayPdf">The overlay PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdfToPageRange(System.Int32,System.Int32,IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds an overlay to a range page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="StartPageIndex">First index  (zero-based page number) to start adding overlays to .</param>
+      <param name="EndPageIndex">Last index  (zero-based page number) to end adding overlays to.</param>
+      <param name="OverlayPdf">The overlay PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AddForegroundOverlayPdfToPageRange(System.Collections.Generic.IEnumerable{System.Int32},IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Adds an overlay to a range page of this PDF. The foreground overlay is copied from a page in another PDF document.
+            </summary>
+      <param name="ToPageIndexes">A list of Indexes (zero-based page numbers) of pages in this PDF to which the overlay will be applied to.</param>
+      <param name="OverlayPdf">The overlay PDF as a <see cref="T:IronPdf.PdfDocument" />.</param>
+      <param name="OverlayPdfPageIndex">Index (zero-based page number) to copy from the Overlay PDF.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.QuickSignPdfWithDigitalSignatureFile(System.String,System.String)">
+      <summary>
+             Sign PDF with digital signature certificate.  For more advanced Options please see <see cref="M:IronPdf.PdfDocument.QuickSignPdfWithDigitalSignatureFile(System.String,System.String)" />
+                  /// <para> Note that the PDF will not be fully signed until Saved using <see cref="M:IronPdf.PdfDocument.SaveAs(System.String)"></see>,  <see cref="M:IronPdf.PdfDocument.TrySaveAs(System.String)"></see>,  <see cref="P:IronPdf.PdfDocument.Stream"></see> or  <see cref="P:IronPdf.PdfDocument.BinaryData"></see>.  Multiple certificates may be used.</para><seealso cref="T:IronPdf.PdfSignature" /></summary>
+      <param name="CertificateFilePath">The file path to a .pfx or .p12 digital signing certificate which may be generated using Adobe Acrobat Viewer.</param>
+      <param name="Password">The certificate password.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.SignPdfWithDigitalSignature(IronPdf.PdfSignature)">
+      <summary>
+            Signs the PDF with digital signature with advanced options. 
+            <para> Note that the PDF will not be fully signed until Saved using <see cref="M:IronPdf.PdfDocument.SaveAs(System.String)"></see>,  <see cref="M:IronPdf.PdfDocument.TrySaveAs(System.String)"></see>,  <see cref="P:IronPdf.PdfDocument.Stream"></see> or  <see cref="P:IronPdf.PdfDocument.BinaryData"></see>.  Multiple certificates may be used.</para></summary>
+      <param name="Signature">The signature.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.StampHTML(IronPdf.HtmlStamp,System.Int32)">
+      <summary>
+            Edits the PDF by adding rendered HTML either behind or in-front of the existing contents of one page.
+            </summary>
+      <param name="Stamp">The <see cref="T:IronPdf.HtmlStamp" /> stamp. </param>
+      <param name="PageIndexToStamp">The page index (zero-based page number) to stamp.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.StampHTML(IronPdf.HtmlStamp)">
+      <summary>
+            Edits the PDF by adding rendered HTML either behind or in-front of the existing contents of every page.
+            </summary>
+      <param name="Stamp">The <see cref="T:IronPdf.HtmlStamp" /> stamp. </param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.StampHTML(IronPdf.HtmlStamp,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Edits the PDF by adding rendered HTML either behind or in-front of the existing contents of specified pages.
+            </summary>
+      <param name="Stamp">The <see cref="T:IronPdf.HtmlStamp" /> stamp. </param>
+      <param name="PageIndexesToStamp">The list page indexes (zero-based page number) to stamp.</param>
+    </member>
+    <member name="F:IronPdf.PdfDocument.Password">
+      <summary>
+             Sets a Password used to protect and encrypt the PDF File.
+             Setting a password will cause IronPDF to automatically protect the PDF file content using strong 128 bit encryption. 
+             Setting the password to null will remove any existing password.
+            </summary>
+    </member>
+    <member name="M:IronPdf.PdfDocument.FromFile(System.String,System.String)">
+      <summary>
+            Opens an existing PDF document for editing.
+            </summary>
+      <param name="PdfFilePath">The PDF file path.</param>
+      <param name="Password">Optional password if the PDF document is protected / encrypted.</param>
+      <exception cref="T:System.IO.IOException">Exception thrown if can not be opened.</exception>
+    </member>
+    <member name="M:IronPdf.PdfDocument.#ctor(System.String,System.String)">
+      <summary>
+            Opens an existing PDF document for editing.
+            </summary>
+      <param name="PdfFilePath">The PDF file path.</param>
+      <param name="Password">Optional password if the PDF document is protected / encrypted.</param>
+      <exception cref="T:System.IO.IOException">Exception thrown if can not be opened.</exception>
+    </member>
+    <member name="M:IronPdf.PdfDocument.#ctor(System.IO.Stream,System.String)">
+      <summary>
+            Opens an existing PDF document for editing.
+            </summary>
+      <param name="PdfDataStream">The PDF file data as a Stream.</param>
+      <param name="Password">Optional password if the PDF document is protected / encrypted.</param>
+      <exception cref="T:System.IO.IOException">Exception thrown if can not be opened.</exception>
+    </member>
+    <member name="M:IronPdf.PdfDocument.#ctor(System.Byte[],System.String)">
+      <summary>
+            Opens an existing PDF document for editing.
+            </summary>
+      <param name="PdfData">The PDF file data as byte array.</param>
+      <param name="Password">Optional password if the PDF document is protected / encrypted.</param>
+      <exception cref="T:System.IO.IOException">Exception thrown if can not be opened.</exception>
+    </member>
+    <member name="P:IronPdf.PdfDocument.Stream">
+      <summary>
+             Gets the binary data for the full PDF file as a Stream
+            </summary>
+      <value>
+            The PDF file as a MemoryStream
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.BinaryData">
+      <summary>
+            Gets the binary data for the full PDF file as a byte array;
+            </summary>
+      <value>
+            The PDF file as a byte array.
+            </value>
+    </member>
+    <member name="M:IronPdf.PdfDocument.SaveAs(System.String)">
+      <summary>
+            Saves the PdfDocument to a file.
+            </summary>
+      <param name="FileName">File Path</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.TrySaveAs(System.String)">
+      <summary>
+            Attempt to save the PdfDocument to a file.
+            </summary>
+      <param name="FileName">File Path</param>
+      <returns>}<c>true</c> if the file was saved successfully.  <c>false</c> if an error occurred (e.g. file was locked or insufficient permissions). </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.CopyPage(System.Int32)">
+      <summary>
+            Creates a new PDF by copying a page from this PdfDocument.
+            </summary>
+      <param name="PageIndex">Index of the page.  Note: Page 1 has index 0...</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.CopyPages(System.Int32,System.Int32)">
+      <summary>
+            Creates a new PDF by copying a range of pages from this PdfDocument.
+            </summary>
+      <param name="StartIndex">The index of the first PDF page to copy.. Note: Page 1 has index 0 </param>
+      <param name="EndIndex">The index of the last PDF page to copy.&gt;</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.CopyPages(System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Creates a new PDF by copying a range of pages from this PdfDocument.
+            </summary>
+      <param name="PageIndexes">An IEnumerable of page indexes to copy into the new PDF. </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractAllBitmaps">
+      <summary>
+            Finds all embedded Images from within the PDF and returns then as System.Drawing.Bitmap objects
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractBitmapsFromPage(System.Int32)">
+      <summary>
+            Finds all embedded Images from within one page of the PDF and returns them as System.Drawing.Bitmap objects
+            </summary>
+      <param name="PageIndex">Index of the page.  Note: Page 1 has index 0...</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractBitmapsFromPages(System.Int32,System.Int32)">
+      <summary>
+            Finds all embedded Images from within a range of pages in the PDF and returns them as System.Drawing.Bitmap objects
+            </summary>
+      <param name="StartIndex">The index of the first PDF page  to extract images from.. Note: Page 1 has index 0 </param>
+      <param name="EndIndex">The index of the last PDF page to extract images from.</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractBitmapsFromPages(System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Finds all embedded Images from within a specified  pages in the PDF and returns them as System.Drawing.Bitmap objects
+            </summary>
+      <param name="PageIndexes">An IEnumerable list of page indexes. </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractAllImages">
+      <summary>
+            Finds all embedded Images from within the PDF and returns then as System.Drawing.Image objects
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractImagesFromPage(System.Int32)">
+      <summary>
+            Finds all embedded Images from within one page of the PDF and returns them as System.Drawing.Image objects
+            </summary>
+      <param name="PageIndex">Index of the page.  Note: Page 1 has index 0...</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractImagesFromPages(System.Int32,System.Int32)">
+      <summary>
+            Finds all embedded Images from within a range of pages in the PDF and returns them as System.Drawing.Bitmap objects
+            </summary>
+      <param name="StartIndex">The index of the first PDF page  to extract images from.. Note: Page 1 has index 0 </param>
+      <param name="EndIndex">The index of the last PDF page to extract images from.</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractImagesFromPages(System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Finds all embedded Images from within a specified  pages in the PDF and returns them as System.Drawing.Image objects
+            </summary>
+      <param name="PageIndexes">An IEnumerable list of page indexes. </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.Merge(IronPdf.PdfDocument,IronPdf.PdfDocument)">
+      <summary>
+            Static method that joins (concatenates) 2 PDF documents together into one final PDF document. 
+            </summary>
+      <param name="A">A PDF</param>
+      <param name="B">A Seconds PDF</param>
+      <returns>
+            A new merged PDF file.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.Merge(System.Collections.Generic.IEnumerable{IronPdf.PdfDocument})">
+      <summary>
+            Static method that joins (concatenates) multiple PDF documents together into one compiled PDF document. 
+            </summary>
+      <param name="PDFs">A IEnumerable of PdfDocument.  To merge existing PDF files you may use the PdfDocument.FromFile static method in conjunction with Merge.</param>
+      <returns>
+            The merged PDF file.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.AppendPdf(IronPdf.PdfDocument)">
+      <summary>
+            Appends another PDF to the end of the current PdfDocument
+            </summary>
+      <param name="AnotherPdfFile"> PdfDocument to append.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.PrependPdf(IronPdf.PdfDocument)">
+      <summary>
+            Adds another PDF to the beginning of the current PdfDocument
+            </summary>
+      <param name="AnotherPdfFile"> PdfDocument to prepend.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.InsertPdf(IronPdf.PdfDocument,System.Int32)">
+      <summary>
+            Inserts another PDF into of the current PdfDocument, starting at a given Page Index.
+            </summary>
+      <param name="AnotherPdfFile">Another PdfDocument.</param>
+      <param name="AtIndex">Index at which to insert the new content.  Note: Page 1 has index 0...</param>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PageCount">
+      <summary>
+            Gets the number of pages in the PDF document.         
+            </summary>
+      <value>
+            The page count.
+            </value>
+    </member>
+    <member name="M:IronPdf.PdfDocument.RemovePage(System.Int32)">
+      <summary>
+            Removes a page from the PDF at the given index.
+            </summary>
+      <param name="PageIndex">Index of the page.  Note: Page 1 has index 0...</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.RemovePages(System.Int32,System.Int32)">
+      <summary>
+            Removes a range of pages from the PDF
+            </summary>
+      <param name="StartIndex">The start index. Note: Page 1 has index 0 </param>
+      <param name="EndIndex">The end index. Note: The last page has index <c>PageCount -1</c></param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.RemovePages(System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Removes a range of pages from the PDF
+            </summary>
+      <param name="PageIndexes">An list of pages indexes to remove.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractAllText">
+      <summary>
+            Extracts the written text content from the PDF and returns it as a string. 
+            Pages will be separated by 4 consecutive newline characters ("\n\n\n\n")
+            </summary>
+      <returns>
+            All text in the PDF as a string.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractTextFromPage(System.Int32)">
+      <summary>
+            Extracts the text content from one page of the PDF and returns it as a string. 
+            </summary>
+      <param name="PageIndex">Index of the page.  Note: Page 1 has index 0...</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractTextFromPages(System.Int32,System.Int32)">
+      <summary>
+            Extracts the written text content from a range of pages within the PDF and returns it as a string.   
+            Pages will be separated by 4 consecutive newline characters ("\n\n\n\n")
+            </summary>
+      <param name="StartIndex">The start page index. Note: Page 1 has index 0 </param>
+      <param name="EndIndex">The end page index. Note: The last page has index <c>PageCount -1</c></param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ExtractTextFromPages(System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Extracts the written text content from specified pages in the PDF PDF and returns it as a string.  
+            Pages will be separated by 4 consecutive newline characters ("\n\n\n\n")
+            </summary>
+      <param name="PageIndexes">An IEnumerable list of page indexes. </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="P:IronPdf.PdfDocument.SecuritySettings">
+      <summary>
+            Advanced security settings for the PDF.
+            <para>Allows the developer to control user access passwords, encryption, and also who may edit, print and copy content from the PDF document</para></summary>
+      <value>
+            Advanced security settings for this PDF as an instance of <see cref="T:IronPdf.PdfDocument.PdfSecuritySettings" /></value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.MetaData">
+      <summary>
+            MetaData information settings for the PDF.
+            <para>Allows File meta-data to be read and set including: Authors, File Dates, Keywords, Title and Subject</para></summary>
+      <value>
+            MetaData settings for this PDF as an instance of <see cref="T:IronPdf.PdfDocument.PdfMetaData" /></value>
+    </member>
+    <member name="T:IronPdf.PdfDocument.PdfSecuritySettings">
+      <summary>
+            A class defining user security settings for a PDF document.
+            <para>Allows the developer to control user access passwords, encryption, and also who may edit, print and copy content from the PDF document</para><para>Implemented in <see cref="P:IronPdf.PdfDocument.SecuritySettings" />. </para></summary>
+    </member>
+    <member name="T:IronPdf.PdfDocument.PdfSecuritySettings.PdfPrintSecrity">
+      <summary>
+            Enumeration defining levels of PDF user access rights to print a PDF.
+            <para>See <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserPrinting" /></para></summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.PdfSecuritySettings.PdfPrintSecrity.NoPrint">
+      <summary>
+            The user may not print the PDF unless they have the Owner password.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.PdfSecuritySettings.PdfPrintSecrity.PrintLowQuality">
+      <summary>
+            The user may only print the PDF at low resolution unless they have the Owner password.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.PdfSecuritySettings.PdfPrintSecrity.FullPrintRights">
+      <summary>
+            Users may print the PDF without restriction.
+            </summary>
+    </member>
+    <member name="T:IronPdf.PdfDocument.PdfSecuritySettings.PdfEditSecrity">
+      <summary>
+            Enumeration defining levels of PDF user access rights to edit a PDF.  Edit rights may also be limited by the User's PDF document client software.
+            <para>See <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserEdits" /></para></summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.PdfSecuritySettings.PdfEditSecrity.NoEdit">
+      <summary>
+            The user may not edit the PDF unless they have the Owner password.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.PdfSecuritySettings.PdfEditSecrity.EditPages">
+      <summary>
+            The user may re-arrange pages, rotate pages and manage PDF thumbnails, but may not otherwise edit the PDF unless they have the Owner password.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.PdfSecuritySettings.PdfEditSecrity.EditAll">
+      <summary>
+            The user may edit the PDF as allowed by their PDF client software.
+            </summary>
+    </member>
+    <member name="M:IronPdf.PdfDocument.PdfSecuritySettings.MakePdfDocumentReadOnly(System.String)">
+      <summary>
+            Makes this PDF document read only such that:
+            <para>Content is encrypted at 128 bit. Copy and paste of content is disallowed. Annotations and form editing are disabled. </para></summary>
+      <param name="OwnerPassword">The owner password for the PDF.  A string for owner password is required to enable PDF encryption and all document security options.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.PdfSecuritySettings.RemovePasswordsAndEncryption">
+      <summary>
+            Removes all user and owner password security for a PDF document.  Also disables content encryption.
+            <para>Content is encrypted at 128 bit. Copy and paste of content is disallowed. Annotations and form editing are disabled. </para></summary>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfSecuritySettings.OwnerPassword">
+      <summary>
+            Sets the owner password and enables 128Bit encryption of PDF content. An owner password is one used to enable and disable all other security settings.
+            <para>OwnerPassword must be set to a non empty string value for <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserCopyPasteContent" />, <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserAnnotations" />, <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserFormData" />,s <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserPrinting" /> and <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserEdits" /> to be restricted. </para></summary>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfSecuritySettings.UserPassword">
+      <summary>
+            Sets the user password and enables 128Bit encryption of PDF content .
+            <para>A user password if a password that each user must enter to open or print the PDF document.</para></summary>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserCopyPasteContent">
+      <summary>
+            Gets or sets the permissions for users to extract or 'copy &amp; paste' content (text and images) from f the PDF document.
+            <para>If AllowUserCopyPasteContent is set <c>false</c>,  the <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.OwnerPassword" /> must also be set for the security measure to take effect.</para></summary>
+      <value>
+        <c>true</c> if users may 'copy and paste' content out of the PDF otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserAnnotations">
+      <summary>
+            Gets or sets the permissions for users to annotate the PDF document with comments.
+            <para>If AllowUserAnnotations is set <c>false</c>, the <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.OwnerPassword" /> must be set for the security measure to take effect.</para></summary>
+      <value>
+        <c>true</c> if users may annotate the PDF document, otherwise <c>false</c>.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserFormData">
+      <summary>
+            Gets or sets the permissions for users to fill-in (enter data into) forms in the PDF document.
+            <para>If AllowUserFormData is set <c>false</c>, the <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.OwnerPassword" /> must be set for the security measure to take effect.</para></summary>
+      <value>
+        <c>true</c> if users may annotate the PDF document, otherwise <c>false</c>.  Setting AllowUserFormData true will also enable annotations.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserPrinting">
+      <summary>
+            Gets or sets the permissions for users to print the PDF document.
+            <para>If print rights are restricted, then the <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.OwnerPassword" /> must be set for the security measure to take effect.</para></summary>
+      <value>
+            The <see cref="T:IronPdf.PdfDocument.PdfSecuritySettings.PdfPrintSecrity" /> value for user printing.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfSecuritySettings.AllowUserEdits">
+      <summary>
+            Gets or sets the permissions for users edit the PDF document.  The features to edit the document depends entirely on the PDF client software used by the end user.
+            <para>If editing rights are restricted, then the <see cref="P:IronPdf.PdfDocument.PdfSecuritySettings.OwnerPassword" /> must be set for the security measure to take effect.</para></summary>
+      <value>
+            The <see cref="T:IronPdf.PdfDocument.PdfSecuritySettings.PdfEditSecrity" /> value for user edit security.
+            </value>
+    </member>
+    <member name="T:IronPdf.PdfDocument.PdfMetaData">
+      <summary>
+            A class defining PDF file meta-data.
+            <para>Allows File meta-data to be read and set including: Authors, File Dates, Keywords, Title and Subject</para><para>Implemented in <see cref="P:IronPdf.PdfDocument.MetaData" />. </para></summary>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfMetaData.Author">
+      <summary>
+            Gets or sets the Author of the document.
+            </summary>
+      <value>
+            The author name as a string.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfMetaData.Creator">
+      <summary>
+            Gets or sets the Creator of the document.
+            </summary>
+      <value>
+            The creator name as a string.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfMetaData.CreationDate">
+      <summary>
+            Gets or sets the PDF file creation DateTime.
+            </summary>
+      <value>
+            DateTime of PDF file creation.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfMetaData.Keywords">
+      <summary>
+            Gets or sets the Keywords of the document.  This helps search indexes and operating systems correctly index the PDF.
+            </summary>
+      <value>
+            The Keywords of the document as a string.  It is customary to use comma separation between keywords.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfMetaData.ModifiedDate">
+      <summary>
+            Gets or sets the PDF file last-modified DateTime.
+            </summary>
+      <value>
+            DateTime of PDF file modification.
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfMetaData.Subject">
+      <summary>
+            Gets or sets the Subject of the document.  This helps search indexes and operating systems correctly index the PDF, and may appear in PDF viewer software.
+            </summary>
+      <value>
+            The Subject of the document as a string. 
+            </value>
+    </member>
+    <member name="P:IronPdf.PdfDocument.PdfMetaData.Title">
+      <summary>
+            Gets or sets the Title of the document.  This helps search indexes and operating systems correctly index the PDF, and may appear in PDF viewer software.
+            </summary>
+      <value>
+            The Title of the document as a string. 
+            </value>
+    </member>
+    <member name="M:IronPdf.PdfDocument.GetPrintDocument">
+      <summary>
+            Returns a <see cref="T:System.Drawing.Printing.PrintDocument" /> for the PDF allowing developers granular control over sending the PDF to a Printer.
+            <para>An assembly reference to System.Drawing is required in your project.</para></summary>
+      <returns>A <see cref="T:System.Drawing.Printing.PrintDocument" />.</returns>
+      <exception cref="T:System.Exception">IronPdf must be licensed to use this feature.</exception>
+    </member>
+    <member name="M:IronPdf.PdfDocument.Print">
+      <summary>
+            Prints this PDF by sending it to the computer's default printer.  
+            <para>Windows print UI dialogs will be displayed to the user.</para><para>For advanced real-world printing options please see <see cref="M:IronPdf.PdfDocument.GetPrintDocument" />.</para></summary>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToBitmap">
+      <summary>
+            Rasterizes (renders) the PDF into System.Drawing.Bitmap objects.  1 Bitmap for each page.
+            <para>Please add an assembly reference to System.Drawing to use this "PDF To Image" method.</para><para>Please Dispose() each Bitmap object after use.</para></summary>
+      <returns>An array of System.Drawing.Bitmap image objects which can be saved, manipulated, displayed or edited programmatically.</returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToBitmap(System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Rasterizes (renders) the PDF into System.Drawing.Bitmap objects.
+            <para>Specific pages may be selected using the PageNumbers parameter.</para><para>Please add an assembly reference to System.Drawing to use this "PDF To Image" method</para><para>Please Dispose() each Bitmap object after use.</para></summary>
+      <param name="PageNumbers">Specific page numbers may be given to only convert part of the PDF document to images</param>
+      <returns>
+            An array of System.Drawing.Bitmap image objects which can be saved, manipulated, displayed or edited programmatically.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToBitmap(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Rasterizes (renders) the PDF into System.Drawing.Bitmap objects.
+            <para>Specific pages may be selected using the PageNumbers parameter.  The Widths and Height of the output images may be specified.</para><para>Please add an assembly reference to System.Drawing to use this "PDF To Image" method</para><para>Please Dispose() each Bitmap object after use.</para></summary>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <param name="PageNumbers">Specific page numbers may be given to only convert part of the PDF document to images</param>
+      <returns>
+            An array of System.Drawing.Bitmap image objects which can be saved, manipulated, displayed or edited programmatically.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.PageToBitmap(System.Int32)">
+      <summary>
+            Renders a single page of the PDF to a System.Drawing.Bitmap object.
+            <para>Please add an assembly reference to System.Drawing to use this "PDF To Image" method</para><para>Please Dispose() each Bitmap object after use.</para></summary>
+      <param name="PageNumber">The page number to be converted to an image.</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.PageToBitmap(System.Int32,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Renders a single page of the PDF to a System.Drawing.Bitmap object.
+            <para>Please add an assembly reference to System.Drawing to use this "PDF To Image" method</para><para>Please Dispose() each Bitmap object after use.</para></summary>
+      <param name="PageNumber">The page number to be converted to an image.</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.RasterizeToImageFiles(System.String,IronPdf.ImageType)">
+      <summary>
+            Renders the PDF and exports image Files in convenient formats.  1 image file is created for each page.<para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.png</param>
+      <param name="ImageFileType">Type of the image file.  If not specified, a best guess will be taken from the FileNamePattern file extension</param>
+      <returns>An array of the file paths of the image files created.</returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.RasterizeToImageFiles(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},IronPdf.ImageType)">
+      <summary>
+            Renders the PDF and exports image Files in convenient formats.  Image dimensions may be specified.  1 image file is created for each page.<para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.png</param>
+      <param name="ImageFileType">Type of the image file.  If not specified, a best guess will be taken from the FileNamePattern file extension</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.RasterizeToImageFiles(System.String,System.Collections.Generic.IEnumerable{System.Int32},IronPdf.ImageType)">
+      <summary>
+            Renders the PDF and exports image Files in convenient formats.  Page Numbers may be specified.  1 image file is created for each page.
+            <para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.png</param>
+      <param name="ImageFileType">Type of the image file.  If not specified, a best guess will be taken from the FileNamePattern file extension</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.RasterizeToImageFiles(System.String,System.Collections.Generic.IEnumerable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},IronPdf.ImageType)">
+      <summary>
+            Renders the PDF and exports image Files in convenient formats.  Page Numbers may be specified.  1 image file is created for each page.
+            <para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.png</param>
+      <param name="ImageFileType">Type of the image file.  If not specified, a best guess will be taken from the FileNamePattern file extension</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToJpegImages(System.String)">
+      <summary>
+            Renders the pages of the PDF as JPEG files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.jpg</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToJpegImages(System.String,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as JPEG files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.jpg</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToJpegImages(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as JPEG files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.jpg</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToJpegImages(System.String,System.Collections.Generic.IEnumerable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as JPEG files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_page_*.jpg</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToPngImages(System.String)">
+      <summary>
+            Renders the pages of the PDF as PNG (Portable Network Graphic) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.png</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToPngImages(System.String,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as PNG (Portable Network Graphic) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.png</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToPngImages(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as PNG (Portable Network Graphic) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.png</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToPngImages(System.String,System.Collections.Generic.IEnumerable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as PNG (Portable Network Graphic) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.png</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToTiffImages(System.String)">
+      <summary>
+            Renders the pages of the PDF as TIFF (Tagged Image File Format / Tif) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.tiff</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToTiffImages(System.String,System.Collections.Generic.IEnumerable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as TIFF (Tagged Image File Format / Tif) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.tiff</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToTiffImages(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as TIFF (Tagged Image File Format / Tif) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.tiff</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.ToTiffImages(System.String,System.Collections.Generic.IEnumerable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+      <summary>
+            Renders the pages of the PDF as TIFF (Tagged Image File Format / Tif) files and saves them to disk.
+            <para>Specific image dimensions and page numbers may be given as optional parameters</para><para>FileNamePattern should normally contain an asterisk (*) character which will be substituted for the page numbers</para></summary>
+      <param name="FileNamePattern">A full or partial file path for the output files containing an asterisk.  E.g.  C:\images\pdf_pages_*.tiff</param>
+      <param name="PageNumbers">A list of the specific page numbers to render as images.</param>
+      <param name="ImageMaxWidth">The target maximum width of the output images.</param>
+      <param name="ImageMaxHeight">The target maximum height of the output images.</param>
+      <returns>
+            An array of the file paths of the image files created.
+            </returns>
+    </member>
+    <member name="M:IronPdf.PdfDocument.Finalize">
+      <exclude />
+    </member>
+    <member name="T:IronPdf.PdfDocument.WaterMarkLocation">
+      <summary>
+              Location for a simple watermark to be applied to a PDF page.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.TopLeft">
+      <summary>
+            The top left of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.TopCenter">
+      <summary>
+            The top center of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.TopRight">
+      <summary>
+            The top right of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.MiddleLeft">
+      <summary>
+            The middle left of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.MiddleCenter">
+      <summary>
+            The dead center of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.MiddleRight">
+      <summary>
+            The middle right of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.BottomLeft">
+      <summary>
+            The bottom left of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.BottomCenter">
+      <summary>
+            The bottom center of the page
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfDocument.WaterMarkLocation.BottomRight">
+      <summary>
+            The bottom right of the page
+            </summary>
+    </member>
+    <member name="M:IronPdf.PdfDocument.WatermarkPage(System.String,System.Int32,IronPdf.PdfDocument.WaterMarkLocation,System.Int32,System.Int32,System.String)">
+      <summary>
+            Watermarks a single page of this PDF with HTML content.
+            <para>Watermarks are restricted to basic positioning and a 100mm by 100mm maximum size.  For more advanced options see <see cref="M:IronPdf.PdfDocument.StampHTML(IronPdf.HtmlStamp,System.Int32)" /></para></summary>
+      <param name="Html">The HTML fragment</param>
+      <param name="PageIndexToWaterMark">The page index (zero-based page number) of this PDF to watermark.</param>
+      <param name="Location">The location of the watermark. <see cref="T:IronPdf.PdfDocument.WaterMarkLocation" /></param>
+      <param name="Opacity">The opacity of the watermark from 0-100%. 100 is opaque, 0 is invisible.</param>
+      <param name="Rotation">The rotation of the watermark content in clockwise degrees.</param>
+      <param name="Hyperlink">An optional hyperlink which the watermark will link to.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.WatermarkAllPages(System.String,IronPdf.PdfDocument.WaterMarkLocation,System.Int32,System.Int32,System.String)">
+      <summary>
+            Watermarks all pages of this PDF with HTML content.
+            <para>Watermarks are restricted to basic positioning and a 100mm by 100mm maximum size.  For more advanced options see <see cref="M:IronPdf.PdfDocument.StampHTML(IronPdf.HtmlStamp)" /></para></summary>
+      <param name="Html">The HTML fragment</param>
+      <param name="Location">The location of the watermark. <see cref="T:IronPdf.PdfDocument.WaterMarkLocation" /></param>
+      <param name="Opacity">The opacity of the watermark from 0-100%. 100 is opaque, 0 is invisible.</param>
+      <param name="Rotation">The rotation of the watermark content in clockwise degrees.</param>
+      <param name="Hyperlink">An optional hyperlink which the watermark will link to.</param>
+    </member>
+    <member name="M:IronPdf.PdfDocument.WatermarkPages(System.String,System.Collections.Generic.IEnumerable{System.Int32},IronPdf.PdfDocument.WaterMarkLocation,System.Int32,System.Int32,System.String)">
+      <summary>
+            Watermarks all pages of this PDF with HTML content.
+            <para>Watermarks are restricted to basic positioning and a 100mm by 100mm maximum size.  For more advanced options see <see cref="M:IronPdf.PdfDocument.StampHTML(IronPdf.HtmlStamp,System.Collections.Generic.IEnumerable{System.Int32})" /></para></summary>
+      <param name="Html">The HTML fragment</param>
+      <param name="PageIndexesToWaterMark"> A list of page index (zero-based page number) of this PDF to watermark.</param>
+      <param name="Location">The location of the watermark. <see cref="T:IronPdf.PdfDocument.WaterMarkLocation" /></param>
+      <param name="Opacity">The opacity of the watermark from 0-100%. 100 is opaque, 0 is invisible.</param>
+      <param name="Rotation">The rotation of the watermark content in clockwise degrees.</param>
+      <param name="Hyperlink">An optional hyperlink which the watermark will link to.</param>
+    </member>
+    <member name="T:IronPdf.Forms.PdfForm">
+      <summary>
+            A class represents all user editable form fields in a PDF documents.
+            <para>Developers may then pre-populate PDF forms, and also read PDF forms which have been filled in by uers.</para></summary>
+    </member>
+    <member name="F:IronPdf.Forms.PdfForm.Fields">
+      <summary>
+            The editable fields within this PDF.
+            </summary>
+      <seealso cref="P:IronPdf.PdfDocument.Form" />
+    </member>
+    <member name="P:IronPdf.Forms.PdfForm.FieldNames">
+      <summary>
+             Returns the field name of every editable data field in the PDF.
+            </summary>
+      <value>
+            The field names as an array of strings.
+            </value>
+    </member>
+    <member name="M:IronPdf.Forms.PdfForm.GetFieldByName(System.String)">
+      <summary>
+            Returns a <see cref="T:IronPdf.Forms.FormField" /> by its name.  This method is fault tolerant and will attempt to match case mistables and partial field names.
+            </summary>
+      <param name="FieldName">The name of the field to be edited. This is analogous to the HTML input 'name' attribute when creating a PDF with forms from HTML using IronPDF.</param>
+      <returns>
+      </returns>
+    </member>
+    <member name="T:IronPdf.Forms.ComboBoxField">
+      <summary>
+            Represents a combo-box (drop down menu) in a PDF form.
+            </summary>
+      <seealso cref="T:IronPdf.Forms.FormField" />
+    </member>
+    <member name="P:IronPdf.Forms.ComboBoxField.SelectedIndex">
+      <summary>
+            Gets the index of the selected option.
+            </summary>
+      <value>
+            The index of the selected. 0 based.
+            </value>
+    </member>
+    <member name="P:IronPdf.Forms.ComboBoxField.Options">
+      <summary>
+            Gets the available options for the combo-box in zero based index order.
+            </summary>
+      <value>
+            The option names as strings.
+            </value>
+    </member>
+    <member name="P:IronPdf.Forms.ComboBoxField.Value">
+      <summary>
+            Gets or sets the text value of the combo-box.
+            </summary>
+      <value>
+            The value as a string.
+            </value>
+    </member>
+    <member name="T:IronPdf.Forms.CheckBoxField">
+      <summary>
+            Represents a check-box in a PDF form.
+            </summary>
+      <seealso cref="T:IronPdf.Forms.FormField" />
+    </member>
+    <member name="P:IronPdf.Forms.CheckBoxField.Value">
+      <summary>
+            Gets or sets the value of the CheckBoxField as a string. 
+            </summary>
+      <value>
+            A typical return value for a checked box is "/Yes", other values mean that the box is not checked.
+            </value>
+      <seealso cref="P:IronPdf.Forms.CheckBoxField.BooleanValue" />
+    </member>
+    <member name="P:IronPdf.Forms.CheckBoxField.BooleanValue">
+      <summary>
+            Gets or sets a value indicating whether the check-box is checked (ticked).
+            </summary>
+      <value>
+        <c>true</c> if checked; otherwise, <c>false</c>.
+            </value>
+    </member>
+    <member name="T:IronPdf.Forms.TextField">
+      <summary>
+            Represents an editable text input field in a PDF document.
+            </summary>
+      <seealso cref="T:IronPdf.Forms.FormField" />
+    </member>
+    <member name="P:IronPdf.Forms.TextField.Value">
+      <summary>
+            Gets or sets the text in the text-box.
+            </summary>
+      <value>
+            Text value as a string.
+            </value>
+    </member>
+    <member name="T:IronPdf.Forms.FormField">
+      <summary>
+            Generic base class from which all PDF Form fields are derived.
+            </summary>
+    </member>
+    <member name="P:IronPdf.Forms.FormField.Name">
+      <summary>
+            Gets the ID name of this field.
+            </summary>
+      <value>
+            The name as a string.
+            </value>
+      <seealso cref="M:IronPdf.Forms.PdfForm.GetFieldByName(System.String)" />
+    </member>
+    <member name="P:IronPdf.Forms.FormField.Value">
+      <summary>
+            Gets the value of the editable PDF field.
+            </summary>
+      <value>
+            The value.
+            </value>
+    </member>
+    <member name="M:IronPdf.Forms.FormField.ToString">
+      <summary>
+            Returns the value of this field.
+            </summary>
+      <returns>
+            The value of this field.
+            </returns>
+    </member>
+    <member name="T:IronPdf.PdfPrintOptions">
+      <summary>
+            PDF output options for IronPdf.  
+            Specifies options such as Paper-Size, DPI, Headers and Footers.  
+            </summary>
+    </member>
+    <member name="T:IronPdf.PdfPrintOptions.PdfPaperSize">
+      <summary>
+            Defines the target paper size the PDF will use of pagination.  Relates to real-world paper-sizes.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Letter">
+            8.5in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Legal">
+            8.5in x 14in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A4">
+            210mm x 297mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.CSheet">
+            17in x 22in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.DSheet">
+            22in x 34in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.ESheet">
+            34in x 44in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.LetterSmall">
+            8.5in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Tabloid">
+            11in x 17in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Ledger">
+            17in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Statement">
+            5.5in x 8.5in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Executive">
+            7.25in x 10.5in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A3">
+            297mm x 420mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A4Small">
+            210mm x 297mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A5">
+            148mm x 210mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B4">
+            250mm x 353mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B5">
+            176mm x 250mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Folio">
+            8.5in x 13in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Quarto">
+            215mm x 275mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Standard10x14">
+            10in x 14in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Standard11x17">
+            11in x 17in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Note">
+            8.5in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Number9Envelope">
+            3.875in x 8.875in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Number10Envelope">
+            4.125in x 9.5in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Number11Envelope">
+            4.5in x 10.375in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Number12Envelope">
+            4.75in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Number14Envelope">
+            5in x 11.5in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.DLEnvelope">
+            110mm x 220mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.C5Envelope">
+            162mm x 229mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.C3Envelope">
+            324mm x 458mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.C4Envelope">
+            229mm x 324mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.C6Envelope">
+            114mm x 162mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.C65Envelope">
+            114mm x 229mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B4Envelope">
+            250mm x 353mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B5Envelope">
+            176mm x 250mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B6Envelope">
+            176mm x 125mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.ItalyEnvelope">
+            110mm x 230mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.MonarchEnvelope">
+            3.875in x 7.5in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PersonalEnvelope">
+            3.625in x 6.5in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.USStandardFanfold">
+            14.875in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.GermanStandardFanfold">
+            8.5in x 12in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.GermanLegalFanfold">
+            8.5in x 13in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.IsoB4">
+            250mm x 353mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.JapanesePostcard">
+            100mm x 148mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Standard9x11">
+            9in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Standard10x11">
+            10in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Standard15x11">
+            15in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.InviteEnvelope">
+            220mm x 220mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.LetterExtra">
+            9.275in x 12in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.LegalExtra">
+            9.275in x 15in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.TabloidExtra">
+            11.69in x 18in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A4Extra">
+            236mm x 322mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.LetterTransverse">
+            8.275in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A4Transverse">
+            210mm x 297mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.LetterExtraTransverse">
+            9.275in x 12in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.APlus">
+            227mm x 356mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.BPlus">
+            305mm x 487mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.LetterPlus">
+            8.5in x 12.69in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A4Plus">
+            210mm x 330mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A5Transverse">
+            148mm x 210mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B5Transverse">
+            182mm x 257mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A3Extra">
+            322mm x 445mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A5Extra">
+            174mm x 235mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B5Extra">
+            201mm x 276mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A2">
+            420mm x 594mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A3Transverse">
+            297mm x 420mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A3ExtraTransverse">
+            322mm x 445mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.JapaneseDoublePostcard">
+            200mm x 148mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A6">
+            105mm x 148mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.LetterRotated">
+            11in x 8.5in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A3Rotated">
+            420mm x 297mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A4Rotated">
+            297mm x 210mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A5Rotated">
+            210mm x 148mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B4JisRotated">
+            364mm x 257mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B5JisRotated">
+            257mm x 182mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.JapanesePostcardRotated">
+            148mm x 100mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.JapaneseDoublePostcardRotated">
+            148mm x 200mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.A6Rotated">
+            148mm x 105mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B6Jis">
+            128mm x 182mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.B6JisRotated">
+            182mm x 128mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Standard12x11">
+            12in x 11in
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Prc16K">
+            146mm x 215mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Prc32K">
+            97mm x 151mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Prc32KBig">
+            97mm x 151mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber1">
+            102mm x 165mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber2">
+            102mm x 176mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber3">
+            125mm x 176mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber4">
+            110mm x 208mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber5">
+            110mm x 220mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber6">
+            120mm x 230mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber7">
+            160mm x 230mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber8">
+            120mm x 309mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber9">
+            229mm x 324mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber10">
+            324mm x 458mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Prc16KRotated">
+            146mm x 215mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Prc32KRotated">
+            97mm x 151mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Prc32KBigRotated">
+            97mm x 151mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber1Rotated">
+            165mm x 102mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber2Rotated">
+            176mm x 102mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber3Rotated">
+            176mm x 125mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber4Rotated">
+            208mm x 110mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber5Rotated">
+            220mm x 110mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber6Rotated">
+            230mm x 120mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber7Rotated">
+            230mm x 160mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber8Rotated">
+            309mm x 120mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber9Rotated">
+            324mm x 229mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.PrcEnvelopeNumber10Rotated">
+            458mm x 324mm
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperSize.Custom">
+            Set using PdfPrintOptions.SetCustomPaperSizeInInches or 
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.Header">
+      <summary>
+            Sets the header content for every PDF page as Html or String.  Supports 'mail-merge'.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.Footer">
+      <summary>
+            Sets the footer content for every PDF page as Html or String.  Supports 'mail-merge'.
+            </summary>
+    </member>
+    <member name="T:IronPdf.PdfPrintOptions.PdfPaperOrientation">
+      <summary>
+             Paper Orientation
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperOrientation.Portrait">
+            Paper is oriented vertically
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfPaperOrientation.Landscape">
+            Paper is oriented horizontally 
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.InputEncoding">
+      <summary>
+            The input character encoding as a string;
+            </summary>
+    </member>
+    <member name="M:IronPdf.PdfPrintOptions.SetCustomPaperSize(System.Double,System.Double)">
+      <summary>
+            Sets the size of the custom paper. Depreciated.
+            </summary>
+      <param name="width">The width.</param>
+      <param name="height">The height.</param>
+    </member>
+    <member name="M:IronPdf.PdfPrintOptions.SetCustomPaperSizeinMilimeters(System.Double,System.Double)">
+      <summary>
+            Set an output paper size for PDF pages.  Dimensions are in millimeters. 
+             </summary>
+      <param name="width">Custom paper width in millimeters.</param>
+      <param name="height">&gt;Custom paper height in millimeters.</param>
+    </member>
+    <member name="M:IronPdf.PdfPrintOptions.SetCustomPaperSizeInInches(System.Double,System.Double)">
+      <summary>
+            Set an output paper size for PDF pages.  Dimensions are in Inches. 
+             </summary>
+      <param name="width">Custom paper width in Inches.</param>
+      <param name="height">&gt;Custom paper height in Inches.</param>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.Zoom">
+      <summary>
+            The zoom level in %.  Enlarges the rendering size of Html documents.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.DPI">
+      <summary>
+            Printing output DPI.  300 is standard for most print jobs.  Higher resolutions produce clearer images and text, but also larger PDF files.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.GrayScale">
+      <summary>
+            Outputs a black-and-white PDF
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.CustomCssUrl">
+      <summary>
+            Allows a custom CSS style-sheet  to be applied to Html before rendering.  May be a local file path,  or remote url.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.JpegQuality">
+      <summary>
+            Quality of any image that must be re-sampled. 0-100
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.MarginLeft">
+      <summary>
+            Paper margin in millimeters.  Set to zero for border-less and commercial printing applications.
+             </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.MarginBottom">
+      <summary>
+            Paper margin in millimeters.  Set to zero for border-less and commercial printing applications.
+             </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.MarginTop">
+      <summary>
+            Paper margin in millimeters.  Set to zero for border-less and commercial printing applications.  
+             </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.MarginRight">
+      <summary>
+            Paper margin in millimeters.  Set to zero for border-less and commercial printing applications.
+             </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.PaperSize">
+      <summary>
+            Set an output paper size for PDF pages.  System.Drawing.Printing.PaperKind. <para>Use SetCustomPaperSize(int width, int height) for custom sizes.</para></summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.PaperOrientation">
+      <summary>
+            The PDF paper orientation.  
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.PrintHtmlBackgrounds">
+      <summary>
+             Prints background-colors and images from Html
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.CssMediaType">
+      <summary>
+             Enables Media="screen" CSS Styles  and StyleSheets
+            <para>Note: By setting AllowScreenCss=false, IronPdf prints using CSS for media="print" only.</para></summary>
+    </member>
+    <member name="T:IronPdf.PdfPrintOptions.PdfCssMediaType">
+      <summary>
+            Defines which style-sheet should be rendered.   'Print' or 'Screen'.  This matches the CSS3 Media Queries standard.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfCssMediaType.Print">
+            Renders as expected for a web browser.
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.PdfCssMediaType.Screen">
+            Ignores 'Print' styles and includes additional 'Screen' styles where available.
+        </member>
+    <member name="F:IronPdf.PdfPrintOptions.EnableJavaScript">
+      <summary>
+             Enables JavaScript and Json to be executed  before the page is rendered.  Ideal for printing from Ajax / Angular Applications.
+            <para>Also see RenderDelay - <see cref="F:IronPdf.PdfPrintOptions.RenderDelay" /></para></summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.CreatePdfFormsFromHtml">
+      <summary>
+             Turns all Html forms elements into editable PDF forms.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.Title">
+      <summary>
+             PDF Document Name and Title meta-data.  Not required.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.FitToPaperWidth">
+      <summary>
+             Where possible, fits the PDF content to 1 page width.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.RenderDelay">
+      <summary>
+                Milliseconds to wait after Html is rendered before printing.  This can use useful when
+                considering the rendering of JavaScript, Ajax or animations.
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfPrintOptions.FirstPageNumber">
+      <summary>
+             First page number to be used in PDF headers and footers.
+            </summary>
+    </member>
+    <member name="T:IronPdf.License">
+      <summary>
+             Allows IronPdf license keys to be applied globally across an application.
+            </summary>
+    </member>
+    <member name="F:IronPdf.License.LicenseKey">
+      <summary>
+             Removes watermarks. Get Licensed at http://ironpdf.com/license
+             A License key can also be added to Web.Config or App.Config as IronPdf.LicenseKey
+            </summary>
+    </member>
+    <member name="M:IronPdf.License.IsValidLicense(System.String)">
+      <summary>
+            Determines whether a license key is valid.
+            </summary>
+      <param name="LicenseKey">IronPDF license key as a string</param>
+    </member>
+    <member name="T:IronPdf.ImageType">
+      <summary>
+             An Image File Type Enumeration used to select image file formats when converting PDF documents to images.
+             Also see: <see cref="M:IronPdf.PdfDocument.RasterizeToImageFiles(System.String,IronPdf.ImageType)" /></summary>
+    </member>
+    <member name="F:IronPdf.ImageType.Default">
+      <summary>
+            Default file type.  WIll save images in a Bitmap file type unless a file pattern ends in an image file format such as .png or .jpeg
+            </summary>
+    </member>
+    <member name="F:IronPdf.ImageType.Bitmap">
+      <summary>
+            PDF pages will be rendered to windows Bitmap image files.
+            </summary>
+    </member>
+    <member name="F:IronPdf.ImageType.Jpeg">
+      <summary>
+            PDF pages will be rendered to JPEG image files.
+            </summary>
+    </member>
+    <member name="F:IronPdf.ImageType.Png">
+      <summary>
+            PDF pages will be rendered to PNG (Portable Network Graphics) image files.
+            </summary>
+    </member>
+    <member name="F:IronPdf.ImageType.Gif">
+      <summary>
+            PDF pages will be rendered to non-animated GIF image files.
+            The GIF
+            </summary>
+    </member>
+    <member name="F:IronPdf.ImageType.Tiff">
+      <summary>
+            PDF pages will be rendered to TIFF image files.
+            </summary>
+    </member>
+    <member name="T:IronPdf.PdfSignature">
+      <summary>
+            A class that represents a PDF signing certificate (.PFX or .p12) format which can be used to digitally sign a PDF. This protecting it from alteration.
+            </summary>
+    </member>
+    <member name="M:IronPdf.PdfSignature.#ctor(System.String,System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:IronPdf.PdfSignature" /> class using a .pfx or .p12 digital signature file.
+            </summary>
+      <param name="FilePathToCertificate">The file path to certificate.</param>
+      <param name="Password">The certificate's password.</param>
+    </member>
+    <member name="M:IronPdf.PdfSignature.#ctor(System.Byte[],System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:IronPdf.PdfSignature" /> class.
+            </summary>
+      <param name="CertificateRawData">The certificate as a binary data (byte array).</param>
+      <param name="Password">The certificate's password.</param>
+    </member>
+    <member name="M:IronPdf.PdfSignature.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+      <summary>
+            Initializes a new instance of the <see cref="T:IronPdf.PdfSignature" /> class.
+            </summary>
+      <param name="ExportableNativeCertificate">The exportable native certificate as a System.Security.Cryptography.X509Certificates.X509Certificate2.</param>
+    </member>
+    <member name="F:IronPdf.PdfSignature.SigningReason">
+      <summary>
+            The reason the PDF was signed (optional).
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfSignature.SigningLocation">
+      <summary>
+            The physical location the PDF was signed (optional).
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfSignature.SigningContact">
+      <summary>
+            The contact person or email address for signing related inquiries (optional).
+            </summary>
+    </member>
+    <member name="F:IronPdf.PdfSignature.SignatureImage">
+      <summary>
+            A visual image for the sign, often a PNG of a human signature or company stamp (optional).
+            <para>This appends a visual signature in addition to  cryptographic signing.</para><seealso cref="M:IronPdf.PdfSignature.LoadSignatureImageFromFile(System.String)" /><seealso cref="M:IronPdf.PdfSignature.LoadSignatureImageFromStream(System.IO.Stream)" /></summary>
+    </member>
+    <member name="M:IronPdf.PdfSignature.LoadSignatureImageFromFile(System.String)">
+      <summary>
+            Loads a signature image from an image file.
+            This appends a visual signature in addition to  cryptographic signing.
+            </summary>
+      <param name="FilePath">The file path.</param>
+    </member>
+    <member name="M:IronPdf.PdfSignature.LoadSignatureImageFromStream(System.IO.Stream)">
+      <summary>
+            Loads a signature image from a stream.
+            This appends visual signature in addition to  cryptographic signing.
+            </summary>
+      <param name="Stream">The image file as a stream.</param>
+    </member>
+    <member name="M:IronPdf.PdfSignature.SignPdfFile(System.String)">
+      <summary>
+            Signs an existing PDF file.
+            </summary>
+      <param name="PdfFilePath">The PDF file path.</param>
+      <returns>
+        <c>true</c> if successful.</returns>
+    </member>
+  </members>
+</doc>

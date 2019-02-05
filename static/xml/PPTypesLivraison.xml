@@ -1,0 +1,7 @@
+<?xml version="1.0" standalone="yes"?>
+<dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
+<PPTypesLivraison><CodeLivraison>3001</CodeLivraison><Description>Poste&#160;régulière</Description></PPTypesLivraison>
+<PPTypesLivraison><CodeLivraison>3002</CodeLivraison><Description>Poste&#160;prioritaire</Description></PPTypesLivraison>
+<PPTypesLivraison><CodeLivraison>3003</CodeLivraison><Description>Transport&#160;privé</Description></PPTypesLivraison>
+<PPTypesLivraison></PPTypesLivraison>
+</dataroot>
