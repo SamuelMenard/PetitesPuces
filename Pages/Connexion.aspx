@@ -43,9 +43,11 @@
         </div>
         <div class="row">
             <div class="form-signin col-md-6">
+
                 <asp:Panel ID="alert_erreur" class="alert alert-danger" runat="server" Visible="false">
-                  <strong>Le nom d'utilisateur ou le mot de passe est incorrect</strong>
+                  <asp:Label ID="lblMessageErreur" Text="" runat="server"></asp:Label>
                 </asp:Panel>
+
                 <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
                 <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Nom d'utilisateur"></asp:TextBox>
                 <asp:TextBox ID="tbMDP" runat="server" CssClass="form-control" placeholder="Mot de passe" TextMode="Password"></asp:TextBox>

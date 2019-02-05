@@ -69,6 +69,8 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
                 decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; }
+
                 decimal? poids = article.PPProduits.Poids;
 
                 // sum au sous total

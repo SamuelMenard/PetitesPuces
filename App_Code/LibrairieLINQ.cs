@@ -12,7 +12,7 @@ public static class LibrairieLINQ
     public static object JSON { get; private set; }
 
     // Pour la connexion
-    public static bool connexionOK(String courriel, String mdp, String typeConnexion)
+    public static int connexionOK(String courriel, String mdp, String typeConnexion)
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         /*
@@ -20,24 +20,40 @@ public static class LibrairieLINQ
          * C = client
          * V = vendeur
          * G = gestionnaire
+         * 
+         * Codes
+         * 400 -> connexion OK
+         * 401 -> courriel ou mdp incorrect
+         * 402 -> Compte désactivé
          * */
+        int codeErreur = 401;
+
         var clients = dataContext.PPClients;
         var vendeurs = dataContext.PPVendeurs;
         var gestionnaires = dataContext.PPGestionnaires;
-
-        bool valide = false;
+        
         switch (typeConnexion)
         {
-            case "C": valide = clients.Where(client => client.AdresseEmail == courriel && client.MotDePasse == mdp).Any(); break;
+            case "C":
+                var client = from c in clients where c.AdresseEmail == courriel && c.MotDePasse == mdp select c;
+
+                if (client.Count() == 0) { codeErreur = 401; }
+                else if (client.First().Statut != 1) { codeErreur = 402; }
+                else { codeErreur = 400; }
+                break;
             case "V":
-                valide = vendeurs.Where(vendeur => vendeur.AdresseEmail == courriel && vendeur.MotDePasse == mdp).Any();
+                var vendeur = from v in vendeurs where v.AdresseEmail == courriel && v.MotDePasse == mdp select v;
+                if (vendeur.Count() == 0) { codeErreur = 401; }
+                else if (vendeur.First().Statut != 1) { codeErreur = 402; }
+                else { codeErreur = 400; }
                 break;
             case "G":
-                valide = gestionnaires.Where(gestionnaire => gestionnaire.courriel == courriel
+                bool valide = gestionnaires.Where(gestionnaire => gestionnaire.courriel == courriel
                             && gestionnaire.motDePasse == mdp).Any();
+                if (valide) { codeErreur = 400; }
                 break;
         }
-        return valide;
+        return codeErreur;
     }
 
     // Avoir les infos de bases afin de les storer en variable de session
@@ -323,7 +339,7 @@ public static class LibrairieLINQ
                            where p.NoClient == noClient && p.NoVendeur == noVendeur
                            select p;
 
-        return (Decimal)tousArticles.Sum(article => article.PPProduits.PrixVente * article.NbItems);
+        return (Decimal)tousArticles.Sum(article => ((article.PPProduits.DateVente > DateTime.Now) ? article.PPProduits.PrixVente : article.PPProduits.PrixDemande) * article.NbItems);
     }
 
     // vérifier si le poids de la commande dépasse le max de la compagnie
@@ -621,6 +637,26 @@ public static class LibrairieLINQ
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableVendeur = dataContext.PPVendeurs;
         return (from vendeur in tableVendeur where vendeur.Statut == 1 select vendeur).ToList();
+    }
+
+    // get vendeurs avec taux redevance modifiable
+    public static List<PPVendeurs> getVendeursAvecRedevanceModifiable()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeur = dataContext.PPVendeurs;
+        return (from vendeur in tableVendeur where vendeur.PPCommandes.Count() == 0 && vendeur.Statut == 1 select vendeur).ToList();
+    }
+
+    // modifier redevance vendeur
+    public static void modifierRedevanceVendeur(long noVendeur, Decimal redevance)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeur = dataContext.PPVendeurs;
+        PPVendeurs vendeur = (from v in tableVendeur
+                             where v.NoVendeur == noVendeur
+                             select v).First();
+        vendeur.Pourcentage = redevance;
+        dataContext.SaveChanges();
     }
 
 

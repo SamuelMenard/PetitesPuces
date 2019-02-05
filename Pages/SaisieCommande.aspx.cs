@@ -78,6 +78,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
+
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
 
@@ -287,6 +289,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
+
+                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
 
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
