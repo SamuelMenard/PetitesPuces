@@ -1,16 +1,15 @@
 <?xml version="1.0" standalone="yes"?>
 <dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
-<PPPoidsLivraisons><CodeLivraison>3001</CodeLivraison><CodePoids>2001</CodePoids><Tarif>4.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3001</CodeLivraison><CodePoids>2002</CodePoids><Tarif>12.50</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3001</CodeLivraison><CodePoids>2003</CodePoids><Tarif>25.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3001</CodeLivraison><CodePoids>2004</CodePoids><Tarif>35.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3002</CodeLivraison><CodePoids>2001</CodePoids><Tarif>6.75</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3002</CodeLivraison><CodePoids>2002</CodePoids><Tarif>15.75</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3002</CodeLivraison><CodePoids>2003</CodePoids><Tarif>29.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3002</CodeLivraison><CodePoids>2004</CodePoids><Tarif>45.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3003</CodeLivraison><CodePoids>2001</CodePoids><Tarif>15.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3003</CodeLivraison><CodePoids>2002</CodePoids><Tarif>20.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3003</CodeLivraison><CodePoids>2003</CodePoids><Tarif>35.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons><CodeLivraison>3003</CodeLivraison><CodePoids>2004</CodePoids><Tarif>50.00</Tarif></PPPoidsLivraisons>
-<PPPoidsLivraisons></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>401</CodeLivraison><CodePoids>301</CodePoids><Tarif>4.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>401</CodeLivraison><CodePoids>302</CodePoids><Tarif>12.50</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>401</CodeLivraison><CodePoids>303</CodePoids><Tarif>25.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>401</CodeLivraison><CodePoids>304</CodePoids><Tarif>35.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>402</CodeLivraison><CodePoids>301</CodePoids><Tarif>6.75</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>402</CodeLivraison><CodePoids>302</CodePoids><Tarif>15.75</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>402</CodeLivraison><CodePoids>303</CodePoids><Tarif>29.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>402</CodeLivraison><CodePoids>304</CodePoids><Tarif>45.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>403</CodeLivraison><CodePoids>301</CodePoids><Tarif>15.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>403</CodeLivraison><CodePoids>302</CodePoids><Tarif>20.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>403</CodeLivraison><CodePoids>303</CodePoids><Tarif>35.00</Tarif></PPPoidsLivraisons>
+<PPPoidsLivraisons><CodeLivraison>403</CodeLivraison><CodePoids>304</CodePoids><Tarif>50.00</Tarif></PPPoidsLivraisons>
 </dataroot>

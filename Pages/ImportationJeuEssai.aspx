@@ -8,19 +8,19 @@
     <title></title>
 </head>
 <body>
-    <form id="form1" runat="server">
-        <asp:Panel ID="panViderBD" runat="server" Visible="false">
-            <asp:Table ID="tabEtatTables" runat="server" GridLines="Both">
-                <asp:TableHeaderRow runat="server">
-                    <asp:TableHeaderCell runat="server" Text="Tables"></asp:TableHeaderCell>
-                    <asp:TableHeaderCell runat="server" Text="État"></asp:TableHeaderCell>
-                </asp:TableHeaderRow>
-            </asp:Table>
-            <asp:Button ID="btnViderBD" runat="server" Text="Vider la base de données" OnClick="btnViderBD_Click" />
-        </asp:Panel>
-        <asp:Panel ID="panImporterDonnees" runat="server" Visible="false">
-            <asp:Button ID="btnImporterDonnees" runat="server" Text="Importer les données du jeu d'essai dans la base de données" OnClick="btnImporterDonnees_Click" />
-        </asp:Panel>
-    </form>
+   <form runat="server">
+       <asp:Table ID="tabEtatTables" runat="server" GridLines="Both">
+           <asp:TableHeaderRow runat="server">
+               <asp:TableHeaderCell runat="server" Text="Tables"></asp:TableHeaderCell>
+               <asp:TableHeaderCell runat="server" Text="État"></asp:TableHeaderCell>
+           </asp:TableHeaderRow>
+       </asp:Table>
+       <br />
+       <asp:Button ID="btnViderBD" runat="server" Text="Vider la base de données" Visible="false" OnClick="btnViderBD_Click" />
+       <asp:Button ID="btnImporterDonnees" runat="server" Text="Importer les données du jeu d'essai dans la base de données" Visible="false" OnClick="btnImporterDonnees_Click" />
+       <br />
+       <br />
+       <asp:Label ID="lblResultatImportation" runat="server" Visible="false" ForeColor="Red" />
+   </form>
 </body>
 </html>

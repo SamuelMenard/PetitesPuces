@@ -1,8 +1,7 @@
 <?xml version="1.0" standalone="yes"?>
 <dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
-<PPTypesPoids><CodePoids>2001</CodePoids><PoidsMin>0.0</PoidsMin><PoidsMax>4.9</PoidsMax></PPTypesPoids>
-<PPTypesPoids><CodePoids>2002</CodePoids><PoidsMin>5.0</PoidsMin><PoidsMax>19.9</PoidsMax></PPTypesPoids>
-<PPTypesPoids><CodePoids>2003</CodePoids><PoidsMin>20.0</PoidsMin><PoidsMax>99.9</PoidsMax></PPTypesPoids>
-<PPTypesPoids><CodePoids>2004</CodePoids><PoidsMin>100.0</PoidsMin><PoidsMax>999999.9</PoidsMax></PPTypesPoids>
-<PPTypesPoids></PPTypesPoids>
+<PPTypesPoids><CodePoids>301</CodePoids><PoidsMin>0.0</PoidsMin><PoidsMax>4.9</PoidsMax></PPTypesPoids>
+<PPTypesPoids><CodePoids>302</CodePoids><PoidsMin>5.0</PoidsMin><PoidsMax>19.9</PoidsMax></PPTypesPoids>
+<PPTypesPoids><CodePoids>303</CodePoids><PoidsMin>20.0</PoidsMin><PoidsMax>99.9</PoidsMax></PPTypesPoids>
+<PPTypesPoids><CodePoids>304</CodePoids><PoidsMin>100.0</PoidsMin><PoidsMax>999999.9</PoidsMax></PPTypesPoids>
 </dataroot>

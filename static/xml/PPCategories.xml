@@ -1,12 +1,11 @@
 <?xml version="1.0" standalone="yes"?>
 <dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
-<PPCategories><NoCategorie>1001</NoCategorie><Description>Articles&#160;de&#160;maison</Description><Details>Électroménagers,&#160;accessoires&#160;de&#160;cuisines,&#160;de&#160;salle&#160;de&#160;bains,&#160;de&#160;chambres</Details></PPCategories>
-<PPCategories><NoCategorie>1002</NoCategorie><Description>Mobiliers</Description><Details>Mobilier&#160;d'intérieur&#160;et&#160;d'extérieur</Details></PPCategories>
-<PPCategories><NoCategorie>1003</NoCategorie><Description>Articles&#160;électroniques</Description><Details>Caméras,&#160;DVD,&#160;consoles&#160;de&#160;jeux,&#160;ordinateurs,&#160;portables,&#160;sans&#160;fil</Details></PPCategories>
-<PPCategories><NoCategorie>1004</NoCategorie><Description>Articles&#160;de&#160;bébé&#160;et&#160;enfants</Description><Details>Vêtements,&#160;mobiliers,&#160;jouets,&#160;articles&#160;de&#160;sports&#160;et&#160;loisirs</Details></PPCategories>
-<PPCategories><NoCategorie>1005</NoCategorie><Description>Rénovation,&#160;bricolage,&#160;loisirs</Description><Details>Outils,&#160;quincaillerie,&#160;articles&#160;variés</Details></PPCategories>
-<PPCategories><NoCategorie>1006</NoCategorie><Description>Vêtements&#160;et&#160;articles&#160;de&#160;sports</Description><Details>Chaussures,&#160;vêtements,&#160;patins,&#160;raquettes,&#160;ski,&#160;équipement&#160;de&#160;hockey</Details></PPCategories>
-<PPCategories><NoCategorie>1007</NoCategorie><Description>Articles&#160;de&#160;musique</Description><Details>Instruments,&#160;amplification,&#160;pièces&#160;et&#160;accessoires</Details></PPCategories>
-<PPCategories><NoCategorie>1008</NoCategorie><Description>Varia</Description><Details>Un&#160;peu&#160;de&#160;tout&#160;ce&#160;qui&#160;n'appartient&#160;à&#160;aucune&#160;autre&#160;catégorie</Details></PPCategories>
-<PPCategories></PPCategories>
+<PPCategories><NoCategorie>501</NoCategorie><Description>Articles&#160;de&#160;maison</Description><Details>Électroménagers,&#160;accessoires&#160;de&#160;cuisines,&#160;de&#160;salle&#160;de&#160;bains,&#160;de&#160;chambres</Details></PPCategories>
+<PPCategories><NoCategorie>502</NoCategorie><Description>Mobiliers</Description><Details>Mobilier&#160;d'intérieur&#160;et&#160;d'extérieur</Details></PPCategories>
+<PPCategories><NoCategorie>503</NoCategorie><Description>Articles&#160;électroniques</Description><Details>Caméras,&#160;DVD,&#160;consoles&#160;de&#160;jeux,&#160;ordinateurs,&#160;portables,&#160;sans&#160;fil</Details></PPCategories>
+<PPCategories><NoCategorie>504</NoCategorie><Description>Articles&#160;de&#160;bébé&#160;et&#160;enfants</Description><Details>Vêtements,&#160;mobiliers,&#160;jouets,&#160;articles&#160;de&#160;sports&#160;et&#160;loisirs</Details></PPCategories>
+<PPCategories><NoCategorie>505</NoCategorie><Description>Rénovation,&#160;bricolage,&#160;loisirs</Description><Details>Outils,&#160;quincaillerie,&#160;articles&#160;variés</Details></PPCategories>
+<PPCategories><NoCategorie>506</NoCategorie><Description>Vêtements&#160;et&#160;articles&#160;de&#160;sports</Description><Details>Chaussures,&#160;vêtements,&#160;patins,&#160;raquettes,&#160;ski,&#160;équipement&#160;de&#160;hockey</Details></PPCategories>
+<PPCategories><NoCategorie>507</NoCategorie><Description>Articles&#160;de&#160;musique</Description><Details>Instruments,&#160;amplification,&#160;pièces&#160;et&#160;accessoires</Details></PPCategories>
+<PPCategories><NoCategorie>508</NoCategorie><Description>Varia</Description><Details>Un&#160;peu&#160;de&#160;tout&#160;ce&#160;qui&#160;n'appartient&#160;à&#160;aucune&#160;autre&#160;catégorie</Details></PPCategories>
 </dataroot>
