@@ -132,11 +132,14 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
 
     public void retourChoix_click(Object sender, EventArgs e)
     {
-        afficherTableaux();
+        divMessageErreurCourriel.Visible = false;
+        //afficherTableaux();
     }
 
     public void confirmer_click(Object sender, EventArgs e)
     {
+        divEnvoieSucces.Visible = false;
+
         if (lstCbClients.Where(cb => cb.Checked).Any() || lstCbVendeurs.Where(cb => cb.Checked).Any())
         {
             divMessageErreur.Visible = false;
@@ -147,6 +150,44 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
             divMessageErreur.Visible = true;
         }
         
+    }
+
+    public void envoyer_click(Object sender, EventArgs e)
+    {
+        if (tbObjet.Text == "" || tbMessage.Value == "")
+        {
+            divMessageErreurCourriel.Visible = true;
+            afficherCourriel();
+        }
+        else
+        {
+            // envoyer courriel
+            foreach (CheckBox cb in lstCbVendeurs)
+            {
+                if (cb.Checked)
+                {
+                    String id = cb.ID.Replace("cbVendeur_", "");
+                    PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(long.Parse(id));
+                    LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", vendeur.AdresseEmail, tbObjet.Text, tbMessage.Value);
+
+                }
+            }
+
+            foreach (CheckBox cb in lstCbClients)
+            {
+                if (cb.Checked)
+                {
+                    String id = cb.ID.Replace("cbClient_", "");
+                    PPClients client = LibrairieLINQ.getFicheInformationsClient(long.Parse(id));
+                    LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", client.AdresseEmail, tbObjet.Text, tbMessage.Value);
+
+                }
+            }
+
+            divMessageErreurCourriel.Visible = false;
+            divEnvoieSucces.Visible = true;
+            //afficherTableaux();
+        }
     }
 
     public void dateCroissant_click(Object sender, EventArgs e)

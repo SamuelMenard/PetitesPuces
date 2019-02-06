@@ -353,4 +353,18 @@ public static class LibrairieControlesDynamique
         return li;
     }
 
+    static public HtmlTextArea textAreaDYN(Control control, String id, int rows, String cssClass, String valeur)
+    {
+        HtmlTextArea textArea = new HtmlTextArea
+        {
+            ID = id,
+            Rows = rows,
+            Value = valeur
+        };
+        textArea.Attributes.Add("class", "form-control");
+        textArea.Style.Add("resize", "none");
+        control.Controls.Add(textArea);
+        return textArea;
+    }
+
 }

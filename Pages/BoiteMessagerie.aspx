@@ -17,6 +17,11 @@
             <div id="divMessageErreur" visible="false" class="alert alert-danger" runat="server">
               <strong>Attention !</strong> Vous devez sélectionner au moins un destinataire.
             </div>
+
+            <div id="divEnvoieSucces" visible="false" class="alert alert-success" runat="server">
+              <strong>Excellent !</strong> Le courriel a été envoyé avec succès.
+            </div>
+
             
             <asp:PlaceHolder id="phChoix" runat="server" />
 
@@ -85,6 +90,10 @@
 
         <asp:Panel ID="divCourriel" Visible="false" runat="server">
 
+            <div id="divMessageErreurCourriel" visible="false" class="alert alert-danger" runat="server">
+              <strong>Attention !</strong> L'objet et le message ne peuvent pas êtres vide.
+            </div>
+
             <asp:PlaceHolder id="phCourriel" runat="server" />
 
         <br />
@@ -109,7 +118,7 @@
               <textarea class="form-control" rows="5" id="tbMessage" style="resize: none;" runat="server"></textarea>
             </div>
 
-            <asp:Button ID="btnEnvoyer" CssClass="btn btn-warning btn-block" Text="Envoyer" runat="server" />
+            <asp:Button ID="btnEnvoyer" CssClass="btn btn-warning btn-block" Text="Envoyer" OnClick="envoyer_click" runat="server" />
         </asp:Panel>
         
 
