@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
@@ -18,21 +21,21 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
 
     protected void remplirTableau()
     {
-        ajouterRangee("PPDetailsCommandes", !dbContext.PPDetailsCommandes.Any());
+        ajouterRangee("PPArticlesEnPanier", !dbContext.PPArticlesEnPanier.Any());
+        ajouterRangee("PPCategories", !dbContext.PPCategories.Any());
+        ajouterRangee("PPClients", !dbContext.PPClients.Any());
         ajouterRangee("PPCommandes", !dbContext.PPCommandes.Any());
+        ajouterRangee("PPDetailsCommandes", !dbContext.PPDetailsCommandes.Any());
+        ajouterRangee("PPGestionnaires", !dbContext.PPGestionnaires.Any());
+        ajouterRangee("PPHistoriquePaiements", !dbContext.PPHistoriquePaiements.Any());
         ajouterRangee("PPPoidsLivraisons", !dbContext.PPPoidsLivraisons.Any());
-        ajouterRangee("PPTypesLivraison", !dbContext.PPTypesLivraison.Any());
-        ajouterRangee("PPTypesPoids", !dbContext.PPTypesPoids.Any());
+        ajouterRangee("PPProduits", !dbContext.PPProduits.Any());
         ajouterRangee("PPTaxeFederale", !dbContext.PPTaxeFederale.Any());
         ajouterRangee("PPTaxeProvinciale", !dbContext.PPTaxeProvinciale.Any());
-        ajouterRangee("PPHistoriquePaiements", !dbContext.PPHistoriquePaiements.Any());
-        ajouterRangee("PPArticlesEnPanier", !dbContext.PPArticlesEnPanier.Any());
-        ajouterRangee("PPProduits", !dbContext.PPProduits.Any());
-        ajouterRangee("PPCategories", !dbContext.PPCategories.Any());
-        ajouterRangee("PPVendeursClients", !dbContext.PPVendeursClients.Any());
+        ajouterRangee("PPTypesLivraison", !dbContext.PPTypesLivraison.Any());
+        ajouterRangee("PPTypesPoids", !dbContext.PPTypesPoids.Any());
         ajouterRangee("PPVendeurs", !dbContext.PPVendeurs.Any());
-        ajouterRangee("PPClients", !dbContext.PPClients.Any());
-        ajouterRangee("PPGestionnaires", !dbContext.PPGestionnaires.Any());
+        ajouterRangee("PPVendeursClients", !dbContext.PPVendeursClients.Any());
     }
 
     protected void Page_Load(object sender, EventArgs e)
@@ -379,11 +382,20 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
 
                 lblResultatImportation.Text = "Les données du jeu d'essai ont été importées.";
             }
-            catch
+            catch (DbUpdateException ex)
             {
                 transaction.Rollback();
 
-                lblResultatImportation.Text = "Les données du jeu d'essai n'ont pas été importées.";
+                if (ex.InnerException is UpdateException && ex.InnerException.InnerException is SqlException)
+                    lblResultatImportation.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.InnerException.InnerException.Message;
+                else
+                    lblResultatImportation.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+
+                lblResultatImportation.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.Message;
             }
         }
 
