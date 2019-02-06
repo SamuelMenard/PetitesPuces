@@ -631,12 +631,60 @@ public static class LibrairieLINQ
         return (from client in tableClient where client.Statut == 1 select client).ToList();
     }
 
+    // get tout les clients
+    public static List<PPClients> getListeClientsTrie(String trie)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableClient = dataContext.PPClients;
+        List<PPClients> lstClients = new List<PPClients>();
+
+        switch (trie)
+        {
+            case "dateCroissant": lstClients = (from client in tableClient where client.Statut == 1 orderby client.DateCreation ascending select client).ToList(); break;
+            case "dateDecroissant": lstClients = (from client in tableClient where client.Statut == 1 orderby client.DateCreation descending select client).ToList(); break;
+        }
+
+        return lstClients;
+    }
+
     // get tout les vendeurs
     public static List<PPVendeurs> getListeVendeurs()
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableVendeur = dataContext.PPVendeurs;
         return (from vendeur in tableVendeur where vendeur.Statut == 1 select vendeur).ToList();
+    }
+
+    // get tout les  triés
+    public static List<PPVendeurs> getListeVendeursTrie(String trie)
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeur = dataContext.PPVendeurs;
+        var tableHisto = dataContext.PPHistoriquePaiements;
+        List<PPVendeurs> lstVendeurs = new List<PPVendeurs>();
+
+        switch (trie)
+        {
+            case "dateCroissant": lstVendeurs = (from vendeur in tableVendeur where vendeur.Statut == 1 orderby vendeur.DateCreation ascending select vendeur).ToList(); break;
+            case "dateDecroissant": lstVendeurs = (from vendeur in tableVendeur where vendeur.Statut == 1 orderby vendeur.DateCreation descending select vendeur).ToList(); break;
+            case "ventesCroissant":
+                lstVendeurs = (from vendeur in tableVendeur
+                               where vendeur.Statut == 1
+                               let lstHisto = (from histo in tableHisto where histo.NoVendeur == vendeur.NoVendeur select histo).ToList()
+                               let totVentes = lstHisto.Sum(vente => vente.MontantVenteAvantLivraison)
+                               orderby totVentes ascending
+                               select vendeur).ToList();
+                break;
+            case "ventesDecroissant":
+                lstVendeurs = (from vendeur in tableVendeur
+                               where vendeur.Statut == 1
+                               let lstHisto = (from histo in tableHisto where histo.NoVendeur == vendeur.NoVendeur select histo).ToList()
+                               let totVentes = lstHisto.Sum(vente => vente.MontantVenteAvantLivraison)
+                               orderby totVentes descending
+                               select vendeur).ToList();
+                break;
+        }
+        return lstVendeurs;
     }
 
     // get vendeurs avec taux redevance modifiable
@@ -657,6 +705,17 @@ public static class LibrairieLINQ
                              select v).First();
         vendeur.Pourcentage = redevance;
         dataContext.SaveChanges();
+    }
+
+    // get historique paiement vendeur
+    public static List<PPHistoriquePaiements> getHistoriquePaiementVendeurs(long noVendeur)
+    {
+        List<PPHistoriquePaiements> lstHisto = new List<PPHistoriquePaiements>();
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableHisto = dataContext.PPHistoriquePaiements;
+        var toutHisto = from histo in tableHisto where histo.NoVendeur == noVendeur select histo;
+        if (toutHisto.Count() != 0) { lstHisto = toutHisto.ToList(); }
+        return lstHisto;
     }
 
 

@@ -7,18 +7,19 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">
     <!-- Contenu de la page -->
     <div class="container">
-        <div class="row">
 
         <div class="jumbotron">
                 <h1>Tableau de bord du gestionnaire</h1> 
                 <p>Vous pouvez retrouver ci-bas des liens vers les différents outils d'administration</p> 
         </div>
 
-        <asp:LinkButton ID="btn_gererDemandes" 
+        <div class="row">
+            <asp:LinkButton ID="btn_gererDemandes" 
                         runat="server"
+                CssClass="col-md-3"
             OnClick="nouvellesDemandes_click">
 
-                <asp:Panel ID="gererDemandes" CssClass="col-md-3" runat="server">
+                <asp:Panel ID="gererDemandes" CssClass="" runat="server">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <img src="../static/images/shake-hands.jpg" alt="LOGO" class="img-responsive">
@@ -30,102 +31,109 @@
                 </asp:Panel>
             </asp:LinkButton>
 
-        <asp:LinkButton ID="btn_gererInactiviteClients" 
-                        runat="server"
-            OnClick="inactiviteClients_click">
-                <asp:Panel ID="gererInactiviteClients" CssClass="col-md-3" runat="server">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+            <asp:LinkButton ID="btn_gererInactiviteClients" 
+                            runat="server"
+                CssClass="col-md-3"
+                OnClick="inactiviteClients_click">
+                    <asp:Panel ID="gererInactiviteClients" CssClass="" runat="server">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+                            </div>
+                            <div class="panel-footer">
+                                <h4>Gérer l'inactivité des clients</h4>
+                                <br />
+                            </div>
                         </div>
-                        <div class="panel-footer">
-                            <h4>Gérer l'inactivité des clients</h4>
-                            <br />
-                        </div>
-                    </div>
-                </asp:Panel>
-        </asp:LinkButton>
+                    </asp:Panel>
+            </asp:LinkButton>
 
-        <asp:LinkButton ID="btn_gererInactiviteVendeurs" 
-                        runat="server"
-            OnClick="inactiviteVendeurs_click">
-                <asp:Panel ID="gererInactiviteVendeurs" CssClass="col-md-3" runat="server">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+            <asp:LinkButton ID="btn_gererInactiviteVendeurs" 
+                            runat="server"
+                CssClass="col-md-3"
+                OnClick="inactiviteVendeurs_click">
+                    <asp:Panel ID="gererInactiviteVendeurs" CssClass="" runat="server">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+                            </div>
+                            <div class="panel-footer">
+                                <h4>Gérer l'inactivité des vendeurs</h4>
+                            </div>
                         </div>
-                        <div class="panel-footer">
-                            <h4>Gérer l'inactivité des vendeurs</h4>
-                        </div>
-                    </div>
-                </asp:Panel>
-        </asp:LinkButton>
+                    </asp:Panel>
+            </asp:LinkButton>
 
-        <asp:LinkButton ID="btn_RendreInactif" 
-                        runat="server"
-            OnClick="rendreInactif_click">
-                <asp:Panel ID="rendreInactif" CssClass="col-md-3" runat="server">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+            <asp:LinkButton ID="btn_RendreInactif" 
+                            runat="server"
+                CssClass="col-md-3"
+                OnClick="rendreInactif_click">
+                    <asp:Panel ID="rendreInactif" CssClass="" runat="server">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="../static/images/user-management.png" alt="LOGO" class="img-responsive">
+                            </div>
+                            <div class="panel-footer">
+                                <h4>Rendre inactif un client ou un vendeur</h4>
+                            </div>
                         </div>
-                        <div class="panel-footer">
-                            <h4>Rendre inactif un client ou un vendeur</h4>
-                        </div>
-                    </div>
-                </asp:Panel>
-        </asp:LinkButton>
-
-        <asp:LinkButton ID="btn_visualiserStats" 
-                        runat="server"
-            OnClick="stats_click">
-                <asp:Panel ID="visualiserStats" CssClass="col-md-3" runat="server">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <img src="../static/images/stats.png" alt="LOGO" class="img-responsive">
-                        </div>
-                        <div class="panel-footer">
-                            <h4>Visualiser les statistiques</h4>
-                            <br />
-                        </div>
-                    </div>
-                </asp:Panel>
-        </asp:LinkButton>
-
-        <asp:LinkButton ID="btn_visualiserRedevances" 
-                        runat="server"
-            OnClick="redevances_click">
-                <asp:Panel ID="visualiserRedevances" CssClass="col-md-3" runat="server">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <img src="../static/images/payroll.png" alt="LOGO" class="img-responsive">
-                        </div>
-                        <div class="panel-footer">
-                            <h4>Gestion des redevances</h4>
-                            <br />
-                        </div>
-                    </div>
-                </asp:Panel>
-        </asp:LinkButton>
-
-            <asp:LinkButton ID="LinkButton1" 
-                        runat="server"
-            OnClick="email_click">
-                <asp:Panel ID="Panel1" CssClass="col-md-3" runat="server">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <img src="../static/images/email-logo.png" alt="LOGO" class="img-responsive">
-                        </div>
-                        <div class="panel-footer">
-                            <h4>Gestion des redevances</h4>
-                            <br />
-                        </div>
-                    </div>
-                </asp:Panel>
-        </asp:LinkButton>
-        
-
+                    </asp:Panel>
+            </asp:LinkButton>
         </div>
+
+        <div class="row">
+            <asp:LinkButton ID="btn_visualiserStats" 
+                            runat="server"
+                CssClass="col-md-3"
+                OnClick="stats_click">
+                    <asp:Panel ID="visualiserStats" CssClass="" runat="server">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="../static/images/stats.png" alt="LOGO" class="img-responsive">
+                            </div>
+                            <div class="panel-footer">
+                                <h4>Visualiser les statistiques</h4>
+                                <br />
+                            </div>
+                        </div>
+                    </asp:Panel>
+            </asp:LinkButton>
+
+            <asp:LinkButton ID="btn_visualiserRedevances" 
+                            runat="server"
+                CssClass="col-md-3"
+                OnClick="redevances_click">
+                    <asp:Panel ID="visualiserRedevances" CssClass="" runat="server">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="../static/images/payroll.png" alt="LOGO" class="img-responsive">
+                            </div>
+                            <div class="panel-footer">
+                                <h4>Gestion des redevances</h4>
+                                <br />
+                            </div>
+                        </div>
+                    </asp:Panel>
+            </asp:LinkButton>
+
+            <asp:LinkButton ID="btn_Email" 
+                        runat="server"
+                CssClass="col-md-3"
+            OnClick="email_click">
+                    <asp:Panel ID="Panel1" CssClass="" runat="server">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="../static/images/email-logo.png" alt="LOGO" class="img-responsive">
+                            </div>
+                            <div class="panel-footer">
+                                <h4>Boîte de méssagerie</h4>
+                                <br />
+                            </div>
+                        </div>
+                    </asp:Panel>
+            </asp:LinkButton>
+        </div>
+
     </div>
     
 </asp:Content>

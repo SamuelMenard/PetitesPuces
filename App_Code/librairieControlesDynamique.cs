@@ -295,6 +295,16 @@ public static class LibrairieControlesDynamique
         Conteneur.Controls.Add(t);
         return t;
     }
+    static public TableHeaderCell thDYN(TableRow Conteneur, String strID, String strStyle)
+    {
+        TableHeaderCell t = new TableHeaderCell()
+        {
+            ID = strID,
+            CssClass = strStyle
+        };
+        Conteneur.Controls.Add(t);
+        return t;
+    }
     static public TableRow trDYN(Table Conteneur)
     {
         TableRow t = new TableRow();
