@@ -1,0 +1,8 @@
+<?xml version="1.0" standalone="yes"?>
+<dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
+<PPTaxeProvinciale><NoTVQ>4001</NoTVQ><DateEffectiveTVQ>1/1/2005&#160;0:00</DateEffectiveTVQ><TauxTVQ>7.500</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale><NoTVQ>4002</NoTVQ><DateEffectiveTVQ>1/1/2011&#160;0:00</DateEffectiveTVQ><TauxTVQ>8.500</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale><NoTVQ>4003</NoTVQ><DateEffectiveTVQ>1/1/2012&#160;0:00</DateEffectiveTVQ><TauxTVQ>9.500</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale><NoTVQ>4004</NoTVQ><DateEffectiveTVQ>1/1/2013&#160;0:00</DateEffectiveTVQ><TauxTVQ>9.975</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale></PPTaxeProvinciale>
+</dataroot>

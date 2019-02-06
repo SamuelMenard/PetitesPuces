@@ -9,8 +9,18 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-        </div>
+        <asp:Panel ID="panViderBD" runat="server" Visible="false">
+            <asp:Table ID="tabEtatTables" runat="server" GridLines="Both">
+                <asp:TableHeaderRow runat="server">
+                    <asp:TableHeaderCell runat="server" Text="Tables"></asp:TableHeaderCell>
+                    <asp:TableHeaderCell runat="server" Text="État"></asp:TableHeaderCell>
+                </asp:TableHeaderRow>
+            </asp:Table>
+            <asp:Button ID="btnViderBD" runat="server" Text="Vider la base de données" OnClick="btnViderBD_Click" />
+        </asp:Panel>
+        <asp:Panel ID="panImporterDonnees" runat="server" Visible="false">
+            <asp:Button ID="btnImporterDonnees" runat="server" Text="Importer les données du jeu d'essai dans la base de données" OnClick="btnImporterDonnees_Click" />
+        </asp:Panel>
     </form>
 </body>
 </html>

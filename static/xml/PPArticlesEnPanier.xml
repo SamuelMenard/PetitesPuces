@@ -1,0 +1,33 @@
+<?xml version="1.0" standalone="yes"?>
+<dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
+<PPArticlesEnPanier><NoPanier>1</NoPanier><NoClient>101</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200001</NoProduit><DateCreation>1/25/2019&#160;19:17</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>2</NoPanier><NoClient>101</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200002</NoProduit><DateCreation>1/25/2019&#160;19:38</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>3</NoPanier><NoClient>104</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200003</NoProduit><DateCreation>1/26/2019&#160;10:16</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>4</NoPanier><NoClient>104</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200004</NoProduit><DateCreation>1/26/2019&#160;10:28</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>5</NoPanier><NoClient>104</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200005</NoProduit><DateCreation>1/26/2019&#160;10:51</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>6</NoPanier><NoClient>104</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200006</NoProduit><DateCreation>1/26/2019&#160;11:20</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>7</NoPanier><NoClient>104</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200007</NoProduit><DateCreation>1/26/2019&#160;11:49</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>8</NoPanier><NoClient>110</NoClient><NoVendeur>11</NoVendeur><NoProduit>1100017</NoProduit><DateCreation>1/27/2019&#160;13:21</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>9</NoPanier><NoClient>110</NoClient><NoVendeur>11</NoVendeur><NoProduit>1100021</NoProduit><DateCreation>1/27/2019&#160;13:45</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>10</NoPanier><NoClient>110</NoClient><NoVendeur>11</NoVendeur><NoProduit>1100025</NoProduit><DateCreation>1/27/2019&#160;14:13</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>11</NoPanier><NoClient>104</NoClient><NoVendeur>16</NoVendeur><NoProduit>1600031</NoProduit><DateCreation>1/27/2019&#160;15:38</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>12</NoPanier><NoClient>101</NoClient><NoVendeur>16</NoVendeur><NoProduit>1600026</NoProduit><DateCreation>1/28/2019&#160;17:53</DateCreation><NbItems>4</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>13</NoPanier><NoClient>101</NoClient><NoVendeur>16</NoVendeur><NoProduit>1600027</NoProduit><DateCreation>1/28/2019&#160;18:11</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>14</NoPanier><NoClient>101</NoClient><NoVendeur>16</NoVendeur><NoProduit>1600032</NoProduit><DateCreation>1/28/2019&#160;18:35</DateCreation><NbItems>2</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>15</NoPanier><NoClient>104</NoClient><NoVendeur>14</NoVendeur><NoProduit>1400005</NoProduit><DateCreation>1/30/2019&#160;18:17</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>16</NoPanier><NoClient>104</NoClient><NoVendeur>14</NoVendeur><NoProduit>1400006</NoProduit><DateCreation>1/30/2019&#160;18:33</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>17</NoPanier><NoClient>110</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200008</NoProduit><DateCreation>2/1/2019&#160;18:59</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>18</NoPanier><NoClient>110</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200009</NoProduit><DateCreation>2/1/2019&#160;19:27</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>19</NoPanier><NoClient>116</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200010</NoProduit><DateCreation>2/1/2019&#160;20:18</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>20</NoPanier><NoClient>116</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200011</NoProduit><DateCreation>2/1/2019&#160;20:46</DateCreation><NbItems>4</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>21</NoPanier><NoClient>101</NoClient><NoVendeur>11</NoVendeur><NoProduit>1100010</NoProduit><DateCreation>2/2/2019&#160;10:12</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>22</NoPanier><NoClient>119</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200003</NoProduit><DateCreation>2/2/2019&#160;10:26</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>23</NoPanier><NoClient>101</NoClient><NoVendeur>11</NoVendeur><NoProduit>1100011</NoProduit><DateCreation>2/2/2019&#160;10:41</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>24</NoPanier><NoClient>119</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200004</NoProduit><DateCreation>2/2/2019&#160;10:58</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>25</NoPanier><NoClient>101</NoClient><NoVendeur>11</NoVendeur><NoProduit>1100012</NoProduit><DateCreation>2/2/2019&#160;11:15</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>26</NoPanier><NoClient>119</NoClient><NoVendeur>12</NoVendeur><NoProduit>1200006</NoProduit><DateCreation>2/2/2019&#160;11:32</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>27</NoPanier><NoClient>101</NoClient><NoVendeur>11</NoVendeur><NoProduit>1100013</NoProduit><DateCreation>2/2/2019&#160;11:45</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>28</NoPanier><NoClient>119</NoClient><NoVendeur>14</NoVendeur><NoProduit>1400009</NoProduit><DateCreation>2/3/2019&#160;13:25</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier><NoPanier>29</NoPanier><NoClient>119</NoClient><NoVendeur>14</NoVendeur><NoProduit>1400013</NoProduit><DateCreation>2/3/2019&#160;14:05</DateCreation><NbItems>1</NbItems></PPArticlesEnPanier>
+<PPArticlesEnPanier></PPArticlesEnPanier>
+</dataroot>
