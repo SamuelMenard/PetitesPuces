@@ -10,12 +10,17 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
 {
     private long noVendeur;
     private String etape;
+    private String redevance;
+
     private TextBox tbRedevance;
+    private TextBox objet;
+    private HtmlTextArea message;
 
     protected void Page_Load(object sender, EventArgs e)
     {
         getEtape();
         getNoVendeur();
+        getRedevance();
         if (etape == "")
         {
             afficherInfosClient();
@@ -24,7 +29,17 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         {
             afficherFormRedevance();
         }
-        
+        else if (etape == "courrielAccepte")
+        {
+            afficherFormCourriel("Félicitation ! Votre demande de vendeur a été accepté. Votre taux de redevance pour vos ventes sera de " 
+                + this.redevance + "%. Merci de faire affaire avec nous !", true);
+        }
+        else if (etape == "courrielRefuse")
+        {
+            afficherFormCourriel("Nous sommes désolé de vous annoncer que votre demande de vendeur a été refusé. " +
+                "Toutefois, vous pourrez refaire une demande dans les prochains mois ! Merci de votre intérêt envers Les Petites Puces !", false);
+        }
+
     }
 
     public void afficherInfosClient()
@@ -151,7 +166,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Panel colTB = LibrairieControlesDynamique.divDYN(rowPourcentage, "", "col-md-2");
         Panel div = LibrairieControlesDynamique.divDYN(colTB, "", "input-group");
         LibrairieControlesDynamique.lblDYN(div, "", "%", "input-group-addon");
-        TextBox tb = LibrairieControlesDynamique.numericUpDownDYN(div, "", "", "0", "100", "form-control");
+        TextBox tb = LibrairieControlesDynamique.numericUpDownDYN(div, "", this.redevance, "0", "100", "form-control");
         tb.Style.Add("width", "70px");
         tb.MaxLength = 3;
 
@@ -170,6 +185,37 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         LibrairieControlesDynamique.btnDYN(LibrairieControlesDynamique.divDYN(row, "", "col-md-12"), "btnConf_" + vendeur.NoVendeur, "btn btn-warning", "Confirmer", confirmer_click);
     }
 
+    public void afficherFormCourriel(String message, bool accepte)
+    {
+        PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
+
+        LibrairieControlesDynamique.btnDYN(phDynamique, "", "btn btn-warning", "Retour", (accepte) ? new EventHandler(retourRedevance_click) : new EventHandler(retourDetails_click));
+        LibrairieControlesDynamique.brDYN(phDynamique);
+        LibrairieControlesDynamique.brDYN(phDynamique);
+
+        LibrairieControlesDynamique.lblDYN(phDynamique, "", "Destinataire :").Style.Add("font-size", "20px");
+        Panel panelDefault = LibrairieControlesDynamique.divDYN(phDynamique, "", "panel panel-default");
+        Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
+
+        LibrairieControlesDynamique.spaceDYN(panelBody);
+        Label lbl = LibrairieControlesDynamique.lblDYN(panelBody, "", vendeur.Prenom + " " + vendeur.Nom, "badge");
+        lbl.Style.Add("background-color", "orange !important");
+
+        // objet
+        Panel divObjet = LibrairieControlesDynamique.divDYN(phDynamique, "", "form-group");
+        LibrairieControlesDynamique.lblDYN(divObjet, "", "Objet :");
+        this.objet = LibrairieControlesDynamique.tbDYN(divObjet, "", "Demande de vendeur", "form-control");
+
+        // message
+        Panel divMessage = LibrairieControlesDynamique.divDYN(phDynamique, "", "form-group");
+        LibrairieControlesDynamique.lblDYN(divObjet, "", "Message :");
+        this.message = LibrairieControlesDynamique.textAreaDYN(divObjet, "", 5, "form-control", message);
+
+        // bouton envoyer
+        LibrairieControlesDynamique.btnDYN(phDynamique, "", "btn btn-warning", "Envoyer", (accepte) ? new EventHandler(envoyerCourrielAccepte_click) : new EventHandler(envoyerCourrielRefuse_click));
+
+    }
+
     public void retourDashboard_click(Object sender, EventArgs e)
     {
         System.Diagnostics.Debug.WriteLine("Retour");
@@ -184,12 +230,20 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
+    public void retourRedevance_click(Object sender, EventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("Retour");
+        String url = "~/Pages/DetailsDemandeVendeur.aspx?NoVendeur=" + this.noVendeur + "&Etape=redevance&Redevance=" + this.redevance;
+        Response.Redirect(url, true);
+    }
+
     public void btnNon_click(Object sender, EventArgs e)
     {
         HtmlButton btn = (HtmlButton)sender;
         String id = btn.ID.Replace("btnNon_", "");
-        LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), false, "");
-        String url = "~/Pages/DemandesVendeur.aspx?Notification=refuse";
+        //LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), false, "");
+        //String url = "~/Pages/DemandesVendeur.aspx?Notification=refuse";
+        String url = "~/Pages/DetailsDemandeVendeur.aspx?NoVendeur=" + this.noVendeur + "&Etape=courrielRefuse";
         Response.Redirect(url, true);
     }
 
@@ -201,6 +255,43 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
+    public void envoyerCourrielAccepte_click(Object sender, EventArgs e)
+    {
+        if (objet.Text != "" && message.Value != "")
+        {
+            PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
+            LibrairieLINQ.accepterOuDeleteDemandeVendeur(this.noVendeur, true, this.redevance);
+            LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", vendeur.AdresseEmail, this.objet.Text, this.message.Value);
+            String url = "~/Pages/DemandesVendeur.aspx?Notification=accepte";
+            Response.Redirect(url, true);
+        }
+        else
+        {
+            Panel erreur = LibrairieControlesDynamique.divDYN(phErreur, "", "alert alert-danger");
+            LibrairieControlesDynamique.lblDYN(erreur, "", "Le courriel doit contenir un objet et un message.");
+        }
+
+
+    }
+
+    public void envoyerCourrielRefuse_click(Object sender, EventArgs e)
+    {
+        if (objet.Text != "" && message.Value != "")
+        {
+            PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
+            LibrairieLINQ.accepterOuDeleteDemandeVendeur(this.noVendeur, false, "");
+            LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", vendeur.AdresseEmail, this.objet.Text, this.message.Value);
+            String url = "~/Pages/DemandesVendeur.aspx?Notification=refuse";
+            Response.Redirect(url, true);
+        }
+        else
+        {
+            Panel erreur = LibrairieControlesDynamique.divDYN(phErreur, "", "alert alert-danger");
+            LibrairieControlesDynamique.lblDYN(erreur, "", "Le courriel doit contenir un objet et un message.");
+        }
+        
+    }
+
     public void confirmer_click(Object sender, EventArgs e)
     {
         Button btn = (Button)sender;
@@ -209,8 +300,9 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         if (Decimal.TryParse(this.tbRedevance.Text, out n) && n >= 0 && n <= 100)
         {
             this.tbRedevance.CssClass = "form-control";
-            LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true, this.tbRedevance.Text);
-            String url = "~/Pages/DemandesVendeur.aspx?Notification=accepte";
+            //LibrairieLINQ.accepterOuDeleteDemandeVendeur(long.Parse(id), true, this.tbRedevance.Text);
+            String url = "~/Pages/DetailsDemandeVendeur.aspx?NoVendeur=" + this.noVendeur + "&Etape=courrielAccepte&Redevance=" + this.tbRedevance.Text;
+            //String url = "~/Pages/DemandesVendeur.aspx?Notification=accepte";
             Response.Redirect(url, true);
         }
         else
@@ -242,6 +334,18 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         else
         {
             this.etape = Request.QueryString["Etape"];
+        }
+    }
+
+    private void getRedevance()
+    {
+        if (Request.QueryString["Redevance"] == null)
+        {
+            this.redevance = "0";
+        }
+        else
+        {
+            this.redevance = Request.QueryString["Redevance"];
         }
     }
 }

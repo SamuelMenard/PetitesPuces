@@ -295,6 +295,16 @@ public static class LibrairieControlesDynamique
         Conteneur.Controls.Add(t);
         return t;
     }
+    static public TableHeaderCell thDYN(TableRow Conteneur, String strID, String strStyle)
+    {
+        TableHeaderCell t = new TableHeaderCell()
+        {
+            ID = strID,
+            CssClass = strStyle
+        };
+        Conteneur.Controls.Add(t);
+        return t;
+    }
     static public TableRow trDYN(Table Conteneur)
     {
         TableRow t = new TableRow();
@@ -341,6 +351,20 @@ public static class LibrairieControlesDynamique
 
         li.Controls.Add(anchor);
         return li;
+    }
+
+    static public HtmlTextArea textAreaDYN(Control control, String id, int rows, String cssClass, String valeur)
+    {
+        HtmlTextArea textArea = new HtmlTextArea
+        {
+            ID = id,
+            Rows = rows,
+            Value = valeur
+        };
+        textArea.Attributes.Add("class", "form-control");
+        textArea.Style.Add("resize", "none");
+        control.Controls.Add(textArea);
+        return textArea;
     }
 
 }

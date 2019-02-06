@@ -33,7 +33,6 @@
     <div class="container">
         <div class="jumbotron">
                 <h1>Demandes de vendeurs</h1> 
-                <p>Appuyez sur le (X) rouge pour refuser une demande ou sur le (✔) vert pour accepter la demande</p> 
         </div>
         <div class="row">
             <div class="col-md-2">

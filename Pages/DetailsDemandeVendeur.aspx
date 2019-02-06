@@ -8,10 +8,9 @@
     <!-- Contenu de la page -->
     <div class="container">
         <div class="jumbotron">
-                <h1>Fiche du vendeur</h1> 
-                <p>Appuyez sur le (X) rouge pour refuser une demande ou sur le (✔) vert pour accepter la demande</p> 
+                <h1>Détails du vendeur</h1>  
         </div>
-
+        <asp:PlaceHolder id="phErreur" runat="server" />
         <asp:PlaceHolder id="phDynamique" runat="server" />
     </div>
     
