@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Mail;
 
 public partial class Pages_Connexion : System.Web.UI.Page
 {
+    private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (IsPostBack)
+        {
+            tbCourrielMotDePasseOublie.Text = "";
+            errCourrielMotDePasseOublie.Text = "";
+            errCourrielMotDePasseOublie.CssClass = "text-danger d-none";
+        }
     }
 
     public void btnConnexion_click(Object sender, EventArgs e)
@@ -66,5 +74,61 @@ public partial class Pages_Connexion : System.Web.UI.Page
             else if (codeErreur == 402) { lblMessageErreur.Text = "Le compte a été désactivé"; }
         }
         
+    }
+
+    protected void btnEnvoyerMotDePasse_Click(object sender, EventArgs e)
+    {
+        if (dbContext.PPClients.Where(c => c.AdresseEmail == tbCourrielMotDePasseOublie.Text).Any() ||
+            dbContext.PPVendeurs.Where(v => v.AdresseEmail == tbCourrielMotDePasseOublie.Text).Any())
+        {
+            MailMessage message = null;
+                
+            if (dbContext.PPClients.Where(c => c.AdresseEmail == tbCourrielMotDePasseOublie.Text).Any())
+            {
+                PPClients client = dbContext.PPClients.Where(c => c.AdresseEmail == tbCourrielMotDePasseOublie.Text).Single();
+
+                message = new MailMessage("ppuces@gmail.com", client.AdresseEmail);
+                message.Subject = "Mot de passe oublié Les Petites Puces";
+                message.Body = string.Format("Bonjour,\n\n" +
+                                             "Suite à votre demande, nous vous envoyons un rappel de vos informations de connexion.\n" +
+                                             "Identifiant : {1}\n" +
+                                             "Mot de passe : {2}\n\n" +
+                                             "Merci de faire affaire avec nous,\n" +
+                                             "Les Petites Puces",
+                                             client.AdresseEmail,
+                                             client.MotDePasse);
+            }
+            else
+            {
+                PPVendeurs vendeur = dbContext.PPVendeurs.Where(v => v.AdresseEmail == tbCourrielMotDePasseOublie.Text).Single();
+
+                message = new MailMessage("ppuces@gmail.com", vendeur.AdresseEmail);
+                message.Subject = "Mot de passe oublié Les Petites Puces";
+                message.Body = string.Format("Bonjour,\n\n" +
+                                             "Suite à votre demande, nous vous envoyons vos informations de connexion.\n" +
+                                             "Identifiant : {1}\n" +
+                                             "Mot de passe : {2}\n\n" +
+                                             "Merci de faire affaire avec nous,\n" +
+                                             "Les Petites Puces",
+                                             vendeur.AdresseEmail,
+                                             vendeur.MotDePasse);
+            }
+
+            if (LibrairieCourriel.envoyerCourriel(message))
+            {
+                lblMessage.Text = "Nous vous avons envoyé vos informations de connexion par courriel.";
+                divMessage.CssClass = "alert alert-success alert-margins";
+            }
+            else
+            {
+                lblMessage.Text = "Nous n'avons pas pu vous envoyer vos informations de connexion par courriel.";
+                divMessage.CssClass = "alert alert-danger alert-margins";
+            }
+        }
+        else
+        {
+            errCourrielMotDePasseOublie.Text = "Le courriel que vous avez entré ne correspond pas à un profil client ou un profil vendeur";
+            errCourrielMotDePasseOublie.CssClass = "text-danger";
+        }
     }
 }

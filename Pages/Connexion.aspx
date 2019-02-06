@@ -8,6 +8,8 @@
     <title>Ouvrir une session - Les Petites Puces</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
     <style>
@@ -42,8 +44,15 @@
             </div>
         </div>
         <div class="row">
+            <div class="message mx-auto">
+                <asp:Panel ID="divMessage" runat="server" Visible="False">
+                    <asp:Label ID="lblMessage" runat="server" />
+                    <br />
+                </asp:Panel>
+            </div>
+        </div>
+        <div class="row">
             <div class="form-signin col-md-6">
-
                 <asp:Panel ID="alert_erreur" class="alert alert-danger" runat="server" Visible="false">
                   <asp:Label ID="lblMessageErreur" Text="" runat="server"></asp:Label>
                 </asp:Panel>
@@ -65,7 +74,29 @@
                 </asp:DropDownList>
                 <br />
                 <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="btnConnexion_click" />
-                <a style="color: orange;" href="#">Mot de passe oublié?</a>
+                <button type="button" class="btn btn-link" style="color: orange;" data-toggle="modal" data-target="#modalMotDePasseOublie">Mot de passe oublié?</button>
+                <div class="modal fade" id="modalMotDePasseOublie">
+                    <div class="modal-dialog">
+                        <asp:ScriptManager runat="server" />
+                        <asp:UpdatePanel runat="server">
+                            <ContentTemplate>
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Mot de passe oublié</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <asp:TextBox ID="tbCourrielMotDePasseOublie" runat="server" CssClass="form-control" placeholder="Identifiant/Courriel" MaxLength="100" />
+                                        <asp:Label ID="errCourrielMotDePasseOublie" runat="server" CssClass="text-danger d-none" />
+                                    </div>
+                                    <div class="modal-footer">
+                                        <asp:Button ID="btnFermer" Text="Fermer" runat="server" CssClass="btn btn-lg btn-secondary" PostBackUrl="~/Pages/Connexion.aspx" />
+                                        <asp:Button ID="btnEnvoyerMotDePasse" Text="Envoyer le mot de passe" runat="server" CssClass="btn btn-lg btn-primary" BackColor="Orange" BorderColor="Orange" OnClick="btnEnvoyerMotDePasse_Click" />
+                                    </div>
+                                </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                </div>
             </div>
             <span class="barre-verticale-orange"></span>
             <div class="form-signin col-md-6">

@@ -232,6 +232,7 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
                     articleEnPanier.NoPanier = long.Parse(element.Descendants("NoPanier").Single().Value);
                     articleEnPanier.NoClient = long.Parse(element.Descendants("NoClient").Single().Value);
                     articleEnPanier.NoVendeur = long.Parse(element.Descendants("NoVendeur").Single().Value);
+                    articleEnPanier.NoProduit = long.Parse(element.Descendants("NoProduit").Single().Value);
                     articleEnPanier.DateCreation = DateTime.Parse(element.Descendants("DateCreation").Single().Value);
                     articleEnPanier.NbItems = short.Parse(element.Descendants("NbItems").Single().Value);
 
