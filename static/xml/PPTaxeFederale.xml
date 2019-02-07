@@ -1,7 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 <dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
-<PPTaxeFederale><NoTPS>5001</NoTPS><DateEffectiveTPS>1/1/2001&#160;0:00</DateEffectiveTPS><TauxTPS>7.00</TauxTPS></PPTaxeFederale>
-<PPTaxeFederale><NoTPS>5002</NoTPS><DateEffectiveTPS>1/1/2005&#160;0:00</DateEffectiveTPS><TauxTPS>6.00</TauxTPS></PPTaxeFederale>
-<PPTaxeFederale><NoTPS>5003</NoTPS><DateEffectiveTPS>1/1/2008&#160;0:00</DateEffectiveTPS><TauxTPS>5.00</TauxTPS></PPTaxeFederale>
-<PPTaxeFederale></PPTaxeFederale>
+<PPTaxeFederale><NoTPS>201</NoTPS><DateEffectiveTPS>1/1/2001&#160;0:00</DateEffectiveTPS><TauxTPS>7.00</TauxTPS></PPTaxeFederale>
+<PPTaxeFederale><NoTPS>202</NoTPS><DateEffectiveTPS>1/1/2005&#160;0:00</DateEffectiveTPS><TauxTPS>6.00</TauxTPS></PPTaxeFederale>
+<PPTaxeFederale><NoTPS>203</NoTPS><DateEffectiveTPS>1/1/2008&#160;0:00</DateEffectiveTPS><TauxTPS>5.00</TauxTPS></PPTaxeFederale>
 </dataroot>
