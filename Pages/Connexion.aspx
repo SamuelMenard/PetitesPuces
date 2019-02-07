@@ -43,16 +43,22 @@
                 <img class="mb-4" src="/static/images/logo.png" alt="" width="150" height="150">
             </div>
         </div>
+        <asp:ScriptManager runat="server" />
+        <asp:UpdatePanel runat="server">
+        <ContentTemplate>
         <div class="row">
             <div class="message mx-auto">
-                <asp:Panel ID="divMessage" runat="server" Visible="False">
+                <asp:Panel ID="divMessage" runat="server">
                     <asp:Label ID="lblMessage" runat="server" />
                     <br />
                 </asp:Panel>
             </div>
         </div>
+        </ContentTemplate>
+        </asp:UpdatePanel>
         <div class="row">
             <div class="form-signin col-md-6">
+
                 <asp:Panel ID="alert_erreur" class="alert alert-danger" runat="server" Visible="false">
                   <asp:Label ID="lblMessageErreur" Text="" runat="server"></asp:Label>
                 </asp:Panel>
@@ -75,9 +81,8 @@
                 <br />
                 <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="btnConnexion_click" />
                 <button type="button" class="btn btn-link" style="color: orange;" data-toggle="modal" data-target="#modalMotDePasseOublie">Mot de passe oublié?</button>
-                <div class="modal fade" id="modalMotDePasseOublie">
+                <div class="modal" id="modalMotDePasseOublie">
                     <div class="modal-dialog">
-                        <asp:ScriptManager runat="server" />
                         <asp:UpdatePanel runat="server">
                             <ContentTemplate>
                                 <div class="modal-content">
@@ -89,7 +94,7 @@
                                         <asp:Label ID="errCourrielMotDePasseOublie" runat="server" CssClass="text-danger d-none" />
                                     </div>
                                     <div class="modal-footer">
-                                        <asp:Button ID="btnFermer" Text="Fermer" runat="server" CssClass="btn btn-lg btn-secondary" PostBackUrl="~/Pages/Connexion.aspx" />
+                                        <button type="button" class="btn btn-lg btn-secondary" data-dismiss="modal">Fermer</button>
                                         <asp:Button ID="btnEnvoyerMotDePasse" Text="Envoyer le mot de passe" runat="server" CssClass="btn btn-lg btn-primary" BackColor="Orange" BorderColor="Orange" OnClick="btnEnvoyerMotDePasse_Click" />
                                     </div>
                                 </div>
@@ -105,6 +110,12 @@
                 <asp:Button ID="btnAcceuil" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Acceuil"  PostBackUrl="~/Pages/AccueilInternaute.aspx" />
             </div>
         </div>
+        <script>
+            $('#modalMotDePasseOublie').on('hidden.bs.modal', function () {
+                $('#tbCourrielMotDePasseOublie').val('');
+                $('#errCourrielMotDePasseOublie').val('').addClass('d-none');
+            });
+        </script>
     </form>
 </body>
 </html>

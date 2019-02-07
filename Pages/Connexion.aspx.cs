@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Web.UI;
 
 public partial class Pages_Connexion : System.Web.UI.Page
 {
@@ -10,11 +11,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if (IsPostBack)
-        {
-            tbCourrielMotDePasseOublie.Text = "";
-            errCourrielMotDePasseOublie.Text = "";
-            errCourrielMotDePasseOublie.CssClass = "text-danger d-none";
-        }
+            divMessage.Visible = false;
     }
 
     public void btnConnexion_click(Object sender, EventArgs e)
@@ -90,9 +87,9 @@ public partial class Pages_Connexion : System.Web.UI.Page
                 message = new MailMessage("ppuces@gmail.com", client.AdresseEmail);
                 message.Subject = "Mot de passe oublié Les Petites Puces";
                 message.Body = string.Format("Bonjour,\n\n" +
-                                             "Suite à votre demande, nous vous envoyons un rappel de vos informations de connexion.\n" +
-                                             "Identifiant : {1}\n" +
-                                             "Mot de passe : {2}\n\n" +
+                                             "Suite à votre demande, nous vous envoyons vos informations de connexion.\n" +
+                                             "Identifiant : {0}\n" +
+                                             "Mot de passe : {1}\n\n" +
                                              "Merci de faire affaire avec nous,\n" +
                                              "Les Petites Puces",
                                              client.AdresseEmail,
@@ -124,6 +121,10 @@ public partial class Pages_Connexion : System.Web.UI.Page
                 lblMessage.Text = "Nous n'avons pas pu vous envoyer vos informations de connexion par courriel.";
                 divMessage.CssClass = "alert alert-danger alert-margins";
             }
+
+            divMessage.Visible = true;
+
+            ScriptManager.RegisterClientScriptBlock(Page, GetType(), "cacherModal", "$('#modalMotDePasseOublie').modal('hide');", true);
         }
         else
         {
