@@ -188,6 +188,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
     public void afficherFormCourriel(String message, bool accepte)
     {
         PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
+        String infos = "Courriel: " + vendeur.AdresseEmail + "\n" + "Mot de passe: " + vendeur.MotDePasse;
 
         LibrairieControlesDynamique.btnDYN(phDynamique, "", "btn btn-warning", "Retour", (accepte) ? new EventHandler(retourRedevance_click) : new EventHandler(retourDetails_click));
         LibrairieControlesDynamique.brDYN(phDynamique);
@@ -209,7 +210,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         // message
         Panel divMessage = LibrairieControlesDynamique.divDYN(phDynamique, "", "form-group");
         LibrairieControlesDynamique.lblDYN(divObjet, "", "Message :");
-        this.message = LibrairieControlesDynamique.textAreaDYN(divObjet, "", 5, "form-control", message);
+        this.message = LibrairieControlesDynamique.textAreaDYN(divObjet, "", 10, "form-control", ((accepte) ? infos + "\n\n" : "") + message);
 
         // bouton envoyer
         LibrairieControlesDynamique.btnDYN(phDynamique, "", "btn btn-warning", "Envoyer", (accepte) ? new EventHandler(envoyerCourrielAccepte_click) : new EventHandler(envoyerCourrielRefuse_click));

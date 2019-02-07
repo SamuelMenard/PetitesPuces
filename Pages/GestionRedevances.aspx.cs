@@ -24,7 +24,7 @@ public partial class Pages_GestionRedevances : System.Web.UI.Page
         {
             long idVendeur = vendeur.NoVendeur;
             String nomUtil = vendeur.Prenom + " " + vendeur.Nom;
-            Panel colUser = LibrairieControlesDynamique.divDYN(row, "col_" + idVendeur, "col-md-2");
+            Panel colUser = LibrairieControlesDynamique.divDYN(row, "col_" + idVendeur, "col-md-3");
             Panel panelDefault = LibrairieControlesDynamique.divDYN(colUser, "", "panel panel-default");
             panelDefault.Style.Add("width", "200px");
 

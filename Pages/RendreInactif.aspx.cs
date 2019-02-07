@@ -33,9 +33,10 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
             foreach(PPClients client in lstClients)
             {
                 long idClient = client.NoClient;
-                String nomUtil = client.Prenom + " " + client.Nom;
+                String nomUtil = client.AdresseEmail;
                 Panel colUser = LibrairieControlesDynamique.divDYN(row, "col_" + idClient, "col-md-2");
                 Panel panelDefault = LibrairieControlesDynamique.divDYN(colUser, "", "panel panel-default");
+                Panel panelHeading = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-heading");
                 Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
                 LibrairieControlesDynamique.imgDYN(panelBody, "", urlImg, "img-responsive");
                 Panel panelFooter = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-footer");
@@ -44,8 +45,8 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
                 Panel colBtn = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-4");
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowNomBtn, "", "col-md-8");
 
-                HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtn, "btnNonClient_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
-                LibrairieControlesDynamique.lblDYN(colNom, "lbl_" + idClient, nomUtil);
+                HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(panelHeading, "btnNonClient_" + idClient, "btn btn-danger", "", "glyphicon glyphicon-remove", btnNon_click);
+                LibrairieControlesDynamique.lblDYN(panelFooter, "lbl_" + idClient, nomUtil);
             }
         }
         else if (this.typeUtilisateurCourant == "V")

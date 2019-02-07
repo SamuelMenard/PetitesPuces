@@ -56,7 +56,7 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
                 PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(long.Parse(id));
                 //Panel col = LibrairieControlesDynamique.divDYN(divDestinataires, "", "col-md-2");
                 LibrairieControlesDynamique.spaceDYN(divDestinataires);
-                Label lbl = LibrairieControlesDynamique.lblDYN(divDestinataires, "", vendeur.Prenom + " " + vendeur.Nom, "badge");
+                Label lbl = LibrairieControlesDynamique.lblDYN(divDestinataires, "", vendeur.AdresseEmail, "badge");
                 lbl.Style.Add("background-color", "orange !important");
                 
             }
@@ -70,7 +70,7 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
                 PPClients client = LibrairieLINQ.getFicheInformationsClient(long.Parse(id));
                 //Panel col = LibrairieControlesDynamique.divDYN(divDestinataires, "", "col-md-2");
                 LibrairieControlesDynamique.spaceDYN(divDestinataires);
-                Label lbl = LibrairieControlesDynamique.lblDYN(divDestinataires, "", client.Prenom + " " + client.Nom, "badge");
+                Label lbl = LibrairieControlesDynamique.lblDYN(divDestinataires, "", client.AdresseEmail, "badge");
                 lbl.Style.Add("background-color", "orange !important");
 
             }
@@ -86,7 +86,7 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
         List<PPVendeurs> lstVendeurs = LibrairieLINQ.getListeVendeursTrie(this.trieVendeur);
         Table table = LibrairieControlesDynamique.tableDYN(divTableVendeurs, "", "table table-striped");
         TableRow trHEADER = LibrairieControlesDynamique.trDYN(table);
-        LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Nom complet");
+        LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Courriel");
         LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Nom d'affaire");
         LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Date de cration");
         LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Ventes");
@@ -97,7 +97,7 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
             List<PPHistoriquePaiements> lstHisto = LibrairieLINQ.getHistoriquePaiementVendeurs(vendeur.NoVendeur);
 
             TableRow tr = LibrairieControlesDynamique.trDYN(table);
-            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.Prenom + " " + vendeur.Nom);
+            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.AdresseEmail);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.NomAffaires);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.DateCreation.ToString());
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", Decimal.Round((Decimal)lstHisto.Sum(histo => histo.MontantVenteAvantLivraison), 2).ToString() + "$");
@@ -110,14 +110,14 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
         List<PPClients> lstClients = LibrairieLINQ.getListeClientsTrie(this.trieClient);
         Table table = LibrairieControlesDynamique.tableDYN(divTableClients, "", "table table-striped");
         TableRow trHEADER = LibrairieControlesDynamique.trDYN(table);
-        LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Nom complet");
+        LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Courriel");
         LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "Date de cration");
         LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.thDYN(trHEADER, "", ""), "", "✔");
 
         foreach (PPClients client in lstClients)
         {
             TableRow tr = LibrairieControlesDynamique.trDYN(table);
-            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", client.Prenom + " " + client.Nom);
+            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", client.AdresseEmail);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", client.DateCreation.ToString());
             lstCbClients.Add(LibrairieControlesDynamique.cb(LibrairieControlesDynamique.tdDYN(tr, "", ""), "cbClient_" + client.NoClient, ""));
         }
