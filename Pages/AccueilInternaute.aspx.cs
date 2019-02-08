@@ -14,19 +14,22 @@ public partial class Pages_AccueilInternaute : System.Web.UI.Page
 
     public void afficherCategories()
     {
-        List<String> lstCategories = new List<string>();
-        lstCategories.Add("Électronique");
-        lstCategories.Add("Maison");
-        lstCategories.Add("Extérieur");
+        Dictionary<Nullable<long>, List<PPVendeurs>> lstCategories = LibrairieLINQ.getEntreprisesTriesParCategories();
 
-        int noVendeur = 0;
+        // ajouter le liens mes paniers
+        LibrairieControlesDynamique.liDYN(ulSideBar, "#categories", "Nos catégories", "section-header");
 
-        for (int i = 0; i < lstCategories.Count; i++)
+
+        foreach (KeyValuePair<Nullable<long>, List<PPVendeurs>> entry in lstCategories)
         {
-            String nomCategorie = lstCategories[i];
+            String nomCategorie = LibrairieLINQ.getCategorie(entry.Key).Description;
+            long? noCategorie = entry.Key;
+
+            // ajouter lien navbar
+            LibrairieControlesDynamique.liDYN(ulSideBar, "#" + "contentBody_categorie" + noCategorie, nomCategorie, "");
 
             // créer le panel pour la catégorie
-            Panel panelDefault = LibrairieControlesDynamique.divDYN(phDynamique, "", "panel panel-default");
+            Panel panelDefault = LibrairieControlesDynamique.divDYN(categoriesDynamique, "categorie" + noCategorie, "panel panel-default");
             Panel panelHeading = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-heading");
             Panel panelBody = LibrairieControlesDynamique.divDYN(panelDefault, "", "panel-body");
 
@@ -36,29 +39,19 @@ public partial class Pages_AccueilInternaute : System.Web.UI.Page
             // créer la row
             Panel row = null;
 
-            List<String> lstEntreprises = new List<string>();
-            lstEntreprises.Add("Apple");
-            lstEntreprises.Add("Déco Découverte");
-            lstEntreprises.Add("Rona");
-            lstEntreprises.Add("Bureau En Gros");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-            lstEntreprises.Add("Vidéotron");
-
-            for (int y = 0; y < lstEntreprises.Count; y++)
+            int nbEntres = 0;
+            foreach (PPVendeurs vendeur in entry.Value)
             {
-                noVendeur++;
-                int nbItems = 7;
+                long? noVendeur = vendeur.NoVendeur;
+                long? nbItems = LibrairieLINQ.getNbProduitsEntrepriseDansCategorie(entry.Key, vendeur.NoVendeur);
 
-                if (y % 6 == 0)
+                if (nbEntres % 6 == 0)
                 {
                     row = LibrairieControlesDynamique.divDYN(panelBody, "", "row");
                     row.Style.Add("margin-bottom", "20 px");
                 }
 
-                String nomEntreprise = lstEntreprises[y];
+                String nomEntreprise = vendeur.NomAffaires;
                 String urlImg = "../static/images/videotron.png";
 
                 // rajouter les colonnes (entreprises)
@@ -69,14 +62,14 @@ public partial class Pages_AccueilInternaute : System.Web.UI.Page
                 LibrairieControlesDynamique.brDYN(col);
 
                 // nom entreprise + nb produits
-                LinkButton lbNomEntreprise = LibrairieControlesDynamique.lbDYN(col, "lbNomEntreprise_" + noVendeur, nomEntreprise, nomEntreprise_click);
+                LinkButton lbNomEntreprise = LibrairieControlesDynamique.lbDYN(col, nomCategorie + ";" + noVendeur, nomEntreprise, nomEntreprise_click);
                 LibrairieControlesDynamique.spaceDYN(col);
                 LibrairieControlesDynamique.spaceDYN(col);
-                LibrairieControlesDynamique.lblDYN(col, "lblQuantiteItems_" + noVendeur, nbItems.ToString(), "badge");
-                
+                LibrairieControlesDynamique.lblDYN(col, "", nbItems.ToString(), "badge");
+                nbEntres++;
             }
         }
-        
+
     }
 
     public void nomEntreprise_click(Object sender, EventArgs e)

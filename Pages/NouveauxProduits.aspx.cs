@@ -14,9 +14,7 @@ public partial class Pages_NouveauxProduits : System.Web.UI.Page
 
     public void afficherNouveauxProduits()
     {
-        List<int> lstEntreprises = new List<int>();
-        lstEntreprises.Add(1);
-        lstEntreprises.Add(2);
+        List<PPProduits> lstProduits = LibrairieLINQ.getNouveauxProduits();
 
         // Créer le panel
         Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, "", "panel panel-default");
@@ -30,20 +28,17 @@ public partial class Pages_NouveauxProduits : System.Web.UI.Page
 
 
         // Rajouter les produits
-        // temporaire
-        int idItem = 0;
 
-        for (int i = 0; i < 3; i++)
+        foreach(PPProduits produit in lstProduits)
         {
-            idItem++;
-            Double prix = 1300.99;
-            int quantiteStock = 2;
+            Decimal prix = Decimal.Round((Decimal)produit.PrixDemande, 2);
+            short quantiteStock = (short)produit.NombreItems;
 
-            String nomProduit = "MacBook Air 13\", 256GB SSD - Rose Gold";
-            String urlImage = "../static/images/macbookair13.jpg";
+            String nomProduit = produit.Nom;
+            String urlImage = "../static/images/" + produit.Photo;
             String urlNouveau = "../static/images/nouveau.png";
 
-            Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, "" + idItem, "row");
+            Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, "" + produit.NoProduit, "row");
 
             // ajouter l'image
             Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-2");
@@ -51,7 +46,7 @@ public partial class Pages_NouveauxProduits : System.Web.UI.Page
 
             // Nom du produit
             Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
-            LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item");
+            LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item deux-lignes");
 
             // Quantité sélectionné
             Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
