@@ -130,7 +130,7 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
                     if (LibrairieCourriel.envoyerCourriel(message))
                     {
-                        lblMessage.Text = "Votre profil à été créé. Un rappel de vos informations de connexion vous a été envoyé par courriel.";
+                        lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
                         divMessage.CssClass = "alert alert-success alert-margins";
                     }
                     else
