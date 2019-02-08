@@ -86,11 +86,13 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
                 message = new MailMessage("ppuces@gmail.com", client.AdresseEmail);
                 message.Subject = "Mot de passe oublié Les Petites Puces";
-                message.Body = string.Format("Bonjour,\n\n" +
-                                             "Suite à votre demande, nous vous envoyons vos informations de connexion.\n" +
-                                             "Identifiant : {0}\n" +
-                                             "Mot de passe : {1}\n\n" +
-                                             "Merci de faire affaire avec nous,\n" +
+                message.IsBodyHtml = true;
+                message.Body = string.Format("Bonjour,<br /><br />" +
+                                             "Suite à votre demande, nous vous envoyons vos informations de connexion.<br /><br />" +
+                                             "Identifiant : {0}<br />" +
+                                             "Mot de passe : {1}<br /><br />" +
+                                             "Vous pouvez suivre ce lien pour vous connecter à nouveau : <a href=\"http://424s.cgodin.qc.ca/Pages/Connexion.aspx\">http://424s.cgodin.qc.ca/Pages/Connexion.aspx</a>.<br /><br />" +
+                                             "Merci de faire affaire avec nous,<br />" +
                                              "Les Petites Puces",
                                              client.AdresseEmail,
                                              client.MotDePasse);
