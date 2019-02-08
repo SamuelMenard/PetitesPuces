@@ -357,7 +357,7 @@
     </asp:Panel>
 
     <asp:Panel ID="LESi_echoue" CssClass="alert alert-danger" Visible="false" runat="server">
-        <strong>Échoué...</strong> Votre carte de crédit a été refusée.
+        <asp:Label ID="corpsMessageErreur" runat="server"></asp:Label>
     </asp:Panel>
 
     <asp:Panel ID="div_paiement" Visible="false" runat="server" CssClass="row">
@@ -456,7 +456,8 @@
                     <asp:Button ID="btnRetourLivraison" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourLivraison_click" />
                 </div>
                 <div class="col-md-2 order-md-1">
-                    <button id="btnLESi" class="btn btn-warning" onclick="lesiForm();">
+                    <asp:Button ID="test" CssClass="btn btn-warning" Text="Retour" runat="server"/>
+                    <button id="btnLESi" class="btn btn-warning" onclick="return lesiForm();">
                         Payer&nbsp;&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-credit-card"></span>
                     </button>
                 </div>

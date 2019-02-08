@@ -14,6 +14,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     private long numCommande;
     private String etape;
     private short typeLivraison;
+    private int erreur;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -23,6 +24,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         getIdEntreprise();
         getEtapeCommande();
         getTypeLiv();
+        getErreur();
 
         switch (etape)
         {
@@ -30,6 +32,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             case "perso": afficherInfosPerso(); break;
             case "livraison": afficherLivraison(); break;
             case "paiement": afficherPaiement(); break;
+            case "confirmation": afficherReponseLESi(); break;
             case "bon": afficherBon(); getNumCommande(); break;
         }
 
@@ -471,6 +474,21 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherPaiement()
     {
+        // afficher si erreur != -1
+        if (this.erreur != -1)
+        {
+            String message = "";
+
+            if (this.erreur == 0) { message = "Transaction annulée par l'utilisateur"; }
+            else if (this.erreur == 1) { message = "Transaction refusée : Date d'expiration dépassée"; }
+            else if (this.erreur == 2) { message = "Transaction refusée : Limite de crédit atteinte"; }
+            else if (this.erreur == 3) { message = "Transaction refusée : Carte refusée (tout autre motif)"; }
+            else if (this.erreur == 9999) { message = "ERREUR DE VALIDATION"; }
+
+            LESi_echoue.Visible = true;
+            corpsMessageErreur.Text = message;
+        }
+
         // ajuster la bar de progression
         progressBar.Style.Add("width", "100%");
 
@@ -522,25 +540,53 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherReponseLESi()
     {
-        /*Boolean reussi = true;
+        // get le no autorisation
+        int noAutorisation = 0;
+
+        int n;
+        if (Request.Form["NoAutorisation"] == null || !int.TryParse(Request.Form["NoAutorisation"], out n))
+        {
+            noAutorisation = 3;
+        }
+        else { noAutorisation = n; }
+
+        // get date autorisation
+        string date = "";
+
+        if (Request.Form["DateAutorisation"] == null)
+        {
+            date = DateTime.Now.ToString();
+        }
+        else { date = Request.Form["DateAutorisation"]; }
+
+        // get le no autorisation
+        Decimal frais = 0;
+
+        Decimal nd;
+        if (Request.Form["FraisMarchand"] == null || !Decimal.TryParse(Request.Form["FraisMarchand"], out nd))
+        {
+            frais = 3;
+        }
+        else { frais = nd; }
+
 
         // rendre visible la bonne div
-        if (reussi)
+        if (noAutorisation >= 1000 && noAutorisation <= 5000 && noAutorisation != 1234)
         {
             // rajouter les infos de la commande dans la base de données
-            long noCommande = creerCommande();
+            long noCommande = creerCommande(date, frais);
 
             String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon&Commande=" + noCommande;
             Response.Redirect(url, true);
         }
         else
         {
-            LESi_echoue.Visible = true;
-            afficherPaiement();
-        }*/
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + this.typeLivraison + "&Erreur=" + noAutorisation;
+            Response.Redirect(url, true);
+        }
     }
 
-    public long creerCommande()
+    public long creerCommande(String date, Decimal fraisLESI)
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableCommandes = dataContext.PPCommandes;
@@ -568,23 +614,10 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         Decimal TVQPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TVQ", this.idEntreprise) / 100;
         Decimal TPS = Math.Round((sousTotal + prixLivraison) * TPSPourcentage, 2);
         Decimal TVQ = Math.Round((sousTotal + prixLivraison) * TVQPourcentage, 2);
-        
+
 
         // code type livraison
-        short noTypeLivraison = 401;
-
-        if (rbRegulier.Checked == true)
-        {
-            noTypeLivraison = 401;
-        }
-        else if (rbPrioritaire.Checked == true)
-        {
-            noTypeLivraison = 402;
-        }
-        else if (rbCompagnie.Checked == true)
-        {
-            noTypeLivraison = 403;
-        }
+        short noTypeLivraison = this.typeLivraison;
         
 
 
@@ -670,9 +703,9 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                     NoVendeur = this.idEntreprise,
                     NoClient = long.Parse(Session["NoClient"].ToString()),
                     NoCommande = biggestCommandeID,
-                    DateVente = DateTime.Now,
+                    DateVente = Convert.ToDateTime(date),
                     NoAutorisation = biggestNoAutorisation.ToString(),
-                    FraisLesi = 10,
+                    FraisLesi = fraisLESI,
                     Redevance = redevanceArgent,
                     FraisLivraison = prixLivraison,
                     FraisTPS = TPS,
@@ -941,7 +974,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             noTypeLivraison = 403;
         }
 
-        if (this.etape == "paiement" && this.typeLivraison != -1)
+        if ((this.etape == "paiement" || this.etape == "confirmation") && this.typeLivraison != -1)
         {
             noTypeLivraison = this.typeLivraison;
         }
@@ -1270,6 +1303,20 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             this.typeLivraison = n;
         }
     }
+
+    private void getErreur()
+    {
+        int n;
+        if (Request.QueryString["Erreur"] == null || !int.TryParse(Request.QueryString["Erreur"], out n))
+        {
+            this.erreur = -1;
+        }
+        else
+        {
+            this.erreur = n;
+        }
+    }
+
 
     public void nomEntreprisePanier_click(Object sender, EventArgs e)
     {
