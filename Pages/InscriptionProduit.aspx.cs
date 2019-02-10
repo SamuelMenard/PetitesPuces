@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Transactions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -233,7 +232,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 btnOui.CssClass = "btn Orange notActive";
                 btnNon.CssClass = "btn Orange active";
             }
-            ClientScript.RegisterStartupScript(GetType(), "toggleRbDisponibilite", "");
 
             btnValider.Visible = false;
             divImage.Visible = true;
@@ -487,6 +485,28 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
                 if (binOK)
                     imgTeleverse.ImageUrl = "~/static/images/" + produit.NoProduit + fImage.FileName.Substring(fImage.FileName.LastIndexOf("."));
+
+                if (rbDisponibilite.Value != "O")
+                {
+                    btnOui.CssClass = "btn Orange notActive";
+                    btnNon.CssClass = "btn Orange active";
+                }
+                else
+                {
+                    btnOui.CssClass = "btn Orange active";
+                    btnNon.CssClass = "btn Orange notActive";
+                }
+
+                ClientScript.RegisterStartupScript(GetType(), "toggleRbDisponibilite",
+                    "<script>" +
+                    "   $('#radioBtn a').on('click', function () {" +
+                    "      var sel = $(this).data('title');" +
+                    "      var tog = $(this).data('toggle');" +
+                    "      $('#contentBody_' + tog).prop('value', sel);" +
+                    "      $('a[data-toggle=\"' + tog + '\"]').not('[data-title=\"' + sel + '\"]').removeClass('active').addClass('notActive');" +
+                    "      $('a[data-toggle=\"' + tog + '\"][data-title=\"' + sel + '\"]').removeClass('notActive').addClass('active');" +
+                    "   });" +
+                    "</script>");
             }
         }
     }
