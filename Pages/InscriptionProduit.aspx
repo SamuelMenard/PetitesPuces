@@ -65,6 +65,15 @@
       <asp:TextBox ID="tbDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="5" placeholder="Description" />
       <asp:Label ID="errDescription" runat="server" CssClass="text-danger hidden" />
    </div>
+   <div class="form-group">
+      <div class="input-group">
+         <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 200px" ImageUrl="~/static/images/image_placeholder.png" />
+         <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
+         <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
+         <input id="btnSelectionnerImage" type="button" class="btn btn-block Orange" value="Sélectionner une image" />
+         <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
+      </div>
+   </div>
    <div class="row">
       <div class="form-group col-sm-6">
          <asp:TextBox ID="tbNbItems" runat="server" TextMode="Number" CssClass="form-control" placeholder="Quantité" />
@@ -102,16 +111,6 @@
     	   </div>
       </div>
    </div>
-   <asp:Button ID="btnValider" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Valider les informations" OnClick="btnValider_Click" Visible="true"/>
-   <asp:Panel ID="divImage" runat="server" CssClass="form-group" Visible="false">
-      <div class="input-group">
-         <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 200px" ImageUrl="~/static/images/image_placeholder.png" />
-         <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
-         <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
-         <input id="btnSelectionnerImage" type="button" class="btn Orange" value="Sélectionner une image" />
-         <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
-      </div>
-   </asp:Panel>
    <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" Visible="false" OnClick="btnInscription_Click" />
    <asp:Button ID="btnModifier" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le produit" Visible="false" OnClick="btnModifier_Click" />
 </div>
@@ -171,6 +170,12 @@
             $('#contentBody_errDescription').text('').addClass('hidden');
          }
       });
+      $("#contentBody_fImage").change(function () {
+         $("#contentBody_btnTeleverserImage").click();
+      });
+      $("#btnSelectionnerImage").click(function () {
+         $("#contentBody_fImage").click();
+      });
       $('#contentBody_tbNbItems').focusout(function () {
          if ($('#contentBody_tbNbItems').val() == '') {
             $('#contentBody_tbNbItems').removeClass('border-success').addClass('border-danger');
@@ -226,7 +231,15 @@
             $('#contentBody_errPoids').text('').addClass('hidden');
          }
       });
-      $('#contentBody_btnValider').click(function () {
+      $('#radioBtn a').on('click', function () {
+         var sel = $(this).data('title');
+         var tog = $(this).data('toggle');
+         $('#contentBody_' + tog).prop('value', sel);
+
+         $('a[data-toggle=\"' + tog + '\"]').not('[data-title=\"' + sel + '\"]').removeClass('active').addClass('notActive');
+         $('a[data-toggle=\"' + tog + '\"][data-title=\"' + sel + '\"]').removeClass('notActive').addClass('active');
+      });
+      $('#contentBody_btnInscription,#contentBody_btnModifier').click(function () {
          var binPageValide = true;
          if ($('#contentBody_ddlCategorie').val() == '') {
             $('#contentBody_ddlCategorie').removeClass('border-success').addClass('border-danger');
@@ -257,6 +270,12 @@
                $('#contentBody_errDescription').text('La description ne peut pas être vide').removeClass('hidden');
             else
                $('#contentBody_errDescription').text('La description n\'est pas dans un format valide').removeClass('hidden');
+            binPageValide = false;
+         }
+         if ($('#contentBody_imgTeleverse').attr('src') == '../static/images/image_placeholder.png') {
+            $('#contentBody_imgTeleverse').addClass('border-danger')
+            if ($('#contentBody_errImage').text() == '')
+               $('#contentBody_errImage').text('Vous devez sélectionner une image').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbNbItems').val() == '' || !exprNbItems.test($('#contentBody_tbNbItems').val()) || $('#contentBody_tbNbItems').val() > 32767) {
@@ -296,12 +315,6 @@
             binPageValide = false;
          }
          return binPageValide;
-      });
-      $("#btnSelectionnerImage").click(function () {
-         $("#contentBody_fImage").click();
-      });
-      $("#contentBody_fImage").change(function () {
-         $("#contentBody_btnTeleverserImage").click();
       });
    });
 </script>
