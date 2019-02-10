@@ -65,11 +65,6 @@
       <asp:TextBox ID="tbDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="5" placeholder="Description" />
       <asp:Label ID="errDescription" runat="server" CssClass="text-danger hidden" />
    </div>
-   <div class="form-group">
-      <label for="fImage">Sélectionnez une image</label>
-      <asp:FileUpload ID="fImage" runat="server" CssClass="form-control" accept="image/png, image/jpeg" />
-      <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
-   </div>
    <div class="row">
       <div class="form-group col-sm-6">
          <asp:TextBox ID="tbNbItems" runat="server" TextMode="Number" CssClass="form-control" placeholder="Quantité" />
@@ -98,17 +93,26 @@
       </div>
       <div class="form-group col-sm-6"> 
          <div class="input-group">
-    	    <label>Disponibilité 
+    	      <label>Disponibilité</label>&nbsp
             <div id="radioBtn" class="btn-group">
-    		    <asp:HyperLink ID="btnOui" runat="server" CssClass="btn Orange active" Text="Oui" data-toggle="rbDisponibilite" data-title="O" />
-    			<asp:HyperLink ID="btnNon" runat="server" CssClass="btn Orange notActive" Text="Non" data-toggle="rbDisponibilite" data-title="N" />
-    		</div>
-    		<asp:HiddenField ID="rbDisponibilite" runat="server" Value="O" />
-            </label>
-    	</div>
+    		      <asp:HyperLink ID="btnOui" runat="server" CssClass="btn Orange active" Text="Oui" data-toggle="rbDisponibilite" data-title="O" />
+    			   <asp:HyperLink ID="btnNon" runat="server" CssClass="btn Orange notActive" Text="Non" data-toggle="rbDisponibilite" data-title="N" />
+    		   </div>
+    		   <asp:HiddenField ID="rbDisponibilite" runat="server" Value="O" />   
+    	   </div>
       </div>
    </div>
-   <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" OnClick="btnInscription_Click" />
+   <asp:Button ID="btnValider" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Valider les informations" OnClick="btnValider_Click" Visible="true"/>
+   <asp:Panel ID="divImage" runat="server" CssClass="form-group" Visible="false">
+      <div class="input-group">
+         <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 200px" ImageUrl="~/static/images/image_placeholder.png" />
+         <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
+         <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
+         <input id="btnSelectionnerImage" type="button" class="btn Orange" value="Sélectionner une image" />
+         <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
+      </div>
+   </asp:Panel>
+   <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" Visible="false" OnClick="btnInscription_Click" />
    <asp:Button ID="btnModifier" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le produit" Visible="false" OnClick="btnModifier_Click" />
 </div>
 <script type="text/javascript">
@@ -222,7 +226,7 @@
             $('#contentBody_errPoids').text('').addClass('hidden');
          }
       });
-      $('#contentBody_btnInscription').click(function () {
+      $('#contentBody_btnValider').click(function () {
          var binPageValide = true;
          if ($('#contentBody_ddlCategorie').val() == '') {
             $('#contentBody_ddlCategorie').removeClass('border-success').addClass('border-danger');
@@ -293,15 +297,12 @@
          }
          return binPageValide;
       });
-      $('#radioBtn a').on('click', function () {
-         var sel = $(this).data('title');
-         var tog = $(this).data('toggle');
-         $('#contentBody_' + tog).prop('value', sel);
-
-         $('a[data-toggle="' + tog + '"]').not('[data-title="' + sel + '"]').removeClass('active').addClass('notActive');
-         $('a[data-toggle="' + tog + '"][data-title="' + sel + '"]').removeClass('notActive').addClass('active');
+      $("#btnSelectionnerImage").click(function () {
+         $("#contentBody_fImage").click();
+      });
+      $("#contentBody_fImage").change(function () {
+         $("#contentBody_btnTeleverserImage").click();
       });
    });
 </script>
 </asp:Content>
-
