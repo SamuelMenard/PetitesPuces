@@ -1,9 +1,12 @@
-﻿
+﻿.floatRight {
+    float: right;
+}
 
 .border-quantite {
     width:80px;
     font-size:20px;
-}
+    
+ }
 
 
 .nomClient {
@@ -27,8 +30,8 @@
 }
 
 .img-size {
-    height:90px;
-    width:90px;
+    height:75px;
+    width:75px;
 }
 
 .nom-item {
@@ -52,19 +55,45 @@
 .top5 {
     margin-top: 5px;
 }
+.top10 {
+    margin-top: 10px;
+}
 .top15 {
     margin-top: 15px;
 }
+.bot15 {
+    margin-bottom: 15px;
+}
 .left15 {
     margin-left: 15px;
+}
+.left25 {
+    margin-left: 25px;
 }
 .left5 {
     margin-left: 5px;
 }
 
+
+.alignDropDown {
+  
+    position: absolute;
+    left: auto;
+    float: none;
+
+}
+
 .marginFluid {
     padding-right: 50px;
     padding-left: 50px;
+}
+
+.marginFluidSmall {
+    padding-right: 30px;
+    padding-left: 30px;
+}
+.right25 {
+    margin-right: 25px;
 }
 .right15 {
     margin-right: 15px;
@@ -84,9 +113,12 @@
     font-family: Calibri;
     font-weight: bold;
 }
-
+.breakWord {
+    word-wrap: break-word;
+}
 .LiensProduits a {
-    color: orange;   
+    color: orange;
+    word-wrap: break-word;
 }
 
 input[type="radio"] {
@@ -160,6 +192,12 @@ input[type="radio"] {
     border-color : red;
     color: #fff !important;
 }
+.alignQuantite {
+    text-align: center;    
+    display: inline-block;
+    float: none;
+    justify-content: center;
+}
 
 
 .flex-container > div {
@@ -172,3 +210,4 @@ input[type="radio"] {
     border-radius: 4px;
     font-size: 30px;
 }
+

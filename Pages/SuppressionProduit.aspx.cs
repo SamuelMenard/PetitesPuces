@@ -7,6 +7,7 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 
+
 public partial class Pages_SuppressionProduit : System.Web.UI.Page
 {
     private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
@@ -18,7 +19,7 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
 
     protected void Page_Load(object sender, EventArgs e)
-    {
+    {       
         if (Request.QueryString["ResultatModif"] != null)
         {
             string resultat = Request.QueryString["ResultatModif"];
@@ -45,7 +46,7 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
     private void creerPage()
     {
         dbContext.SaveChanges();
-        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container");
+        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluid");
         Panel panelBase = LibrairieControlesDynamique.divDYN(panelGroup, nomEntreprise + "_base", "panel panel-default");
         // Nom de l'entreprise
         Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_header", "panel-heading");
@@ -56,6 +57,12 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
          panelBody = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_PanelBody", "panel-body");
        
         panelBody.Controls.Clear();
+        // Btn Delete
+        Panel rowDel = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowDel_", "row text-right");
+        Panel colDel = LibrairieControlesDynamique.divDYN(rowDel, nomEntreprise + "_colDel_" , "col-sm-12");
+        HtmlButton btnSupprimer = LibrairieControlesDynamique.htmlbtnDYN(colDel, "btnSupprimer_", "btn btn-danger", "Supprimer le(s) produit(s)", "glyphicon glyphicon-remove", btnSupprimer_click);
+        btnSupprimer.Attributes.Add("onclick", "Confirm();");
+       // btnSupprimer.Style.Add("width", "105px");
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorder", 30);
 
         // Chercher les produits de la compagnie        
@@ -75,11 +82,12 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                 int noCat = lesProduits[i].NoCategorie.Value;                
                 PPCategories pCategorie = dbContext.PPCategories.Where(c => c.NoCategorie.Equals(noCat)).First();
                 String categorie = pCategorie.Description;
+                String disponibilite = lesProduits[i].Disponibilité == true ? "Disponible" : "Indisponible";
 
                 Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row valign top15");
 
                 // ajouter l'image
-                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg_" + idItem, "col-sm-2 ");
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg_" + idItem, "col-sm-1 ");
                 LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img_" + idItem, urlImage, "img-size center-block");
                 LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit_" + idItem, idItem.ToString(), "caption center-block text-center");
 
@@ -92,8 +100,12 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                 LibrairieControlesDynamique.lblDYN(colQuantite, nomEntreprise + "_quantite_" + idItem, "Qte : "+lesProduits[i].NombreItems, "prix_item");
 
                 // Categorie
-                Panel colCat = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCategorie_" + idItem, "col-sm-2");
+                Panel colCat = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCategorie_" + idItem, "col-sm-2 breakWord");
                 LibrairieControlesDynamique.lblDYN(colCat, nomEntreprise + "_categorie_" + idItem, categorie, "cat_item");
+
+                // Dispo
+                Panel colDispo = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDispo_" + idItem, "col-sm-1");
+                LibrairieControlesDynamique.lblDYN(colDispo, nomEntreprise + "_Disponibilite_" + idItem, disponibilite, "cat_item");
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-right");
@@ -101,14 +113,10 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                 LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixDemande_" + idItem, "Prix demandé : $" + prix.ToString(), "prix_item");
 
                 // CheckBox (Supprimer plusieurs)
-                Panel colCB = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCB_" + idItem, "col-sm-1 text-right");
+                Panel colCB = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCB_" + idItem, "col-sm-2 text-center");
                 CheckBox cbDelete = LibrairieControlesDynamique.cb(colCB, nomEntreprise + "_cbSupprimer_" + idItem, "");                  
 
-                // Btn Delete
-                Panel colDel = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDel_" + idItem, "col-sm-1 text-right");
-                HtmlButton btnSupprimer = LibrairieControlesDynamique.htmlbtnDYN(colDel, "btnSupprimer_" + idItem, "btn btn-danger left15", "", "glyphicon glyphicon-remove", btnSupprimer_click);
-                btnSupprimer.Attributes.Add("onclick", "Confirm();");              
-                btnSupprimer.Style.Add("height", "105px");
+              
 
 
             }
@@ -127,8 +135,10 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
     private void btnSupprimer_click(object sender, EventArgs e)
     {
         List<PPProduits> lesProduitsDelete = new List<PPProduits>();
-        HtmlButton hb = (HtmlButton)sender;
-        long idProduitBtnDelete = Convert.ToInt64(hb.ID.Replace("btnSupprimer_", ""));        
+        List<PPProduits> lesProduitsNonDispo = new List<PPProduits>();
+        List<PPArticlesEnPanier> lesProduitsEnPaniers = new List<PPArticlesEnPanier>();
+        List<PPDetailsCommandes> lesDetailsCommandes = new List<PPDetailsCommandes>();
+    
         foreach (Control control in panelBody.Controls)
          {                  
             if (control is Panel)
@@ -141,19 +151,26 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                         {
                             if (cColDel is CheckBox && ((CheckBox)cColDel).Checked)
                             {
-                                long noProduit = Convert.ToInt64(cColDel.ID.Replace(nomEntreprise + "_cbSupprimer_", ""));
-                                if (idProduitBtnDelete != noProduit)                                                          
-                                     lesProduitsDelete.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());                                
+                                long noProduit = Convert.ToInt64(cColDel.ID.Replace(nomEntreprise + "_cbSupprimer_", ""));                                                                        
+                                    
+                                lesDetailsCommandes = dbContext.PPDetailsCommandes.Where(c => c.NoProduit == noProduit).ToList();
+                               if(dbContext.PPArticlesEnPanier.Where(c => c.NoProduit == noProduit).Count() > 0)
+                                {
+                                    lesProduitsNonDispo.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());
+                                }
+                                else
+                                {
+
+                                    lesProduitsDelete.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());
+                                }
+                                lesProduitsEnPaniers.AddRange(dbContext.PPArticlesEnPanier.Where(c => c.NoProduit == noProduit).ToList());      
                             }                              
                         }
                     }                  
                 }
             }           
          }
-        if (lesProduitsDelete.Count == 0)
-        {
-            lesProduitsDelete.Add(dbContext.PPProduits.Where(c => c.NoProduit == idProduitBtnDelete).First());            
-        }
+       
        
         string confirmValue = Request.Form["confirm_value"];
         if (confirmValue == "Yes")
@@ -162,15 +179,34 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
             {
                 try
                 {
-                    dbContext.PPProduits.RemoveRange(lesProduitsDelete);
-                    dbContext.SaveChanges();
+                    if (lesProduitsNonDispo.Count > 0)
+                    {
+                        foreach (PPProduits produit in lesProduitsNonDispo)
+                        {
+                            produit.NombreItems = 0;
+                            produit.Disponibilité = false;
+                            dbContext.SaveChanges();
+                        }                       
+                      
+                    }
+                    if (lesProduitsEnPaniers.Count > 0)
+                    {
+                        dbContext.PPArticlesEnPanier.RemoveRange(lesProduitsEnPaniers);
+                        dbContext.SaveChanges();                     
+                    }
+                    if (lesProduitsDelete.Count > 0)
+                    {
+                        dbContext.PPProduits.RemoveRange(lesProduitsDelete);
+                        dbContext.SaveChanges();                        
+                    }
                     dbContextTransaction.Commit();
                     String url = "~/Pages/SuppressionProduit.aspx?";
-                    Response.Redirect(url, true);
+                    Response.Redirect(url, false);
                 }
-                catch (Exception)
-                {
+                catch (Exception ex)
+                {                    
                     dbContextTransaction.Rollback();
+                    System.Diagnostics.Debug.WriteLine(ex.StackTrace.ToString());
                 }
             }
         }      

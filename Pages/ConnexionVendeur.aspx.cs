@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 public partial class Pages_ConnexionVendeur : System.Web.UI.Page
@@ -30,7 +32,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
         
     
         // Créer le panier du vendeur X
-        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container");
+        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluid");
         Panel panelBase = LibrairieControlesDynamique.divDYN(panelGroup, nomEntreprise + "_base", "panel panel-default");
         
 
@@ -44,7 +46,8 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
         Panel panCategorie = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_pretLivraison_", "row text-center");
         Panel colCatAfficher = LibrairieControlesDynamique.divDYN(panCategorie, nomEntreprise + "_colLabelPretLivraison", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colCatAfficher, nomEntreprise + "_labelCategorie", "Prêt pour livraison ", "infos-payage OrangeTitle");
-       
+        LibrairieControlesDynamique.liDYN(ulSideBar, "#contentBody_" + nomEntreprise + "_labelCategorie", "Prêt pour livraison", "");
+
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
         List<PPCommandes> lstCommandes = dbContext.PPCommandes.Where(c => c.Statut.Equals("0")).ToList();
 
@@ -59,6 +62,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
                 decimal prix = lstCommandes[i].MontantTotAvantTaxes.Value;
                 long idClient = lstCommandes[i].NoClient.Value;
                 PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
+                int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
 
                 Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row valign");
 
@@ -74,15 +78,28 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
                 //Button Facture Commande
                 Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture_" + idItem, "col-sm-2 text-center");
-                LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
+                if (File.Exists(Server.MapPath("~/static/pdf/" + idItem + ".pdf")))
+                {
+                    LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
+                }
+                else
+                {
+                    HtmlButton btn = LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture" + idItem, "btn btn-default Orange disabled", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
+                    btn.Attributes.Add("disabled", "disabled");
+                }
+                
 
                 // Pooids total commande
                 Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids_" + idItem, "col-sm-1 text-center");
                 LibrairieControlesDynamique.lblDYN(colPoids, nomEntreprise + "_Poids_" + idItem, "Poids <br>" + lstCommandes[i].PoidsTotal + " lbs", "border-quantite prix_item");
 
                 // Nom du client
-                Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient_" + idItem, "col-sm-3 text-center");
+                Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient_" + idItem, "col-sm-2 text-center");
                 LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
+
+                // Visites
+                Panel colVisites = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colVisite_" + idItem, "col-sm-1 text-center");
+                LibrairieControlesDynamique.lblDYN(colVisites, nomEntreprise + "_Visites_" + idItem, "Visite(s)<br>" + NbVisites, "prix_item");
 
                 // Total avant taxes
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-center");
@@ -106,7 +123,14 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
     private void btnLivre(object sender, EventArgs e)
     {
-        
+        HtmlButton btn = (HtmlButton)sender;
+        string fileName = btn.ID.Replace("btnFacture","");       
+        if (File.Exists(Server.MapPath("~/static/pdf/" + fileName + ".pdf")))
+        {
+            string url = "../static/pdf/" + fileName + ".pdf";
+            System.Diagnostics.Debug.WriteLine(" VOICI LE NOM DU FICHIER " + "../static/pdf/" + fileName + ".pdf");
+            Response.Write("<script>window.open ('" + url + "','_blank');</script>");           
+        }           
     }
 
     protected void link_ProduitDetail(object sender, EventArgs e)
@@ -121,7 +145,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     {    
    
        
-        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup2", "panel-group container");
+        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup2", "panel-group container-fluid marginFluid");
         Panel panelBase = LibrairieControlesDynamique.divDYN(panelGroup, nomEntreprise + "_base2", "panel panel-default");
         // Nom de l'entreprise
         Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_header2", "panel-heading");
@@ -136,6 +160,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
         Panel panCategorie = LibrairieControlesDynamique.divDYN(panelBody2, nomEntreprise + "_pretLivraison2_", "row text-center");
         Panel colCatAfficher = LibrairieControlesDynamique.divDYN(panCategorie, nomEntreprise + "_colLabelPretLivraison2", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colCatAfficher, nomEntreprise + "_labelCategorie2", "Panier Courants ", "infos-payage OrangeTitle");
+        LibrairieControlesDynamique.liDYN(ulSideBar, "#contentBody_"+nomEntreprise + "_labelCategorie2", "Panier Courants", "");
         LibrairieControlesDynamique.hrDYN(colCatAfficher, "OrangeBorderPanier", 5);
 
 
@@ -196,12 +221,12 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
                 // ajouter l'image
                 Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg2_" + idItem, "col-sm-2 ");
                 LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img2_" + idItem, urlImage, "img-size center-block");
-                LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit2_" + idItem, "1000000" + i, "caption center-block text-center");
+                LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit2_" + idItem, idProduit.ToString(), "caption center-block text-center");
 
 
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom2_" + idItem, "col-sm-3 LiensProduits nomClient");
-                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idItem, nomProduit, descriptionProduit);
+                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idProduit, nomProduit, descriptionProduit);
 
                 // Quantité restant
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite2_" + idItem, "col-sm-2 text-right");

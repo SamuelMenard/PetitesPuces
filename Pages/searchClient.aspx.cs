@@ -6,11 +6,10 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
-public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.Page
+public partial class Pages_searchClient : System.Web.UI.Page
 {
 
-    private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
-    long noVendeur;
+    private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();   
     String nomEntreprise = "";
     private int intNbPage;
     private int indexPages;
@@ -34,7 +33,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
 
         }
 
-        noVendeur = Session["NoVendeurCatalogue"] != null ? Convert.ToInt32(Session["NoVendeurCatalogue"]) : 11;
+        
         //noClient = long.Parse(Session["NoClient"].ToString());
         noClient = 10001;
         int result;
@@ -42,8 +41,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             intNbPage = result;
         else
             intNbPage = int.MaxValue;
-
-        nomEntreprise = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First().NomAffaires;
+        
 
         if (!IsPostBack)
         {
@@ -60,7 +58,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
                 intNbPage = Convert.ToInt32(Session["ddlNbPage"]);
             }
 
-            List<int> lstCategories = dbContext.PPProduits.Where(c => c.NoVendeur == noVendeur).GroupBy(c => c.NoCategorie).Select(c => c.Key.Value).ToList();
+            List<int> lstCategories = dbContext.PPProduits.GroupBy(c => c.NoCategorie).Select(c => c.Key.Value).ToList();
             ddlCategorie.Items.Insert(0, new ListItem("Tous les catégories", "1"));
             for (int i = 0; i < lstCategories.Count; i++)
             {
@@ -92,7 +90,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
 
         // Liste des items + le total
         panelBody = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_body", "panel-body");
-        int nbProduitsVendeur = dbContext.PPProduits.Where(c => c.NoVendeur == noVendeur).Count();
+        int nbProduitsVendeur = dbContext.PPProduits.Count();
 
 
         // Rajouter les produits dans le panier
@@ -178,7 +176,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
                     , (produitCat.NombreItems < 1) ? "0" : produitCat.NombreItems.ToString(), "form-control border-quantite");
 
                     Panel colAjout = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colAjout_" + idItem, "col-sm-2 text-right");
-                    Button btnAjout = LibrairieControlesDynamique.btnDYN(colAjout, "btnAjouter_" + idItem, "btn valignMessage btnPageOrange", "Ajouter au panier", btnAjouter_click);
+                    Button btnAjout = LibrairieControlesDynamique.btnDYN(colAjout, "btnAjouter_" + idItem+"-"+produitCat.NoVendeur, "btn valignMessage btnPageOrange", "Ajouter au panier", btnAjouter_click);
 
                     if (produitCat.NombreItems < 1)
                     {
@@ -206,7 +204,9 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
     private void btnAjouter_click(object sender, EventArgs e)
     {
         Button btnAjout = (Button)sender;
-        long noProduit = long.Parse(btnAjout.ID.Replace("btnAjouter_", ""));
+        string[] str = btnAjout.ID.Replace("btnAjouter_", "").Split('-');
+        long noProduit = long.Parse(str[0]);
+        long noVendeur = long.Parse(str[1]);
         TextBox tb = (TextBox)colQuantite.FindControl("quantite_" + noProduit);
         short nbItems = short.Parse(tb.Text.Trim());
         PPArticlesEnPanier nouvelArticle = new PPArticlesEnPanier();
@@ -233,9 +233,9 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         // retourner la liste des paniers
         Dictionary<string, List<PPProduits>> lstProduits = new Dictionary<string, List<PPProduits>>();
 
-        int countProduits = countProduits = dbContext.PPProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).Count();
+        int countProduits = countProduits = dbContext.PPProduits.Where(c =>(c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).Count();
         creerBtnPages(countProduits);
-        var produits = from produit in tableProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderBy(c => c.NoCategorie).ThenBy(c => c.Description).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+        var produits = from produit in tableProduits.Where(c =>(c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderBy(c => c.NoCategorie).ThenBy(c => c.Description).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
                        group produit by new { produit.NoCategorie }
                                          into listeProduits
                        select listeProduits;
@@ -285,11 +285,11 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         {
             if ((i + 1) == noPage)
             {
-                LibrairieControlesDynamique.liDYN(ulPages, "ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
+                LibrairieControlesDynamique.liDYN(ulPages, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
             }
             else
             {
-                LibrairieControlesDynamique.liDYN(ulPages, "ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
+                LibrairieControlesDynamique.liDYN(ulPages, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
             }
 
         }
@@ -302,14 +302,14 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         // retourner la liste des paniers
         Dictionary<string, List<PPProduits>> lstProduits = new Dictionary<string, List<PPProduits>>();
 
-        int countProduits = countProduits = dbContext.PPProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).Count();
+        int countProduits = countProduits = dbContext.PPProduits.Where(c =>  (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).Count();
         creerBtnPages(countProduits);
-        var produits = from produit in tableProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderBy(c => c.NoProduit).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+        var produits = from produit in tableProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderBy(c => c.NoProduit).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
                        select produit;
 
         if (!booTriNumero)
         {
-            produits = from produit in tableProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderByDescending(c => c.NoProduit).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+            produits = from produit in tableProduits.Where(c =>  (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderByDescending(c => c.NoProduit).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
                        select produit;
         }
 
@@ -338,14 +338,14 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         // retourner la liste des paniers
         Dictionary<string, List<PPProduits>> lstProduits = new Dictionary<string, List<PPProduits>>();
 
-        int countProduits = countProduits = dbContext.PPProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).Count();
+        int countProduits = countProduits = dbContext.PPProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).Count();
         creerBtnPages(countProduits);
-        var produits = from produit in tableProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderBy(c => c.DateCreation).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+        var produits = from produit in tableProduits.Where(c =>  (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderBy(c => c.DateCreation).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
                        select produit;
 
         if (!booTriDate)
         {
-            produits = from produit in tableProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderByDescending(c => c.DateCreation).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+            produits = from produit in tableProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) ).OrderByDescending(c => c.DateCreation).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
                        select produit;
         }
         List<PPProduits> lstTempo;
@@ -374,9 +374,9 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         // retourner la liste des paniers
         Dictionary<string, List<PPProduits>> lstProduits = new Dictionary<string, List<PPProduits>>();
         int laCategorieDDL = Convert.ToInt32(ddlCategorie.SelectedValue);
-        int countProduits = countProduits = dbContext.PPProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.NoCategorie == laCategorieDDL) && (c.Disponibilité == true) ).Count();
+        int countProduits = countProduits = dbContext.PPProduits.Where(c =>  (c.Nom.Contains(strSearch)) && (c.NoCategorie == laCategorieDDL) && (c.Disponibilité == true) ).Count();
         creerBtnPages(countProduits);
-        var produits = from produit in tableProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Nom.Contains(strSearch)) && (c.NoCategorie == laCategorieDDL) && (c.Disponibilité == true) ).OrderBy(c => c.NoCategorie).ThenBy(c => c.Description).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+        var produits = from produit in tableProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.NoCategorie == laCategorieDDL) && (c.Disponibilité == true) ).OrderBy(c => c.NoCategorie).ThenBy(c => c.Description).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
                        group produit by new { produit.NoCategorie }
                                          into listeProduits
                        select listeProduits;
@@ -421,7 +421,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         }
         intNbPage = Convert.ToInt32(Session["ddlNbPage"]);
         int laCategorieDDL = Convert.ToInt32(ddlCategorie.SelectedValue);
-        string url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + 1 + "&search=" + _tbsearchText.Text.Trim();
+        string url = "~/Pages/searchClient.aspx?&NoPage=" + 1 + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
     }
     protected void categorieIndexChange(object sender, EventArgs e)
@@ -431,13 +431,13 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         Session["booTriDateStart"] = false;
         Session["booTriNumeroStart"] = false;
         _tbsearchText.Text = "";
-        string url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + 1 + "&search=" + _tbsearchText.Text.Trim();
+        string url = "~/Pages/searchClient.aspx?&NoPage=" + 1 + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
     }
     protected void lbSearch(object sender, EventArgs e)
     {
         int laCategorieDDL = Convert.ToInt32(ddlCategorie.SelectedValue);
-        string url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + 1 + "&search=" + _tbsearchText.Text.Trim();
+        string url = "~/Pages/searchClient.aspx?&NoPage=" + 1 + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
     }
     protected void triParDate(object sender, EventArgs e)
@@ -454,7 +454,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         booTriDate = Convert.ToBoolean(Session["booTriDate"]);
         ddlCategorie.SelectedIndex = 0;
         Session["ddlCategorie"] = 1;
-        string url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
+        string url = "~/Pages/searchClient.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
     }
     protected void triParNoProduit(object sender, EventArgs e)
@@ -471,7 +471,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         booTriNumero = Convert.ToBoolean(Session["booTri"]);
         ddlCategorie.SelectedIndex = 0;
         Session["ddlCategorie"] = 1;
-        string url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
+        string url = "~/Pages/searchClient.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
     }
 }

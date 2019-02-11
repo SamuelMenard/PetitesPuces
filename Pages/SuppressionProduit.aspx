@@ -17,7 +17,7 @@
             var confirm_value = document.createElement("INPUT");
             confirm_value.type = "hidden";
             confirm_value.name = "confirm_value";
-            if (confirm("Voulez vous supprimer le(s) produit(s) sélectionné(s)?")) {
+            if (confirm("Certains produits peuvent se retrouver dans des paniers courants\nVoulez vous supprimer le(s) produit(s) sélectionné(s)?")) {
                 confirm_value.value = "Yes";
             } else {
                 confirm_value.value = "No";

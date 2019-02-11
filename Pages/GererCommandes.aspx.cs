@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Xml;
 
@@ -17,13 +19,20 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
     PPVendeurs leVendeur;
 
     protected void Page_Load(object sender, EventArgs e)
-    {      
+    {
+        Page.MaintainScrollPositionOnPostBack = true;
         noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
         nomEntreprise = leVendeur.NomAffaires;
+        creerPage();       
+    }
 
+    private void creerPage()
+    {
+        phDynamique.Controls.Clear();        
+        ulSideBar.Controls.Clear();
         // Créer le panier du vendeur X
-        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluid");
+        Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluidSmall");
         Panel panelBase = LibrairieControlesDynamique.divDYN(panelGroup, nomEntreprise + "_base", "panel panel-default");
 
 
@@ -41,6 +50,9 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         Panel panCategorie = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_pretLivraison_", "row text-center");
         Panel colCatAfficher = LibrairieControlesDynamique.divDYN(panCategorie, nomEntreprise + "_colLabelPretLivraison", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colCatAfficher, nomEntreprise + "_labelCategorie", "Prêt pour livraison ", "infos-payage OrangeTitle");
+        LibrairieControlesDynamique.liDYN(ulSideBar, "#contentBody_" + nomEntreprise + "_labelCategorie", "Prêt pour livraison", "");
+        
+
 
         //LibrairieControlesDynamique.hrDYN(panelBody);
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
@@ -54,6 +66,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
             decimal prix = lstCommandes[i].MontantTotAvantTaxes.Value;
             long idClient = lstCommandes[i].NoClient.Value;
             PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
+            int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
 
             Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row valign");
 
@@ -69,7 +82,17 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
             //Button Facture Commande
             Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture"+idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
+            if (File.Exists(Server.MapPath("~/static/pdf/" + idItem + ".pdf")))
+            {
+                LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFactures" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnFacture);
+            }
+            else
+            {
+                HtmlButton btn = LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFactureDisabled" + idItem, "btn btn-default Orange disabled", "Facture", "glyphicon glyphicon-list-alt", btnFacture);
+                btn.Attributes.Add("disabled", "disabled");
+            }
+
+
 
             // Pooids total commande
             Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids_" + idItem, "col-sm-1 text-center");
@@ -79,22 +102,27 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
             Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient_" + idItem, "col-sm-2 text-center");
             LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
 
+            // Visites
+            Panel colVisites = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colVisite_" + idItem, "col-sm-1 text-center");
+            LibrairieControlesDynamique.lblDYN(colVisites, nomEntreprise + "_Visites_" + idItem, "Visite(s)<br>" + NbVisites, "prix_item");
+
             // Total avant taxes
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total avant taxes<br>$" + prix.ToString("N"), "prix_item");
+            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total<br>(sans taxes)<br>$" + prix.ToString("N"), "prix_item");
 
-            Panel colLivrer = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colLivrer"+idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.htmlbtnDYN(colLivrer, "btnLivre"+idItem, "btn btn-default Orange", "Livrer", "glyphicon glyphicon-send", btnLivre);
+
+            Panel colLivrer = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colLivrer" + idItem, "col-sm-1 text-center");
+            LibrairieControlesDynamique.htmlbtnDYN(colLivrer, "btnLivre" + idItem, "btn btn-default Orange", "Livrer", "glyphicon glyphicon-send", btnLivre);
 
             //   LibrairieControlesDynamique.hrDYN(panelBody);
         }
 
-        LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);    
+        LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
 
         Panel panCategorie2 = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_Livre_", "row text-center");
         Panel colCatAfficher2 = LibrairieControlesDynamique.divDYN(panCategorie2, nomEntreprise + "_colLabelLivre", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colCatAfficher2, nomEntreprise + "_labelLivre", "Commandes livrés ", "infos-payage OrangeTitle");
-
+        HtmlGenericControl li = LibrairieControlesDynamique.liDYN(ulSideBar, "#contentBody_" + nomEntreprise + "_labelLivre", "Commandes livrés", "");
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
 
 
@@ -108,6 +136,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
             decimal prix = lstCommandesLivre[i].MontantTotAvantTaxes.Value;
             long idClient = lstCommandesLivre[i].NoClient.Value;
             PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
+            int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
 
             Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem2_" + idItem, "row valign");
 
@@ -123,7 +152,17 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
             //Button Facture Commande
             Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture2_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnLivre);
+            if (File.Exists(Server.MapPath("~/static/pdf/" + idItem + ".pdf")))
+            {
+                LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnFactures);
+            }
+            else
+            {
+                HtmlButton btn = LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange disabled", "Facture", "glyphicon glyphicon-list-alt", btnFactures);
+                btn.Attributes.Add("disabled", "disabled");
+            }
+
+
 
             // Pooids total commande
             Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids2_" + idItem, "col-sm-1 text-center");
@@ -133,6 +172,10 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
             Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient2_" + idItem, "col-sm-2 text-center");
             LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
 
+            // Visites
+            Panel colVisites = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colVisite_" + idItem, "col-sm-1 text-center");
+            LibrairieControlesDynamique.lblDYN(colVisites, nomEntreprise + "_Visites_" + idItem, "Visite(s)<br>" + NbVisites, "prix_item");
+
             List<PPDetailsCommandes> lstDetailsCommandes = dbContext.PPDetailsCommandes.Where(c => c.NoCommande == idItem).ToList();
             int nbItems = 0;
             for (int j = 0; j < lstDetailsCommandes.Count; j++)
@@ -140,26 +183,62 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
                 nbItems++;
             }
 
-            // Nom du client
-            Panel colNbItem = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNbItem_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colNbItem, nomEntreprise + "_nbItems_" + idItem, "Nombres d'items<br>"+ nbItems, "nomClient prix_item");
+            // Nombre items
+            Panel colNbItem = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNbItem_" + idItem, "col-sm-1 text-center");
+            LibrairieControlesDynamique.lblDYN(colNbItem, nomEntreprise + "_nbItems_" + idItem, "Nombres d'items<br>" + nbItems, "nomClient prix_item");
 
             // Total avant taxes
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix2_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Total avant taxes<br>$" + prix.ToString("N"), "prix_item");
+            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Total (sans taxes)<br>$" + prix.ToString("N"), "prix_item");
 
             //   LibrairieControlesDynamique.hrDYN(panelBody);
         }
 
-       
+
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
+       
     }
 
-
+    private void btnFactures(object sender, EventArgs e)
+    {
+        HtmlButton btn = (HtmlButton)sender;
+        string fileName = btn.ID.Replace("btnFacture2", "");
+        if (File.Exists(Server.MapPath("~/static/pdf/" + fileName + ".pdf")))
+        {
+            string url = "../static/pdf/" + fileName + ".pdf";
+            System.Diagnostics.Debug.WriteLine(" VOICI LE NOM DU FICHIER " + "../static/pdf/" + fileName + ".pdf");
+            Response.Write("<script>window.open ('" + url + "','_blank');</script>");
+        }
+    }
 
     private void btnLivre(object sender, EventArgs e)
     {
-        
+        HtmlButton btn = (HtmlButton)sender;
+        long idCommande = long.Parse(btn.ID.Replace("btnLivre", "").ToString());
+        PPCommandes commandeLivre = dbContext.PPCommandes.Where(c => c.NoCommande == idCommande).First();
+        commandeLivre.Statut = "1";
+        try
+        {
+            dbContext.SaveChanges();
+            creerPage();
+        }
+        catch(Exception ex)
+        {
+
+        }
+       
+    }
+
+    private void btnFacture(object sender, EventArgs e)
+    {
+        HtmlButton btn = (HtmlButton)sender;
+        string fileName = btn.ID.Replace("btnFactures", "");
+        if (File.Exists(Server.MapPath("~/static/pdf/" + fileName + ".pdf")))
+        {
+            string url = "../static/pdf/" + fileName + ".pdf";
+            System.Diagnostics.Debug.WriteLine(" VOICI LE NOM DU FICHIER " + "../static/pdf/" + fileName + ".pdf");
+            Response.Write("<script>window.open ('" + url + "','_blank');</script>");
+        }
     }
 
     protected void link_ProduitDetail(object sender, EventArgs e)
