@@ -38,6 +38,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         lbPanier.Visible = true;
         lbInscriptionVendeur.Visible = true;
         lbInfosPersos.Visible = true;
+        lbRechercheDetaillee.Visible = true;
     }
 
     public void affichageVendeur()
@@ -119,6 +120,12 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void supprimerProduit_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/SuppressionProduit.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void rechercheDetaillee_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/searchClient.aspx?";
         Response.Redirect(url, true);
     }
 

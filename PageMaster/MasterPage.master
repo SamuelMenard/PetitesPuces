@@ -57,6 +57,8 @@
                     <span class="glyphicon glyphicon-cog nav-color"></span> Ajout produit</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbSupprimerProduit" CssClass="nav-color" runat="server" OnClick="supprimerProduit_click" Visible="false">
                     <span class="glyphicon glyphicon-cog nav-color"></span> Supprimer produit</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbRechercheDetaillee" CssClass="nav-color" runat="server" OnClick="rechercheDetaillee_click" Visible="false">
+                    <span class="glyphicon glyphicon-search nav-color"></span> Recherche détaillée</asp:LinkButton></li>
             </ul>
             </div>
         </nav>
