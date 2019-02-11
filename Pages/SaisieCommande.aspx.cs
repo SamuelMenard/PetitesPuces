@@ -13,6 +13,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     private long idEntreprise;
     private long numCommande;
     private String etape;
+    private short typeLivraison;
+    private int erreur;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -21,11 +23,16 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // Aller chercher les valeurs en GET
         getIdEntreprise();
         getEtapeCommande();
+        getTypeLiv();
+        getErreur();
 
         switch (etape)
         {
             case "panier": afficherPanier(); break;
-            case "livraison": afficherInfosPerso(); break;
+            case "perso": afficherInfosPerso(); break;
+            case "livraison": afficherLivraison(); break;
+            case "paiement": afficherPaiement(); break;
+            case "confirmation": afficherReponseLESi(); break;
             case "bon": afficherBon(); getNumCommande(); break;
         }
 
@@ -76,7 +83,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
                 decimal? prixAvecQuantites = article.PPProduits.PrixDemande * article.NbItems;
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
-                decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
+                decimal? montantRabais = (article.PPProduits.PrixDemande - article.PPProduits.PrixVente) * quantiteSelectionne;
 
                 if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
 
@@ -97,7 +104,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
-                LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item");
+                LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item deux-lignes");
                 LibrairieControlesDynamique.brDYN(colNom);
                 LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
 
@@ -273,7 +280,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
             // Nom de l'entreprise
             Panel panelHeader = LibrairieControlesDynamique.divDYN(panelBase, "", "panel-heading");
-            Label lblVendeur = LibrairieControlesDynamique.lblDYN(panelHeader, "", nomEntreprise + " (" + nomVendeur + ")", "nom-entreprise");
+            Label lblVendeur = LibrairieControlesDynamique.lblDYN(panelHeader, "lblNomEntreprise", nomEntreprise, "nom-entreprise");
 
             // Liste des items + le total
             Panel panelBody = LibrairieControlesDynamique.divDYN(panelBase, "", "panel-body");
@@ -309,7 +316,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-4");
-                LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item");
+                LibrairieControlesDynamique.lblDYN(colNom, "", nomProduit, "nom-item deux-lignes");
                 LibrairieControlesDynamique.brDYN(colNom);
                 LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
 
@@ -404,17 +411,11 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // ajuster la bar de progression
         progressBar.Style.Add("width", "50%");
 
-        // masquer div livraison
-        divLiv.Visible = false;
-
         // remplir les infos
         if (!Page.IsPostBack)
         {
             remplirTbInfosClient();
         }
-
-        // masquer la div de paiement
-        div_paiement.Visible = false;
 
         // rendre visible la division
         divInfosPerso.Visible = true;
@@ -423,17 +424,12 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherLivraison()
     {
+
         // afficher resumé panier
         btnPaiementSecurise.Visible = afficherResumePanier();
 
         // ajuster la bar de progression
         progressBar.Style.Add("width", "75%");
-
-        // masquer div paiement
-        div_paiement.Visible = false;
-
-        // masquer div infos perso
-        divInfosPerso.Visible = false;
 
         // poids total
         Decimal poidsTotal = LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
@@ -478,14 +474,23 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherPaiement()
     {
+        // afficher si erreur != -1
+        if (this.erreur != -1)
+        {
+            String message = "";
+
+            if (this.erreur == 0) { message = "Transaction annulée par l'utilisateur"; }
+            else if (this.erreur == 1) { message = "Transaction refusée : Date d'expiration dépassée"; }
+            else if (this.erreur == 2) { message = "Transaction refusée : Limite de crédit atteinte"; }
+            else if (this.erreur == 3) { message = "Transaction refusée : Carte refusée (tout autre motif)"; }
+            else if (this.erreur == 9999) { message = "ERREUR DE VALIDATION"; }
+
+            LESi_echoue.Visible = true;
+            corpsMessageErreur.Text = message;
+        }
+
         // ajuster la bar de progression
         progressBar.Style.Add("width", "100%");
-
-        // masquer la div d'infos perso
-        divInfosPerso.Visible = false;
-
-        // masquer la div de livraison
-        divLiv.Visible = false;
 
         // poids total
         Decimal poidsTotal = LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
@@ -526,7 +531,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         lblTotalPaiement.Text = "$" + (sousTotal + TPS + TVQ + prixLivraisonStandard).ToString();
 
         // afficher resume paiement
-        btnLESi.Visible = afficherResumePanier();
+        //btnLESi.Visible = afficherResumePanier();
+        afficherResumePanier();
 
         // afficher la div
         div_paiement.Visible = true;
@@ -534,25 +540,53 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherReponseLESi()
     {
-        Boolean reussi = true;
+        // get le no autorisation
+        int noAutorisation = 0;
+
+        int n;
+        if (Request.Form["NoAutorisation"] == null || !int.TryParse(Request.Form["NoAutorisation"], out n))
+        {
+            noAutorisation = 3;
+        }
+        else { noAutorisation = n; }
+
+        // get date autorisation
+        string date = "";
+
+        if (Request.Form["DateAutorisation"] == null)
+        {
+            date = DateTime.Now.ToString();
+        }
+        else { date = Request.Form["DateAutorisation"]; }
+
+        // get le no autorisation
+        Decimal frais = 0;
+
+        Decimal nd;
+        if (Request.Form["FraisMarchand"] == null || !Decimal.TryParse(Request.Form["FraisMarchand"], out nd))
+        {
+            frais = 3;
+        }
+        else { frais = nd; }
+
 
         // rendre visible la bonne div
-        if (reussi)
+        if (noAutorisation >= 1000 && noAutorisation <= 5000 && noAutorisation != 1234)
         {
             // rajouter les infos de la commande dans la base de données
-            long noCommande = creerCommande();
+            long noCommande = creerCommande(date, frais);
 
             String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon&Commande=" + noCommande;
             Response.Redirect(url, true);
         }
         else
         {
-            LESi_echoue.Visible = true;
-            afficherPaiement();
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + this.typeLivraison + "&Erreur=" + noAutorisation;
+            Response.Redirect(url, true);
         }
     }
 
-    public long creerCommande()
+    public long creerCommande(String date, Decimal fraisLESI)
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableCommandes = dataContext.PPCommandes;
@@ -580,23 +614,11 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         Decimal TVQPourcentage = (Decimal)LibrairieLINQ.getPourcentageTaxes("TVQ", this.idEntreprise) / 100;
         Decimal TPS = Math.Round((sousTotal + prixLivraison) * TPSPourcentage, 2);
         Decimal TVQ = Math.Round((sousTotal + prixLivraison) * TVQPourcentage, 2);
-        
+
 
         // code type livraison
-        short noTypeLivraison = 1;
-
-        if (rbRegulier.Checked == true)
-        {
-            noTypeLivraison = 1;
-        }
-        else if (rbPrioritaire.Checked == true)
-        {
-            noTypeLivraison = 2;
-        }
-        else if (rbCompagnie.Checked == true)
-        {
-            noTypeLivraison = 3;
-        }
+        short noTypeLivraison = this.typeLivraison;
+        
 
 
         // calculer un id de commande unique
@@ -681,9 +703,9 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                     NoVendeur = this.idEntreprise,
                     NoClient = long.Parse(Session["NoClient"].ToString()),
                     NoCommande = biggestCommandeID,
-                    DateVente = DateTime.Now,
+                    DateVente = Convert.ToDateTime(date),
                     NoAutorisation = biggestNoAutorisation.ToString(),
-                    FraisLesi = 10,
+                    FraisLesi = fraisLESI,
                     Redevance = redevanceArgent,
                     FraisLivraison = prixLivraison,
                     FraisTPS = TPS,
@@ -698,7 +720,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                                             where ap.NoClient == noClient && ap.NoVendeur == idEntreprise
                                             select ap;
 
-                foreach(var article in tousLesArticlesClient)
+                foreach (var article in tousLesArticlesClient)
                 {
                     dataContext.PPArticlesEnPanier.Remove(article);
                 }
@@ -722,11 +744,10 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 creerCommandePDF(fluxHTML, urlPDF);
                 return biggestCommandeID;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-              dbTransaction.Rollback();
+                dbTransaction.Rollback();
             }
-
         }
         return -1;
     }
@@ -940,25 +961,29 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         // code type livraison
         int noTypeLivraison = 1;
-
         if (rbRegulier.Checked == true)
         {
-            noTypeLivraison = 1;
+            noTypeLivraison = 401;
         }
         else if (rbPrioritaire.Checked == true)
         {
-            noTypeLivraison = 2;
+            noTypeLivraison = 402;
         }
         else if (rbCompagnie.Checked == true)
         {
-            noTypeLivraison = 3;
+            noTypeLivraison = 403;
+        }
+
+        if ((this.etape == "paiement" || this.etape == "confirmation") && this.typeLivraison != -1)
+        {
+            noTypeLivraison = this.typeLivraison;
         }
 
         Decimal sousTotal = LibrairieLINQ.getSousTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
         Decimal prixLivraison = LibrairieLINQ.getPrixLivraison(codePoids, noTypeLivraison, noVendeur);
         Decimal prixLivraisonGratuite = LibrairieLINQ.prixPourLivraisonGratuite(this.idEntreprise);
 
-        if (noTypeLivraison == 1 && sousTotal > prixLivraisonGratuite)
+        if (noTypeLivraison == 401 && sousTotal > prixLivraisonGratuite)
         {
             prixLivraison = 0;
         }
@@ -1002,7 +1027,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         if (!depassePoids && !rupture)
         {
-            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=perso";
             Response.Redirect(url, true);
         }
     }
@@ -1103,7 +1128,6 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         // si valide = continuer
         if (valide){
-            afficherLivraison();
             BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
 
             using (var dbTransaction = dataContext.Database.BeginTransaction())
@@ -1134,8 +1158,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 }
                 
             }
-            
-            
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
+            Response.Redirect(url, true);
         }
 
     }
@@ -1149,15 +1173,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void retourInfosPerso_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Retour");
-        afficherInfosPerso();
+        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=perso";
+        Response.Redirect(url, true);
     }
 
     public void retourLivraison_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Retour");
-        LESi_echoue.Visible = false;
-        afficherLivraison();
+        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison" + "&TypeLivraison=" + this.typeLivraison;
+        Response.Redirect(url, true);
     }
 
     public void paiementLESi_click(Object sender, EventArgs e)
@@ -1184,11 +1207,17 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         if (!depassePoids && !rupture)
         {
-            afficherPaiement();
+            int typeLiv = 401;
+            if (rbRegulier.Checked) { typeLiv = 401; }
+            else if (rbPrioritaire.Checked) { typeLiv = 402; }
+            else if (rbCompagnie.Checked) { typeLiv = 403; }
+            //afficherPaiement();
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + typeLiv;
+            Response.Redirect(url, true);
         }
         else
         {
-            afficherLivraison();
+            //afficherLivraison();
         }
     }
 
@@ -1211,7 +1240,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         // calculer le prix de la livraison
         Decimal poidsTotal = LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
 
-        Decimal prixLivraison = getPrixLivraisonSelonPoids(poidsTotal, this.idEntreprise);
+        Decimal prixLivraison = Decimal.Round(getPrixLivraisonSelonPoids(poidsTotal, this.idEntreprise), 2);
 
         if (prixLivraison == 0)
         {
@@ -1221,8 +1250,6 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         {
             fraisTransport.Text = "$" + prixLivraison.ToString();
         }
-
-        afficherLivraison();
     }
 
     private void getIdEntreprise()
@@ -1263,6 +1290,33 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             this.numCommande = n;
         }
     }
+
+    private void getTypeLiv()
+    {
+        short n;
+        if (Request.QueryString["TypeLivraison"] == null || !short.TryParse(Request.QueryString["TypeLivraison"], out n))
+        {
+            this.typeLivraison = -1;
+        }
+        else
+        {
+            this.typeLivraison = n;
+        }
+    }
+
+    private void getErreur()
+    {
+        int n;
+        if (Request.QueryString["Erreur"] == null || !int.TryParse(Request.QueryString["Erreur"], out n))
+        {
+            this.erreur = -1;
+        }
+        else
+        {
+            this.erreur = n;
+        }
+    }
+
 
     public void nomEntreprisePanier_click(Object sender, EventArgs e)
     {

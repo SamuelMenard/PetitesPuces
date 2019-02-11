@@ -34,6 +34,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageClient()
     {
         lbDeconnexion.Visible = true;
+        lbChangerMotPasse.Visible = true;
         lbPanier.Visible = true;
         lbInscriptionVendeur.Visible = true;
         lbInfosPersos.Visible = true;
@@ -42,6 +43,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageVendeur()
     {
         lbDeconnexion.Visible = true;
+        lbChangerMotPasse.Visible = true;
         lbGererCommandes.Visible = true;
         lbPaniersInactifs.Visible = true;
         lbAjoutProduit.Visible = true;
@@ -51,12 +53,6 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageGestionnaire()
     {
         lbDeconnexion.Visible = true;
-    }
-
-    public void inscription_click(Object sender, EventArgs e)
-    {
-        String url = "~/Pages/Connexion.aspx?";
-        Response.Redirect(url, true);
     }
 
     public void connexion_click(Object sender, EventArgs e)
@@ -72,9 +68,21 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         Response.Redirect(url, true);
     }
 
+    public void changerMotPasse_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/ModificationMotDePasse.aspx?";
+        Response.Redirect(url, true);
+    }
+
     public void panier_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/GestionPanierCommande.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void inscriptionClient_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/InscriptionClient.aspx?";
         Response.Redirect(url, true);
     }
 

@@ -309,6 +309,9 @@ public static class LibrairieLINQ
         var tablePoidsLivraison = dataContext.PPPoidsLivraisons;
         var tableVendeur = dataContext.PPVendeurs;
 
+        System.Diagnostics.Debug.WriteLine("Code poids: " + codePoids);
+        System.Diagnostics.Debug.WriteLine("Code livraison: " + codeLivraison);
+
         Decimal? prixTheorique = (from pl in tablePoidsLivraison
                                  where pl.CodePoids == codePoids && pl.CodeLivraison == codeLivraison
                                  select pl).First().Tarif;
@@ -716,6 +719,15 @@ public static class LibrairieLINQ
         var toutHisto = from histo in tableHisto where histo.NoVendeur == noVendeur select histo;
         if (toutHisto.Count() != 0) { lstHisto = toutHisto.ToList(); }
         return lstHisto;
+    }
+
+    // get les nouveaux produits
+    public static List<PPProduits> getNouveauxProduits()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableProduits = dataContext.PPProduits;
+        var lst = (from produit in tableProduits orderby produit.DateCreation descending select produit).Take(15);
+        return lst.ToList();
     }
 
 

@@ -6,13 +6,19 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">
     <!-- Contenu de la page -->
-    <div class="alert alert-warning">
-      <strong>Attention!</strong> Vous devez vous connecter afin d'accéder à l'entièreté du catalogue.
-    </div>
+    <div class="container">
+        <div class="jumbotron">
+                <h1>Nouveaux produits</h1> 
+                <p>Voici la liste des 15 nouveaux produits. Connectez-vous pour avoir accès à l'ensemble des produits !</p> 
+        </div>
+
+        <asp:Button ID="btnRetourPanier" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retour_click" />
+
+        <br />
+        <br />
 
     <asp:PlaceHolder id="phDynamique" runat="server" />
 
-    <br />
-    <br />
-    <asp:Button ID="btnRetourPanier" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retour_click" />
+    </div>
+    
 </asp:Content>

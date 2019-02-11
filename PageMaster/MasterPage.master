@@ -30,19 +30,25 @@
                 <asp:LinkButton ID="lbAccueil" CssClass="navbar-brand nav-color" runat="server" OnClick="accueil_click">Les Petites Puces</asp:LinkButton>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li><asp:LinkButton ID="lbInscription" CssClass="nav-color" runat="server" OnClick="inscription_click" Visible="false">
-                    <span class="glyphicon glyphicon-user nav-color"></span> S'inscrire</asp:LinkButton></li>
+                <li class="dropdown">
+                    <asp:LinkButton ID="lbInscription" runat="server" CssClass="nav-color" Visible="false" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user nav-color"></span> S'inscrire</asp:LinkButton>
+                    <ul class="dropdown-menu">
+                        <li><asp:LinkButton runat="server" OnClick="inscriptionClient_click">S'inscrire comme client</asp:LinkButton></li>
+                        <li><asp:LinkButton runat="server" OnClick="inscriptionVendeur_click">S'inscrire comme vendeur</asp:LinkButton></li>
+                    </ul>
+                </li>
                 <li><asp:LinkButton ID="lbConnexion" CssClass="nav-color" runat="server" OnClick="connexion_click" Visible="false">
                     <span class="glyphicon glyphicon-log-in nav-color"></span> Se connecter</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbDeconnexion" CssClass="nav-color" runat="server" OnClick="deconnexion_click" Visible="false">
                     <span class="glyphicon glyphicon-log-out nav-color"></span> Se déconnecter</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbChangerMotPasse" CssClass="nav-color" runat="server" OnClick="changerMotPasse_click" Visible="false">
+                    <span class="glyphicon glyphicon-edit nav-color"></span> Changer mon mot de passe</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbPanier" CssClass="nav-color" runat="server" OnClick="panier_click" Visible="false">
                     <span class="glyphicon glyphicon-shopping-cart nav-color"></span> Panier</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbInscriptionVendeur" CssClass="nav-color" runat="server" OnClick="inscriptionVendeur_click" Visible="false">
                     <span class="glyphicon glyphicon-briefcase nav-color"></span> Devenir vendeur</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbInfosPersos" CssClass="nav-color" runat="server" OnClick="infosPersos_click" Visible="false">
                     <span class="glyphicon glyphicon-cog nav-color"></span> Gérer mon profil</asp:LinkButton></li>
-
                 <li><asp:LinkButton ID="lbGererCommandes" CssClass="nav-color" runat="server" OnClick="gererCommandes_click" Visible="false">
                     <span class="glyphicon glyphicon-cog nav-color"></span> Gérer commandes</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbPaniersInactifs" CssClass="nav-color" runat="server" OnClick="paniersInactifs_click" Visible="false">

@@ -3,8 +3,18 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="head" Runat="Server">
     <!-- Pour ajouter des imports dans le head -->
     <link rel="stylesheet" href="../static/style/panier.css">
+    <script src="../static/js/paiement.js"></script>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">
+    <!-- Hidden variables -->
+    <asp:HiddenField ID="hNoVendeur" runat="server" />
+    <asp:HiddenField ID="hNomVendeur" runat="server" />
+    <asp:HiddenField ID="hNoCarteCredit" runat="server" />
+    <asp:HiddenField ID="hDateExpirationCarteCredit" runat="server" />
+    <asp:HiddenField ID="hNoSecuriteCarteCredit" runat="server" />
+    <asp:HiddenField ID="hNoCommande" runat="server" />
+
+
     <!-- Contenu de la page -->
     <div class="container">
      <div id="panier">
@@ -347,22 +357,31 @@
     </asp:Panel>
 
     <asp:Panel ID="LESi_echoue" CssClass="alert alert-danger" Visible="false" runat="server">
-        <strong>Échoué...</strong> Votre carte de crédit a été refusée.
+        <asp:Label ID="corpsMessageErreur" runat="server"></asp:Label>
     </asp:Panel>
 
     <asp:Panel ID="div_paiement" Visible="false" runat="server" CssClass="row">
 
             <div class="col-md-6 mb-3">
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-credit-card"></i></span>
-                            <asp:TextBox ID="noCarte" CssClass="form-control" placeholder="000-000-000" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="noCarte" CssClass="form-control" placeholder="0000000000000000 (16 chiffres)" runat="server"></asp:TextBox>
                         </div>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <div class="input-group">
-                            <asp:TextBox ID="tbCSV" CssClass="form-control" placeholder="000" runat="server"></asp:TextBox>
+                            <span class="input-group-addon">CVV</span>
+                            <asp:TextBox ID="tbCVV" CssClass="form-control" placeholder="000 à 9999" runat="server"></asp:TextBox>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            <asp:TextBox ID="tbDate" CssClass="form-control" placeholder="MM-AAAA" runat="server"></asp:TextBox>
                         </div>
                     </div>
                 </div>
@@ -437,12 +456,10 @@
                     <asp:Button ID="btnRetourLivraison" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourLivraison_click" />
                 </div>
                 <div class="col-md-2 order-md-1">
-                    <asp:LinkButton ID="btnLESi" 
-                                runat="server" 
-                                CssClass="btn btn-warning"    
-                                OnClick="paiementLESi_click">
+                    <asp:Button ID="test" CssClass="btn btn-warning" Text="Retour" runat="server"/>
+                    <button id="btnLESi" class="btn btn-warning" onclick="return lesiForm();">
                         Payer&nbsp;&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-credit-card"></span>
-                    </asp:LinkButton>
+                    </button>
                 </div>
             </div>
     </asp:Panel>
