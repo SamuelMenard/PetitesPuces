@@ -1,30 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class Pages_SaisieModificationProfil : System.Web.UI.Page
 {
+    private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
     protected void Page_Load(object sender, EventArgs e)
     {
-        creationFormulaire(sender,e);
+       if(Session["NoClient"] != null)
+        {
+            creationFormulaire();
+        }
     }
 
-    protected void creationFormulaire(object sender, EventArgs e)
+    protected void creationFormulaire()
     {
-        /*Panel panelBase = LibrairieControlesDynamique.divDYN(phDynamique, "", "container-fluid");
-        Panel panelrow = LibrairieControlesDynamique.divDYN(panelBase, "", "row");
-        Panel panelwell = LibrairieControlesDynamique.divDYN(panelrow, "", "well center-block");
-        Panel panelWellHeader = LibrairieControlesDynamique.divDYN(panelwell, "", "well-header text-center");
-        LibrairieControlesDynamique.lblDYN(panelWellHeader, "lblEnregistrer", "Enregistrer-vous ici!", "text-center text-success");
-        LibrairieControlesDynamique.hrDYN(panelWellHeader);
-        Panel panelrow2 = LibrairieControlesDynamique.divDYN(panelBase, "", "row");
-        Panel panelCol = LibrairieControlesDynamique.divDYN(panelBase, "", "col-md-12 col-sm-12 col-xs-12");
-        Panel panelGroup = LibrairieControlesDynamique.divDYN(panelBase, "", "form-group");
-        */
-
-
+        long idClient = long.Parse(Session["NoClient"].ToString());
+        PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
+        txtNom.Text = leClient.Nom;
+        txtPrenom.Text = leClient.Prenom;
+        txtEmail.Text = leClient.AdresseEmail;
+        txtRue.Text = leClient.Rue;
+        txtPays.Text = leClient.Pays;
+        txtCodePostal.Text = leClient.CodePostal;
+        txtCellulaire.Text = leClient.Tel1;
+        txtTelephone.Text = leClient.Tel2;
+        txtVille.Text = leClient.Ville;
+        province.SelectedValue = leClient.Province;
     }
 }
 

@@ -172,7 +172,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
                     LibrairieControlesDynamique.lblDYN(colPrix, "lblRabais" + idItem, (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
 
                     // Quantité restant
-                    colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-2 text-center");
+                    colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-2 text-left");
 
                     TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem, (produitCat.NombreItems < 1) ? "0" : "1"
                     , (produitCat.NombreItems < 1) ? "0" : produitCat.NombreItems.ToString(), "form-control border-quantite");

@@ -21,7 +21,8 @@
 								<asp:Panel runat="server"  CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-user"></i>
 								</asp:Panel>
-								<input type = "text" placeholder="Prénom" name="txtfname" class="form-control">
+                                <asp:TextBox runat="server"  placeholder="Prénom" ID="txtPrenom" CssClass="form-control" ></asp:TextBox>
+								
 								
 							</asp:Panel>
 						</asp:Panel>
@@ -35,7 +36,20 @@
 								<asp:Panel runat="server"  CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-user"></i>
 								</asp:Panel>
-								<input type = "text" placeholder="Nom" name="txtlname" class="form-control">
+                                <asp:TextBox runat="server"  placeholder="Nom" ID="txtNom" CssClass="form-control" ></asp:TextBox>								
+							</asp:Panel>
+						</asp:Panel>
+					</asp:Panel>
+				</asp:Panel>
+
+                   <asp:Panel runat="server" CssClass="row">
+					<asp:Panel runat="server" CssClass="col-md-12 col-xs-12 col-sm-12">
+						<asp:Panel runat="server" CssClass="form-group">
+							<asp:Panel runat="server" CssClass="input-group">
+								<asp:Panel runat="server" CssClass="input-group-addon">
+									<i class="glyphicon glyphicon-envelope"></i>
+								</asp:Panel>
+                                <asp:TextBox runat="server" Enabled="false"  placeholder="" ID="txtEmail" CssClass="form-control" ></asp:TextBox>								
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -48,7 +62,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</asp:Panel>
-								<input type = "text" class="form-control" name="txtmail" placeholder="No civique et rue">
+                                <asp:TextBox runat="server"  placeholder="No civique et rue" ID="txtRue" CssClass="form-control" ></asp:TextBox>								
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -60,8 +74,8 @@
 							<asp:Panel runat="server" CssClass="input-group">
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
-								</asp:Panel>
-								<input type = "text" class="form-control" name="txtmail" placeholder="Ville">
+								</asp:Panel>								
+                                <asp:TextBox runat="server"  placeholder="Ville" ID="txtVille" CssClass="form-control" ></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -91,7 +105,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</asp:Panel>
-								<input type="text" class="form-control" name="txtCodePostal" placeholder="Code Postal (A9A 9A9)">
+                                <asp:TextBox runat="server"  placeholder="Code Postal (A9A 9A9)" ID="txtCodePostal" CssClass="form-control" ></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -104,7 +118,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</asp:Panel>
-								<input type="text" class="form-control" name="txtPays" placeholder="Pays">
+                                <asp:TextBox runat="server"  placeholder="Pays" ID="txtPays" CssClass="form-control" ></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -117,7 +131,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-phone-alt"></i>
 								</asp:Panel>
-								<input type = "number" minlength="10" maxlength="12" class="form-control" name="txtmobile" placeholder="Telephone">
+                                <asp:TextBox runat="server"  placeholder="Telephone 999 999-999" ID="txtTelephone" MaxLength="12" minlength="10" CssClass="form-control" ></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -130,7 +144,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-phone"></i>
 								</asp:Panel>
-								<input type = "number" minlength="10" maxlength="12" class="form-control" name="txtmobile" placeholder="Cellulaire">
+                               <asp:TextBox runat="server"  placeholder="Cellulaire 999 999-999" ID="txtCellulaire" MaxLength="12" minlength="10" CssClass="form-control" ></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
