@@ -21,8 +21,7 @@
 								<asp:Panel runat="server"  CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-user"></i>
 								</asp:Panel>
-								<input type = "text" placeholder="Prénom" name="txtfname" class="form-control">
-								
+                                <asp:TextBox ID="tbPrenom" placeholder="Prénom" CssClass="form-control" runat="server"></asp:TextBox> 
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -35,7 +34,7 @@
 								<asp:Panel runat="server"  CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-user"></i>
 								</asp:Panel>
-								<input type = "text" placeholder="Nom" name="txtlname" class="form-control">
+                                <asp:TextBox ID="tbNom" placeholder="Nom" CssClass="form-control" runat="server"></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -48,7 +47,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</asp:Panel>
-								<input type = "text" class="form-control" name="txtmail" placeholder="No civique et rue">
+                                <asp:TextBox ID="tbRue" placeholder="No civique et rue" CssClass="form-control" runat="server"></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -61,7 +60,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</asp:Panel>
-								<input type = "text" class="form-control" name="txtmail" placeholder="Ville">
+                                <asp:TextBox ID="tbVille" placeholder="Ville" CssClass="form-control" runat="server"></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -91,7 +90,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</asp:Panel>
-								<input type="text" class="form-control" name="txtCodePostal" placeholder="Code Postal (A9A 9A9)">
+                                <asp:TextBox ID="tbCodePostal" placeholder="Code Postal (A9A 9A9)" CssClass="form-control" runat="server"></asp:TextBox>
 							</asp:Panel>
 						</asp:Panel>
 					</asp:Panel>
@@ -104,6 +103,7 @@
 								<asp:Panel runat="server" CssClass="input-group-addon">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</asp:Panel>
+                                <asp:TextBox ID="tbCode" placeholder="Code Postal (A9A 9A9)" CssClass="form-control" runat="server"></asp:TextBox>
 								<input type="text" class="form-control" name="txtPays" placeholder="Pays">
 							</asp:Panel>
 						</asp:Panel>
@@ -139,7 +139,7 @@
 
 				<asp:Panel runat="server" CssClass="row widget">
 					<asp:Panel runat="server" CssClass="col-md-12 col-xs-12 col-sm-12">
-						<button class="btn btn-warning btn-block"> Modifier</button>
+						<asp:Button ID="btnModifier" CssClass="btn btn-warning btn-block" runat="server" />
 					</asp:Panel>
 				</asp:Panel>
 			</asp:Panel>
