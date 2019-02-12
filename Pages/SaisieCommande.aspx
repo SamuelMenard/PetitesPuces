@@ -456,7 +456,6 @@
                     <asp:Button ID="btnRetourLivraison" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourLivraison_click" />
                 </div>
                 <div class="col-md-2 order-md-1">
-                    <asp:Button ID="test" CssClass="btn btn-warning" Text="Retour" runat="server"/>
                     <button id="btnLESi" class="btn btn-warning" onclick="return lesiForm();">
                         Payer&nbsp;&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-credit-card"></span>
                     </button>

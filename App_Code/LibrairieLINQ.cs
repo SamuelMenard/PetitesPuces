@@ -617,6 +617,10 @@ public static class LibrairieLINQ
             }
             else
             {
+                foreach(PPArticlesEnPanier ap in produit.PPArticlesEnPanier.ToList())
+                {
+                    dataContext.PPArticlesEnPanier.Remove(ap);
+                }
                 produit.Disponibilité = false;
             }
         }
