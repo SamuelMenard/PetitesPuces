@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -28,34 +29,89 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         {
             chargerListeDeroulante();
             initialiserDate();
-            
-            if (Request.QueryString["NoProduit"] != null)
+
+            if (Request.QueryString["Operation"] != null)
             {
                 long noProduit = long.Parse(Request.QueryString["NoProduit"]);
-                PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
-                ddlCategorie.SelectedValue = produit.NoCategorie.ToString();
-                tbNom.Text = produit.Nom;
-                tbPrixDemande.Text = produit.PrixDemande.ToString()
-                                                        .Remove(produit.PrixDemande.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
-                                                        .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
-                tbDescription.Text = produit.Description;
-                tbNbItems.Text = produit.NombreItems.ToString();
-                tbPrixVente.Text = produit.PrixVente.ToString()
-                                                    .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
-                                                    .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
-                tbDateVente.Text = produit.DateVente.Value.ToShortDateString();
-                tbPoids.Text = produit.Poids.ToString().Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
-                if (!(bool)produit.Disponibilité)
+                long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+                if (dbContext.PPProduits.Where(p => p.NoProduit == noProduit && p.NoVendeur == noVendeur).Any())
                 {
-                    btnOui.CssClass = "btn Orange notActive";
-                    btnNon.CssClass = "btn Orange active";
+                    PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
+                    ddlCategorie.SelectedValue = produit.NoCategorie.ToString();
+                    tbNom.Text = produit.Nom;
+                    tbPrixDemande.Text = produit.PrixDemande.ToString()
+                                                            .Remove(produit.PrixDemande.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
+                                                            .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+                    tbDescription.Text = produit.Description;
+                    tbNbItems.Text = produit.NombreItems.ToString();
+                    tbPrixVente.Text = produit.PrixVente.ToString()
+                                                        .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
+                                                        .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+                    tbDateVente.Text = produit.DateVente.Value.ToShortDateString();
+                    tbPoids.Text = produit.Poids.ToString().Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+                    if (!(bool)produit.Disponibilité)
+                    {
+                        btnOui.CssClass = "btn Orange notActive";
+                        btnNon.CssClass = "btn Orange active";
+                    }
+                    rbDisponibilite.Value = (bool)produit.Disponibilité ? "O" : "N";
+                    imgTeleverse.ImageUrl = "~/static/images/" + produit.Photo;
+
+                    if (Request.QueryString["Operation"] == "Afficher" || Request.QueryString["Operation"] == "Supprimer")
+                    {
+                        ddlCategorie.Enabled = false;
+                        errCategorie.Visible = false;
+                        tbNom.Enabled = false;
+                        errNom.Visible = false;
+                        tbPrixDemande.Enabled = false;
+                        errPrixDemande.Visible = false;
+                        tbDescription.Enabled = false;
+                        errDescription.Visible = false;
+                        fImage.Visible = false;
+                        errImage.Visible = false;
+                        btnSelectionnerImage.Visible = false;
+                        btnTeleverserImage.Visible = false;
+                        tbNbItems.Enabled = false;
+                        errNbItems.Visible = false;
+                        tbPrixVente.Enabled = false;
+                        errPrixVente.Visible = false;
+                        tbDateVente.Enabled = false;
+                        errDateVente.Visible = false;
+                        tbPoids.Enabled = false;
+                        errPoids.Visible = false;
+                    }
+
+                    if (Request.QueryString["Operation"] == "Afficher")
+                        btnRetour.Visible = true;
+                    else if (Request.QueryString["Operation"] == "Modifier")
+                        btnModifier.Visible = true;
+                    else if (Request.QueryString["Operation"] == "Supprimer")
+                    {
+                        if (dbContext.PPArticlesEnPanier.Where(a => a.NoProduit == noProduit).Count() > 0)
+                            btnSupprimer.OnClientClick = "if (!confirm('Ce produit a été déposé dans un panier. Voulez-vous vraiment le supprimer?')) { return false; }";
+                        else
+                            btnSupprimer.OnClientClick = "if (!confirm('Voulez-vous vraiment supprimer ce produit?')) { return false; }";
+                        btnSupprimer.Visible = true;
+                    }
                 }
-                rbDisponibilite.Value = (bool)produit.Disponibilité ? "O" : "N";
-                imgTeleverse.ImageUrl = "~/static/images/" + produit.Photo;
-                btnModifier.Visible = true;
+                else
+                    Response.Redirect("~/Pages/SuppressionProduit.aspx?");
             }
             else
                 btnInscription.Visible = true;
+        }
+        if (Request.QueryString["Operation"] == null || (Request.QueryString["Operation"] != null && Request.QueryString["Operation"] == "Modifier"))
+        {
+            ClientScript.RegisterStartupScript(GetType(), "toggleRbDisponibilite",
+                "<script>" +
+                "   $('#radioBtn a').on('click', function () {" +
+                "      var sel = $(this).data('title');" +
+                "      var tog = $(this).data('toggle');" +
+                "      $('#contentBody_' + tog).prop('value', sel);" +
+                "      $('a[data-toggle=\"' + tog + '\"]').not('[data-title=\"' + sel + '\"]').removeClass('active').addClass('notActive');" +
+                "      $('a[data-toggle=\"' + tog + '\"][data-title=\"' + sel + '\"]').removeClass('notActive').addClass('active');" +
+                "   });" +
+                "</script>");
         }
     }
 
@@ -223,162 +279,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         }
     }
 
-    protected void btnInscription_Click(object sender, EventArgs e)
-    {
-        if (validerPage())
-        {
-            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
-            long nbProduit = 0;
-            foreach (PPProduits produit in dbContext.PPProduits.Where(p => p.NoVendeur == noVendeur))
-                if (long.Parse(produit.NoProduit.ToString().Substring(2)) > nbProduit)
-                    nbProduit = long.Parse(produit.NoProduit.ToString().Substring(2));
-
-            PPProduits nouveauProduit = new PPProduits();
-            nouveauProduit.NoProduit = long.Parse(string.Format("{0}{1:D5}", noVendeur, nbProduit + 1));
-            nouveauProduit.NoVendeur = noVendeur;
-            nouveauProduit.NoCategorie = int.Parse(ddlCategorie.SelectedValue);
-            nouveauProduit.Nom = tbNom.Text;
-            nouveauProduit.Description = tbDescription.Text;
-            nouveauProduit.Photo = imgTeleverse.ImageUrl.Substring(imgTeleverse.ImageUrl.LastIndexOf("/")+1);
-            nouveauProduit.PrixDemande = decimal.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
-            nouveauProduit.NombreItems = short.Parse(tbNbItems.Text);
-            nouveauProduit.Disponibilité = rbDisponibilite.Value == "O" ? true : false;
-            nouveauProduit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
-            nouveauProduit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
-            nouveauProduit.Poids = decimal.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
-            nouveauProduit.DateCreation = DateTime.Now;
-
-            dbContext.PPProduits.Add(nouveauProduit);
-
-            bool binOK = true;
-
-            try
-            {
-                dbContext.SaveChanges();
-            }
-            catch (Exception)
-            {
-                binOK = false;
-            }
-
-            if (binOK)
-            {
-                lblMessage.Text = "Le produit a été créé.";
-                divMessage.CssClass = "alert alert-success alert-margins";
-            }
-            else
-            {
-                lblMessage.Text = "Le produit n'a pas pu être créé. Réessayez ultérieurement.";
-                divMessage.CssClass = "alert alert-danger alert-margins";
-            }
-
-            foreach (Control controle in Page.Form.Controls)
-            {
-                if (controle.HasControls())
-                {
-                    foreach (Control controleEnfant in controle.Controls)
-                    {
-                        if (controleEnfant is TextBox)
-                        {
-                            ((TextBox)controleEnfant).Text = "";
-                            ((TextBox)controleEnfant).Enabled = true;
-                        }
-
-                        else if (controleEnfant is DropDownList)
-                        {
-                            ((DropDownList)controleEnfant).ClearSelection();
-                            ((DropDownList)controleEnfant).Enabled = true;
-                        }
-                    }
-                }
-                else
-                {
-                    if (controle is TextBox)
-                    {
-                        ((TextBox)controle).Text = "";
-                        ((TextBox)controle).Enabled = true;
-                    }
-                    else if (controle is DropDownList)
-                    {
-                        ((DropDownList)controle).ClearSelection();
-                        ((DropDownList)controle).Enabled = true;
-                    }
-                }
-            }
-            initialiserDate();
-            btnOui.CssClass = "btn Orange active";
-            btnNon.CssClass = "btn Orange notActive";
-            rbDisponibilite.Value = "O";
-            divMessage.Visible = true;
-        }
-        else
-        {
-            afficherErreurs();
-
-            if (rbDisponibilite.Value != "O")
-            {
-                btnOui.CssClass = "btn Orange notActive";
-                btnNon.CssClass = "btn Orange active";
-            }
-            else
-            {
-                btnOui.CssClass = "btn Orange active";
-                btnNon.CssClass = "btn Orange notActive";
-            }
-        }
-    }
-
-    protected void btnModifier_Click(object sender, EventArgs e)
-    {
-        if (validerPage())
-        {
-            long noProduit = long.Parse(Request.QueryString["NoProduit"]);
-
-            PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
-            produit.NoCategorie = int.Parse(ddlCategorie.SelectedValue);
-            produit.Nom = tbNom.Text;
-            produit.Description = tbDescription.Text;
-            produit.PrixDemande = decimal.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
-            produit.NombreItems = short.Parse(tbNbItems.Text);
-            produit.Disponibilité = rbDisponibilite.Value == "O" ? true : false;
-            produit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
-            produit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
-            produit.Poids = decimal.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
-            produit.DateMAJ = DateTime.Now;
-
-            bool binOK = true;
-
-            try
-            {
-                dbContext.SaveChanges();
-            }
-            catch (Exception)
-            {
-                binOK = false;
-            }
-
-            if (binOK)
-                Response.Redirect("~/Pages/SuppressionProduit.aspx?ResultatModif=OK");
-            else
-                Response.Redirect("~/Pages/SuppressionProduit.aspx?ResultatModif=PasOk");
-        }
-        else
-        {
-            afficherErreurs();
-
-            if (rbDisponibilite.Value != "O")
-            {
-                btnOui.CssClass = "btn Orange notActive";
-                btnNon.CssClass = "btn Orange active";
-            }
-            else
-            {
-                btnOui.CssClass = "btn Orange active";
-                btnNon.CssClass = "btn Orange notActive";
-            }
-        }
-    }
-
     protected void btnTeleverserImage_Click(object sender, EventArgs e)
     {
         if ((fImage.PostedFile.ContentType != "image/jpeg" && fImage.PostedFile.ContentType != "image/png") || fImage.PostedFile.ContentLength >= 31457280)
@@ -485,7 +385,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                     {
                         File.Delete(Server.MapPath("~/static/images/") + produit.NoProduit + "_old" + produit.Photo.Substring(produit.Photo.IndexOf(".")));
                     }
-                    catch {}
+                    catch { }
                 }
                 else
                 {
@@ -504,7 +404,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                         {
                             dbContext.SaveChanges();
                         }
-                        catch {}
+                        catch { }
                     }
                 }
 
@@ -525,6 +425,216 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         {
             btnOui.CssClass = "btn Orange active";
             btnNon.CssClass = "btn Orange notActive";
+        }
+    }
+
+    protected void btnInscription_Click(object sender, EventArgs e)
+    {
+        if (validerPage())
+        {
+            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+            long nbProduit = 0;
+            foreach (PPProduits produit in dbContext.PPProduits.Where(p => p.NoVendeur == noVendeur))
+                if (long.Parse(produit.NoProduit.ToString().Substring(2)) > nbProduit)
+                    nbProduit = long.Parse(produit.NoProduit.ToString().Substring(2));
+
+            PPProduits nouveauProduit = new PPProduits();
+            nouveauProduit.NoProduit = long.Parse(string.Format("{0}{1:D5}", noVendeur, nbProduit + 1));
+            nouveauProduit.NoVendeur = noVendeur;
+            nouveauProduit.NoCategorie = int.Parse(ddlCategorie.SelectedValue);
+            nouveauProduit.Nom = tbNom.Text;
+            nouveauProduit.Description = tbDescription.Text;
+            nouveauProduit.Photo = imgTeleverse.ImageUrl.Substring(imgTeleverse.ImageUrl.LastIndexOf("/")+1);
+            nouveauProduit.PrixDemande = decimal.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            nouveauProduit.NombreItems = short.Parse(tbNbItems.Text);
+            nouveauProduit.Disponibilité = rbDisponibilite.Value == "O" ? true : false;
+            nouveauProduit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
+            nouveauProduit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            nouveauProduit.Poids = decimal.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            nouveauProduit.DateCreation = DateTime.Now;
+
+            dbContext.PPProduits.Add(nouveauProduit);
+
+            bool binOK = true;
+
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                binOK = false;
+            }
+
+            if (binOK)
+            {
+                lblMessage.Text = "Le produit a été créé.";
+                divMessage.CssClass = "alert alert-success alert-margins";
+            }
+            else
+            {
+                lblMessage.Text = "Le produit n'a pas pu être créé. Réessayez ultérieurement.";
+                divMessage.CssClass = "alert alert-danger alert-margins";
+            }
+
+            foreach (Control controle in Page.Form.Controls)
+            {
+                if (controle.HasControls())
+                {
+                    foreach (Control controleEnfant in controle.Controls)
+                    {
+                        if (controleEnfant is TextBox)
+                        {
+                            ((TextBox)controleEnfant).Text = "";
+                            ((TextBox)controleEnfant).Enabled = true;
+                        }
+
+                        else if (controleEnfant is DropDownList)
+                        {
+                            ((DropDownList)controleEnfant).ClearSelection();
+                            ((DropDownList)controleEnfant).Enabled = true;
+                        }
+                    }
+                }
+                else
+                {
+                    if (controle is TextBox)
+                    {
+                        ((TextBox)controle).Text = "";
+                        ((TextBox)controle).Enabled = true;
+                    }
+                    else if (controle is DropDownList)
+                    {
+                        ((DropDownList)controle).ClearSelection();
+                        ((DropDownList)controle).Enabled = true;
+                    }
+                }
+            }
+            initialiserDate();
+            btnOui.CssClass = "btn Orange active";
+            btnNon.CssClass = "btn Orange notActive";
+            rbDisponibilite.Value = "O";
+            divMessage.Visible = true;
+        }
+        else
+        {
+            afficherErreurs();
+
+            if (rbDisponibilite.Value != "O")
+            {
+                btnOui.CssClass = "btn Orange notActive";
+                btnNon.CssClass = "btn Orange active";
+            }
+            else
+            {
+                btnOui.CssClass = "btn Orange active";
+                btnNon.CssClass = "btn Orange notActive";
+            }
+        }
+    }
+
+    protected void btnRetour_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/Pages/SuppressionProduit.aspx?");
+    }
+
+    protected void btnModifier_Click(object sender, EventArgs e)
+    {
+        if (validerPage())
+        {
+            long noProduit = long.Parse(Request.QueryString["NoProduit"]);
+
+            PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
+            produit.NoCategorie = int.Parse(ddlCategorie.SelectedValue);
+            produit.Nom = tbNom.Text;
+            produit.Description = tbDescription.Text;
+            produit.PrixDemande = decimal.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            produit.NombreItems = short.Parse(tbNbItems.Text);
+            produit.Disponibilité = rbDisponibilite.Value == "O" ? true : false;
+            produit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
+            produit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            produit.Poids = decimal.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            produit.DateMAJ = DateTime.Now;
+
+            bool binOK = true;
+
+            try
+            {
+                dbContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                binOK = false;
+            }
+
+            if (binOK)
+                Response.Redirect("~/Pages/SuppressionProduit.aspx?ResultatModif=OK");
+            else
+                Response.Redirect("~/Pages/SuppressionProduit.aspx?ResultatModif=PasOk");
+        }
+        else
+        {
+            afficherErreurs();
+
+            if (rbDisponibilite.Value != "O")
+            {
+                btnOui.CssClass = "btn Orange notActive";
+                btnNon.CssClass = "btn Orange active";
+            }
+            else
+            {
+                btnOui.CssClass = "btn Orange active";
+                btnNon.CssClass = "btn Orange notActive";
+            }
+        }
+    }
+
+    protected void btnSupprimer_Click(object sender, EventArgs e)
+    {
+        List<PPProduits> lesProduitsDelete = new List<PPProduits>();
+        List<PPProduits> lesProduitsNonDispo = new List<PPProduits>();
+        List<PPArticlesEnPanier> lesProduitsEnPaniers = new List<PPArticlesEnPanier>();
+        long noProduit = long.Parse(Request.QueryString["NoProduit"]);
+
+        if (dbContext.PPDetailsCommandes.Where(c => c.NoProduit == noProduit).Count() > 0)
+            lesProduitsNonDispo.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());
+        else
+            lesProduitsDelete.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());
+        lesProduitsEnPaniers.AddRange(dbContext.PPArticlesEnPanier.Where(c => c.NoProduit == noProduit).ToList());
+
+        using (var dbContextTransaction = dbContext.Database.BeginTransaction())
+        {
+            try
+            {
+                if (lesProduitsNonDispo.Count > 0)
+                {
+                    foreach (PPProduits produit in lesProduitsNonDispo)
+                    {
+                        produit.NombreItems = 0;
+                        produit.Disponibilité = false;
+                        dbContext.SaveChanges();
+                    }
+                }
+                if (lesProduitsEnPaniers.Count > 0)
+                {
+                    dbContext.PPArticlesEnPanier.RemoveRange(lesProduitsEnPaniers);
+                    dbContext.SaveChanges();
+                }
+                if (lesProduitsDelete.Count > 0)
+                {
+                    dbContext.PPProduits.RemoveRange(lesProduitsDelete);
+                    dbContext.SaveChanges();
+                }
+                dbContextTransaction.Commit();
+                string url = "~/Pages/SuppressionProduit.aspx?ResultatSuppr=OK";
+                Response.Redirect(url, false);
+            }
+            catch
+            {
+                dbContextTransaction.Rollback();
+                string url = "~/Pages/SuppressionProduit.aspx?ResultatSuppr=PasOk";
+                Response.Redirect(url, false);
+            }
         }
     }
 }

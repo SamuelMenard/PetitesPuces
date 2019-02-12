@@ -34,9 +34,9 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageClient()
     {
         lbDeconnexion.Visible = true;
+        lbInscriptionVendeur.Visible = true;
         lbChangerMotPasse.Visible = true;
         lbPanier.Visible = true;
-        lbInscriptionVendeur.Visible = true;
         lbInfosPersos.Visible = true;
         lbRechercheDetaillee.Visible = true;
     }
@@ -44,6 +44,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageVendeur()
     {
         lbDeconnexion.Visible = true;
+        lbInscriptionClient.Visible = true;
         lbChangerMotPasse.Visible = true;
         lbGererCommandes.Visible = true;
         lbPaniersInactifs.Visible = true;
@@ -69,6 +70,26 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         Response.Redirect(url, true);
     }
 
+    public void inscriptionClient_click(Object sender, EventArgs e)
+    {
+        String url = "";
+        if (((Control)sender).ID == "lbInscriptionClient")
+            url = "~/Pages/InscriptionClientVendeur.aspx?";
+        else
+            url = "~/Pages/InscriptionClient.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void inscriptionVendeur_click(Object sender, EventArgs e)
+    {
+        String url = "";
+        if (((Control)sender).ID == "lbInscriptionVendeur")
+            url = "~/Pages/InscriptionVendeurClient.aspx?";
+        else
+            url = "~/Pages/InscriptionVendeur.aspx?";
+        Response.Redirect(url, true);
+    }
+
     public void changerMotPasse_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/ModificationMotDePasse.aspx?";
@@ -78,18 +99,6 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void panier_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/GestionPanierCommande.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void inscriptionClient_click(Object sender, EventArgs e)
-    {
-        String url = "~/Pages/InscriptionClient.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void inscriptionVendeur_click(Object sender, EventArgs e)
-    {
-        String url = "~/Pages/InscriptionVendeur.aspx?";
         Response.Redirect(url, true);
     }
 

@@ -70,7 +70,7 @@
          <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 200px" ImageUrl="~/static/images/image_placeholder.png" />
          <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
          <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
-         <input id="btnSelectionnerImage" type="button" class="btn btn-block Orange" value="Sélectionner une image" />
+         <input id="btnSelectionnerImage" type="button" class="btn btn-block Orange" value="Sélectionner une image" runat="server" />
          <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
       </div>
    </div>
@@ -112,7 +112,10 @@
       </div>
    </div>
    <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Inscrire le produit" Visible="false" OnClick="btnInscription_Click" />
+   <asp:Button ID="btnRetour" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Retour" Visible="false" OnClick="btnRetour_Click" />
    <asp:Button ID="btnModifier" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le produit" Visible="false" OnClick="btnModifier_Click" />
+   <asp:Button ID="btnSupprimer" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Supprimer le produit" Visible="false" OnClick="btnSupprimer_Click" />
+   
 </div>
 <script type="text/javascript">
    $(document).ready(function () {
@@ -173,7 +176,7 @@
       $("#contentBody_fImage").change(function () {
          $("#contentBody_btnTeleverserImage").click();
       });
-      $("#btnSelectionnerImage").click(function () {
+      $("#contentBody_btnSelectionnerImage").click(function () {
          $("#contentBody_fImage").click();
       });
       $('#contentBody_tbNbItems').focusout(function () {
@@ -230,14 +233,6 @@
             $('#contentBody_tbPoids').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errPoids').text('').addClass('hidden');
          }
-      });
-      $('#radioBtn a').on('click', function () {
-         var sel = $(this).data('title');
-         var tog = $(this).data('toggle');
-         $('#contentBody_' + tog).prop('value', sel);
-
-         $('a[data-toggle=\"' + tog + '\"]').not('[data-title=\"' + sel + '\"]').removeClass('active').addClass('notActive');
-         $('a[data-toggle=\"' + tog + '\"][data-title=\"' + sel + '\"]').removeClass('notActive').addClass('active');
       });
       $('#contentBody_btnInscription,#contentBody_btnModifier').click(function () {
          var binPageValide = true;

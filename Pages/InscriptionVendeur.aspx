@@ -167,9 +167,9 @@
                </div>
                <asp:Label ID="errLivraisonGratuite" runat="server" CssClass="text-danger d-none" />
             </div>
-            <div class="checkbox mb-3">
-               <label>
-                  Exemption taxes <asp:CheckBox ID="cbTaxes" runat="server" />
+            <div class="form-check-inline mb-3">
+               <label class="form-check-label">
+                  <asp:CheckBox ID="cbTaxes" runat="server" CssClass="form-check-input" />Exemption taxes
                </label>
             </div>
             <asp:Button ID="btnEnvoyerDemande" runat="server"  CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" Text="Envoyer la demande d'inscription" OnClick="btnEnvoyerDemande_Click" />  
