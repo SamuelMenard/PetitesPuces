@@ -10,48 +10,69 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
 {
     private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
 
-    protected void ajouterRangee(string strNomTable, bool binVide)
+    protected void ajouterRangee(string strNomTable, int intNbEnregistements)
     {
         TableRow row = LibrairieControlesDynamique.trDYN(tabEtatTables);
         TableCell cell = LibrairieControlesDynamique.tdDYN(row, "", "");
         cell.Text = strNomTable;
         cell = LibrairieControlesDynamique.tdDYN(row, "", "");
-        cell.Text = binVide ? "Vide" : "Contient des données";
+        cell.Text = intNbEnregistements + (intNbEnregistements > 1 ? " enregistrements" : " enregistrement");
     }
 
-    protected void remplirTableau()
+    protected void remplirTableau(bool binImportation)
     {
-        ajouterRangee("PPArticlesEnPanier", !dbContext.PPArticlesEnPanier.Any());
-        ajouterRangee("PPCategories", !dbContext.PPCategories.Any());
-        ajouterRangee("PPClients", !dbContext.PPClients.Any());
-        ajouterRangee("PPCommandes", !dbContext.PPCommandes.Any());
-        ajouterRangee("PPDetailsCommandes", !dbContext.PPDetailsCommandes.Any());
-        ajouterRangee("PPGestionnaires", !dbContext.PPGestionnaires.Any());
-        ajouterRangee("PPHistoriquePaiements", !dbContext.PPHistoriquePaiements.Any());
-        ajouterRangee("PPPoidsLivraisons", !dbContext.PPPoidsLivraisons.Any());
-        ajouterRangee("PPProduits", !dbContext.PPProduits.Any());
-        ajouterRangee("PPTaxeFederale", !dbContext.PPTaxeFederale.Any());
-        ajouterRangee("PPTaxeProvinciale", !dbContext.PPTaxeProvinciale.Any());
-        ajouterRangee("PPTypesLivraison", !dbContext.PPTypesLivraison.Any());
-        ajouterRangee("PPTypesPoids", !dbContext.PPTypesPoids.Any());
-        ajouterRangee("PPVendeurs", !dbContext.PPVendeurs.Any());
-        ajouterRangee("PPVendeursClients", !dbContext.PPVendeursClients.Any());
+        if (binImportation)
+        {
+            ajouterRangee("PPVendeurs", dbContext.PPVendeurs.Count());
+            ajouterRangee("PPClients", dbContext.PPClients.Count());
+            ajouterRangee("PPCategories", dbContext.PPCategories.Count());
+            ajouterRangee("PPProduits", dbContext.PPProduits.Count());
+            ajouterRangee("PPArticlesEnPanier", dbContext.PPArticlesEnPanier.Count());
+            ajouterRangee("PPTypesPoids", dbContext.PPTypesPoids.Count());
+            ajouterRangee("PPTypesLivraison", dbContext.PPTypesLivraison.Count());
+            ajouterRangee("PPPoidsLivraisons", dbContext.PPPoidsLivraisons.Count());
+            ajouterRangee("PPCommandes", dbContext.PPCommandes.Count());
+            ajouterRangee("PPDetailsCommandes", dbContext.PPDetailsCommandes.Count());
+            ajouterRangee("PPVendeursClients", dbContext.PPVendeursClients.Count());
+            ajouterRangee("PPHistoriquePaiements", dbContext.PPHistoriquePaiements.Count());
+            ajouterRangee("PPTaxeProvinciale", dbContext.PPTaxeProvinciale.Count());
+            ajouterRangee("PPTaxeFederale", dbContext.PPTaxeFederale.Count());
+            ajouterRangee("PPGestionnaires", dbContext.PPGestionnaires.Count());
+        }
+        else
+        {
+            ajouterRangee("PPGestionnaires", dbContext.PPGestionnaires.Count());
+            ajouterRangee("PPTaxeFederale", dbContext.PPTaxeFederale.Count());
+            ajouterRangee("PPTaxeProvinciale", dbContext.PPTaxeProvinciale.Count());
+            ajouterRangee("PPHistoriquePaiements", dbContext.PPHistoriquePaiements.Count());
+            ajouterRangee("PPVendeursClients", dbContext.PPVendeursClients.Count());
+            ajouterRangee("PPDetailsCommandes", dbContext.PPDetailsCommandes.Count());
+            ajouterRangee("PPCommandes", dbContext.PPCommandes.Count());
+            ajouterRangee("PPPoidsLivraisons", dbContext.PPPoidsLivraisons.Count());
+            ajouterRangee("PPTypesLivraison", dbContext.PPTypesLivraison.Count());
+            ajouterRangee("PPTypesPoids", dbContext.PPTypesPoids.Count());
+            ajouterRangee("PPArticlesEnPanier", dbContext.PPArticlesEnPanier.Count());
+            ajouterRangee("PPProduits", dbContext.PPProduits.Count());
+            ajouterRangee("PPCategories", dbContext.PPCategories.Count());
+            ajouterRangee("PPClients", dbContext.PPClients.Count());
+            ajouterRangee("PPVendeurs", dbContext.PPVendeurs.Count());
+        }
     }
 
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
-            remplirTableau();
+           remplirTableau(false);
 
             if (!dbContext.PPArticlesEnPanier.Any() && !dbContext.PPCategories.Any() &&
-            !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
-            !dbContext.PPDetailsCommandes.Any() && !dbContext.PPGestionnaires.Any() &&
-            !dbContext.PPHistoriquePaiements.Any() && !dbContext.PPPoidsLivraisons.Any() &&
-            !dbContext.PPProduits.Any() && !dbContext.PPTaxeFederale.Any() &&
-            !dbContext.PPTaxeProvinciale.Any() && !dbContext.PPTypesLivraison.Any() &&
-            !dbContext.PPTypesPoids.Any() && !dbContext.PPVendeurs.Any() &&
-            !dbContext.PPVendeursClients.Any())
+                !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
+                !dbContext.PPDetailsCommandes.Any() && !dbContext.PPGestionnaires.Any() &&
+                !dbContext.PPHistoriquePaiements.Any() && !dbContext.PPPoidsLivraisons.Any() &&
+                !dbContext.PPProduits.Any() && !dbContext.PPTaxeFederale.Any() &&
+                !dbContext.PPTaxeProvinciale.Any() && !dbContext.PPTypesLivraison.Any() &&
+                !dbContext.PPTypesPoids.Any() && !dbContext.PPVendeurs.Any() &&
+                !dbContext.PPVendeursClients.Any())
             {
                 btnImporterDonnees.Visible = true;
             }
@@ -84,7 +105,7 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
 
         lblResultatImportation.Visible = false;
 
-        remplirTableau();
+        remplirTableau(false);
 
         if (!dbContext.PPArticlesEnPanier.Any() && !dbContext.PPCategories.Any() &&
         !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
@@ -402,16 +423,16 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
 
         lblResultatImportation.Visible = true;
 
-        remplirTableau();
+        remplirTableau(true);
 
         if (!dbContext.PPArticlesEnPanier.Any() && !dbContext.PPCategories.Any() &&
-        !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
-        !dbContext.PPDetailsCommandes.Any() && !dbContext.PPGestionnaires.Any() &&
-        !dbContext.PPHistoriquePaiements.Any() && !dbContext.PPPoidsLivraisons.Any() &&
-        !dbContext.PPProduits.Any() && !dbContext.PPTaxeFederale.Any() &&
-        !dbContext.PPTaxeProvinciale.Any() && !dbContext.PPTypesLivraison.Any() &&
-        !dbContext.PPTypesPoids.Any() && !dbContext.PPVendeurs.Any() &&
-        !dbContext.PPVendeursClients.Any())
+            !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
+            !dbContext.PPDetailsCommandes.Any() && !dbContext.PPGestionnaires.Any() &&
+            !dbContext.PPHistoriquePaiements.Any() && !dbContext.PPPoidsLivraisons.Any() &&
+            !dbContext.PPProduits.Any() && !dbContext.PPTaxeFederale.Any() &&
+            !dbContext.PPTaxeProvinciale.Any() && !dbContext.PPTypesLivraison.Any() &&
+            !dbContext.PPTypesPoids.Any() && !dbContext.PPVendeurs.Any() &&
+            !dbContext.PPVendeursClients.Any())
         {
             btnViderBD.Visible = false;
             btnImporterDonnees.Visible = true;
