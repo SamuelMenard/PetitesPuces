@@ -34,8 +34,8 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageClient()
     {
         lbDeconnexion.Visible = true;
-        lbChangerMotPasse.Visible = true;
         lbInscriptionVendeur.Visible = true;
+        lbChangerMotPasse.Visible = true;
         lbPanier.Visible = true;
         lbInfosPersos.Visible = true;
         lbRechercheDetaillee.Visible = true;
@@ -44,8 +44,8 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageVendeur()
     {
         lbDeconnexion.Visible = true;
-        lbChangerMotPasse.Visible = true;
         lbInscriptionClient.Visible = true;
+        lbChangerMotPasse.Visible = true;
         lbGererCommandes.Visible = true;
         lbPaniersInactifs.Visible = true;
         lbAjoutProduit.Visible = true;
@@ -70,18 +70,6 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         Response.Redirect(url, true);
     }
 
-    public void changerMotPasse_click(Object sender, EventArgs e)
-    {
-        String url = "~/Pages/ModificationMotDePasse.aspx?";
-        Response.Redirect(url, true);
-    }
-
-    public void panier_click(Object sender, EventArgs e)
-    {
-        String url = "~/Pages/GestionPanierCommande.aspx?";
-        Response.Redirect(url, true);
-    }
-
     public void inscriptionClient_click(Object sender, EventArgs e)
     {
         String url = "";
@@ -99,6 +87,18 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
             url = "~/Pages/InscriptionVendeurClient.aspx?";
         else
             url = "~/Pages/InscriptionVendeur.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void changerMotPasse_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/ModificationMotDePasse.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void panier_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/GestionPanierCommande.aspx?";
         Response.Redirect(url, true);
     }
 

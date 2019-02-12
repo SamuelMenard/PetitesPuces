@@ -4,13 +4,26 @@ using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Pages_InscriptionVendeur : System.Web.UI.Page
+public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
 {
     private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (!IsPostBack)
+        {
+            long noClient = Convert.ToInt64(Session["NoClient"]);
+            PPClients client = dbContext.PPClients.Where(c => c.NoClient == noClient).Single();
+            tbNom.Text = client.Nom;
+            tbPrenom.Text = client.Prenom;
+            tbAdresse.Text = client.Rue;
+            tbVille.Text = client.Ville;
+            ddlProvince.SelectedValue = client.Province;
+            tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
+            tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
+            if (client.Tel2 != null)
+                tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
+        }
     }
 
     protected void btnEnvoyerDemande_Click(object sender, EventArgs e)
@@ -53,7 +66,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbNomEntreprise.CssClass = "form-control border-success";
                 errNomEntreprise.Text = "";
-                errNomEntreprise.CssClass = "text-danger d-none";
+                errNomEntreprise.CssClass = "text-danger hidden";
             }
             if (tbNom.Text == "" || !exprNomOuPrenom.IsMatch(tbNom.Text))
             {
@@ -68,7 +81,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbNom.CssClass = "form-control border-success";
                 errNom.Text = "";
-                errNom.CssClass = "text-danger d-none";
+                errNom.CssClass = "text-danger hidden";
             }
             if (tbPrenom.Text == "" || !exprNomOuPrenom.IsMatch(tbPrenom.Text))
             {
@@ -83,7 +96,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbPrenom.CssClass = "form-control border-success";
                 errPrenom.Text = "";
-                errPrenom.CssClass = "text-danger d-none";
+                errPrenom.CssClass = "text-danger hidden";
             }
             if (tbAdresse.Text == "" || !exprAdresse.IsMatch(tbAdresse.Text))
             {
@@ -98,7 +111,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbAdresse.CssClass = "form-control border-success";
                 errAdresse.Text = "";
-                errAdresse.CssClass = "text-danger d-none";
+                errAdresse.CssClass = "text-danger hidden";
             }
             if (tbVille.Text == "" || !exprNomOuPrenom.IsMatch(tbVille.Text))
             {
@@ -113,7 +126,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbVille.CssClass = "form-control border-success";
                 errVille.Text = "";
-                errVille.CssClass = "text-danger d-none";
+                errVille.CssClass = "text-danger hidden";
             }
             if (ddlProvince.SelectedValue == "")
             {
@@ -125,7 +138,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 ddlProvince.CssClass = "form-control border-success";
                 errProvince.Text = "";
-                errProvince.CssClass = "text-danger d-none";
+                errProvince.CssClass = "text-danger hidden";
             }
             if (tbCodePostal.Text == "" || !exprCodePostal.IsMatch(tbCodePostal.Text))
             {
@@ -140,7 +153,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbCodePostal.CssClass = "form-control border-success";
                 errCodePostal.Text = "";
-                errCodePostal.CssClass = "text-danger d-none";
+                errCodePostal.CssClass = "text-danger hidden";
             }
             if (tbTelephone1.Text == "" || !exprTelephone.IsMatch(tbTelephone1.Text))
             {
@@ -155,7 +168,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbTelephone1.CssClass = "form-control border-success";
                 errTelephone1.Text = "";
-                errTelephone1.CssClass = "text-danger d-none";
+                errTelephone1.CssClass = "text-danger hidden";
             }
             if (tbTelephone2.Text != "" && !exprTelephone.IsMatch(tbTelephone2.Text))
             {
@@ -167,7 +180,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbTelephone2.CssClass = "form-control border-success";
                 errTelephone2.Text = "";
-                errTelephone2.CssClass = "text-danger d-none";
+                errTelephone2.CssClass = "text-danger hidden";
             }
             if (tbCourriel.Text == "" || !exprCourriel.IsMatch(tbCourriel.Text))
             {
@@ -182,7 +195,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbCourriel.CssClass = "form-control border-success";
                 errCourriel.Text = "";
-                errCourriel.CssClass = "text-danger d-none";
+                errCourriel.CssClass = "text-danger hidden";
             }
             if (tbConfirmationCourriel.Text == "" || !exprCourriel.IsMatch(tbConfirmationCourriel.Text) || tbConfirmationCourriel.Text != tbCourriel.Text)
             {
@@ -199,7 +212,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbConfirmationCourriel.CssClass = "form-control border-success";
                 errConfirmationCourriel.Text = "";
-                errConfirmationCourriel.CssClass = "text-danger d-none";
+                errConfirmationCourriel.CssClass = "text-danger hidden";
             }
             if (tbMotPasse.Text == "" || !exprMotPasse.IsMatch(tbMotPasse.Text))
             {
@@ -214,7 +227,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbMotPasse.CssClass = "form-control border-success";
                 errMotPasse.Text = "";
-                errMotPasse.CssClass = "text-danger d-none";
+                errMotPasse.CssClass = "text-danger hidden";
             }
             if (tbConfirmationMotPasse.Text == "" || tbConfirmationMotPasse.Text != tbMotPasse.Text)
             {
@@ -229,7 +242,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbConfirmationMotPasse.CssClass = "form-control border-success";
                 errConfirmationMotPasse.Text = "";
-                errConfirmationMotPasse.CssClass = "text-danger d-none";
+                errConfirmationMotPasse.CssClass = "text-danger hidden";
             }
             if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 66)
             {
@@ -246,7 +259,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbPoidsMaxLivraison.CssClass = "form-control border-success";
                 errPoidsMaxLivraison.Text = "";
-                errPoidsMaxLivraison.CssClass = "text-danger d-none";
+                errPoidsMaxLivraison.CssClass = "text-danger hidden";
             }
             if (tbLivraisonGratuite.Text == "" || !exprMontant.IsMatch(tbLivraisonGratuite.Text) || double.Parse(tbLivraisonGratuite.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36)
             {
@@ -263,7 +276,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbLivraisonGratuite.CssClass = "form-control border-success";
                 errLivraisonGratuite.Text = "";
-                errLivraisonGratuite.CssClass = "text-danger d-none";
+                errLivraisonGratuite.CssClass = "text-danger hidden";
             }
         }
         else
@@ -327,12 +340,21 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             }
 
             foreach (Control controle in Page.Form.Controls)
-                if (controle is TextBox)
-                    ((TextBox)controle).Text = "";
-                else if (controle is DropDownList)
-                    ((DropDownList)controle).ClearSelection();
-                else if (controle is CheckBox)
-                    ((CheckBox)controle).Checked = false;
+                if (controle.HasControls())
+                    foreach (Control controleEnfant in controle.Controls)
+                        if (controleEnfant is TextBox)
+                            ((TextBox)controleEnfant).Text = "";
+                        else if (controleEnfant is DropDownList)
+                            ((DropDownList)controleEnfant).ClearSelection();
+                        else if (controleEnfant is CheckBox)
+                            ((CheckBox)controleEnfant).Checked = false;
+                else
+                    if (controle is TextBox)
+                        ((TextBox)controle).Text = "";
+                    else if (controle is DropDownList)
+                        ((DropDownList)controle).ClearSelection();
+                    else if (controle is CheckBox)
+                        ((CheckBox)controle).Checked = false;
             divMessage.Visible = true;
         }
     }

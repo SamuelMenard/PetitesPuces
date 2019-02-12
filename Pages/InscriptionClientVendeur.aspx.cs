@@ -1,31 +1,41 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Pages_InscriptionVendeur : System.Web.UI.Page
+public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
 {
     private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (!IsPostBack)
+        {
+            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+            PPVendeurs vendeur = dbContext.PPVendeurs.Where(v => v.NoVendeur == noVendeur).Single();
+            tbNom.Text = vendeur.Nom;
+            tbPrenom.Text = vendeur.Prenom;
+            tbAdresse.Text = vendeur.Rue;
+            tbVille.Text = vendeur.Ville;
+            ddlProvince.SelectedValue = vendeur.Province;
+            tbCodePostal.Text = vendeur.CodePostal.Substring(0, 3) + " " + vendeur.CodePostal.Substring(3, 3);
+            tbTelephone1.Text = "(" + vendeur.Tel1.Substring(0, 3) + ") " + vendeur.Tel1.Substring(3, 3) + "-" + vendeur.Tel1.Substring(6);
+            if (vendeur.Tel2 != null)
+                tbTelephone2.Text = "(" + vendeur.Tel2.Substring(0, 3) + ") " + vendeur.Tel2.Substring(3, 3) + "-" + vendeur.Tel2.Substring(6);
+        }
     }
 
-    protected void btnEnvoyerDemande_Click(object sender, EventArgs e)
+    protected void btnInscription_Click(object sender, EventArgs e)
     {
-        Regex exprNomEntreprise = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
         Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]| \\d/\\d)? [a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])* [a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
         Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z] ?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\) |[0-9]{3}[ -])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
-        Regex exprPoids = new Regex("^\\d+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
-        if (tbNomEntreprise.Text == "" || !exprNomEntreprise.IsMatch(tbNomEntreprise.Text) ||
-            tbNom.Text == "" || !exprNomOuPrenom.IsMatch(tbNom.Text) ||
+        if (tbNom.Text == "" || !exprNomOuPrenom.IsMatch(tbNom.Text) ||
             tbPrenom.Text == "" || !exprNomOuPrenom.IsMatch(tbPrenom.Text) ||
             tbAdresse.Text == "" || !exprAdresse.IsMatch(tbAdresse.Text) ||
             tbVille.Text == "" || !exprNomOuPrenom.IsMatch(tbVille.Text) ||
@@ -36,25 +46,8 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             tbCourriel.Text == "" || !exprCourriel.IsMatch(tbCourriel.Text) ||
             tbConfirmationCourriel.Text == "" || !exprCourriel.IsMatch(tbConfirmationCourriel.Text) || tbConfirmationCourriel.Text != tbCourriel.Text ||
             tbMotPasse.Text == "" || !exprMotPasse.IsMatch(tbMotPasse.Text) ||
-            tbConfirmationMotPasse.Text == "" || tbConfirmationMotPasse.Text != tbMotPasse.Text ||
-            tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 66 ||
-            tbLivraisonGratuite.Text == "" || !exprMontant.IsMatch(tbLivraisonGratuite.Text) || double.Parse(tbLivraisonGratuite.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36)
+            tbConfirmationMotPasse.Text == "" || tbConfirmationMotPasse.Text != tbMotPasse.Text)
         {
-            if (tbNomEntreprise.Text == "" || !exprNomEntreprise.IsMatch(tbNomEntreprise.Text))
-            {
-                tbNomEntreprise.CssClass = "form-control border-danger";
-                if (tbNomEntreprise.Text == "")
-                    errNomEntreprise.Text = "Le nom de l'entreprise ne peut pas être vide";
-                else
-                    errNomEntreprise.Text = "Le nom de l'entreprise n'est pas dans un format valide";
-                errNomEntreprise.CssClass = "text-danger";
-            }
-            else
-            {
-                tbNomEntreprise.CssClass = "form-control border-success";
-                errNomEntreprise.Text = "";
-                errNomEntreprise.CssClass = "text-danger d-none";
-            }
             if (tbNom.Text == "" || !exprNomOuPrenom.IsMatch(tbNom.Text))
             {
                 tbNom.CssClass = "form-control border-danger";
@@ -68,7 +61,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbNom.CssClass = "form-control border-success";
                 errNom.Text = "";
-                errNom.CssClass = "text-danger d-none";
+                errNom.CssClass = "text-danger hidden";
             }
             if (tbPrenom.Text == "" || !exprNomOuPrenom.IsMatch(tbPrenom.Text))
             {
@@ -83,7 +76,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbPrenom.CssClass = "form-control border-success";
                 errPrenom.Text = "";
-                errPrenom.CssClass = "text-danger d-none";
+                errPrenom.CssClass = "text-danger hidden";
             }
             if (tbAdresse.Text == "" || !exprAdresse.IsMatch(tbAdresse.Text))
             {
@@ -98,7 +91,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbAdresse.CssClass = "form-control border-success";
                 errAdresse.Text = "";
-                errAdresse.CssClass = "text-danger d-none";
+                errAdresse.CssClass = "text-danger hidden";
             }
             if (tbVille.Text == "" || !exprNomOuPrenom.IsMatch(tbVille.Text))
             {
@@ -113,7 +106,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbVille.CssClass = "form-control border-success";
                 errVille.Text = "";
-                errVille.CssClass = "text-danger d-none";
+                errVille.CssClass = "text-danger hidden";
             }
             if (ddlProvince.SelectedValue == "")
             {
@@ -125,7 +118,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 ddlProvince.CssClass = "form-control border-success";
                 errProvince.Text = "";
-                errProvince.CssClass = "text-danger d-none";
+                errProvince.CssClass = "text-danger hidden";
             }
             if (tbCodePostal.Text == "" || !exprCodePostal.IsMatch(tbCodePostal.Text))
             {
@@ -140,7 +133,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbCodePostal.CssClass = "form-control border-success";
                 errCodePostal.Text = "";
-                errCodePostal.CssClass = "text-danger d-none";
+                errCodePostal.CssClass = "text-danger hidden";
             }
             if (tbTelephone1.Text == "" || !exprTelephone.IsMatch(tbTelephone1.Text))
             {
@@ -155,7 +148,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbTelephone1.CssClass = "form-control border-success";
                 errTelephone1.Text = "";
-                errTelephone1.CssClass = "text-danger d-none";
+                errTelephone1.CssClass = "text-danger hidden";
             }
             if (tbTelephone2.Text != "" && !exprTelephone.IsMatch(tbTelephone2.Text))
             {
@@ -167,7 +160,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbTelephone2.CssClass = "form-control border-success";
                 errTelephone2.Text = "";
-                errTelephone2.CssClass = "text-danger d-none";
+                errTelephone2.CssClass = "text-danger hidden";
             }
             if (tbCourriel.Text == "" || !exprCourriel.IsMatch(tbCourriel.Text))
             {
@@ -182,7 +175,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbCourriel.CssClass = "form-control border-success";
                 errCourriel.Text = "";
-                errCourriel.CssClass = "text-danger d-none";
+                errCourriel.CssClass = "text-danger hidden";
             }
             if (tbConfirmationCourriel.Text == "" || !exprCourriel.IsMatch(tbConfirmationCourriel.Text) || tbConfirmationCourriel.Text != tbCourriel.Text)
             {
@@ -199,7 +192,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbConfirmationCourriel.CssClass = "form-control border-success";
                 errConfirmationCourriel.Text = "";
-                errConfirmationCourriel.CssClass = "text-danger d-none";
+                errConfirmationCourriel.CssClass = "text-danger hidden";
             }
             if (tbMotPasse.Text == "" || !exprMotPasse.IsMatch(tbMotPasse.Text))
             {
@@ -214,7 +207,7 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbMotPasse.CssClass = "form-control border-success";
                 errMotPasse.Text = "";
-                errMotPasse.CssClass = "text-danger d-none";
+                errMotPasse.CssClass = "text-danger hidden";
             }
             if (tbConfirmationMotPasse.Text == "" || tbConfirmationMotPasse.Text != tbMotPasse.Text)
             {
@@ -229,79 +222,37 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
             {
                 tbConfirmationMotPasse.CssClass = "form-control border-success";
                 errConfirmationMotPasse.Text = "";
-                errConfirmationMotPasse.CssClass = "text-danger d-none";
-            }
-            if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 66)
-            {
-                tbPoidsMaxLivraison.CssClass = "form-control border-danger";
-                if (tbPoidsMaxLivraison.Text == "")
-                    errPoidsMaxLivraison.Text = "Le poids de livraison maximum ne peut pas être vide";
-                else if (!exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
-                    errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être un entier";
-                else
-                    errPoidsMaxLivraison.Text = "Le poids de livraison maximum ne peut pas dépasser 66 lbs";
-                errPoidsMaxLivraison.CssClass = "text-danger";
-            }
-            else
-            {
-                tbPoidsMaxLivraison.CssClass = "form-control border-success";
-                errPoidsMaxLivraison.Text = "";
-                errPoidsMaxLivraison.CssClass = "text-danger d-none";
-            }
-            if (tbLivraisonGratuite.Text == "" || !exprMontant.IsMatch(tbLivraisonGratuite.Text) || double.Parse(tbLivraisonGratuite.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36)
-            {
-                tbLivraisonGratuite.CssClass = "form-control border-danger";
-                if (tbLivraisonGratuite.Text == "")
-                    errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite ne peut pas être vide";
-                else if (!exprMontant.IsMatch(tbLivraisonGratuite.Text))
-                    errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule";
-                else
-                    errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $";
-                errLivraisonGratuite.CssClass = "text-danger";
-            }
-            else
-            {
-                tbLivraisonGratuite.CssClass = "form-control border-success";
-                errLivraisonGratuite.Text = "";
-                errLivraisonGratuite.CssClass = "text-danger d-none";
+                errConfirmationMotPasse.CssClass = "text-danger hidden";
             }
         }
         else
         {
-            if (dbContext.PPVendeurs.Where(v => v.NomAffaires == tbNomEntreprise.Text).Any())
-            {
-                lblMessage.Text = "Ce nom d'entreprise existe déjà";
-                divMessage.CssClass = "alert alert-danger alert-margins";
-            }
-            else if (dbContext.PPVendeurs.Where(v => v.AdresseEmail == tbCourriel.Text).Any())
+            if (dbContext.PPClients.Where(c => c.AdresseEmail == tbCourriel.Text).Any())
             {
                 lblMessage.Text = "Il y a déjà un profil associé à ce courriel";
                 divMessage.CssClass = "alert alert-danger alert-margins";
             }
             else
             {
-                PPVendeurs vendeur = new PPVendeurs();
-                vendeur.NoVendeur = dbContext.PPVendeurs.Max(v => v.NoVendeur) + 1;
-                vendeur.NomAffaires = tbNomEntreprise.Text;
-                vendeur.Nom = tbNom.Text;
-                vendeur.Prenom = tbPrenom.Text;
-                vendeur.Rue = tbAdresse.Text;
-                vendeur.Ville = tbVille.Text;
-                vendeur.Province = ddlProvince.SelectedValue;
-                vendeur.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "");
-                vendeur.Pays = "Canada";
-                vendeur.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
+                PPClients client = new PPClients();
+                client.NoClient = dbContext.PPClients.Max(c => c.NoClient) + 1;
+                client.Nom = tbNom.Text;
+                client.Prenom = tbPrenom.Text;
+                client.Rue = tbAdresse.Text;
+                client.Ville = tbVille.Text;
+                client.Province = ddlProvince.SelectedValue;
+                client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "");
+                client.Pays = "Canada";
+                client.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                 if (!string.IsNullOrEmpty(tbTelephone2.Text))
-                    vendeur.Tel2 = tbTelephone2.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
-                vendeur.AdresseEmail = tbCourriel.Text;
-                vendeur.MotDePasse = tbMotPasse.Text;
-                vendeur.PoidsMaxLivraison = int.Parse(tbPoidsMaxLivraison.Text);
-                vendeur.LivraisonGratuite = decimal.Parse(tbLivraisonGratuite.Text.Replace(".", ","));
-                vendeur.Taxes = !cbTaxes.Checked;
-                vendeur.Configuration = vendeur.NoVendeur + ".xml";
-                vendeur.DateCreation = DateTime.Now;
+                    client.Tel2 = tbTelephone2.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
+                client.AdresseEmail = tbCourriel.Text;
+                client.MotDePasse = tbMotPasse.Text;
+                client.DateCreation = DateTime.Now;
+                client.NbConnexions = 0;
+                client.Statut = 1;
 
-                dbContext.PPVendeurs.Add(vendeur);
+                dbContext.PPClients.Add(client);
 
                 bool binOK = true;
 
@@ -316,23 +267,47 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
 
                 if (binOK)
                 {
-                    lblMessage.Text = "Votre demande d'inscription a été envoyé. Nous vous enverrons un courriel lorsque votre demande sera traitée.";
-                    divMessage.CssClass = "alert alert-success alert-margins";
+                    MailMessage message = new MailMessage("ppuces@gmail.com", client.AdresseEmail);
+                    message.Subject = "Création profil Les Petites Puces";
+                    message.Body = string.Format("Bonjour,\n\n" +
+                                                 "Suite à votre demande, votre profil Les Petites Puces a été créé. Votre numéro de client est {0}. Voici vos informations de connexion :\n" +
+                                                 "Identifiant : {1}\n" +
+                                                 "Mot de passe : {2}\n\n" +
+                                                 "Merci de faire affaire avec nous,\n" +
+                                                 "Les Petites Puces",
+                                                 client.NoClient,
+                                                 client.AdresseEmail,
+                                                 client.MotDePasse);
+
+                    if (LibrairieCourriel.envoyerCourriel(message))
+                    {
+                        lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
+                        divMessage.CssClass = "alert alert-success alert-margins";
+                    }
+                    else
+                    {
+                        dbContext.PPClients.Remove(client);
+                        dbContext.SaveChanges();
+
+                        lblMessage.Text = "Votre profil n'a pas pu être créé. Assurez-vous que vous avez saisi correctement votre courriel et que celui-ci existe vraiment.";
+                        divMessage.CssClass = "alert alert-danger alert-margins";
+                    }
                 }
                 else
                 {
-                    lblMessage.Text = "Votre demande d'inscription n'a pas pu être envoyé. Réessayez ultérieurement.";
+                    lblMessage.Text = "Votre profil n'a pas pu être créé. Réessayez ultérieurement.";
                     divMessage.CssClass = "alert alert-danger alert-margins";
                 }
             }
 
             foreach (Control controle in Page.Form.Controls)
-                if (controle is TextBox)
-                    ((TextBox)controle).Text = "";
-                else if (controle is DropDownList)
-                    ((DropDownList)controle).ClearSelection();
-                else if (controle is CheckBox)
-                    ((CheckBox)controle).Checked = false;
+                if (controle.HasControls())
+                    foreach (Control controleEnfant in controle.Controls)
+                        if (controleEnfant is TextBox)
+                            ((TextBox)controleEnfant).Text = "";
+                else
+                    if (controle is TextBox)
+                        ((TextBox)controle).Text = "";
             divMessage.Visible = true;
         }
     }
