@@ -367,13 +367,13 @@
                     <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-credit-card"></i></span>
-                            <asp:TextBox ID="noCarte" CssClass="form-control" placeholder="0000000000000000 (16 chiffres)" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="noCarte" CssClass="form-control" placeholder="0000000000000000 (16 chiffres)" MaxLength="16" runat="server"></asp:TextBox>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="input-group">
                             <span class="input-group-addon">CVV</span>
-                            <asp:TextBox ID="tbCVV" CssClass="form-control" placeholder="000 à 9999" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="tbCVV" CssClass="form-control" placeholder="000 à 9999" MaxLength="4" runat="server"></asp:TextBox>
                         </div>
                     </div>
                     <br />
@@ -381,7 +381,7 @@
                     <div class="col-md-4">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                            <asp:TextBox ID="tbDate" CssClass="form-control" placeholder="MM-AAAA" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="tbDate" CssClass="form-control" placeholder="MM-AAAA" MaxLength="7" runat="server"></asp:TextBox>
                         </div>
                     </div>
                 </div>
