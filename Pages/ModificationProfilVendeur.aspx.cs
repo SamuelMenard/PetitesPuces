@@ -33,7 +33,10 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
 
             XDocument document = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
             XElement configuration = document.Element("configuration");
-            imgTeleverse.ImageUrl = "~/static/images/" + configuration.Descendants("urlImage").Single().Value;
+            if ((imgTeleverse.ImageUrl = "~/static/images/" + configuration.Descendants("urlImage").Single().Value) == "~/static/images/image_magasin.jpg")
+                btnSelectionnerImage.Visible = true;
+            else
+                btnChangerImage.Visible = true;
             cpCouleurFond.Value = configuration.Descendants("couleurFond").Single().Value;
             cpCouleurTexte.Value = configuration.Descendants("couleurTexte").Single().Value;
         }
@@ -239,7 +242,6 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
     {
         if ((fImage.PostedFile.ContentType != "image/jpeg" && fImage.PostedFile.ContentType != "image/png") || fImage.PostedFile.ContentLength >= 31457280)
         {
-            imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
             if (fImage.PostedFile.ContentType != "image/jpeg" && fImage.PostedFile.ContentType != "image/png")
                 errImage.Text = "L'image sélectionnée doit être au format jpeg ou png";
             else
@@ -259,17 +261,19 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
             XElement configuration = document.Element("configuration");
             string urlImage = configuration.Descendants("urlImage").Single().Value;
 
-            try
+            if (urlImage != "image_magasin.jpg")
             {
-                File.Move(Server.MapPath("~/static/images/") + urlImage,
-                          Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")));
-            }
-            catch
-            {
-                imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
-                errImage.Text = "L'image sélectionnée n'a pas pu être téléversée.";
-                errImage.CssClass = "text-danger";
-                binOK = false;
+                try
+                {
+                    File.Move(Server.MapPath("~/static/images/") + urlImage,
+                              Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")));
+                }
+                catch
+                {
+                    errImage.Text = "L'image sélectionnée n'a pas pu être téléversée.";
+                    errImage.CssClass = "text-danger";
+                    binOK = false;
+                }
             }
 
             if (binOK)
@@ -280,40 +284,42 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
                 }
                 catch (Exception ex)
                 {
-                    imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
                     errImage.Text = "L'image sélectionnée n'a pas pu être téléversée. L'erreur suivante s'est produite : " + ex.Message;
                     errImage.CssClass = "text-danger";
                     binOK = false;
                 }
             }
 
-            if (binOK)
+            if (urlImage != "image_magasin.jpg")
             {
-                try
+                if (binOK)
                 {
-                    File.Delete(Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")));
-                }
-                catch { }
-            }
-            else
-            {
-                try
-                {
-                    File.Move(Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")),
-                              Server.MapPath("~/static/images/") + urlImage);
-                }
-                catch
-                {
-
-
                     try
                     {
-                        configuration.Descendants("urlImage").Single().Value = vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf("."));
-                        document.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
-
-                        imgTeleverse.ImageUrl = "~/static/images/" + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf("."));
+                        File.Delete(Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")));
                     }
                     catch { }
+                }
+                else
+                {
+                    try
+                    {
+                        File.Move(Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")),
+                                  Server.MapPath("~/static/images/") + urlImage);
+                    }
+                    catch
+                    {
+
+
+                        try
+                        {
+                            configuration.Descendants("urlImage").Single().Value = vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf("."));
+                            document.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+
+                            imgTeleverse.ImageUrl = "~/static/images/" + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf("."));
+                        }
+                        catch { }
+                    }
                 }
             }
 
@@ -325,16 +331,30 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
                     document.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
 
                     imgTeleverse.ImageUrl = "~/static/images/" + vendeur.NoVendeur + fImage.FileName.Substring(fImage.FileName.LastIndexOf("."));
-                    imgTeleverse.CssClass = "thumbnail img-responsive border-success";
+
+                    if (urlImage == "image_magasin.jpg")
+                    {
+                        btnSelectionnerImage.Visible = false;
+                        btnChangerImage.Visible = true;
+                    }
                 }
                 catch
                 {
-                    imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
                     errImage.Text = "L'image sélectionnée n'a pas pu être téléversée.";
                     errImage.CssClass = "text-danger";
                 }
             }
         }
+    }
+
+    protected void btnRemiseAZero_Click(object sender, EventArgs e)
+    {
+        imgTeleverse.ImageUrl = "~/static/images/image_magasin.jpg";
+        cpCouleurFond.Value = "#ffffff";
+        cpCouleurTexte.Value = "#000000";
+        btnSelectionnerImage.Visible = true;
+        btnChangerImage.Visible = false;
+        btnRemiseAZero.Enabled = false;
     }
 
     protected void btnModifierProfil_Click(object sender, EventArgs e)
@@ -373,6 +393,17 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
                 {
                     XDocument document = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
                     XElement configuration = document.Element("configuration");
+
+                    if (imgTeleverse.ImageUrl == "~/static/images/image_magasin.jpg")
+                    {
+                        try
+                        {
+                            if (configuration.Descendants("urlImage").Single().Value != "image_magasin.jpg")
+                                File.Delete(Server.MapPath("~/static/images/") + configuration.Descendants("urlImage").Single().Value);
+                        }
+                        catch { }
+                    }
+
                     configuration.Descendants("urlImage").Single().Value = imgTeleverse.ImageUrl.Substring(imgTeleverse.ImageUrl.LastIndexOf("/") + 1);
                     configuration.Descendants("couleurFond").Single().Value = cpCouleurFond.Value;
                     configuration.Descendants("couleurTexte").Single().Value = cpCouleurTexte.Value;
@@ -396,7 +427,6 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
                     divMessage.CssClass = "alert alert-danger alert-margins";
                 }
             }
-            imgTeleverse.CssClass = "thumbnail img-responsive";
             errImage.Text = "";
             errImage.CssClass = "text-danger hidden";
             divMessage.Visible = true;

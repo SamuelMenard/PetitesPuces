@@ -40,7 +40,6 @@
             <asp:Label ID="lblMessage" runat="server" />
             <br />
          </asp:Panel>
-         
       </div>
    </div>
    <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
@@ -113,12 +112,11 @@
    <hr />
    <h1 class="h4 mb-3 font-weight-normal">Configuration du magasin</h1>
    <div class="row">
-      <div class="form-group col-sm-6">
+      <div class="col-sm-6">
          <div class="input-group">
             <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 100px" ImageUrl="~/static/images/image_placeholder.png" />
             <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
-            <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
-            <input id="btnSelectionnerImage" type="button" class="btn btn-block Orange" value="Sélectionner une image" runat="server" />
+            <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" /> 
             <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
          </div>
       </div>
@@ -129,6 +127,15 @@
          <div class="form-group">
             Couleur de texte <input id="cpCouleurTexte" runat="server" type="color" />
          </div>
+      </div>
+   </div>
+   <div class="row">
+      <div class="form-group col-sm-6">
+         <input id="btnSelectionnerImage" type="button" class="btn Orange" value="Sélectionner une image" runat="server" visible="false" />
+         <input id="btnChangerImage" type="button" class="btn Orange" value="Changer l'image" runat="server" visible="false" />
+      </div>
+      <div class="form-group col-sm-6">
+         <asp:Button ID="btnRemiseAZero" runat="server" CssClass="btn Orange" Text="Remettre les valeurs par défaut" OnClick="btnRemiseAZero_Click" />
       </div>
    </div>
    <asp:Button ID="btnModifierProfil" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le profil" OnClick="btnModifierProfil_Click" />
@@ -270,12 +277,28 @@
             $("#contentBody_tbLivraisonGratuite").removeClass("border-danger").addClass("border-success");
             $("#contentBody_errLivraisonGratuite").text('').addClass('hidden');
          }
-       });
+      });
+      if ($("#contentBody_imgTeleverse").attr('src') != '../static/images/image_magasin.jpg')
+         $("#contentBody_btnRemiseAZero").removeAttr('disabled');
+      else if ($("#contentBody_cpCouleurFond").val() == '#ffffff' && $("#contentBody_cpCouleurTexte").val() == '#000000')
+            $("#contentBody_btnRemiseAZero").attr('disabled', 'disabled');
       $("#contentBody_fImage").change(function () {
          $("#contentBody_btnTeleverserImage").click();
       });
-      $("#contentBody_btnSelectionnerImage").click(function () {
+      $("#contentBody_btnSelectionnerImage,#contentBody_btnChangerImage").click(function () {
          $("#contentBody_fImage").click();
+      });
+      $("#contentBody_cpCouleurFond").change(function () {
+         if ($("#contentBody_cpCouleurFond").val() != '#ffffff')
+            $("#contentBody_btnRemiseAZero").removeAttr('disabled');
+         else if ($("#contentBody_imgTeleverse").attr('src') == '../static/images/image_magasin.jpg' && $("#contentBody_cpCouleurTexte").val() == '#000000')
+            $("#contentBody_btnRemiseAZero").attr('disabled', 'disabled');
+      });
+      $("#contentBody_cpCouleurTexte").change(function () {
+         if ($("#contentBody_cpCouleurTexte").val() != '#000000')
+            $("#contentBody_btnRemiseAZero").removeAttr('disabled');
+         else if ($("#contentBody_imgTeleverse").attr('src') == '../static/images/image_magasin.jpg' && $("#contentBody_cpCouleurFond").val() == '#ffffff')
+            $("#contentBody_btnRemiseAZero").attr('disabled', 'disabled');
       });
       $("#contentBody_btnModifierProfil").click(function () {
          var binPageValide = true;

@@ -84,7 +84,10 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                     if (Request.QueryString["Operation"] == "Afficher")
                         btnRetour.Visible = true;
                     else if (Request.QueryString["Operation"] == "Modifier")
+                    {
+                        btnChangerImage.Visible = true;
                         btnModifier.Visible = true;
+                    }
                     else if (Request.QueryString["Operation"] == "Supprimer")
                     {
                         if (dbContext.PPArticlesEnPanier.Where(a => a.NoProduit == noProduit).Count() > 0)
@@ -98,7 +101,10 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                     Response.Redirect("~/Pages/SuppressionProduit.aspx?");
             }
             else
+            {
+                btnSelectionnerImage.Visible = true;
                 btnInscription.Visible = true;
+            }  
         }
         else
             divMessage.Visible = false;
@@ -206,14 +212,12 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         }
         if (imgTeleverse.ImageUrl == "~/static/images/image_placeholder.png")
         {
-            imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
             if (errImage.Text == "")
                 errImage.Text = "Vous devez sélectionner une image";
             errImage.CssClass = "text-danger";
         }
         else
         {
-            imgTeleverse.CssClass = "thumbnail img-responsive border-success";
             errImage.Text = "";
             errImage.CssClass = "text-danger hidden";
         }
@@ -284,7 +288,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
     {
         if ((fImage.PostedFile.ContentType != "image/jpeg" && fImage.PostedFile.ContentType != "image/png") || fImage.PostedFile.ContentLength >= 31457280)
         {
-            imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
             if (fImage.PostedFile.ContentType != "image/jpeg" && fImage.PostedFile.ContentType != "image/png")
                 errImage.Text = "L'image sélectionnée doit être au format jpeg ou png";
             else
@@ -320,7 +323,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 }
                 catch
                 {
-                    imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
                     errImage.Text = "L'image sélectionnée n'a pas pu être téléversée.";
                     errImage.CssClass = "text-danger";
                     binOK = false;
@@ -334,7 +336,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                     }
                     catch (Exception ex)
                     {
-                        imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
                         errImage.Text = "L'image sélectionnée n'a pas pu être téléversée. L'erreur suivante est survenue : " + ex.Message;
                         errImage.CssClass = "text-danger";
                         binOK = false;
@@ -344,7 +345,8 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 if (binOK)
                 {
                     imgTeleverse.ImageUrl = "~/static/images/" + noProduit + fImage.FileName.Substring(fImage.FileName.LastIndexOf("."));
-                    imgTeleverse.CssClass = "thumbnail img-responsive border-success";
+                    btnSelectionnerImage.Visible = false;
+                    btnChangerImage.Visible = true;
                 }
             }
             else
@@ -359,7 +361,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 }
                 catch
                 {
-                    imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
                     errImage.Text = "L'image sélectionnée n'a pas pu être téléversée.";
                     errImage.CssClass = "text-danger";
                     binOK = false;
@@ -373,7 +374,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                     }
                     catch (Exception ex)
                     {
-                        imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
                         errImage.Text = "L'image sélectionnée n'a pas pu être téléversée. L'erreur suivante s'est produite : " + ex.Message;
                         errImage.CssClass = "text-danger";
                         binOK = false;
@@ -412,7 +412,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 if (binOK)
                 {
                     imgTeleverse.ImageUrl = "~/static/images/" + produit.NoProduit + fImage.FileName.Substring(fImage.FileName.LastIndexOf("."));
-                    imgTeleverse.CssClass = "thumbnail img-responsive border-success";
                 }
             }
         }
@@ -491,7 +490,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                     else if (controle is DropDownList)
                         ((DropDownList)controle).ClearSelection();
             imgTeleverse.ImageUrl = "~/static/images/image_placeholder.png";
-            imgTeleverse.CssClass = "thumbnail img-responsive";
             initialiserDate();
             btnOui.CssClass = "btn Orange active";
             btnNon.CssClass = "btn Orange notActive";
