@@ -173,6 +173,16 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
                         vendeur.Statut = short.Parse(element.Descendants("Statut").Single().Value);
 
                     dbContext.PPVendeurs.Add(vendeur);
+
+                    XDocument configuration = new XDocument();
+                    XElement urlImage = new XElement("urlImage");
+                    urlImage.Value = "image_magasin.jpg";
+                    XElement couleurFond = new XElement("couleurFond");
+                    couleurFond.Value = "#ffffff";
+                    XElement couleurTexte = new XElement("couleurTexte");
+                    couleurTexte.Value = "#000000";
+                    configuration.Add(new XElement("configuration", urlImage, couleurFond, couleurTexte));
+                    configuration.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
                 }
 
                 document = XDocument.Load(Server.MapPath("\\static\\xml\\PPClients.xml"));
