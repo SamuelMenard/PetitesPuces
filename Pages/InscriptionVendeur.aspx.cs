@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 public partial class Pages_InscriptionVendeur : System.Web.UI.Page
 {
@@ -323,6 +324,16 @@ public partial class Pages_InscriptionVendeur : System.Web.UI.Page
 
                 try
                 {
+                    XDocument document = new XDocument();
+                    XElement urlImage = new XElement("urlImage");
+                    urlImage.Value = "image_magasin.jpg";
+                    XElement couleurFond = new XElement("couleurFond");
+                    couleurFond.Value = "#ffffff";
+                    XElement couleurTexte = new XElement("couleurTexte");
+                    couleurTexte.Value = "#000000";
+                    document.Add(new XElement("configuration", urlImage, couleurFond, couleurTexte));
+                    document.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+
                     dbContext.SaveChanges();
                 }
                 catch (Exception)
