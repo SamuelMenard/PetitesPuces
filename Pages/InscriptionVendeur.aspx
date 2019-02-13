@@ -183,11 +183,11 @@
       </div>
       <script>
          $(document).ready(function () {
-            var exprNomEntreprise = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
-            var exprNomOuPrenom = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$/;
-            var exprAdresse = /^(\d+-)?\d+([a-zA-Z]| \d\/\d)? [a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])* [a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
-            var exprCodePostal = /^[A-Z]\d[A-Z] ?\d[A-Z]\d$/i;
-            var exprTelephone = /^((\([0-9]{3}\) |[0-9]{3}[ -])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
+            var exprNomEntreprise = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
+            var exprNomOuPrenom = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$/;
+            var exprAdresse = /^(\d+-)?\d+([a-zA-Z]|\s\d\/\d)?\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
+            var exprCodePostal = /^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i;
+            var exprTelephone = /^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
             var exprCourriel = /^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\.[a-z]+$/;
             var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
             var exprPoids = /^\d+$/;
@@ -370,9 +370,6 @@
                } else if (!exprPoids.test($("#tbPoidsMaxLivraison").val())) {
                   $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
                   $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('d-none');
-               } else if ($("#tbPoidsMaxLivraison").val() > 66) {
-                  $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-                  $("#errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas dépasser 66 lbs').removeClass('d-none');
                } else {
                   $("#tbPoidsMaxLivraison").removeClass("border-danger").addClass("border-success");
                   $("#errPoidsMaxLivraison").text('').addClass('d-none');
@@ -495,14 +492,12 @@
                      $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#tbPoidsMaxLivraison").val()) || $("#tbPoidsMaxLivraison").val() > 66) {
+               if ($("#tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#tbPoidsMaxLivraison").val())) {
                   $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
                   if ($("#tbPoidsMaxLivraison").val() == '')
                      $("#errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('d-none');
-                  else if (!exprPoids.test($("#tbPoidsMaxLivraison").val()))
-                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('d-none');
                   else
-                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas dépasser 66 lbs').removeClass('d-none');
+                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('d-none');
                   binPageValide = false;
                }
                if ($("#tbLivraisonGratuite").val() == '' || !exprMontant.test($("#tbLivraisonGratuite").val()) || $("#tbLivraisonGratuite").val() > 214748.36) {

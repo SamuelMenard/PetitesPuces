@@ -1,10 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
-public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
+public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
 {
     private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
 
@@ -12,18 +12,33 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            long noClient = Convert.ToInt64(Session["NoClient"]);
-            PPClients client = dbContext.PPClients.Where(c => c.NoClient == noClient).Single();
-            tbNom.Text = client.Nom;
-            tbPrenom.Text = client.Prenom;
-            tbAdresse.Text = client.Rue;
-            tbVille.Text = client.Ville;
-            ddlProvince.SelectedValue = client.Province;
-            tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
-            tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
-            if (client.Tel2 != null)
-                tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
+            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+            PPVendeurs vendeur = dbContext.PPVendeurs.Where(v => v.NoVendeur == noVendeur).Single();
+            tbNomEntreprise.Text = vendeur.NomAffaires;
+            tbNom.Text = vendeur.Nom;
+            tbPrenom.Text = vendeur.Prenom;
+            tbAdresse.Text = vendeur.Rue;
+            tbVille.Text = vendeur.Ville;
+            ddlProvince.SelectedValue = vendeur.Province;
+            tbCodePostal.Text = vendeur.CodePostal.Substring(0, 3) + " " + vendeur.CodePostal.Substring(3, 3);
+            tbTelephone1.Text = "(" + vendeur.Tel1.Substring(0, 3) + ") " + vendeur.Tel1.Substring(3, 3) + "-" + vendeur.Tel1.Substring(6);
+            if (vendeur.Tel2 != null)
+                tbTelephone2.Text = "(" + vendeur.Tel2.Substring(0, 3) + ") " + vendeur.Tel2.Substring(3, 3) + "-" + vendeur.Tel2.Substring(6);
+            tbCourriel.Text = vendeur.AdresseEmail;
+            tbPoidsMaxLivraison.Text = vendeur.PoidsMaxLivraison.ToString();
+            tbLivraisonGratuite.Text = vendeur.LivraisonGratuite.ToString()
+                                                                .Remove(vendeur.LivraisonGratuite.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
+                                                                .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+            cbTaxes.Checked = (bool)!vendeur.Taxes;
+
+            XDocument document = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+            XElement configuration = document.Element("configuration");
+            imgTeleverse.ImageUrl = "~/static/images/" + configuration.Descendants("urlImage").Single().Value;
+            cpCouleurFond.Value = configuration.Descendants("couleurFond").Single().Value;
+            cpCouleurTexte.Value = configuration.Descendants("couleurTexte").Single().Value;
         }
+        else
+            divMessage.Visible = false;
     }
 
     protected bool validerPage()
@@ -33,8 +48,6 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
         Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
-        Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
-        Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
         Regex exprPoids = new Regex("^\\d+$");
         Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
         return tbNomEntreprise.Text != "" && exprNomEntreprise.IsMatch(tbNomEntreprise.Text) &&
@@ -46,10 +59,6 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
                tbCodePostal.Text != "" && exprCodePostal.IsMatch(tbCodePostal.Text) &&
                tbTelephone1.Text != "" && exprTelephone.IsMatch(tbTelephone1.Text) &&
                (tbTelephone2.Text == "" || exprTelephone.IsMatch(tbTelephone2.Text)) &&
-               tbCourriel.Text != "" && exprCourriel.IsMatch(tbCourriel.Text) &&
-               tbConfirmationCourriel.Text != "" && exprCourriel.IsMatch(tbConfirmationCourriel.Text) && tbConfirmationCourriel.Text == tbCourriel.Text &&
-               tbMotPasse.Text != "" && exprMotPasse.IsMatch(tbMotPasse.Text) &&
-               tbConfirmationMotPasse.Text != "" && tbConfirmationMotPasse.Text == tbMotPasse.Text &&
                tbPoidsMaxLivraison.Text != "" && exprPoids.IsMatch(tbPoidsMaxLivraison.Text) &&
                tbLivraisonGratuite.Text != "" && exprMontant.IsMatch(tbLivraisonGratuite.Text) && double.Parse(tbLivraisonGratuite.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36;
     }
@@ -61,8 +70,6 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
         Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
-        Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
-        Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
         Regex exprPoids = new Regex("^\\d+$");
         Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
         if (tbNomEntreprise.Text == "" || !exprNomEntreprise.IsMatch(tbNomEntreprise.Text))
@@ -194,68 +201,6 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             errTelephone2.Text = "";
             errTelephone2.CssClass = "text-danger hidden";
         }
-        if (tbCourriel.Text == "" || !exprCourriel.IsMatch(tbCourriel.Text))
-        {
-            tbCourriel.CssClass = "form-control border-danger";
-            if (tbCourriel.Text == "")
-                errCourriel.Text = "Le courriel ne peut pas être vide";
-            else
-                errCourriel.Text = "Le courriel n'est pas dans un format valide";
-            errCourriel.CssClass = "text-danger";
-        }
-        else
-        {
-            tbCourriel.CssClass = "form-control border-success";
-            errCourriel.Text = "";
-            errCourriel.CssClass = "text-danger hidden";
-        }
-        if (tbConfirmationCourriel.Text == "" || !exprCourriel.IsMatch(tbConfirmationCourriel.Text) || tbConfirmationCourriel.Text != tbCourriel.Text)
-        {
-            tbConfirmationCourriel.CssClass = "form-control border-danger";
-            if (tbConfirmationCourriel.Text == "")
-                errConfirmationCourriel.Text = "La confirmation du courriel ne peut pas être vide";
-            else if (!exprCourriel.IsMatch(tbConfirmationCourriel.Text))
-                errConfirmationCourriel.Text = "La confirmation du courriel n'est pas dans un format valide";
-            else
-                errConfirmationCourriel.Text = "La confirmation du courriel ne correspond pas au courriel";
-            errConfirmationCourriel.CssClass = "text-danger";
-        }
-        else
-        {
-            tbConfirmationCourriel.CssClass = "form-control border-success";
-            errConfirmationCourriel.Text = "";
-            errConfirmationCourriel.CssClass = "text-danger hidden";
-        }
-        if (tbMotPasse.Text == "" || !exprMotPasse.IsMatch(tbMotPasse.Text))
-        {
-            tbMotPasse.CssClass = "form-control border-danger";
-            if (tbMotPasse.Text == "")
-                errMotPasse.Text = "Le mot de passe ne peut pas être vide";
-            else
-                errMotPasse.Text = "Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre";
-            errMotPasse.CssClass = "text-danger";
-        }
-        else
-        {
-            tbMotPasse.CssClass = "form-control border-success";
-            errMotPasse.Text = "";
-            errMotPasse.CssClass = "text-danger hidden";
-        }
-        if (tbConfirmationMotPasse.Text == "" || tbConfirmationMotPasse.Text != tbMotPasse.Text)
-        {
-            tbConfirmationMotPasse.CssClass = "form-control border-danger";
-            if (tbConfirmationMotPasse.Text == "")
-                errConfirmationMotPasse.Text = "La confirmation du mot de passe ne peut pas être vide";
-            else
-                errConfirmationMotPasse.Text = "La confirmation du mot de passe ne correspond pas au mot de passe";
-            errConfirmationMotPasse.CssClass = "text-danger";
-        }
-        else
-        {
-            tbConfirmationMotPasse.CssClass = "form-control border-success";
-            errConfirmationMotPasse.Text = "";
-            errConfirmationMotPasse.CssClass = "text-danger hidden";
-        }
         if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 66)
         {
             tbPoidsMaxLivraison.CssClass = "form-control border-danger";
@@ -290,26 +235,122 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         }
     }
 
-    protected void btnEnvoyerDemande_Click(object sender, EventArgs e)
+    protected void btnTeleverserImage_Click(object sender, EventArgs e)
+    {
+        if ((fImage.PostedFile.ContentType != "image/jpeg" && fImage.PostedFile.ContentType != "image/png") || fImage.PostedFile.ContentLength >= 31457280)
+        {
+            imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
+            if (fImage.PostedFile.ContentType != "image/jpeg" && fImage.PostedFile.ContentType != "image/png")
+                errImage.Text = "L'image sélectionnée doit être au format jpeg ou png";
+            else
+                errImage.Text = "L'image sélectionnée doit être inférieure à 30 mo";
+            errImage.CssClass = "text-danger";
+        }
+        else
+        {
+            errImage.Text = "";
+            errImage.CssClass = "text-danger hidden";
+
+            bool binOK = true;
+
+            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+            PPVendeurs vendeur = dbContext.PPVendeurs.Where(v => v.NoVendeur == noVendeur).Single();
+            XDocument document = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+            XElement configuration = document.Element("configuration");
+            string urlImage = configuration.Descendants("urlImage").Single().Value;
+
+            try
+            {
+                File.Move(Server.MapPath("~/static/images/") + urlImage,
+                          Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")));
+            }
+            catch
+            {
+                imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
+                errImage.Text = "L'image sélectionnée n'a pas pu être téléversée.";
+                errImage.CssClass = "text-danger";
+                binOK = false;
+            }
+
+            if (binOK)
+            {
+                try
+                {
+                    fImage.SaveAs(Server.MapPath("~/static/images/") + vendeur.NoVendeur + fImage.FileName.Substring(fImage.FileName.LastIndexOf(".")));
+                }
+                catch (Exception ex)
+                {
+                    imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
+                    errImage.Text = "L'image sélectionnée n'a pas pu être téléversée. L'erreur suivante s'est produite : " + ex.Message;
+                    errImage.CssClass = "text-danger";
+                    binOK = false;
+                }
+            }
+
+            if (binOK)
+            {
+                try
+                {
+                    File.Delete(Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")));
+                }
+                catch { }
+            }
+            else
+            {
+                try
+                {
+                    File.Move(Server.MapPath("~/static/images/") + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf(".")),
+                              Server.MapPath("~/static/images/") + urlImage);
+                }
+                catch
+                {
+
+
+                    try
+                    {
+                        configuration.Descendants("urlImage").Single().Value = vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf("."));
+                        document.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+
+                        imgTeleverse.ImageUrl = "~/static/images/" + vendeur.NoVendeur + "_old" + urlImage.Substring(urlImage.IndexOf("."));
+                    }
+                    catch { }
+                }
+            }
+
+            if (binOK)
+            {
+                try
+                {
+                    configuration.Descendants("urlImage").Single().Value = vendeur.NoVendeur + fImage.FileName.Substring(fImage.FileName.LastIndexOf("."));
+                    document.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+
+                    imgTeleverse.ImageUrl = "~/static/images/" + vendeur.NoVendeur + fImage.FileName.Substring(fImage.FileName.LastIndexOf("."));
+                    imgTeleverse.CssClass = "thumbnail img-responsive border-success";
+                }
+                catch
+                {
+                    imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
+                    errImage.Text = "L'image sélectionnée n'a pas pu être téléversée.";
+                    errImage.CssClass = "text-danger";
+                }
+            }
+        }
+    }
+
+    protected void btnModifierProfil_Click(object sender, EventArgs e)
     {
         if (validerPage())
         {
-            if (dbContext.PPVendeurs.Where(v => v.NomAffaires == tbNomEntreprise.Text).Any())
+            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+
+            if (dbContext.PPVendeurs.Where(v => v.NoVendeur != noVendeur && v.NomAffaires == tbNomEntreprise.Text).Any())
             {
                 lblMessage.Text = "Ce nom d'entreprise existe déjà";
                 divMessage.CssClass = "alert alert-danger alert-margins";
             }
-            else if (dbContext.PPVendeurs.Where(v => v.AdresseEmail == tbCourriel.Text).Any() ||
-                     dbContext.PPClients.Where(c => c.AdresseEmail == tbCourriel.Text).Any() ||
-                     dbContext.PPGestionnaires.Where(g => g.courriel == tbCourriel.Text).Any())
-            {
-                lblMessage.Text = "Il y a déjà un profil associé à ce courriel";
-                divMessage.CssClass = "alert alert-danger alert-margins";
-            }
             else
             {
-                PPVendeurs vendeur = new PPVendeurs();
-                vendeur.NoVendeur = dbContext.PPVendeurs.Max(v => v.NoVendeur) + 1;
+                PPVendeurs vendeur = dbContext.PPVendeurs.Where(v => v.NoVendeur == noVendeur).Single();
                 vendeur.NomAffaires = tbNomEntreprise.Text;
                 vendeur.Nom = tbNom.Text;
                 vendeur.Prenom = tbPrenom.Text;
@@ -321,20 +362,22 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
                 vendeur.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                 if (!string.IsNullOrEmpty(tbTelephone2.Text))
                     vendeur.Tel2 = tbTelephone2.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
-                vendeur.AdresseEmail = tbCourriel.Text;
-                vendeur.MotDePasse = tbMotPasse.Text;
                 vendeur.PoidsMaxLivraison = int.Parse(tbPoidsMaxLivraison.Text);
                 vendeur.LivraisonGratuite = decimal.Parse(tbLivraisonGratuite.Text.Replace(".", ","));
                 vendeur.Taxes = !cbTaxes.Checked;
-                vendeur.Configuration = vendeur.NoVendeur + ".xml";
-                vendeur.DateCreation = DateTime.Now;
-
-                dbContext.PPVendeurs.Add(vendeur);
+                vendeur.DateMAJ = DateTime.Now;
 
                 bool binOK = true;
 
                 try
                 {
+                    XDocument document = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+                    XElement configuration = document.Element("configuration");
+                    configuration.Descendants("urlImage").Single().Value = imgTeleverse.ImageUrl.Substring(imgTeleverse.ImageUrl.LastIndexOf("/") + 1);
+                    configuration.Descendants("couleurFond").Single().Value = cpCouleurFond.Value;
+                    configuration.Descendants("couleurTexte").Single().Value = cpCouleurTexte.Value;
+                    document.Save(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+
                     dbContext.SaveChanges();
                 }
                 catch (Exception)
@@ -344,32 +387,18 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
 
                 if (binOK)
                 {
-                    lblMessage.Text = "Votre demande d'inscription a été envoyé. Nous vous enverrons un courriel lorsque votre demande sera traitée.";
+                    lblMessage.Text = "Votre profil a été modifié.";
                     divMessage.CssClass = "alert alert-success alert-margins";
                 }
                 else
                 {
-                    lblMessage.Text = "Votre demande d'inscription n'a pas pu être envoyé. Réessayez ultérieurement.";
+                    lblMessage.Text = "Votre profil n'a pas pu être modifié. Réessayez ultérieurement.";
                     divMessage.CssClass = "alert alert-danger alert-margins";
                 }
             }
-
-            foreach (Control controle in Page.Form.Controls)
-                if (controle.HasControls())
-                    foreach (Control controleEnfant in controle.Controls)
-                        if (controleEnfant is TextBox)
-                            ((TextBox)controleEnfant).Text = "";
-                        else if (controleEnfant is DropDownList)
-                            ((DropDownList)controleEnfant).ClearSelection();
-                        else if (controleEnfant is CheckBox)
-                            ((CheckBox)controleEnfant).Checked = false;
-                        else
-                    if (controle is TextBox)
-                            ((TextBox)controle).Text = "";
-                        else if (controle is DropDownList)
-                            ((DropDownList)controle).ClearSelection();
-                        else if (controle is CheckBox)
-                            ((CheckBox)controle).Checked = false;
+            imgTeleverse.CssClass = "thumbnail img-responsive";
+            errImage.Text = "";
+            errImage.CssClass = "text-danger hidden";
             divMessage.Visible = true;
         }
         else
