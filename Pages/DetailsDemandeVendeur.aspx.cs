@@ -18,6 +18,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        verifierPermissions("G");
         getEtape();
         getNoVendeur();
         getRedevance();
@@ -347,6 +348,39 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         else
         {
             this.redevance = Request.QueryString["Redevance"];
+        }
+    }
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
         }
     }
 }
