@@ -37,7 +37,7 @@
                 <p>Vous pouvez modifier le pourcentage de redevance en modifiant la valeur sous le nom du vendeur</p> 
         </div>
 
-        <div class="row">
+        <div id="divToolBar" class="row" runat="server">
             <div class="col-sm-1 mb-3">
                 <asp:Button ID="btnRetourPanier" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourDashboard_click" />
             </div>
@@ -50,6 +50,14 @@
         </div>
 
         <br />
+
+        <div id="divSuccessCourriel" class="alert alert-success" visible="false" runat="server">
+          <asp:Label ID="lblSuccessCourriel" runat="server"></asp:Label>
+        </div>
+
+        <div id="divErreurCourriel" class="alert alert-danger" visible="false" runat="server">
+          <asp:Label ID="lblErreurCourriel" runat="server"></asp:Label>
+        </div>
 
         <asp:PlaceHolder id="phDynamique" runat="server" />
 
