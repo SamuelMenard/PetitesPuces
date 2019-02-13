@@ -100,6 +100,9 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             else
                 btnInscription.Visible = true;
         }
+        else
+            divMessage.Visible = false;
+
         if (Request.QueryString["Operation"] == null || (Request.QueryString["Operation"] != null && Request.QueryString["Operation"] == "Modifier"))
         {
             ClientScript.RegisterStartupScript(GetType(), "toggleRbDisponibilite",
@@ -123,15 +126,15 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         DateTime dateAujourdhui = DateTime.Now.Date;
         DateTime dateExpiration = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
         Regex exprPoids = new Regex("^\\d+(\\.\\d)?$");
-        return ddlCategorie.SelectedValue == "" ||
-               tbNom.Text == "" || !exprTexte.IsMatch(tbNom.Text) ||
-               tbPrixDemande.Text == "" || !exprMontant.IsMatch(tbPrixDemande.Text) || double.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36 ||
-               tbDescription.Text == "" || !exprTexte.IsMatch(tbDescription.Text) ||
-               imgTeleverse.ImageUrl == "~/static/images/image_placeholder.png" ||
-               tbNbItems.Text == "" || !exprNbItems.IsMatch(tbNbItems.Text) || int.Parse(tbNbItems.Text) > 32767 ||
-               tbPrixVente.Text == "" || !exprMontant.IsMatch(tbPrixVente.Text) || double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36 ||
-               (dateExpiration.Year <= dateAujourdhui.Year && dateExpiration.Month <= dateAujourdhui.Month && dateExpiration.Day <= dateAujourdhui.Day) ||
-               tbPoids.Text == "" || !exprPoids.IsMatch(tbPoids.Text) || double.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 66;
+        return ddlCategorie.SelectedValue != "" &&
+               tbNom.Text != "" && exprTexte.IsMatch(tbNom.Text) &&
+               tbPrixDemande.Text != "" && exprMontant.IsMatch(tbPrixDemande.Text) && double.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 &&
+               tbDescription.Text != "" && exprTexte.IsMatch(tbDescription.Text) &&
+               imgTeleverse.ImageUrl != "~/static/images/image_placeholder.png" &&
+               tbNbItems.Text != "" && exprNbItems.IsMatch(tbNbItems.Text) && int.Parse(tbNbItems.Text) <= 32767 &&
+               tbPrixVente.Text != "" && exprMontant.IsMatch(tbPrixVente.Text) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 &&
+               (dateExpiration.Year >= dateAujourdhui.Year && dateExpiration.Month >= dateAujourdhui.Month && dateExpiration.Day > dateAujourdhui.Day) &&
+               tbPoids.Text != "" && exprPoids.IsMatch(tbPoids.Text);
     }
 
     protected void afficherErreurs()
@@ -260,15 +263,13 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             errDateVente.Text = "";
             errDateVente.CssClass = "text-danger hidden";
         }
-        if (tbPoids.Text == "" || !exprPoids.IsMatch(tbPoids.Text) || double.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 66)
+        if (tbPoids.Text == "" || !exprPoids.IsMatch(tbPoids.Text))
         {
             tbPoids.CssClass = "form-control border-danger";
             if (tbPoids.Text == "")
                 errPoids.Text = "Le poids ne peut pas être vide";
-            else if (!exprPoids.IsMatch(tbPoids.Text))
-                errPoids.Text = "Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule";
             else
-                errPoids.Text = "Le poids de l'article ne peut pas dépasser le poids de livraison maximum permis de 66 lbs";
+                errPoids.Text = "Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule";
             errPoids.CssClass = "text-danger";
         }
         else
@@ -478,38 +479,19 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             }
 
             foreach (Control controle in Page.Form.Controls)
-            {
                 if (controle.HasControls())
-                {
                     foreach (Control controleEnfant in controle.Controls)
-                    {
                         if (controleEnfant is TextBox)
-                        {
                             ((TextBox)controleEnfant).Text = "";
-                            ((TextBox)controleEnfant).Enabled = true;
-                        }
-
                         else if (controleEnfant is DropDownList)
-                        {
                             ((DropDownList)controleEnfant).ClearSelection();
-                            ((DropDownList)controleEnfant).Enabled = true;
-                        }
-                    }
-                }
                 else
-                {
                     if (controle is TextBox)
-                    {
                         ((TextBox)controle).Text = "";
-                        ((TextBox)controle).Enabled = true;
-                    }
                     else if (controle is DropDownList)
-                    {
                         ((DropDownList)controle).ClearSelection();
-                        ((DropDownList)controle).Enabled = true;
-                    }
-                }
-            }
+            imgTeleverse.ImageUrl = "~/static/images/image_placeholder.png";
+            imgTeleverse.CssClass = "thumbnail img-responsive";
             initialiserDate();
             btnOui.CssClass = "btn Orange active";
             btnNon.CssClass = "btn Orange notActive";

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Web;
 
 /// <summary>
 /// Description résumée de LibrairieCourriel
@@ -13,7 +10,7 @@ public static class LibrairieCourriel
     private static SmtpClient smtpClient =
         new SmtpClient("smtp.gmail.com", 587) {
             EnableSsl = true,
-            Credentials = new NetworkCredential("ppuces@gmail.com", "Secret98112")
+            Credentials = new NetworkCredential("ppuces@gmail.com", "Secret!123")
         };
 
     public static bool envoyerCourriel(MailMessage message)

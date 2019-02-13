@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="InscriptionClientVendeur.aspx.cs" Inherits="Pages_InscriptionClientVendeur" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="ModificationProfilVendeur.aspx.cs" Inherits="Pages_ModificationProfilVendeur" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 <style>
@@ -40,9 +40,14 @@
             <asp:Label ID="lblMessage" runat="server" />
             <br />
          </asp:Panel>
+         
       </div>
    </div>
    <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
+   <div class="form-group">
+      <asp:TextBox ID="tbNomEntreprise" runat="server" CssClass="form-control" placeholder="Nom de l'entreprise" MaxLength="50" />
+      <asp:Label ID="errNomEntreprise" runat="server" CssClass="text-danger hidden" />
+   </div> 
    <div class="row">
       <div class="form-group col-sm-6">
          <asp:TextBox ID="tbPrenom" runat="server" CssClass="form-control" placeholder="Prénom" MaxLength="50" />
@@ -86,27 +91,69 @@
       <asp:Label ID="errTelephone2" runat="server" CssClass="text-danger hidden" />
    </div>
    <div class="form-group">
-      <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" />
-      <asp:Label ID="errCourriel" runat="server" CssClass="text-danger hidden" />
-      <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" MaxLength="100" />
-      <asp:Label ID="errConfirmationCourriel" runat="server" CssClass="text-danger hidden" />
+      <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" Enabled="False" />
    </div>
    <div class="form-group">
-      <asp:TextBox ID="tbMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Mot de passe" MaxLength="50" />
-      <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger hidden" />
-      <asp:TextBox ID="tbConfirmationMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Confimation mot de passe" MaxLength="50" />
-      <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger hidden" />
+      <div class="input-group">
+         <asp:TextBox ID="tbPoidsMaxLivraison" runat="server" TextMode="Number" CssClass="form-control" placeholder="Poids de livraison maximum" />
+         <span class="input-group-addon">lbs</span>
+      </div>
+      <asp:Label ID="errPoidsMaxLivraison" runat="server" CssClass="text-danger hidden" />
    </div>
-   <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="S'inscrire" OnClick="btnInscription_Click" />
+   <div class="form-group">
+      <div class="input-group">
+         <asp:TextBox ID="tbLivraisonGratuite" runat="server" TextMode="Number" step="0.01" CssClass="form-control" placeholder="Montant pour avoir la livraison gratuite" />
+         <span class="input-group-addon">$</span>
+      </div>
+      <asp:Label ID="errLivraisonGratuite" runat="server" CssClass="text-danger hidden" /> 
+   </div>
+   <div class="form-group text-center">
+      <label class="checkbox-inline"><asp:CheckBox ID="cbTaxes" runat="server" />Exemption taxes</label>
+   </div>
+   <hr />
+   <h1 class="h4 mb-3 font-weight-normal">Configuration du magasin</h1>
+   <div class="row">
+      <div class="form-group col-sm-6">
+         <div class="input-group">
+            <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 100px" ImageUrl="~/static/images/image_placeholder.png" />
+            <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
+            <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
+            <input id="btnSelectionnerImage" type="button" class="btn btn-block Orange" value="Sélectionner une image" runat="server" />
+            <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
+         </div>
+      </div>
+      <div class="col-sm-6">
+         <div class="form-group">
+            Couleur de fond <input id="cpCouleurFond" runat="server" type="color" />
+         </div>
+         <div class="form-group">
+            Couleur de texte <input id="cpCouleurTexte" runat="server" type="color" />
+         </div>
+      </div>
+   </div>
+   <asp:Button ID="btnModifierProfil" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le profil" OnClick="btnModifierProfil_Click" />
 </div>
 <script>
    $(document).ready(function () {
+      var exprNomEntreprise = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
       var exprNomOuPrenom = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$/;
       var exprAdresse = /^(\d+-)?\d+([a-zA-Z]|\s\d\/\d)?\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
       var exprCodePostal = /^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i;
       var exprTelephone = /^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
-      var exprCourriel = /^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\.[a-z]+$/;
-      var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
+      var exprPoids = /^\d+$/;
+      var exprMontant = /^\d+\.\d{2}$/;
+      $("#contentBody_tbNomEntreprise").focusout(function () {
+         if ($("#contentBody_tbNomEntreprise").val() == '') {
+            $("#contentBody_tbNomEntreprise").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise ne peut pas être vide').removeClass('hidden');
+         } else if (!exprNomEntreprise.test($("#contentBody_tbNomEntreprise").val())) {
+            $("#contentBody_tbNomEntreprise").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise n\'est pas dans un format valide').removeClass('hidden');
+         } else {
+            $("#contentBody_tbNomEntreprise").removeClass("border-danger").addClass("border-success");
+            $("#contentBody_errNomEntreprise").text('').addClass('hidden');
+         }
+      });
       $("#contentBody_tbNom").focusout(function () {
          if ($("#contentBody_tbNom").val() == '') {
             $("#contentBody_tbNom").removeClass("border-success").addClass("border-danger");
@@ -197,77 +244,49 @@
             $("#contentBody_errTelephone2").text('').addClass('hidden');
          }
       });
-      $("#contentBody_tbCourriel").focusout(function () {
-         if ($("#contentBody_tbCourriel").val() == '') {
-            $("#contentBody_tbCourriel").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errCourriel").text('Le courriel ne peut pas être vide').removeClass('hidden');
-         } else if (!exprCourriel.test($("#contentBody_tbCourriel").val())) {
-            $("#contentBody_tbCourriel").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errCourriel").text('Le courriel n\'est pas dans un format valide').removeClass('hidden');
+      $("#contentBody_tbPoidsMaxLivraison").focusout(function () {
+         if ($("#contentBody_tbPoidsMaxLivraison").val() == '') {
+            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('hidden');
+         } else if (!exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val())) {
+            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('hidden');
          } else {
-            $("#contentBody_tbCourriel").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errCourriel").text('').addClass('hidden');
-            if ($("#contentBody_tbConfirmationCourriel").val() != '' && exprCourriel.test($("#contentBody_tbConfirmationCourriel").val())) {
-               if ($("#contentBody_tbConfirmationCourriel").val() != $("#contentBody_tbCourriel").val()) {
-                  $("#contentBody_tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('hidden');
-               } else {
-                  $("#contentBody_tbConfirmationCourriel").removeClass("border-danger").addClass("border-success");
-                  $("#contentBody_errConfirmationCourriel").text('').addClass('hidden');
-               }
-            }
+            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-danger").addClass("border-success");
+            $("#contentBody_errPoidsMaxLivraison").text('').addClass('hidden');
          }
       });
-      $("#contentBody_tbConfirmationCourriel").focusout(function () {
-         if ($("#contentBody_tbConfirmationCourriel").val() == '') {
-            $("#contentBody_tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').removeClass('hidden');
-         } else if (!exprCourriel.test($("#contentBody_tbConfirmationCourriel").val())) {
-            $("#contentBody_tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').removeClass('hidden');
-         } else if ($("#contentBody_tbConfirmationCourriel").val() != $("#contentBody_tbCourriel").val()) {
-            $("#contentBody_tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('hidden');
+      $("#contentBody_tbLivraisonGratuite").focusout(function () {
+         if ($("#contentBody_tbLivraisonGratuite").val() == '') {
+            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('hidden');
+         } else if (!exprMontant.test($("#contentBody_tbLivraisonGratuite").val())) {
+            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
+         } else if ($("#contentBody_tbLivraisonGratuite").val() > 214748.36) {
+            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('hidden');
          } else {
-            $("#contentBody_tbConfirmationCourriel").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errConfirmationCourriel").text('').addClass('hidden');
+            $("#contentBody_tbLivraisonGratuite").removeClass("border-danger").addClass("border-success");
+            $("#contentBody_errLivraisonGratuite").text('').addClass('hidden');
          }
+       });
+      $("#contentBody_fImage").change(function () {
+         $("#contentBody_btnTeleverserImage").click();
       });
-      $("#contentBody_tbMotPasse").focusout(function () {
-         if ($("#contentBody_tbMotPasse").val() == '') {
-            $("#contentBody_tbMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errMotPasse").text('Le mot de passe ne peut pas être vide').removeClass('hidden');
-         } else if (!exprMotPasse.test($("#contentBody_tbMotPasse").val())) {
-            $("#contentBody_tbMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('hidden');
-         } else {
-            $("#contentBody_tbMotPasse").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errMotPasse").text('').addClass('hidden');
-            if ($("#contentBody_tbConfirmationMotPasse").val() != '') {
-               if ($("#contentBody_tbConfirmationMotPasse").val() != $("#contentBody_tbMotPasse").val()) {
-                  $("#contentBody_tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('hidden');
-               } else {
-                  $("#contentBody_tbConfirmationMotPasse").removeClass("border-danger").addClass("border-success");
-                  $("#contentBody_errConfirmationMotPasse").text('').addClass('hidden');
-               }
-            }
-         }
+      $("#contentBody_btnSelectionnerImage").click(function () {
+         $("#contentBody_fImage").click();
       });
-      $("#contentBody_tbConfirmationMotPasse").focusout(function () {
-         if ($("#contentBody_tbConfirmationMotPasse").val() == '') {
-            $("#contentBody_tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').removeClass('hidden');
-         } else if ($("#contentBody_tbConfirmationMotPasse").val() != $("#contentBody_tbMotPasse").val()) {
-            $("#contentBody_tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('hidden');
-         } else {
-            $("#contentBody_tbConfirmationMotPasse").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errConfirmationMotPasse").text('').addClass('hidden');
-         }
-      });
-      $("#contentBody_btnInscription").click(function () {
+      $("#contentBody_btnModifierProfil").click(function () {
          var binPageValide = true;
+         if ($("#contentBody_tbNomEntreprise").val() == '' || !exprNomEntreprise.test($("#contentBody_tbNomEntreprise").val())) {
+            $("#contentBody_tbNomEntreprise").removeClass("border-success").addClass("border-danger");
+            if ($("#contentBody_tbNomEntreprise").val() == '')
+               $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise ne peut pas être vide').removeClass('hidden');
+            else
+               $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise n\'est pas dans un format valide').removeClass('hidden');
+            binPageValide = false;
+         }
          if ($("#contentBody_tbNom").val() == '' || !exprNomOuPrenom.test($("#contentBody_tbNom").val())) {
             $("#contentBody_tbNom").removeClass("border-success").addClass("border-danger");
             if ($("#contentBody_tbNom").val() == '')
@@ -326,38 +345,22 @@
             $("#contentBody_errTelephone2").text('Le téléphone 2 n\'est pas dans un format valide').removeClass('hidden');
             binPageValide = false;
          }
-         if ($("#contentBody_tbCourriel").val() == '' || !exprCourriel.test($("#contentBody_tbCourriel").val())) {
-            $("#contentBody_tbCourriel").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbCourriel").val() == '')
-               $("#contentBody_errCourriel").text('Le courriel ne peut pas être vide').removeClass('hidden');
+         if ($("#contentBody_tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val())) {
+            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
+            if ($("#contentBody_tbPoidsMaxLivraison").val() == '')
+               $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('hidden');
             else
-               $("#contentBody_errCourriel").text('Le courriel n\'est pas dans un format valide').removeClass('hidden');
+               $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('hidden');
             binPageValide = false;
          }
-         if ($("#contentBody_tbConfirmationCourriel").val() == '' || !exprCourriel.test($("#contentBody_tbConfirmationCourriel").val()) || $("#contentBody_tbConfirmationCourriel").val() != $("#contentBody_tbCourriel").val()) {
-            $("#contentBody_tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbConfirmationCourriel").val() == '')
-               $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').removeClass('hidden');
-            else if (!exprCourriel.test($("#contentBody_tbConfirmationCourriel").val()))
-               $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').removeClass('hidden');
+         if ($("#contentBody_tbLivraisonGratuite").val() == '' || !exprMontant.test($("#contentBody_tbLivraisonGratuite").val()) || $("#contentBody_tbLivraisonGratuite").val() > 214748.36) {
+            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
+            if ($("#contentBody_tbLivraisonGratuite").val() == '')
+               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('hidden');
+            else if (!exprMontant.test($("#contentBody_tbLivraisonGratuite").val()))
+               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
             else
-               $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('hidden');                                   
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbMotPasse").val() == '' || !exprMotPasse.test($("#contentBody_tbMotPasse").val())) {
-            $("#contentBody_tbMotPasse").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbMotPasse").val() == '')
-               $("#contentBody_errMotPasse").text('Le mot de passe ne peut pas être vide').removeClass('hidden');
-            else
-               $("#contentBody_errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbConfirmationMotPasse").val() == '' || $("#contentBody_tbConfirmationMotPasse").val() != $("#contentBody_tbMotPasse").val()) {
-            $("#contentBody_tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbConfirmationMotPasse").val() == '')
-               $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').removeClass('hidden');
-            else
-               $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('hidden');
+               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('hidden');
             binPageValide = false;
          }
          return binPageValide;
