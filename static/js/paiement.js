@@ -31,7 +31,6 @@ function lesiForm() {
         toutValide = false;
     }
     else {
-        alert("No carte OK")
         document.getElementById('contentBody_noCarte').classList.remove('erreur');
     }
 
@@ -40,7 +39,6 @@ function lesiForm() {
         toutValide = false;
     }
     else {
-        alert("No securite OK")
         document.getElementById('contentBody_tbCVV').classList.remove('erreur');
     }
 
@@ -72,7 +70,6 @@ function lesiForm() {
 
     if (dateValide) {
         document.getElementById('contentBody_tbDate').classList.remove('erreur');
-        alert("Date carte OK");
     }
     else {
         document.getElementById('contentBody_tbDate').classList.add('erreur');
