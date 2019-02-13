@@ -33,10 +33,19 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             noPage = Convert.ToInt32(Request.QueryString["NoPage"]);
 
         }
-
-        noVendeur = Session["NoVendeurCatalogue"] != null ? Convert.ToInt32(Session["NoVendeurCatalogue"]) : 11;
+        if(Session["NoVendeurCatalogue"]!= null || Session["NoClient"] != null)
+        {
+            noVendeur = Session["NoVendeurCatalogue"] != null ? Convert.ToInt32(Session["NoVendeurCatalogue"]) : 11;
+            noClient = Convert.ToInt32(Session["NoClient"]);
+        }
+        else
+        {
+            string url = "~/Pages/Connexion.aspx?";
+            Response.Redirect(url);
+        }
+       
         //noClient = long.Parse(Session["NoClient"].ToString());
-        noClient = 10001;
+       
         int result;
         if (intNbPage == 0 && int.TryParse(ddlNbParPage.SelectedItem.Text, out result))
             intNbPage = result;
@@ -210,13 +219,32 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         TextBox tb = (TextBox)colQuantite.FindControl("quantite_" + noProduit);
         short nbItems = short.Parse(tb.Text.Trim());
         PPArticlesEnPanier nouvelArticle = new PPArticlesEnPanier();
-        nouvelArticle.NoPanier = dbContext.PPArticlesEnPanier.Max(c => c.NoPanier) + 1; 
-        nouvelArticle.NoClient = noClient;
-        nouvelArticle.NoVendeur = noVendeur;
-        nouvelArticle.NoProduit = noProduit;
-        nouvelArticle.DateCreation = DateTime.Now;
-        nouvelArticle.NbItems = nbItems;
-        dbContext.PPArticlesEnPanier.Add(nouvelArticle);
+        System.Diagnostics.Debug.WriteLine(" NO CLIENT "+ noClient + " noVendeur " + noVendeur + " noProduit " + noProduit);
+        List<PPArticlesEnPanier> articleExistants = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.NoProduit == noProduit)).ToList();
+        
+        if (articleExistants.Count >0 )
+        {
+            PPArticlesEnPanier articleExistant = articleExistants.First();
+            //articleExistant;
+            //nouvelArticle.NoPanier = articleExistant.NoPanier;
+            articleExistant.NoClient = noClient;
+            articleExistant.NoVendeur = noVendeur;
+            articleExistant.NoProduit = noProduit;
+            articleExistant.DateCreation = DateTime.Now;
+            articleExistant.NbItems = nbItems;
+        }
+        else
+        {
+            nouvelArticle.NoPanier = dbContext.PPArticlesEnPanier.Max(c => c.NoPanier) + 1;
+            nouvelArticle.NoClient = noClient;
+            nouvelArticle.NoVendeur = noVendeur;
+            nouvelArticle.NoProduit = noProduit;
+            nouvelArticle.DateCreation = DateTime.Now;
+            nouvelArticle.NbItems = nbItems;
+            dbContext.PPArticlesEnPanier.Add(nouvelArticle);
+        }      
+       
+        
 
         try
         {

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="ModificationProfilVendeur.aspx.cs" Inherits="Pages_ModificationProfilVendeur" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="SaisieProfilClient.aspx.cs" Inherits="Pages_SaisieProfilClient" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 <style>
@@ -43,10 +43,6 @@
       </div>
    </div>
    <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
-   <div class="form-group">
-      <asp:TextBox ID="tbNomEntreprise" runat="server" CssClass="form-control" placeholder="Nom de l'entreprise" MaxLength="50" />
-      <asp:Label ID="errNomEntreprise" runat="server" CssClass="text-danger hidden" />
-   </div> 
    <div class="row">
       <div class="form-group col-sm-6">
          <asp:TextBox ID="tbPrenom" runat="server" CssClass="form-control" placeholder="Prénom" MaxLength="50" />
@@ -90,77 +86,19 @@
       <asp:Label ID="errTelephone2" runat="server" CssClass="text-danger hidden" />
    </div>
    <div class="form-group">
-      <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" Enabled="False" />
+      <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" Enabled="false" />     
    </div>
-   <div class="form-group">
-      <div class="input-group">
-         <asp:TextBox ID="tbPoidsMaxLivraison" runat="server" TextMode="Number" CssClass="form-control" placeholder="Poids de livraison maximum" />
-         <span class="input-group-addon">lbs</span>
-      </div>
-      <asp:Label ID="errPoidsMaxLivraison" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <div class="input-group">
-         <asp:TextBox ID="tbLivraisonGratuite" runat="server" TextMode="Number" step="0.01" CssClass="form-control" placeholder="Montant pour avoir la livraison gratuite" />
-         <span class="input-group-addon">$</span>
-      </div>
-      <asp:Label ID="errLivraisonGratuite" runat="server" CssClass="text-danger hidden" /> 
-   </div>
-   <div class="form-group text-center">
-      <label class="checkbox-inline"><asp:CheckBox ID="cbTaxes" runat="server" />Exemption taxes</label>
-   </div>
-   <hr />
-   <h1 class="h4 mb-3 font-weight-normal">Configuration du magasin</h1>
-   <div class="row">
-      <div class="col-sm-6">
-         <div class="input-group">
-            <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 100px" ImageUrl="~/static/images/image_placeholder.png" />
-            <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
-            <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" /> 
-            <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
-         </div>
-      </div>
-      <div class="col-sm-6">
-         <div class="form-group">
-            Couleur de fond <input id="cpCouleurFond" runat="server" type="color" />
-         </div>
-         <div class="form-group">
-            Couleur de texte <input id="cpCouleurTexte" runat="server" type="color" />
-         </div>
-      </div>
-   </div>
-   <div class="row">
-      <div class="form-group col-sm-6">
-         <input id="btnSelectionnerImage" type="button" class="btn Orange" value="Sélectionner une image" runat="server" visible="false" />
-         <input id="btnChangerImage" type="button" class="btn Orange" value="Changer l'image" runat="server" visible="false" />
-      </div>
-      <div class="form-group col-sm-6">
-         <asp:Button ID="btnRemiseAZero" runat="server" CssClass="btn Orange" Text="Remettre les valeurs par défaut" OnClick="btnRemiseAZero_Click" />
-      </div>
-   </div>
-   <asp:Button ID="btnModifierProfil" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le profil" OnClick="btnModifierProfil_Click" />
+   
+   <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier" OnClick="btnInscription_Click" />
 </div>
 <script>
    $(document).ready(function () {
-      var exprNomEntreprise = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
-      var exprNomOuPrenom = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$/;
-      var exprAdresse = /^(\d+-)?\d+([a-zA-Z]|\s\d\/\d)?\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
-      var exprCodePostal = /^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i;
-      var exprTelephone = /^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
-      var exprPoids = /^\d+$/;
-      var exprMontant = /^\d+\.\d{2}$/;
-      $("#contentBody_tbNomEntreprise").focusout(function () {
-         if ($("#contentBody_tbNomEntreprise").val() == '') {
-            $("#contentBody_tbNomEntreprise").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise ne peut pas être vide').removeClass('hidden');
-         } else if (!exprNomEntreprise.test($("#contentBody_tbNomEntreprise").val())) {
-            $("#contentBody_tbNomEntreprise").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise n\'est pas dans un format valide').removeClass('hidden');
-         } else {
-            $("#contentBody_tbNomEntreprise").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errNomEntreprise").text('').addClass('hidden');
-         }
-      });
+      var exprNomOuPrenom = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$/;
+      var exprAdresse = /^(\d+-)?\d+([a-zA-Z]| \d\/\d)? [a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])* [a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-' ][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
+      var exprCodePostal = /^[A-Z]\d[A-Z] ?\d[A-Z]\d$/i;
+      var exprTelephone = /^((\([0-9]{3}\) |[0-9]{3}[ -])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
+      var exprCourriel = /^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\.[a-z]+$/;
+      var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
       $("#contentBody_tbNom").focusout(function () {
          if ($("#contentBody_tbNom").val() == '') {
             $("#contentBody_tbNom").removeClass("border-success").addClass("border-danger");
@@ -251,65 +189,9 @@
             $("#contentBody_errTelephone2").text('').addClass('hidden');
          }
       });
-      $("#contentBody_tbPoidsMaxLivraison").focusout(function () {
-         if ($("#contentBody_tbPoidsMaxLivraison").val() == '') {
-            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('hidden');
-         } else if (!exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val())) {
-            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('hidden');
-         } else {
-            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errPoidsMaxLivraison").text('').addClass('hidden');
-         }
-      });
-      $("#contentBody_tbLivraisonGratuite").focusout(function () {
-         if ($("#contentBody_tbLivraisonGratuite").val() == '') {
-            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('hidden');
-         } else if (!exprMontant.test($("#contentBody_tbLivraisonGratuite").val())) {
-            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
-         } else if ($("#contentBody_tbLivraisonGratuite").val() > 214748.36) {
-            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('hidden');
-         } else {
-            $("#contentBody_tbLivraisonGratuite").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errLivraisonGratuite").text('').addClass('hidden');
-         }
-      });
-      if ($("#contentBody_imgTeleverse").attr('src') != '../static/images/image_magasin.jpg')
-         $("#contentBody_btnRemiseAZero").removeAttr('disabled');
-      else if ($("#contentBody_cpCouleurFond").val() == '#ffffff' && $("#contentBody_cpCouleurTexte").val() == '#000000')
-            $("#contentBody_btnRemiseAZero").attr('disabled', 'disabled');
-      $("#contentBody_fImage").change(function () {
-         $("#contentBody_btnTeleverserImage").click();
-      });
-      $("#contentBody_btnSelectionnerImage,#contentBody_btnChangerImage").click(function () {
-         $("#contentBody_fImage").click();
-      });
-      $("#contentBody_cpCouleurFond").change(function () {
-         if ($("#contentBody_cpCouleurFond").val() != '#ffffff')
-            $("#contentBody_btnRemiseAZero").removeAttr('disabled');
-         else if ($("#contentBody_imgTeleverse").attr('src') == '../static/images/image_magasin.jpg' && $("#contentBody_cpCouleurTexte").val() == '#000000')
-            $("#contentBody_btnRemiseAZero").attr('disabled', 'disabled');
-      });
-      $("#contentBody_cpCouleurTexte").change(function () {
-         if ($("#contentBody_cpCouleurTexte").val() != '#000000')
-            $("#contentBody_btnRemiseAZero").removeAttr('disabled');
-         else if ($("#contentBody_imgTeleverse").attr('src') == '../static/images/image_magasin.jpg' && $("#contentBody_cpCouleurFond").val() == '#ffffff')
-            $("#contentBody_btnRemiseAZero").attr('disabled', 'disabled');
-      });
-      $("#contentBody_btnModifierProfil").click(function () {
+     
+      $("#contentBody_btnInscription").click(function () {
          var binPageValide = true;
-         if ($("#contentBody_tbNomEntreprise").val() == '' || !exprNomEntreprise.test($("#contentBody_tbNomEntreprise").val())) {
-            $("#contentBody_tbNomEntreprise").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbNomEntreprise").val() == '')
-               $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise ne peut pas être vide').removeClass('hidden');
-            else
-               $("#contentBody_errNomEntreprise").text('Le nom de l\'entreprise n\'est pas dans un format valide').removeClass('hidden');
-            binPageValide = false;
-         }
          if ($("#contentBody_tbNom").val() == '' || !exprNomOuPrenom.test($("#contentBody_tbNom").val())) {
             $("#contentBody_tbNom").removeClass("border-success").addClass("border-danger");
             if ($("#contentBody_tbNom").val() == '')
@@ -366,24 +248,6 @@
          if ($("#contentBody_tbTelephone2").val() != '' && !exprTelephone.test($("#contentBody_tbTelephone2").val())) {
             $("#contentBody_tbTelephone2").removeClass("border-success").addClass("border-danger");
             $("#contentBody_errTelephone2").text('Le téléphone 2 n\'est pas dans un format valide').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val())) {
-            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbPoidsMaxLivraison").val() == '')
-               $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('hidden');
-            else
-               $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbLivraisonGratuite").val() == '' || !exprMontant.test($("#contentBody_tbLivraisonGratuite").val()) || $("#contentBody_tbLivraisonGratuite").val() > 214748.36) {
-            $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbLivraisonGratuite").val() == '')
-               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('hidden');
-            else if (!exprMontant.test($("#contentBody_tbLivraisonGratuite").val()))
-               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
-            else
-               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('hidden');
             binPageValide = false;
          }
          return binPageValide;

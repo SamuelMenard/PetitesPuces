@@ -51,6 +51,8 @@
                     <span class="glyphicon glyphicon-shopping-cart nav-color"></span> Panier</asp:LinkButton></li>
                <li><asp:LinkButton ID="lbInfosPersos" CssClass="nav-color" runat="server" OnClick="infosPersos_click" Visible="false">
                     <span class="glyphicon glyphicon-cog nav-color"></span> Gérer mon profil</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lblInfoPersoVendeur" CssClass="nav-color" runat="server" OnClick="infosPersosVendeur_click" Visible="false">
+                    <span class="glyphicon glyphicon-cog nav-color"></span> Gérer mon profil</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbGererCommandes" CssClass="nav-color" runat="server" OnClick="gererCommandes_click" Visible="false">
                     <span class="glyphicon glyphicon-cog nav-color"></span> Gérer commandes</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbPaniersInactifs" CssClass="nav-color" runat="server" OnClick="paniersInactifs_click" Visible="false">
@@ -58,7 +60,7 @@
                 <li><asp:LinkButton ID="lbAjoutProduit" CssClass="nav-color" runat="server" OnClick="ajoutProduit_click" Visible="false">
                     <span class="glyphicon glyphicon-cog nav-color"></span> Ajout produit</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbSupprimerProduit" CssClass="nav-color" runat="server" OnClick="supprimerProduit_click" Visible="false">
-                    <span class="glyphicon glyphicon-cog nav-color"></span> Supprimer produit</asp:LinkButton></li>
+                    <span class="glyphicon glyphicon-cog nav-color"></span> Gestion des produits</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbRechercheDetaillee" CssClass="nav-color" runat="server" OnClick="rechercheDetaillee_click" Visible="false">
                     <span class="glyphicon glyphicon-search nav-color"></span> Recherche détaillée</asp:LinkButton></li>
             </ul>

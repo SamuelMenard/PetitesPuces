@@ -50,6 +50,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         lbPaniersInactifs.Visible = true;
         lbAjoutProduit.Visible = true;
         lbSupprimerProduit.Visible = true;
+        lblInfoPersoVendeur.Visible = true;
     }
 
     public void affichageGestionnaire()
@@ -102,9 +103,15 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         Response.Redirect(url, true);
     }
 
+    public void infosPersosVendeur_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/ModificationProfilVendeur.aspx?";
+        Response.Redirect(url, true);
+    }
+
     public void infosPersos_click(Object sender, EventArgs e)
     {
-        String url = "~/Pages/SaisieModificationProfil.aspx?";
+        String url = "~/Pages/SaisieProfilClient.aspx?";
         Response.Redirect(url, true);
     }
 

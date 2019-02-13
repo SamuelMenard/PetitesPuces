@@ -70,7 +70,8 @@
          <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 200px" ImageUrl="~/static/images/image_placeholder.png" />
          <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
          <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
-         <input id="btnSelectionnerImage" type="button" class="btn btn-block Orange" value="Sélectionner une image" runat="server" />
+         <input id="btnSelectionnerImage" type="button" class="btn btn-block Orange" value="Sélectionner une image" runat="server" visible="false" />
+         <input id="btnChangerImage" type="button" class="btn btn-block Orange" value="Changer l'image" runat="server" visible="false" />
          <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
       </div>
    </div>
@@ -176,7 +177,7 @@
       $("#contentBody_fImage").change(function () {
          $("#contentBody_btnTeleverserImage").click();
       });
-      $("#contentBody_btnSelectionnerImage").click(function () {
+      $("#contentBody_btnSelectionnerImage,#contentBody_btnChangerImage").click(function () {
          $("#contentBody_fImage").click();
       });
       $('#contentBody_tbNbItems').focusout(function () {
@@ -268,7 +269,6 @@
             binPageValide = false;
          }
          if ($('#contentBody_imgTeleverse').attr('src') == '../static/images/image_placeholder.png') {
-            $('#contentBody_imgTeleverse').addClass('border-danger')
             if ($('#contentBody_errImage').text() == '')
                $('#contentBody_errImage').text('Vous devez sélectionner une image').removeClass('hidden');
             binPageValide = false;

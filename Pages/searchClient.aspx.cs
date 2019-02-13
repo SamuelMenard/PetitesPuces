@@ -210,7 +210,16 @@ public partial class Pages_searchClient : System.Web.UI.Page
         TextBox tb = (TextBox)colQuantite.FindControl("quantite_" + noProduit);
         short nbItems = short.Parse(tb.Text.Trim());
         PPArticlesEnPanier nouvelArticle = new PPArticlesEnPanier();
-        nouvelArticle.NoPanier = dbContext.PPArticlesEnPanier.Max(c => c.NoPanier) + 1; 
+        PPArticlesEnPanier articleExistant = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.NoProduit == noProduit)).First();
+        if(articleExistant != null)
+        {
+            nouvelArticle = articleExistant;
+            //nouvelArticle.NoPanier = articleExistant.NoPanier;
+        }
+        else
+        {
+            nouvelArticle.NoPanier = dbContext.PPArticlesEnPanier.Max(c => c.NoPanier) + 1;
+        }       
         nouvelArticle.NoClient = noClient;
         nouvelArticle.NoVendeur = noVendeur;
         nouvelArticle.NoProduit = noProduit;

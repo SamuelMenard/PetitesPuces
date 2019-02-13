@@ -16,45 +16,66 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
     public void btnConnexion_click(Object sender, EventArgs e)
     {
-        String typeUtilisateur = ddlTypeUtilisateur.SelectedValue.ToString();
+        String typeUtilisateur = null;
         String courriel = tbCourriel.Text;
         String MDP = tbMDP.Text;
+
+        if (dbContext.PPClients.Where(c => c.AdresseEmail == courriel).Any())
+            typeUtilisateur = "C";
+        else if (dbContext.PPVendeurs.Where(v => v.AdresseEmail == courriel).Any())
+            typeUtilisateur = "V";
+        else if (dbContext.PPGestionnaires.Where(g => g.courriel == courriel).Any())
+            typeUtilisateur = "G";
 
         bool verdictConnexion = false;
         String url = "";
 
-        int codeErreur = LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur);
+        int codeErreur = typeUtilisateur != null ? LibrairieLINQ.connexionOK(courriel, MDP, typeUtilisateur) : 401;
 
-        if (typeUtilisateur == "C" && codeErreur == 400)
+        if (typeUtilisateur != null)
         {
-            verdictConnexion = true;
-            List<String> lstInfos = LibrairieLINQ.infosBaseClient(courriel);
-            Session["TypeUtilisateur"] = "C";
-            Session["NoClient"] = lstInfos[0];
-            Session["Nom"] = lstInfos[1];
-            Session["Prenom"] = lstInfos[2];
-            Session["Courriel"] = lstInfos[3];
-            url = "~/Pages/AccueilClient.aspx?";
+            if (typeUtilisateur == "C" && codeErreur == 400)
+            {
+                verdictConnexion = true;
+                List<String> lstInfos = LibrairieLINQ.infosBaseClient(courriel);
+                Session["TypeUtilisateur"] = "C";
+                Session["NoClient"] = lstInfos[0];
+                Session["Nom"] = lstInfos[1];
+                Session["Prenom"] = lstInfos[2];
+                Session["Courriel"] = lstInfos[3];
+                url = "~/Pages/AccueilClient.aspx?";
 
-        }
-        else if (typeUtilisateur == "V" && codeErreur == 400)
-        {
-            verdictConnexion = true;
-            List<String> lstInfos = LibrairieLINQ.infosBaseVendeur(courriel);
-            Session["TypeUtilisateur"] = "V";
-            Session["NoVendeur"] = lstInfos[0];
-            Session["NomAffaire"] = lstInfos[1];
-            Session["Nom"] = lstInfos[2];
-            Session["Prenom"] = lstInfos[3];
-            Session["Courriel"] = lstInfos[4];
-            url = "~/Pages/ConnexionVendeur.aspx?";
+                PPClients client = dbContext.PPClients.Where(c => c.AdresseEmail == courriel).Single();
+                if (client.DateDerniereConnexion.Value.Date != DateTime.Now.Date)
+                {
+                    client.NbConnexions++;
+                    client.DateDerniereConnexion = DateTime.Now;
+                }
 
-        }
-        else if (typeUtilisateur == "G" && codeErreur == 400)
-        {
-            verdictConnexion = true;
-            Session["TypeUtilisateur"] = "G";
-            url = "~/Pages/AcceuilGestionnaire.aspx?";
+                try
+                {
+                    dbContext.SaveChanges();
+                }
+                catch { }
+            }
+            else if (typeUtilisateur == "V" && codeErreur == 400)
+            {
+                verdictConnexion = true;
+                List<String> lstInfos = LibrairieLINQ.infosBaseVendeur(courriel);
+                Session["TypeUtilisateur"] = "V";
+                Session["NoVendeur"] = lstInfos[0];
+                Session["NomAffaire"] = lstInfos[1];
+                Session["Nom"] = lstInfos[2];
+                Session["Prenom"] = lstInfos[3];
+                Session["Courriel"] = lstInfos[4];
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (typeUtilisateur == "G" && codeErreur == 400)
+            {
+                verdictConnexion = true;
+                Session["TypeUtilisateur"] = "G";
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
         }
 
         if (verdictConnexion)

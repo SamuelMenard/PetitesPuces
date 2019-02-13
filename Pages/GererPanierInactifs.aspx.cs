@@ -10,7 +10,6 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
 {
     DropDownList ddlNbMois;
     int moisChoisis;
-
     private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
     long noVendeur;
     String nomEntreprise;
@@ -53,29 +52,25 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
         Panel colInactif = LibrairieControlesDynamique.divDYN(rowInactif, nomEntreprise + "_colInactif2_", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colInactif, nomEntreprise + "_nom2", nomEntreprise + " - " + leVendeur.AdresseEmail, "nom-entreprise");
         panelBody2 = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_PanelBody2", "panel-body");
-        DateTime dateParMois = DateTime.Now.AddMonths(-nbMois);
-      
+
+        DateTime dateParMois = DateTime.Now.AddMonths(-nbMois);      
         DateTime dateParMoisMax = DateTime.Now.AddMonths(-(nbMois+1));
         if (nbMois == 7)
         {
             dateParMoisMax = DateTime.MinValue;
         }
         List<PPArticlesEnPanier> lstPaniersEntreprise = new List<PPArticlesEnPanier>();
-        List<PPClients> lesClients = dbContext.PPArticlesEnPanier.Where(c => (c.NoVendeur == noVendeur) && (c.DateCreation <= dateParMois) && (c.DateCreation >= dateParMoisMax)).OrderBy(C => C.DateCreation).Select(c => c.PPClients).Distinct().ToList();
-        foreach(PPClients leClient in lesClients)
+        List<PPArticlesEnPanier> lstArticles = dbContext.PPArticlesEnPanier.GroupBy(x => x.NoClient).Select(t => t.OrderBy(c => c.DateCreation).FirstOrDefault()).ToList();
+        foreach(PPArticlesEnPanier lesArticles in lstArticles)
         {            
-            if(nbMois != 7)
-            lstPaniersEntreprise.AddRange(dbContext.PPArticlesEnPanier.Where(c => (c.NoVendeur == noVendeur) && (c.NoClient == leClient.NoClient) && (c.DateCreation <= dateParMois) && (c.DateCreation >= dateParMoisMax)).OrderBy(C => C.DateCreation).ToList());
-            else
-                lstPaniersEntreprise.AddRange(dbContext.PPArticlesEnPanier.Where(c => (c.NoVendeur == noVendeur) && (c.NoClient == leClient.NoClient)).OrderBy(C => C.DateCreation).ToList());
-        }
-       // lstPaniersEntreprise = 
+            if ((lesArticles.DateCreation <= dateParMois) && (lesArticles.DateCreation >= dateParMoisMax))
+                lstPaniersEntreprise.AddRange(dbContext.PPArticlesEnPanier.Where(c => (c.NoVendeur == noVendeur) && (c.NoClient == lesArticles.NoClient)).OrderBy(C => C.DateCreation).ToList());
+        }       
         panelBody2.Controls.Clear();
         Panel panCategorie = LibrairieControlesDynamique.divDYN(panelBody2, nomEntreprise + "_pretLivraison2_", "row text-center");
         Panel colCatAfficher = LibrairieControlesDynamique.divDYN(panCategorie, nomEntreprise + "_colLabelPretLivraison2", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colCatAfficher, nomEntreprise + "_labelCategorie2", "Panier Courants ", "infos-payage OrangeTitle");        
         LibrairieControlesDynamique.hrDYN(colCatAfficher, "OrangeBorderPanier", 5);
-
 
         // Rajouter les produits dans le panier
 
