@@ -89,7 +89,7 @@
       <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" Enabled="false" />     
    </div>
    
-   <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="S'inscrire" OnClick="btnInscription_Click" />
+   <asp:Button ID="btnInscription" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier" OnClick="btnInscription_Click" />
 </div>
 <script>
    $(document).ready(function () {
@@ -248,40 +248,6 @@
          if ($("#contentBody_tbTelephone2").val() != '' && !exprTelephone.test($("#contentBody_tbTelephone2").val())) {
             $("#contentBody_tbTelephone2").removeClass("border-success").addClass("border-danger");
             $("#contentBody_errTelephone2").text('Le téléphone 2 n\'est pas dans un format valide').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbCourriel").val() == '' || !exprCourriel.test($("#contentBody_tbCourriel").val())) {
-            $("#contentBody_tbCourriel").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbCourriel").val() == '')
-               $("#contentBody_errCourriel").text('Le courriel ne peut pas être vide').removeClass('hidden');
-            else
-               $("#contentBody_errCourriel").text('Le courriel n\'est pas dans un format valide').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbConfirmationCourriel").val() == '' || !exprCourriel.test($("#contentBody_tbConfirmationCourriel").val()) || $("#contentBody_tbConfirmationCourriel").val() != $("#contentBody_tbCourriel").val()) {
-            $("#contentBody_tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbConfirmationCourriel").val() == '')
-               $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').removeClass('hidden');
-            else if (!exprCourriel.test($("#contentBody_tbConfirmationCourriel").val()))
-               $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').removeClass('hidden');
-            else
-               $("#contentBody_errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('hidden');                                   
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbMotPasse").val() == '' || !exprMotPasse.test($("#contentBody_tbMotPasse").val())) {
-            $("#contentBody_tbMotPasse").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbMotPasse").val() == '')
-               $("#contentBody_errMotPasse").text('Le mot de passe ne peut pas être vide').removeClass('hidden');
-            else
-               $("#contentBody_errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($("#contentBody_tbConfirmationMotPasse").val() == '' || $("#contentBody_tbConfirmationMotPasse").val() != $("#contentBody_tbMotPasse").val()) {
-            $("#contentBody_tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbConfirmationMotPasse").val() == '')
-               $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').removeClass('hidden');
-            else
-               $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('hidden');
             binPageValide = false;
          }
          return binPageValide;

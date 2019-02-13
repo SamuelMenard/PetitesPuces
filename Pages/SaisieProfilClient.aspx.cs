@@ -164,34 +164,25 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         }
         else
         {
-            if (dbContext.PPClients.Where(c => c.AdresseEmail == tbCourriel.Text).Any())
-            {
-                lblMessage.Text = "Il y a déjà un profil associé à ce courriel";
-                divMessage.CssClass = "alert alert-danger alert-margins";
-            }
-            else
-            {
-                long noClient = Convert.ToInt64(Session["NoClient"]);
-                PPClients leClientConnecter = dbContext.PPClients.Where(v => v.NoClient == noClient).Single();
-                PPClients client = new PPClients();
-                client.NoClient = dbContext.PPClients.Max(c => c.NoClient) + 1;
-                client.Nom = tbNom.Text;
-                client.Prenom = tbPrenom.Text;
-                client.Rue = tbAdresse.Text;
-                client.Ville = tbVille.Text;
+           
+                long noClient = Convert.ToInt64(Session["NoClient"]);               
+                PPClients client = dbContext.PPClients.Where(v => v.NoClient == noClient).Single();                
+                client.Nom = tbNom.Text.Trim();
+                client.Prenom = tbPrenom.Text.Trim();
+                client.Rue = tbAdresse.Text.Trim();
+                client.Ville = tbVille.Text.Trim();
                 client.Province = ddlProvince.SelectedValue;
-                client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "");
+                client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "").Trim();
                 client.Pays = "Canada";
                 client.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                 if (!string.IsNullOrEmpty(tbTelephone2.Text))
                     client.Tel2 = tbTelephone2.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
-                client.AdresseEmail = leClientConnecter.AdresseEmail;
-                client.MotDePasse = leClientConnecter.MotDePasse;
-                client.DateCreation = leClientConnecter.DateCreation;
+                client.AdresseEmail = client.AdresseEmail;
+                client.MotDePasse = client.MotDePasse;
+                client.DateCreation = client.DateCreation;
                 client.DateMAJ = DateTime.Now;
-                client.NbConnexions = leClientConnecter.NbConnexions;
-                client.Statut = leClientConnecter.Statut;
-                dbContext.PPClients.Add(client);
+                client.NbConnexions = client.NbConnexions;
+                client.Statut = client.Statut;               
 
                 bool binOK = true;
 
@@ -202,52 +193,8 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
                 catch (Exception)
                 {
                     binOK = false;
-                }
-
-                if (binOK)
-                {
-                    MailMessage message = new MailMessage("ppuces@gmail.com", client.AdresseEmail);
-                    message.Subject = "Création profil Les Petites Puces";
-                    message.Body = string.Format("Bonjour,\n\n" +
-                                                 "Suite à votre demande, votre profil Les Petites Puces a été créé. Votre numéro de client est {0}. Voici vos informations de connexion :\n" +
-                                                 "Identifiant : {1}\n" +
-                                                 "Mot de passe : {2}\n\n" +
-                                                 "Merci de faire affaire avec nous,\n" +
-                                                 "Les Petites Puces",
-                                                 client.NoClient,
-                                                 client.AdresseEmail,
-                                                 client.MotDePasse);
-
-                    if (LibrairieCourriel.envoyerCourriel(message))
-                    {
-                        lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
-                        divMessage.CssClass = "alert alert-success alert-margins";
-                    }
-                    else
-                    {
-                        dbContext.PPClients.Remove(client);
-                        dbContext.SaveChanges();
-
-                        lblMessage.Text = "Votre profil n'a pas pu être créé. Assurez-vous que vous avez saisi correctement votre courriel et que celui-ci existe vraiment.";
-                        divMessage.CssClass = "alert alert-danger alert-margins";
-                    }
-                }
-                else
-                {
-                    lblMessage.Text = "Votre profil n'a pas pu être créé. Réessayez ultérieurement.";
-                    divMessage.CssClass = "alert alert-danger alert-margins";
-                }
-            }
-
-            foreach (Control controle in Page.Form.Controls)
-                if (controle.HasControls())
-                    foreach (Control controleEnfant in controle.Controls)
-                        if (controleEnfant is TextBox)
-                            ((TextBox)controleEnfant).Text = "";
-                else
-                    if (controle is TextBox)
-                        ((TextBox)controle).Text = "";
-            divMessage.Visible = true;
+                }         
+           
         }
     }
 }
