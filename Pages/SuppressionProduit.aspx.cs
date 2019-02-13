@@ -58,10 +58,7 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
        
         panelBody.Controls.Clear();
         // Btn Delete
-        Panel rowDel = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowDel_", "row text-right");
-        Panel colDel = LibrairieControlesDynamique.divDYN(rowDel, nomEntreprise + "_colDel_" , "col-sm-12");
-        HtmlButton btnSupprimer = LibrairieControlesDynamique.htmlbtnDYN(colDel, "btnSupprimer_", "btn btn-danger", "Supprimer le(s) produit(s)", "glyphicon glyphicon-remove", btnSupprimer_click);
-        btnSupprimer.Attributes.Add("onclick", "Confirm();");
+       
        // btnSupprimer.Style.Add("width", "105px");
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorder", 30);
 
@@ -77,7 +74,8 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                 
                 long idItem = Convert.ToInt64(lesProduits[i].NoProduit);
                 String nomProduit = lesProduits[i].Nom.ToString();
-                Double prix = Convert.ToDouble(lesProduits[i].PrixVente);
+                Double prix = Convert.ToDouble(lesProduits[i].PrixDemande);
+                Double prixVente = Convert.ToDouble(lesProduits[i].PrixVente);
                 String urlImage = "../static/images/"+ lesProduits[i].Photo;
                 int noCat = lesProduits[i].NoCategorie.Value;                
                 PPCategories pCategorie = dbContext.PPCategories.Where(c => c.NoCategorie.Equals(noCat)).First();
@@ -92,8 +90,12 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                 LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit_" + idItem, idItem.ToString(), "caption center-block text-center");
 
                 // Nom du produit
-                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom_" + idItem, "col-sm-3 LiensProduits nomClient");
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom_" + idItem, "col-sm-2 LiensProduits nomClient breakWord");
                 LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom_" + idItem, nomProduit, modifierProduit);
+
+                // Modification
+                Panel colMod = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colMod_" + idItem, "col-sm-1 text-center");
+                LibrairieControlesDynamique.btnDYN(colMod, "btnModifier_" + idItem, "btn btnPageOrange", "Modifier", btnModifier_Click);
 
                 // Quantité restant
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-1");
@@ -109,14 +111,22 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-right");
-                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : $" + prix.ToString()+"<br>", "prix_item");
+                if(lesProduits[i].DateVente > DateTime.Now)
+                    LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : $" + prixVente.ToString() + "<br>", "prix_item");
+                else
+                    LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : $" + prixVente.ToString() + "<br>", "prix_item produitNonVente");
+
                 LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixDemande_" + idItem, "Prix demandé : $" + prix.ToString(), "prix_item");
 
+               // Panel rowDel = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowDel_", "row text-right");
+                Panel colDel = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDel_"+idItem, "col-sm-2 text-center");         
+                HtmlButton btnSupprimmer = LibrairieControlesDynamique.htmlbtnDYN(colDel, "btnSupprimer_" + idItem, "btn btn-danger", "Supprimer", "glyphicon glyphicon-remove", btnSupprimer_click);
+                //btnSupprimer.Attributes.Add("onclick", "Confirm();");
                 // CheckBox (Supprimer plusieurs)
-                Panel colCB = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCB_" + idItem, "col-sm-2 text-center");
-                CheckBox cbDelete = LibrairieControlesDynamique.cb(colCB, nomEntreprise + "_cbSupprimer_" + idItem, "");                  
+                //Panel colCB = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCB_" + idItem, "col-sm-2 text-center");
+                //CheckBox cbDelete = LibrairieControlesDynamique.cb(colCB, nomEntreprise + "_cbSupprimer_" + idItem, "");                  
 
-              
+
 
 
             }
@@ -124,17 +134,31 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorder", 30);
     }
 
+    private void btnModifier_Click(object sender, EventArgs e)
+    {
+        // throw new NotImplementedException();
+        Button lb = (Button)sender;
+        long idProduitMod = Convert.ToInt64(lb.ID.Replace("btnModifier_", ""));
+        String url = "~/Pages/InscriptionProduit.aspx?NoProduit=" + idProduitMod + "&Operation=Modifier";
+        Response.Redirect(url, true);
+    }
+
     private void modifierProduit(object sender, EventArgs e)
     {
         LinkButton lb = (LinkButton)sender;
         long idProduitMod = Convert.ToInt64(lb.ID.Replace(nomEntreprise + "_nom_", ""));
-        String url = "~/Pages/InscriptionProduit.aspx?NoProduit="+ idProduitMod;
+        String url = "~/Pages/InscriptionProduit.aspx?NoProduit=" + idProduitMod + "&Operation=Afficher";
         Response.Redirect(url, true);
     }
 
     private void btnSupprimer_click(object sender, EventArgs e)
     {
-        List<PPProduits> lesProduitsDelete = new List<PPProduits>();
+
+        HtmlButton lb = (HtmlButton)sender;
+        long idProduitMod = Convert.ToInt64(lb.ID.Replace("btnSupprimer_", ""));
+        String url = "~/Pages/InscriptionProduit.aspx?NoProduit="+ idProduitMod+"&Operation=Supprimer";
+        Response.Redirect(url, true);
+        /*List<PPProduits> lesProduitsDelete = new List<PPProduits>();
         List<PPProduits> lesProduitsNonDispo = new List<PPProduits>();
         List<PPArticlesEnPanier> lesProduitsEnPaniers = new List<PPArticlesEnPanier>();
         List<PPDetailsCommandes> lesDetailsCommandes = new List<PPDetailsCommandes>();
@@ -153,8 +177,8 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                             {
                                 long noProduit = Convert.ToInt64(cColDel.ID.Replace(nomEntreprise + "_cbSupprimer_", ""));                                                                        
                                     
-                                lesDetailsCommandes = dbContext.PPDetailsCommandes.Where(c => c.NoProduit == noProduit).ToList();
-                               if(dbContext.PPArticlesEnPanier.Where(c => c.NoProduit == noProduit).Count() > 0)
+                               // lesDetailsCommandes = dbContext.PPDetailsCommandes.Where(c => c.NoProduit == noProduit).ToList();
+                               if(dbContext.PPDetailsCommandes.Where(c => c.NoProduit == noProduit).Count() > 0)
                                 {
                                     lesProduitsNonDispo.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());
                                 }
@@ -210,7 +234,7 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                 }
             }
         }      
-     
+     */
   
     }
    

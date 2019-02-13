@@ -7,7 +7,9 @@
     font-size:20px;
     
  }
-
+.produitNonVente {
+    text-decoration: Line-Through
+}
 
 .nomClient {
     font-size: 15px !important;
