@@ -540,48 +540,60 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
     public void afficherReponseLESi()
     {
-        // get le no autorisation
-        int noAutorisation = 0;
+        // vérifier que les quantités sont guud
+        bool depassePoids = LibrairieLINQ.depassePoidsMax(this.idEntreprise, LibrairieLINQ.getPoidsTotalPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise));
+        bool rupture = LibrairieLINQ.ruptureDeStockPanierClient(long.Parse(Session["NoClient"].ToString()), this.idEntreprise);
 
-        int n;
-        if (Request.Form["NoAutorisation"] == null || !int.TryParse(Request.Form["NoAutorisation"], out n))
+        if (!depassePoids && !rupture)
         {
-            noAutorisation = 3;
-        }
-        else { noAutorisation = n; }
+            // get le no autorisation
+            int noAutorisation = 0;
 
-        // get date autorisation
-        string date = "";
+            int n;
+            if (Request.Form["NoAutorisation"] == null || !int.TryParse(Request.Form["NoAutorisation"], out n))
+            {
+                noAutorisation = 3;
+            }
+            else { noAutorisation = n; }
 
-        if (Request.Form["DateAutorisation"] == null)
-        {
-            date = DateTime.Now.ToString();
-        }
-        else { date = Request.Form["DateAutorisation"]; }
+            // get date autorisation
+            string date = "";
 
-        // get le no autorisation
-        Decimal frais = 0;
+            if (Request.Form["DateAutorisation"] == null)
+            {
+                date = DateTime.Now.ToString();
+            }
+            else { date = Request.Form["DateAutorisation"]; }
 
-        Decimal nd;
-        if (Request.Form["FraisMarchand"] == null || !Decimal.TryParse(Request.Form["FraisMarchand"], out nd))
-        {
-            frais = 3;
-        }
-        else { frais = nd; }
+            // get le no autorisation
+            Decimal frais = 0;
+
+            Decimal nd;
+            if (Request.Form["FraisMarchand"] == null || !Decimal.TryParse(Request.Form["FraisMarchand"], out nd))
+            {
+                frais = 3;
+            }
+            else { frais = nd; }
 
 
-        // rendre visible la bonne div
-        if (noAutorisation >= 1000 && noAutorisation <= 5000 && noAutorisation != 1234)
-        {
-            // rajouter les infos de la commande dans la base de données
-            long noCommande = creerCommande(date, frais);
+            // rendre visible la bonne div
+            if (noAutorisation >= 1000 && noAutorisation <= 5000 && noAutorisation != 1234)
+            {
+                // rajouter les infos de la commande dans la base de données
+                long noCommande = creerCommande(date, frais);
 
-            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon&Commande=" + noCommande;
-            Response.Redirect(url, true);
+                String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon&Commande=" + noCommande;
+                Response.Redirect(url, true);
+            }
+            else
+            {
+                String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + this.typeLivraison + "&Erreur=" + noAutorisation;
+                Response.Redirect(url, true);
+            }
         }
         else
         {
-            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + this.typeLivraison + "&Erreur=" + noAutorisation;
+            String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + this.typeLivraison;
             Response.Redirect(url, true);
         }
     }
