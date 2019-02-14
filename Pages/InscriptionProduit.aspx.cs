@@ -129,9 +129,11 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         Regex exprTexte = new Regex("^[\\w\\s!\"$%?&()\\-;:«»°,'.]+$");
         Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
         Regex exprNbItems = new Regex("^\\d+$");
-        DateTime dateAujourdhui = DateTime.Now.Date;
-        DateTime dateExpiration = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
         Regex exprPoids = new Regex("^\\d+(\\.\\d)?$");
+        bool dateExpirationValide = false;
+        if (tbDateVente.Text != "")
+            if (Convert.ToDateTime(tbDateVente.Text).Date > DateTime.Now.Date)
+                dateExpirationValide = true;
         return ddlCategorie.SelectedValue != "" &&
                tbNom.Text != "" && exprTexte.IsMatch(tbNom.Text) &&
                tbPrixDemande.Text != "" && exprMontant.IsMatch(tbPrixDemande.Text) && double.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 &&
@@ -139,7 +141,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                imgTeleverse.ImageUrl != "~/static/images/image_placeholder.png" &&
                tbNbItems.Text != "" && exprNbItems.IsMatch(tbNbItems.Text) && int.Parse(tbNbItems.Text) <= 32767 &&
                tbPrixVente.Text != "" && exprMontant.IsMatch(tbPrixVente.Text) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 &&
-               (dateExpiration.Year >= dateAujourdhui.Year && dateExpiration.Month >= dateAujourdhui.Month && dateExpiration.Day > dateAujourdhui.Day) &&
+               dateExpirationValide &&
                tbPoids.Text != "" && exprPoids.IsMatch(tbPoids.Text);
     }
 
@@ -148,8 +150,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         Regex exprTexte = new Regex("^[\\w\\s!\"$%?&()\\-;:«»°,'.]+$");
         Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
         Regex exprNbItems = new Regex("^\\d+$");
-        DateTime dateAujourdhui = DateTime.Now.Date;
-        DateTime dateExpiration = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
         Regex exprPoids = new Regex("^\\d+(\\.\\d)?$");
         if (ddlCategorie.SelectedValue == "")
         {
@@ -212,12 +212,14 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         }
         if (imgTeleverse.ImageUrl == "~/static/images/image_placeholder.png")
         {
+            imgTeleverse.CssClass = "thumbnail img-responsive border-danger";
             if (errImage.Text == "")
                 errImage.Text = "Vous devez sélectionner une image";
             errImage.CssClass = "text-danger";
         }
         else
         {
+            imgTeleverse.CssClass = "thumbnail img-responsive border-success";
             errImage.Text = "";
             errImage.CssClass = "text-danger hidden";
         }
@@ -255,7 +257,13 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             errPrixVente.Text = "";
             errPrixVente.CssClass = "text-danger hidden";
         }
-        if (dateExpiration.Year <= dateAujourdhui.Year && dateExpiration.Month <= dateAujourdhui.Month && dateExpiration.Day <= dateAujourdhui.Day)
+        if (tbDateVente.Text == "")
+        {
+            tbDateVente.CssClass = "form-control border-danger";
+            errDateVente.Text = "Vous devez sélectionner une date d'expiration du prix de vente";
+            errDateVente.CssClass = "text-danger";
+        }
+        else if (Convert.ToDateTime(tbDateVente.Text).Date <= DateTime.Now.Date)
         {
             tbDateVente.CssClass = "form-control border-danger";
             errDateVente.Text = "La date d'expiration du prix de vente doit être supérieure à la date d'aujourd'hui";

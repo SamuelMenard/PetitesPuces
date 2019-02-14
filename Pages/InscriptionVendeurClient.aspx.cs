@@ -257,7 +257,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             errConfirmationMotPasse.Text = "";
             errConfirmationMotPasse.CssClass = "text-danger hidden";
         }
-        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 66)
+        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
         {
             tbPoidsMaxLivraison.CssClass = "form-control border-danger";
             if (tbPoidsMaxLivraison.Text == "")

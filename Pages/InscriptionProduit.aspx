@@ -211,8 +211,10 @@
          }
       });
       $('#contentBody_tbDateVente').focusout(function () {
-         var dateExpiration = new Date($('#contentBody_tbDateVente').val() + ' 00:00:00');
-         if (dateExpiration.getFullYear() <= dateAujourdhui.getFullYear() && dateExpiration.getMonth() <= dateAujourdhui.getMonth() && dateExpiration.getDate() <= dateAujourdhui.getDate()) {
+         if ($('#contentBody_tbDateVente').val() == '') {
+            $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errDateVente').text('Vous devez sélectionner une date d\'expiration du prix de vente').removeClass('hidden');
+         } else if (new Date($('#contentBody_tbDateVente').val() + ' 00:00:00') <= dateAujourdhui) {
             $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errDateVente').text('La date d\'expiration du prix de vente doit être supérieure à la date d\'aujourd\'hui').removeClass('hidden');
          } else {
@@ -227,9 +229,6 @@
          } else if (!exprPoids.test($('#contentBody_tbPoids').val())) {
             $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPoids').text('Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule').removeClass('hidden');
-         } else if ($('#contentBody_tbPoids').val() > 66) {
-            $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errPoids').text('Le poids de l\'article ne peut pas dépasser le poids de livraison maximum permis de 66 lbs').removeClass('hidden');
          } else {
             $('#contentBody_tbPoids').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errPoids').text('').addClass('hidden');
@@ -269,9 +268,14 @@
             binPageValide = false;
          }
          if ($('#contentBody_imgTeleverse').attr('src') == '../static/images/image_placeholder.png') {
+            $('#contentBody_imgTeleverse').removeClass('border-success').addClass('border-danger');
             if ($('#contentBody_errImage').text() == '')
                $('#contentBody_errImage').text('Vous devez sélectionner une image').removeClass('hidden');
             binPageValide = false;
+         }
+         else {
+            $('#contentBody_imgTeleverse').removeClass('border-danger').addClass('border-success');
+            $('#contentBody_errImage').text('').addClass('hidden');
          }
          if ($('#contentBody_tbNbItems').val() == '' || !exprNbItems.test($('#contentBody_tbNbItems').val()) || $('#contentBody_tbNbItems').val() > 32767) {
             $('#contentBody_tbNbItems').removeClass('border-success').addClass('border-danger');
@@ -293,20 +297,23 @@
                $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
             binPageValide = false;
          }
-         var dateExpiration = new Date($('#contentBody_tbDateVente').val() + ' 00:00:00');
-         if (dateExpiration.getFullYear() <= dateAujourdhui.getFullYear() && dateExpiration.getMonth() <= dateAujourdhui.getMonth() && dateExpiration.getDate() <= dateAujourdhui.getDate()) {
+         if ($('#contentBody_tbDateVente').val() == '') {
+            $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errDateVente').text('Vous devez sélectionner une date d\'expiration du prix de vente').removeClass('hidden');
+            binPageValide = false;
+         } else if (new Date($('#contentBody_tbDateVente').val() + ' 00:00:00') <= dateAujourdhui) {
             $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errDateVente').text('La date d\'expiration du prix de vente doit être supérieure à la date d\'aujourd\'hui').removeClass('hidden');
             binPageValide = false;
          }
-         if ($('#contentBody_tbPoids').val() == '' || !exprPoids.test($('#contentBody_tbPoids').val()) || $('#contentBody_tbPoids').val() > 66) {
+         else
+            $('#contentBody_tbDateVente').removeClass('border-danger').addClass('border-success');
+         if ($('#contentBody_tbPoids').val() == '' || !exprPoids.test($('#contentBody_tbPoids').val())) {
             $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');
             if ($('#contentBody_tbPoids').val() == '')
                $('#contentBody_errPoids').text('Le poids ne peut pas être vide').removeClass('hidden');
-            else if (!exprPoids.test($('#contentBody_tbPoids').val()))
-               $('#contentBody_errPoids').text('Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule').removeClass('hidden');
             else
-               $('#contentBody_errPoids').text('Le poids de l\'article ne peut pas dépasser le poids de livraison maximum permis de 66 lbs').removeClass('hidden');
+               $('#contentBody_errPoids').text('Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule').removeClass('hidden');
             binPageValide = false;
          }
          return binPageValide;
