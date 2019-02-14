@@ -8,6 +8,7 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        verifierPermissions("C");
         Page.MaintainScrollPositionOnPostBack = true;
 
         // Afficher message accueil avec nom
@@ -263,5 +264,38 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
 
         String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
         Response.Redirect(url, true);
+    }
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
+        }
     }
 }

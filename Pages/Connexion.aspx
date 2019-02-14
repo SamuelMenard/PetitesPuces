@@ -72,13 +72,6 @@
                         Se souvenir de moi
                     </label>
                 </div>
-                <asp:DropDownList ID="ddlTypeUtilisateur" CssClass="form-control"
-                    runat="server">
-                    <asp:ListItem Selected="True" Value="C"> Client </asp:ListItem>
-                    <asp:ListItem Value="V"> Vendeur </asp:ListItem>
-                    <asp:ListItem Value="G"> Gestionnaire </asp:ListItem>
-                </asp:DropDownList>
-                <br />
                 <asp:Button ID="btnConnexion" Text="Ouvrir une session" runat="server" CssClass="btn btn-lg btn-primary btn-block" BackColor="Orange" BorderColor="Orange" OnClick="btnConnexion_click" />
                 <button type="button" class="btn btn-link" style="color: orange;" data-toggle="modal" data-target="#modalMotDePasseOublie">Mot de passe oublié?</button>
                 <div class="modal" id="modalMotDePasseOublie">
