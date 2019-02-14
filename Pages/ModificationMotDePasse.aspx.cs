@@ -8,7 +8,13 @@ public partial class Pages_ModificationMotDePasse : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+        string url = null;
+        if (Session["TypeUtilisateur"] == null)
+            url = "~/Pages/AccueilInternaute.aspx?";
+        else if (Session["TypeUtilisateur"].ToString() == "G")
+            url = "~/Pages/AcceuilGestionnaire.aspx?";
+        if (url != null)
+            Response.Redirect(url, true);
     }
 
     protected void btnModifierMotPasse_Click(object sender, EventArgs e)
