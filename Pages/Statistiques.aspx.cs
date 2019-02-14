@@ -34,6 +34,22 @@ public partial class Pages_Statistiques : System.Web.UI.Page
 
     public String nbVisitesClientVendeur;
     public String NbVisitesClientVendeur { get { return this.nbVisitesClientVendeur; } set { this.nbVisitesClientVendeur = value; } }
+    
+    public int mois3Client;
+    public int mois6Client;
+    public int mois9Client;
+    public int mois12Client;
+
+    public int Mois3Client { get { return this.mois3Client; } set { this.mois3Client = value; } }
+    public int Mois6Client { get { return this.mois6Client; } set { this.mois6Client = value; } }
+    public int Mois9Client { get { return this.mois9Client; } set { this.mois9Client = value; } }
+    public int Mois12Client { get { return this.mois12Client; } set { this.mois12Client = value; } }
+
+    public List<String> tabClients = new List<string>();
+    public List<short> tabNbConnexions = new List<short>();
+    public List<String> TabClients { get { return this.tabClients; } set { this.tabClients = value; } }
+    public List<short> TabNbConnexions { get { return this.tabNbConnexions; } set { this.tabNbConnexions = value; } }
+
 
     public string nbTotalVendeurs_value { get { return nbTotalVendeurs_value; } }
 
@@ -41,6 +57,8 @@ public partial class Pages_Statistiques : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        verifierPermissions("G");
+
         getNoVendeur();
         getNoClient();
 
@@ -54,18 +72,18 @@ public partial class Pages_Statistiques : System.Web.UI.Page
 
         // 2) Nouveaux vendeurs depuis 1,3,6,12, toujours
         DateTime d1 = DateTime.Now.AddMonths(-1);
-        mois1 = (from v1 in tableVendeur where v1.DateCreation <= d1 && v1.Statut == null select v1).Count();
+        mois1 = (from v1 in tableVendeur where v1.DateCreation <= d1 select v1).Count();
 
         DateTime d3 = DateTime.Now.AddMonths(-3);
-        mois3 = (from v1 in tableVendeur where v1.DateCreation <= d3 && v1.Statut == null select v1).Count();
+        mois3 = (from v1 in tableVendeur where v1.DateCreation <= d3 select v1).Count();
 
         DateTime d6 = DateTime.Now.AddMonths(-6);
-        mois6 = (from v1 in tableVendeur where v1.DateCreation <= d6 && v1.Statut == null select v1).Count();
+        mois6 = (from v1 in tableVendeur where v1.DateCreation <= d6 select v1).Count();
 
         DateTime d12 = DateTime.Now.AddMonths(-12);
-        mois12 = (from v1 in tableVendeur where v1.DateCreation <= d12 && v1.Statut == null select v1).Count();
+        mois12 = (from v1 in tableVendeur where v1.DateCreation <= d12 select v1).Count();
         
-        moisToujours = (from v1 in tableVendeur where v1.Statut == null select v1).Count();
+        moisToujours = (from v1 in tableVendeur select v1).Count();
 
         // 3) Nombre total de clients
         clientsActifs = (from client in tableClients where client.PPCommandes.Count > 0 select client).Count();
@@ -98,6 +116,26 @@ public partial class Pages_Statistiques : System.Web.UI.Page
             PPVendeurs vendeur = (this.noVendeurSelectionne != -1) ? (from v in tableVendeur where v.NoVendeur == this.noVendeurSelectionne select v).First() : lstVendeurs.First();
             PPClients client = (this.noClientSelectionne != -1) ? (from c in tableClients where c.NoClient == this.noClientSelectionne select c).First():lstClients.First();
             nbVisitesClientVendeur = (from v in client.PPVendeursClients where v.NoVendeur == vendeur.NoVendeur select v).Count().ToString();
+        }
+
+        // 5) Nombre de nouveaux clients depuis 3, 6, 9, 12 mois
+        DateTime d3C = DateTime.Now.AddMonths(-3);
+        mois3Client = (from c in tableClients where c.DateCreation <= d3C select c).Count();
+
+        DateTime d6C = DateTime.Now.AddMonths(-6);
+        mois6Client = (from c in tableClients where c.DateCreation <= d6C select c).Count();
+
+        DateTime d9C = DateTime.Now.AddMonths(-9);
+        mois9Client = (from c in tableClients where c.DateCreation <= d9C select c).Count();
+
+        DateTime d12C = DateTime.Now.AddMonths(-12);
+        mois12Client = (from c in tableClients where c.DateCreation <= d12C select c).Count();
+
+        // 6) Nombre connexions clients
+        foreach(PPClients client in tableClients)
+        {
+            tabClients.Add(client.AdresseEmail);
+            tabNbConnexions.Add((short)client.NbConnexions);
         }
 
     }
@@ -165,6 +203,46 @@ public partial class Pages_Statistiques : System.Web.UI.Page
                 this.noClientSelectionne = -1;
             }
 
+        }
+    }
+
+    public void retourDashboard_click(Object sender, EventArgs e)
+    {
+        System.Diagnostics.Debug.WriteLine("Retour");
+        String url = "~/Pages/AcceuilGestionnaire.aspx?";
+        Response.Redirect(url, true);
+    }
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
         }
     }
 }

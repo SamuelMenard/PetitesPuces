@@ -12,7 +12,8 @@
         window.onload = function () {
             graphNouveauxVendeurs();
             graphTotalClients();
-
+            graphNouveauxClients();
+            graphNbConnexionsClients();
         };
 
         function graphNouveauxVendeurs() {
@@ -70,6 +71,82 @@
                 }
             });
         }
+
+        function graphNouveauxClients() {
+            var mois3 = <%= new JavaScriptSerializer().Serialize(mois3Client) %>;
+            var mois6 = <%= new JavaScriptSerializer().Serialize(mois6Client) %>;
+            var mois9 = <%= new JavaScriptSerializer().Serialize(mois9Client) %>;
+            var mois12 = <%= new JavaScriptSerializer().Serialize(mois12Client) %>;
+
+            new Chart(document.getElementById("canvasNbNouveauxClientsDepuis"), {
+                type: 'line',
+                data: {
+                labels: ['3 mois', '6 mois', '9 mois', '12 mois'],
+                datasets: [{ 
+                        data: [mois3, mois6, mois9, mois12],
+                        label: "Nouveaux clients",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    }
+                ]
+                },
+                options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            suggestedMax:10,
+                            stepSize: 1,
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Nouveaux clients au courant du temps'
+                }
+                }
+            });
+        }
+
+        function graphNbConnexionsClients() {
+            var tabClient = <%= new JavaScriptSerializer().Serialize(tabClients) %>;
+            var tabNbConnexions = <%= new JavaScriptSerializer().Serialize(tabNbConnexions) %>;
+
+            var tabCouleurs = [];
+            for (var i = 0; i < tabClient.length; i++) {
+                tabCouleurs.push(getRandomColor());
+            }
+
+            new Chart(document.getElementById("canvasNbConnexionsClients"), {
+                type: 'horizontalBar',
+                data: {
+                  labels: tabClient,
+                  datasets: [
+                    {
+                      label: "Nombre de connexions",
+                      backgroundColor: tabCouleurs,
+                      data: tabNbConnexions
+                    }
+                  ]
+                },
+                options: {
+                  legend: { display: false },
+                  title: {
+                    display: true,
+                    text: 'Nombre de connexions par client'
+                  }
+                }
+            });
+        }
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
         
         
     </script>
@@ -86,6 +163,11 @@
         </div>
 
         <div class="row">
+            <div class="col-sm-12 mb-3">
+                    <asp:Button ID="btnRetourPanier" CssClass="btn btn-warning" Text="Retour" runat="server" OnClick="retourDashboard_click" />
+                </div>
+            <br />
+            <br />
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -142,6 +224,20 @@
                                     <div class="slice"><div class="bar"></div><div class="fill"></div></div>
                                 </div>
                             </div>
+                        </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <canvas id="canvasNbNouveauxClientsDepuis" width="200" height="200"></canvas>
+                        </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <canvas id="canvasNbConnexionsClients" width="200" height="200"></canvas>
                         </div>
                 </div>
             </div>
