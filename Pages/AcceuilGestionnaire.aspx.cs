@@ -39,7 +39,8 @@ public partial class Pages_AcceuilGestionnaire : System.Web.UI.Page
 
     public void stats_click(Object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("Stats");
+        String url = "~/Pages/Statistiques.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void redevances_click(Object sender, EventArgs e)
