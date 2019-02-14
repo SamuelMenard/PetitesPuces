@@ -86,7 +86,25 @@ public partial class Pages_searchClient : System.Web.UI.Page
         // Nom de l'entreprise
         phDynamique.Controls.Clear();
         Panel panelHeader = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_header", "panel-heading");
-        LibrairieControlesDynamique.lblDYN(panelHeader, nomEntreprise + "_nom", nomEntreprise, "nom-entreprise");
+        Panel rowItemHeader = LibrairieControlesDynamique.divDYN(panelHeader, nomEntreprise + "_rowHeader_", "row valign");
+        Panel colEntreprise = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colEntreprise_", "col-sm-6");
+        LibrairieControlesDynamique.lblDYN(colEntreprise, nomEntreprise + "_nom", nomEntreprise, "nom-entreprise");
+        Panel colVendeurs = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colDdlVendeur_", "col-sm-6 text-right prix_item");
+        LibrairieControlesDynamique.lblDYN(colVendeurs, nomEntreprise + "_lblDDLVendeur", "Choisir un vendeur : ", "");
+        DropDownList ddlVendeurs = LibrairieControlesDynamique.ddlDYN(colVendeurs, "lesVendeurs", "");
+        ddlVendeurs.AutoPostBack = true;
+        ddlVendeurs.EnableViewState = true;
+        List<PPVendeurs> lesVendeurs = dbContext.PPVendeurs.ToList();
+        for (int i = 0; i < lesVendeurs.Count; i++)
+        {
+            long leNoVendeur = lesVendeurs[i].NoVendeur;
+            string strNomEntreprise = lesVendeurs[i].NomAffaires;
+            ddlVendeurs.Items.Insert(i, new ListItem(strNomEntreprise, leNoVendeur.ToString()));
+
+        }
+        ddlVendeurs.SelectedIndexChanged += ddlVendeurIndex;
+        ddlVendeurs.SelectedIndex = ddlVendeurs.Items.IndexOf(ddlVendeurs.Items.FindByValue(Convert.ToString(Session["NoVendeurCatalogue"])));
+       
 
         // Liste des items + le total
         panelBody = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_body", "panel-body");
@@ -201,6 +219,14 @@ public partial class Pages_searchClient : System.Web.UI.Page
 
     }
 
+    private void ddlVendeurIndex(object sender, EventArgs e)
+    {
+        DropDownList ddlVendeur = (DropDownList)sender;
+        Session["NoVendeurCatalogue"] = ddlVendeur.SelectedValue;
+        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
+        Response.Redirect(url, true);
+    }
+
     private void btnAjouter_click(object sender, EventArgs e)
     {
         Button btnAjout = (Button)sender;
@@ -210,14 +236,14 @@ public partial class Pages_searchClient : System.Web.UI.Page
         TextBox tb = (TextBox)colQuantite.FindControl("quantite_" + noProduit);
         short nbItems = short.Parse(tb.Text.Trim());
         PPArticlesEnPanier nouvelArticle = new PPArticlesEnPanier();
-        PPArticlesEnPanier articleExistant = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.NoProduit == noProduit)).First();
-        if(articleExistant != null)
+        List<PPArticlesEnPanier> articleExistants = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.NoProduit == noProduit)).ToList();
+
+        if (articleExistants.Any())
         {
-            nouvelArticle = articleExistant;
-            //nouvelArticle.NoPanier = articleExistant.NoPanier;
+            nouvelArticle = articleExistants.First();
         }
         else
-        {
+        {       
             nouvelArticle.NoPanier = dbContext.PPArticlesEnPanier.Max(c => c.NoPanier) + 1;
         }       
         nouvelArticle.NoClient = noClient;
