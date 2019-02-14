@@ -7,6 +7,9 @@ using System.Web.UI.WebControls;
 
 public partial class Pages_Statistiques : System.Web.UI.Page
 {
+    private long noVendeurSelectionne;
+    private long noClientSelectionne;
+
     public int mois1;
     public int mois3;
     public int mois6;
@@ -25,19 +28,26 @@ public partial class Pages_Statistiques : System.Web.UI.Page
     public int clientsActifs;
     public int clientsPotentiels;
     public int clientsVisiteurs;
-
     public int ClientsActifs { get { return this.clientsActifs; } set { this.clientsActifs = value; } }
     public int ClientsPotentiels { get { return this.clientsPotentiels; } set { this.clientsPotentiels = value; } }
     public int ClientsVisiteurs { get { return this.clientsVisiteurs; } set { this.clientsVisiteurs = value; } }
 
+    public String nbVisitesClientVendeur;
+    public String NbVisitesClientVendeur { get { return this.nbVisitesClientVendeur; } set { this.nbVisitesClientVendeur = value; } }
+
     public string nbTotalVendeurs_value { get { return nbTotalVendeurs_value; } }
 
-    BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+    
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        getNoVendeur();
+        getNoClient();
+
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableVendeur = dataContext.PPVendeurs;
         var tableClients = dataContext.PPClients;
+        var tableVendeursClients = dataContext.PPVendeursClients;
 
         // 1) Tous les vendeurs sur le site
         totalVendeurs = (from vendeur in tableVendeur where vendeur.Statut == 1 select vendeur).Count();
@@ -62,9 +72,99 @@ public partial class Pages_Statistiques : System.Web.UI.Page
         clientsPotentiels = (from client in tableClients where client.PPCommandes.Count == 0 && client.PPArticlesEnPanier.Count() > 0 select client).Count();
         clientsVisiteurs = (from client in tableClients where client.PPCommandes.Count == 0 && client.PPArticlesEnPanier.Count() == 0 select client).Count();
 
+        // 4) Nombre de visites d'un client pour un vendeur
+        // populer liste des vendeurs
+        List<PPVendeurs> lstVendeurs = (from vendeur in tableVendeur where vendeur.Statut == 1 select vendeur).ToList();
+        foreach (PPVendeurs vendeur in lstVendeurs)
+        {
+            ddlVendeurs.Items.Add(new ListItem(vendeur.NomAffaires, vendeur.NoVendeur.ToString()));
+        }
         
-        
+        // populer liste des clients
+        List<PPClients> lstClients = (from client in tableClients where client.Statut == 1 select client).ToList();
 
+        foreach (PPClients client in lstClients)
+        {
+            ddlClients.Items.Add(new ListItem(client.AdresseEmail, client.NoClient.ToString()));
+        }
 
+        // mettre le nb de visites
+        if (lstClients.Count == 0)
+        {
+            nbVisitesClientVendeur = "N/A";
+        }
+        else
+        {
+            PPVendeurs vendeur = (this.noVendeurSelectionne != -1) ? (from v in tableVendeur where v.NoVendeur == this.noVendeurSelectionne select v).First() : lstVendeurs.First();
+            PPClients client = (this.noClientSelectionne != -1) ? (from c in tableClients where c.NoClient == this.noClientSelectionne select c).First():lstClients.First();
+            nbVisitesClientVendeur = (from v in client.PPVendeursClients where v.NoVendeur == vendeur.NoVendeur select v).Count().ToString();
+        }
+
+    }
+
+    protected void Page_LoadComplete(object sender, EventArgs e)
+    {
+        ddlVendeurs.SelectedValue = this.noVendeurSelectionne.ToString();
+        ddlClients.SelectedValue = this.noClientSelectionne.ToString();
+    }
+
+    public void ddlVendeurs_onChanged(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/Statistiques.aspx?NoVendeur=" + ddlVendeurs.SelectedValue + (this.noClientSelectionne != -1?"&NoClient=" + this.noClientSelectionne:"");
+        Response.Redirect(url, true);
+    }
+
+    public void ddlClients_onChanged(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/Statistiques.aspx?NoClient=" + ddlClients.SelectedValue + (this.noVendeurSelectionne != -1 ? "&NoVendeur=" + this.noVendeurSelectionne : "");
+        Response.Redirect(url, true);
+    }
+
+    private void getNoVendeur()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+
+        long n;
+        if (Request.QueryString["NoVendeur"] == null || !long.TryParse(Request.QueryString["NoVendeur"], out n))
+        {
+            this.noVendeurSelectionne = -1;
+        }
+        else
+        {
+            if ((from vendeur in tableVendeurs where vendeur.NoVendeur == n select vendeur).Count() > 0)
+            {
+                this.noVendeurSelectionne = n;
+            }
+            else
+            {
+                this.noVendeurSelectionne = -1;
+            }
+            
+        }
+    }
+
+    private void getNoClient()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableClients = dataContext.PPClients;
+
+        long n;
+        if (Request.QueryString["NoClient"] == null || !long.TryParse(Request.QueryString["NoClient"], out n))
+        {
+            this.noClientSelectionne = -1;
+        }
+        else
+        {
+            if ((from client in tableClients where client.NoClient == n select client).Count() > 0)
+            {
+                this.noClientSelectionne = n;
+            }
+            else
+            {
+                this.noClientSelectionne = -1;
+            }
+
+        }
     }
 }
