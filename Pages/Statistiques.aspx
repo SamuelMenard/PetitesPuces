@@ -4,39 +4,16 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="head" Runat="Server">
     <!-- Pour ajouter des imports dans le head -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+    <link rel="stylesheet" href="../static/style/circle.css">
+    <link rel="stylesheet" href="../static/style/circle.scss">
 
     <script>
         // execute on page load
         window.onload = function () {
-            graphTotalVendeurs();
             graphNouveauxVendeurs();
             graphTotalClients();
-        };
 
-        function graphTotalVendeurs() {
-            var tVendeurs = <%= new JavaScriptSerializer().Serialize(totalVendeurs) %>;
-            // Bar chart
-            new Chart(document.getElementById("canvasTotalVendeurs"), {
-                type: 'bar',
-                data: {
-                  labels: ["Vendeurs"],
-                  datasets: [
-                    {
-                      label: "Vendeurs",
-                      backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                      data: [tVendeurs]
-                    }
-                  ]
-                },
-                options: {
-                  legend: { display: false },
-                  title: {
-                    display: true,
-                    text: 'Quantité totale de vendeurs'
-                  }
-                }
-            });
-        }
+        };
 
         function graphNouveauxVendeurs() {
             var mois1 = <%= new JavaScriptSerializer().Serialize(mois1) %>;
@@ -94,6 +71,7 @@
             });
         }
         
+        
     </script>
 
 
@@ -108,14 +86,64 @@
         </div>
 
         <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3 class="text-center">Nombre total de vendeurs</h3>
+                            <div class="inner-content text-center">
+                                <div class="c100 p100 big center orange">
+                                    <span><%=totalVendeurs %></span>
+                                    <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <div class="col-md-4">
-                <canvas id="canvasTotalVendeurs" width="200" height="200"></canvas>
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <canvas id="canvasNouveauxVendeurs" width="200" height="200"></canvas>
+                        </div>
+                </div>
             </div>
             <div class="col-md-4">
-                <canvas id="canvasNouveauxVendeurs" width="200" height="200"></canvas>
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <canvas id="canvasTotalClients" width="200" height="200"></canvas>
+                        </div>
+                </div>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-4">
-                <canvas id="canvasTotalClients" width="200" height="200"></canvas>
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3>Nombre de visites d'un client pour un vendeur</h3>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4>Vendeurs : </h4>
+                                </div>
+                                <div class="col-md-8">
+                                    <asp:DropDownList ID="ddlVendeurs" CssClass="form-control" OnSelectedIndexChanged="ddlVendeurs_onChanged" AutoPostBack="true" runat="server"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h4>Clients : </h4>
+                                </div>
+                                <div class="col-md-8">
+                                    <asp:DropDownList ID="ddlClients" CssClass="form-control" OnSelectedIndexChanged="ddlClients_onChanged" AutoPostBack="true" runat="server"></asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="inner-content text-center">
+                                <div class="c100 p100 big center orange">
+                                    <span><%=nbVisitesClientVendeur %></span>
+                                    <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
             </div>
         </div>
     </div>
