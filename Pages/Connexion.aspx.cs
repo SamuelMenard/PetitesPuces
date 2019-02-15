@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Web;
 using System.Web.UI;
 
 public partial class Pages_Connexion : System.Web.UI.Page
@@ -10,8 +11,25 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (IsPostBack)
+        if (!IsPostBack)
+        {
+            if (Request.Cookies["idPetitesPuces"] != null)
+            {
+                tbCourriel.Text = Server.HtmlEncode(Request.Cookies["idPetitesPuces"].Value);
+                cbSeSouvenir.Checked = true;
+            }
+        }
+        else
+        {
+            if (!cbSeSouvenir.Checked && Request.Cookies["idPetitesPuces"] != null)
+            {
+                HttpCookie cookie = new HttpCookie("idPetitesPuces");
+                cookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(cookie);
+            }
+
             divMessage.Visible = false;
+        }
     }
 
     public void btnConnexion_click(Object sender, EventArgs e)
@@ -80,6 +98,14 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
         if (verdictConnexion)
         {
+            if (cbSeSouvenir.Checked)
+            {
+                HttpCookie cookie = new HttpCookie("idPetitesPuces");
+                cookie.Value = courriel;
+                cookie.Expires = DateTime.MaxValue;
+                Response.Cookies.Add(cookie);
+            }
+
             Response.Redirect(url, true);
         }
         else
@@ -91,7 +117,6 @@ public partial class Pages_Connexion : System.Web.UI.Page
             if (codeErreur == 401) { lblMessageErreur.Text = "Courriel ou mot de passe incorrect"; }
             else if (codeErreur == 402) { lblMessageErreur.Text = "Le compte a été désactivé"; }
         }
-        
     }
 
     protected void btnEnvoyerMotDePasse_Click(object sender, EventArgs e)
