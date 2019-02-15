@@ -242,6 +242,26 @@
                 </div>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-sm-12 mb-3 table-responsive">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Montant total des commandes d'un client par vendeur</h3>
+                        <asp:Table ID="tabTotalCommandesClientsParVendeur" runat="server" CssClass="table table-bordered table-condensed">
+                            <asp:TableHeaderRow>
+                                <asp:TableHeaderCell>Numéro de client</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Nom complet du client</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Numéro de vendeur</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Nom complet du vendeur</asp:TableHeaderCell> 
+                                <asp:TableHeaderCell>Montant total des commandes</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Date de la dernière commande</asp:TableHeaderCell>
+                            </asp:TableHeaderRow>
+                        </asp:Table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     

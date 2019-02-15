@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -138,6 +139,63 @@ public partial class Pages_Statistiques : System.Web.UI.Page
             tabNbConnexions.Add((short)client.NbConnexions);
         }
 
+        // 8) Total des commandes d'un client par vendeur
+        var commandesParClient = from commande in dataContext.PPCommandes
+                                 orderby commande.NoClient
+                                 group commande by commande.PPClients;
+
+        foreach (var commandesClient in commandesParClient)
+        {
+            PPClients client = commandesClient.Key;
+            var commandesParVendeur = from commande in commandesClient
+                                      orderby commande.NoVendeur
+                                      group commande by commande.PPVendeurs;
+
+            bool premierVendeur = true;
+            foreach (var commandesVendeur in commandesParVendeur)
+            {
+                PPVendeurs vendeur = commandesVendeur.Key;
+                decimal montantTotalCommandes = 0;
+                DateTime dateDeniereCommande = DateTime.MinValue;
+                foreach (PPCommandes commande in commandesVendeur)
+                {
+                    montantTotalCommandes += (decimal)(commande.MontantTotAvantTaxes + commande.CoutLivraison + commande.TPS + commande.TVQ);
+                    if (commande.DateCommande > dateDeniereCommande)
+                        dateDeniereCommande = (DateTime)commande.DateCommande;
+                }
+
+                TableRow row = new TableRow();
+                TableCell cell;
+                if (premierVendeur)
+                {
+                    cell = new TableCell();
+                    cell.RowSpan = commandesParVendeur.Count();
+                    cell.Text = client.NoClient.ToString();
+                    row.Cells.Add(cell);
+                    cell = new TableCell();
+                    cell.RowSpan = commandesParVendeur.Count();
+                    cell.Text = client.Prenom + " " + client.Nom;
+                    row.Cells.Add(cell);
+                }
+                cell = new TableCell();
+                cell.Text = vendeur.NoVendeur.ToString();
+                row.Cells.Add(cell);
+                cell = new TableCell();
+                cell.Text = vendeur.Prenom + " " + vendeur.Nom;
+                row.Cells.Add(cell);
+                cell = new TableCell();
+                cell.HorizontalAlign = HorizontalAlign.Right;
+                cell.Text = montantTotalCommandes.ToString("C", CultureInfo.CurrentCulture);
+                row.Cells.Add(cell);
+                cell = new TableCell();
+                cell.HorizontalAlign = HorizontalAlign.Right;
+                cell.Text = dateDeniereCommande.ToString("yyyy'-'MM'-'dd HH':'mm");
+                row.Cells.Add(cell);
+                tabTotalCommandesClientsParVendeur.Rows.Add(row);
+
+                premierVendeur = false;
+            }
+        }
     }
 
     protected void Page_LoadComplete(object sender, EventArgs e)
