@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.Page
 {
@@ -95,12 +98,39 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
     private void creerPage()
     {
         // Nom de l'entreprise
+        PPVendeurs vendeur;
         phDynamique.Controls.Clear();
+        
+
         Panel panelHeader = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_header", "panel-heading");
         Panel rowItemHeader = LibrairieControlesDynamique.divDYN(panelHeader, nomEntreprise + "_rowHeader_" , "row valign");
+        Panel colImage = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colImage_", "col-sm-2 text-center");
+        if(dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).Any())
+        {
+            vendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
+            if (File.Exists(Server.MapPath("\\static\\xml1\\" + vendeur.Configuration))){
+                XDocument docXml = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+                XElement elements = docXml.Element("configuration");
+                String urlImg = "~/static/images/" + elements.Descendants("urlImage").Single().Value;
+                System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
+                img.Style.Add("width", "100px");
+                String urlBackColor = elements.Descendants("couleurFond").Single().Value;
+                String urlForeColor = elements.Descendants("couleurTexte").Single().Value;
+                _base.BackColor = ColorTranslator.FromHtml(urlBackColor);
+                _base.ForeColor = ColorTranslator.FromHtml(urlForeColor);
+            }
+            else
+            {
+                String urlImg = "~/static/images/image_magasin.jpg";
+                System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
+                img.Style.Add("width", "100px");                
+            }
+        }
+            
+       
         Panel colEntreprise = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colEntreprise_", "col-sm-6");
         LibrairieControlesDynamique.lblDYN(colEntreprise, nomEntreprise + "_nom", nomEntreprise, "nom-entreprise");
-        Panel colVendeurs = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colDdlVendeur_", "col-sm-6 text-right prix_item");
+        Panel colVendeurs = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colDdlVendeur_", "col-sm-4 text-right prix_item");
         LibrairieControlesDynamique.lblDYN(colVendeurs, nomEntreprise + "_lblDDLVendeur", "Choisir un vendeur : ", "");
         DropDownList ddlVendeurs = LibrairieControlesDynamique.ddlDYN(colVendeurs, "lesVendeurs", "");
         ddlVendeurs.AutoPostBack = true;
@@ -114,7 +144,10 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             
         }
         ddlVendeurs.SelectedIndexChanged += ddlVendeurIndex;
-        ddlVendeurs.SelectedIndex = ddlVendeurs.Items.IndexOf(ddlVendeurs.Items.FindByValue(Convert.ToString(Session["NoVendeurCatalogue"])));
+        if (Convert.ToString(Session["NoVendeurCatalogue"]) != null && Convert.ToString(Session["NoVendeurCatalogue"]) != "")
+            ddlVendeurs.SelectedIndex = ddlVendeurs.Items.IndexOf(ddlVendeurs.Items.FindByValue(Convert.ToString(Session["NoVendeurCatalogue"])));
+        else if(ddlVendeurs.Items.Count > 0)
+            ddlVendeurs.SelectedIndex = 0;
         // ddlVendeurs.SelectedItem.Value = noVendeur.ToString();
 
         // Liste des items + le total
