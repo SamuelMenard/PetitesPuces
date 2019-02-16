@@ -108,23 +108,15 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         if(dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).Any())
         {
             vendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
-            if (File.Exists(Server.MapPath("\\static\\xml1\\" + vendeur.Configuration))){
-                XDocument docXml = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
-                XElement elements = docXml.Element("configuration");
-                String urlImg = "~/static/images/" + elements.Descendants("urlImage").Single().Value;
-                System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
-                img.Style.Add("width", "100px");
-                String urlBackColor = elements.Descendants("couleurFond").Single().Value;
-                String urlForeColor = elements.Descendants("couleurTexte").Single().Value;
-                _base.BackColor = ColorTranslator.FromHtml(urlBackColor);
-                _base.ForeColor = ColorTranslator.FromHtml(urlForeColor);
-            }
-            else
-            {
-                String urlImg = "~/static/images/image_magasin.jpg";
-                System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
-                img.Style.Add("width", "100px");                
-            }
+            XDocument docXml = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+            XElement elements = docXml.Element("configuration");
+            String urlImg = "~/static/images/" + elements.Descendants("urlImage").Single().Value;
+            System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
+            img.Style.Add("width", "100px");
+            String urlBackColor = elements.Descendants("couleurFond").Single().Value;
+            String urlForeColor = elements.Descendants("couleurTexte").Single().Value;
+            _base.BackColor = ColorTranslator.FromHtml(urlBackColor);
+            _base.ForeColor = ColorTranslator.FromHtml(urlForeColor);
         }
             
        
