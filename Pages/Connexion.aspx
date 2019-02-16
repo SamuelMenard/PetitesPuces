@@ -68,7 +68,7 @@
                 <asp:TextBox ID="tbMDP" runat="server" CssClass="form-control" placeholder="Mot de passe" TextMode="Password"></asp:TextBox>
                 <div class="checkbox mb-3">
                     <label>
-                        <input type="checkbox" value="cbSeSouvenir">
+                        <asp:CheckBox ID="cbSeSouvenir" runat="server" />
                         Se souvenir de moi
                     </label>
                 </div>
