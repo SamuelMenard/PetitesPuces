@@ -349,6 +349,7 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
                     if (controle is TextBox)
                             ((TextBox)controle).Text = "";
             divMessage.Visible = true;
+            divInscription.Visible = false;
         }
         else
             afficherErreurs();
