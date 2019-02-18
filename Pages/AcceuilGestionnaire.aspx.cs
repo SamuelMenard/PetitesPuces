@@ -49,6 +49,12 @@ public partial class Pages_AcceuilGestionnaire : System.Web.UI.Page
         Response.Redirect(url, true);
     }
 
+    public void vis_redevances_click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/VisualiserRedevances.aspx?";
+        Response.Redirect(url, true);
+    }
+
     public void email_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/BoiteMessagerie.aspx?";

@@ -132,6 +132,21 @@
                         </div>
                     </asp:Panel>
             </asp:LinkButton>
+
+            <asp:LinkButton ID="btn_VisRedevances" 
+                        runat="server"
+                CssClass="col-md-3"
+            OnClick="vis_redevances_click">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <img src="../static/images/vis_redevances.png" alt="LOGO" class="img-responsive">
+                            </div>
+                            <div class="panel-footer">
+                                <h4>Encaisser les redevances</h4>
+                                <br />
+                            </div>
+                        </div>
+            </asp:LinkButton>
         </div>
 
     </div>

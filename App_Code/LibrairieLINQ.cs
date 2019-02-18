@@ -690,6 +690,11 @@ public static class LibrairieLINQ
                                orderby totVentes descending
                                select vendeur).ToList();
                 break;
+            case "redevancesCroissant": lstVendeurs = (from vendeur in tableVendeur where vendeur.Statut == 1 orderby vendeur.PPCommandes.Where(c => c.Statut.Equals("1")).Sum(c => c.MontantTotAvantTaxes * vendeur.Pourcentage) ascending select vendeur).ToList(); break;
+            case "redevancesDecroissant": lstVendeurs = (from vendeur in tableVendeur where vendeur.Statut == 1 orderby vendeur.PPCommandes.Where(c => c.Statut.Equals("1")).Sum(c => c.MontantTotAvantTaxes * vendeur.Pourcentage) descending select vendeur).ToList(); break;
+            default:
+                lstVendeurs = (from vendeur in tableVendeur where vendeur.Statut == 1 orderby vendeur.DateCreation descending select vendeur).ToList();
+                break;
         }
         return lstVendeurs;
     }
@@ -733,7 +738,14 @@ public static class LibrairieLINQ
         var lst = (from produit in tableProduits orderby produit.DateCreation descending select produit).Take(15);
         return lst.ToList();
     }
-    
+
+    // get les vendeurs actifs
+    public static List<PPVendeurs> getVendeursActifs()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+        return (from vendeur in tableVendeurs where vendeur.Statut == 1 select vendeur).ToList();
+    }
 
 
 
