@@ -18,11 +18,46 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     PPVendeurs leVendeur;
     protected void Page_Load(object sender, EventArgs e)
     {
-        noVendeur = Convert.ToInt32((Session["NoVendeur"]));
+        verifierPermissions("V");
+        if(Session["NoVendeur"] != null)
+            noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
         nomEntreprise = leVendeur.NomAffaires;       
         creerSectionPretLivraison();
         creerPage();
+    }
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
+        }
     }
 
     private void creerSectionPretLivraison()

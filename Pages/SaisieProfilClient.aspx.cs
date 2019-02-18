@@ -13,7 +13,11 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
     {
         if (!IsPostBack)
         {
-            long noClient = Convert.ToInt64(Session["NoClient"]);
+            verifierPermissions("C");
+            long noClient = 0;
+            if(Session["NoClient"] != null)
+                 noClient = Convert.ToInt64(Session["NoClient"]);
+
             PPClients client = dbContext.PPClients.Where(v => v.NoClient == noClient).Single();
             tbNom.Text = client.Nom;
             tbPrenom.Text = client.Prenom;
@@ -25,6 +29,39 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             if (client.Tel2 != null)
                 tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
             tbCourriel.Text = client.AdresseEmail;
+        }
+    }
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
         }
     }
 

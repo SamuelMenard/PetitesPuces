@@ -20,7 +20,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        System.Diagnostics.Debug.WriteLine("PAGE LOAD LE DDL = " + Session["ddlMoisInactif"]);
+        verifierPermissions("V");
         if (Session["ddlMoisInactif"] != null && !IsPostBack)
         {
             if(Convert.ToInt32(Session["ddlMoisInactif"]) == 7)
@@ -33,12 +33,46 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
           
         }
         nbMois = Convert.ToInt32(Session["ddlMoisInactif"]);
-        noVendeur = Convert.ToInt32((Session["NoVendeur"]));
+        if(Session["NoVendeur"] != null)
+            noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
         nomEntreprise = leVendeur.NomAffaires;
         creerPage();
     }
-    
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
+        }
+    }
+
     private void creerPage()
     {
         System.Diagnostics.Debug.WriteLine("PAGE LOAD LE DDL = " + nbMois);
