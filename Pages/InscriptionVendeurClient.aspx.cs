@@ -393,6 +393,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
                         else if (controle is CheckBox)
                             ((CheckBox)controle).Checked = false;
             divMessage.Visible = true;
+            divInscription.Visible = false;
         }
         else
             afficherErreurs();
