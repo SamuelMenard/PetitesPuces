@@ -142,7 +142,8 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void rechercheDetaillee_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/searchClient.aspx?";
-        Response.Redirect(url, true);
+        Session["NoVendeurCatalogue"] = "";
+       Response.Redirect(url, true);
     }
 
     public void accueil_click(Object sender, EventArgs e)

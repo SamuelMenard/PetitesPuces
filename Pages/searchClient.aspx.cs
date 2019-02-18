@@ -27,30 +27,25 @@ public partial class Pages_searchClient : System.Web.UI.Page
         booTriDate = Convert.ToBoolean(Session["booTriDate"]);
         booTriNumero = Convert.ToBoolean(Session["booTri"]);
 
-        if (Request.QueryString["NoPage"] != null)
-        {
-            noPage = Convert.ToInt32(Request.QueryString["NoPage"]);
+        verifierPermissions("C");
 
-        }
+        if(Session["NoClient"] != null)
+            noClient = long.Parse(Session["NoClient"].ToString());
 
+        if (Request.QueryString["NoPage"] != null)        
+            noPage = Convert.ToInt32(Request.QueryString["NoPage"]);       
         
-        //noClient = long.Parse(Session["NoClient"].ToString());
-        noClient = 10001;
         int result;
         if (intNbPage == 0 && int.TryParse(ddlNbParPage.SelectedItem.Text, out result))
             intNbPage = result;
         else
-            intNbPage = int.MaxValue;
-        
+            intNbPage = int.MaxValue;        
 
         if (!IsPostBack)
         {
 
             if (Request.QueryString["search"] != null)
-            {
-                _tbsearchText.Text = Request.QueryString["search"];
-
-            }
+                _tbsearchText.Text = Request.QueryString["search"];           
 
             if (Session["ddlNbPage"] != null)
             {
@@ -92,14 +87,16 @@ public partial class Pages_searchClient : System.Web.UI.Page
         Panel colVendeurs = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colDdlVendeur_", "col-sm-6 text-right prix_item");
         LibrairieControlesDynamique.lblDYN(colVendeurs, nomEntreprise + "_lblDDLVendeur", "Choisir un vendeur : ", "");
         DropDownList ddlVendeurs = LibrairieControlesDynamique.ddlDYN(colVendeurs, "lesVendeurs", "");
+        ddlVendeurs.Items.Clear();
         ddlVendeurs.AutoPostBack = true;
         ddlVendeurs.EnableViewState = true;
+        ddlVendeurs.Items.Insert(0, new ListItem("", ""));
         List<PPVendeurs> lesVendeurs = dbContext.PPVendeurs.ToList();
         for (int i = 0; i < lesVendeurs.Count; i++)
         {
             long leNoVendeur = lesVendeurs[i].NoVendeur;
             string strNomEntreprise = lesVendeurs[i].NomAffaires;
-            ddlVendeurs.Items.Insert(i, new ListItem(strNomEntreprise, leNoVendeur.ToString()));
+            ddlVendeurs.Items.Insert(i+1, new ListItem(strNomEntreprise, leNoVendeur.ToString()));
 
         }
         ddlVendeurs.SelectedIndexChanged += ddlVendeurIndex;
@@ -222,9 +219,12 @@ public partial class Pages_searchClient : System.Web.UI.Page
     private void ddlVendeurIndex(object sender, EventArgs e)
     {
         DropDownList ddlVendeur = (DropDownList)sender;
-        Session["NoVendeurCatalogue"] = ddlVendeur.SelectedValue;
-        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
-        Response.Redirect(url, true);
+        if (ddlVendeur.SelectedValue != "")
+        {
+            Session["NoVendeurCatalogue"] = ddlVendeur.SelectedValue;
+            String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
+            Response.Redirect(url, true);
+        }
     }
 
     private void btnAjouter_click(object sender, EventArgs e)
@@ -237,6 +237,17 @@ public partial class Pages_searchClient : System.Web.UI.Page
         short nbItems = short.Parse(tb.Text.Trim());
         PPArticlesEnPanier nouvelArticle = new PPArticlesEnPanier();
         List<PPArticlesEnPanier> articleExistants = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.NoProduit == noProduit)).ToList();
+
+        DateTime dateNow = DateTime.Now.Date;
+        List<PPVendeursClients> nouvelVisite = dbContext.PPVendeursClients.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.DateVisite >= dateNow)).ToList();
+        PPVendeursClients modVisite = new PPVendeursClients();
+        if (!nouvelVisite.Any())
+        {
+            modVisite.NoClient = noClient;
+            modVisite.NoVendeur = noVendeur;
+            modVisite.DateVisite = DateTime.Now;
+            dbContext.PPVendeursClients.Add(modVisite);
+        }
 
         if (articleExistants.Any())
         {
@@ -508,5 +519,38 @@ public partial class Pages_searchClient : System.Web.UI.Page
         Session["ddlCategorie"] = 1;
         string url = "~/Pages/searchClient.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
+    }
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
+        }
     }
 }

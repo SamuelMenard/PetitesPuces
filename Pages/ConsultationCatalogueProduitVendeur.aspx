@@ -6,6 +6,9 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">    
      <!-- Contenu de la page -->
+    <asp:Panel runat="server" ID="messageAction" >
+
+    </asp:Panel>
     <asp:Panel runat="server" ID="_base" CssClass="panel panel-default container">
          <asp:Panel runat="server" ID="_searchFilter_" CssClass="clearfix topBotPad center">
              <asp:Panel runat="server" ID="_colFullRow_" CssClass="col-sm-12">

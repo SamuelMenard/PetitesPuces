@@ -30,15 +30,16 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
 
         booTriDate = Convert.ToBoolean(Session["booTriDate"]);
         booTriNumero = Convert.ToBoolean(Session["booTri"]);
+        verifierPermissions("C");
 
         if (Request.QueryString["NoPage"] != null)
         {
             noPage = Convert.ToInt32(Request.QueryString["NoPage"]);
 
         }
-        if(Session["NoVendeurCatalogue"]!= null || Session["NoClient"] != null)
+        if(Session["NoVendeurCatalogue"] != null || Session["NoClient"] != null)
         {
-            noVendeur = Session["NoVendeurCatalogue"] != null ? Convert.ToInt32(Session["NoVendeurCatalogue"]) : 11;
+            noVendeur = Session["NoVendeurCatalogue"] != null ? Convert.ToInt32(Session["NoVendeurCatalogue"]) : 0;
             noClient = Convert.ToInt32(Session["NoClient"]);
         }
         else
@@ -46,8 +47,6 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
             string url = "~/Pages/Connexion.aspx?";
             Response.Redirect(url);
         }
-       
-        //noClient = long.Parse(Session["NoClient"].ToString());
        
         int result;
         if (intNbPage == 0 && int.TryParse(ddlNbParPage.SelectedItem.Text, out result))
@@ -107,24 +106,17 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         Panel colImage = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colImage_", "col-sm-2 text-center");
         if(dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).Any())
         {
-            vendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
-            if (File.Exists(Server.MapPath("\\static\\xml1\\" + vendeur.Configuration))){
-                XDocument docXml = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
-                XElement elements = docXml.Element("configuration");
-                String urlImg = "~/static/images/" + elements.Descendants("urlImage").Single().Value;
-                System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
-                img.Style.Add("width", "100px");
-                String urlBackColor = elements.Descendants("couleurFond").Single().Value;
-                String urlForeColor = elements.Descendants("couleurTexte").Single().Value;
-                _base.BackColor = ColorTranslator.FromHtml(urlBackColor);
-                _base.ForeColor = ColorTranslator.FromHtml(urlForeColor);
-            }
-            else
-            {
-                String urlImg = "~/static/images/image_magasin.jpg";
-                System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
-                img.Style.Add("width", "100px");                
-            }
+            vendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();          
+            XDocument docXml = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+            XElement elements = docXml.Element("configuration");
+            String urlImg = "~/static/images/" + elements.Descendants("urlImage").Single().Value;
+            System.Web.UI.WebControls.Image img = LibrairieControlesDynamique.imgDYN(colImage, "", urlImg, "");
+            img.Style.Add("width", "100px");
+            String urlBackColor = elements.Descendants("couleurFond").Single().Value;
+            String urlForeColor = elements.Descendants("couleurTexte").Single().Value;
+            _base.BackColor = ColorTranslator.FromHtml(urlBackColor);
+            _base.ForeColor = ColorTranslator.FromHtml(urlForeColor);
+               
         }
             
        
@@ -133,6 +125,8 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         Panel colVendeurs = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colDdlVendeur_", "col-sm-4 text-right prix_item");
         LibrairieControlesDynamique.lblDYN(colVendeurs, nomEntreprise + "_lblDDLVendeur", "Choisir un vendeur : ", "");
         DropDownList ddlVendeurs = LibrairieControlesDynamique.ddlDYN(colVendeurs, "lesVendeurs", "");
+        ddlVendeurs.Items.Clear();
+        ddlVendeurs.Items.Insert(0, new ListItem("Tous les vendeurs", ""));
         ddlVendeurs.AutoPostBack = true;
         ddlVendeurs.EnableViewState = true;
         List<PPVendeurs> lesVendeurs = dbContext.PPVendeurs.ToList();      
@@ -140,7 +134,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         {
             long leNoVendeur = lesVendeurs[i].NoVendeur;
             string strNomEntreprise = lesVendeurs[i].NomAffaires;
-            ddlVendeurs.Items.Insert(i, new ListItem(strNomEntreprise, leNoVendeur.ToString()));
+            ddlVendeurs.Items.Insert(i+1, new ListItem(strNomEntreprise, leNoVendeur.ToString()));
             
         }
         ddlVendeurs.SelectedIndexChanged += ddlVendeurIndex;
@@ -266,8 +260,17 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
     private void ddlVendeurIndex(object sender, EventArgs e)
     {
         DropDownList ddlVendeur = (DropDownList)sender;
-        Session["NoVendeurCatalogue"] = ddlVendeur.SelectedValue;
-        String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
+        String url = "";
+        if (ddlVendeur.SelectedValue != "")
+        {
+            Session["NoVendeurCatalogue"] = ddlVendeur.SelectedValue;
+            url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";           
+        }
+        else
+        {
+            Session["NoVendeurCatalogue"] = "";
+            url = "~/Pages/searchClient.aspx?";           
+        }
         Response.Redirect(url, true);
     }
 
@@ -280,8 +283,19 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         PPArticlesEnPanier nouvelArticle = new PPArticlesEnPanier();
         System.Diagnostics.Debug.WriteLine(" NO CLIENT "+ noClient + " noVendeur " + noVendeur + " noProduit " + noProduit);
         List<PPArticlesEnPanier> articleExistants = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.NoProduit == noProduit)).ToList();
-        
-        if (articleExistants.Count >0 )
+        DateTime dateNow = DateTime.Now.Date;
+        List<PPVendeursClients> nouvelVisite = dbContext.PPVendeursClients.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.DateVisite >= dateNow) ).ToList();
+        PPVendeursClients modVisite = new PPVendeursClients();
+        if (!nouvelVisite.Any())
+        {
+            modVisite.NoClient = noClient;
+            modVisite.NoVendeur = noVendeur;
+            modVisite.DateVisite = DateTime.Now;
+            dbContext.PPVendeursClients.Add(modVisite);
+        }
+   
+
+        if (articleExistants.Count > 0 )
         {
             PPArticlesEnPanier articleExistant = articleExistants.First();           
             articleExistant.NoClient = noClient;
@@ -306,6 +320,11 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         try
         {
             dbContext.SaveChanges();
+            Panel row = LibrairieControlesDynamique.divDYN(messageAction, nomEntreprise + "_rowPanierVide", "row marginFluid text-center");
+            Panel message = LibrairieControlesDynamique.divDYN(row, nomEntreprise + "_messagePanierVide", "message text-center top15");
+            Panel messageContainer = LibrairieControlesDynamique.divDYN(message, nomEntreprise + "_divMessage", "alert alert-success alert-margins");
+            string strMessage = "Les produits ont été ajoutés au panier";
+            LibrairieControlesDynamique.lblDYN(messageContainer, nomEntreprise + "_leMessageLabel", strMessage);          
         } catch (Exception ex) { }
     }
 
@@ -558,5 +577,38 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         Session["ddlCategorie"] = 1;
         string url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
+    }
+
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
+        }
     }
 }
