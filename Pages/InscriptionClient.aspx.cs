@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web.UI;
@@ -230,6 +231,12 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
                 dbContext.PPVendeurs.Where(v => v.AdresseEmail == tbCourriel.Text).Any() ||
                 dbContext.PPGestionnaires.Where(g => g.courriel == tbCourriel.Text).Any())
             {
+                tbExpediteur.Text = "";
+                tbDestinataire.Text = "";
+                tbSujet.Text = "";
+                tbCorps.Text = "";
+                divCourriel.Visible = false;
+
                 lblMessage.Text = "Il y a déjà un profil associé à ce courriel";
                 divMessage.CssClass = "alert alert-danger alert-margins";
             }
@@ -280,7 +287,7 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
                                                  client.AdresseEmail,
                                                  client.MotDePasse);
 
-                    if (LibrairieCourriel.envoyerCourriel(message))
+                    /*if (LibrairieCourriel.envoyerCourriel(message))
                     {
                         lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
                         divMessage.CssClass = "alert alert-success alert-margins";
@@ -292,13 +299,22 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
                         lblMessage.Text = "Votre profil n'a pas pu être créé. Assurez-vous que vous avez saisi correctement votre courriel et que celui-ci existe vraiment.";
                         divMessage.CssClass = "alert alert-danger alert-margins";
-                    }
+                    }*/
+
+                    tbExpediteur.Text = message.From.ToString();
+                    tbDestinataire.Text = message.To.ToString();
+                    tbSujet.Text = message.Subject;
+                    tbCorps.Text = message.Body;
+                    divCourriel.Visible = true;
+
+                    lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
+                    divMessage.CssClass = "alert alert-success alert-margins";
                 }
-                else
+                /*else
                 {
                     lblMessage.Text = "Votre profil n'a pas pu être créé. Réessayez ultérieurement.";
                     divMessage.CssClass = "alert alert-danger alert-margins";
-                }
+                }*/
             }
 
             foreach (Control controle in Page.Form.Controls)

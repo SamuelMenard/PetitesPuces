@@ -29,6 +29,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
             }
 
             divMessage.Visible = false;
+            divCourriel.Visible = false;
         }
     }
 
@@ -64,11 +65,19 @@ public partial class Pages_Connexion : System.Web.UI.Page
                 url = "~/Pages/AccueilClient.aspx?";
 
                 PPClients client = dbContext.PPClients.Where(c => c.AdresseEmail == courriel).Single();
-                if (client.DateDerniereConnexion.Value.Date != DateTime.Now.Date)
+                if (client.DateDerniereConnexion != null)
+                {
+                    if (client.DateDerniereConnexion.Value.Date != DateTime.Now.Date)
+                    {
+                        client.NbConnexions++;
+                        client.DateDerniereConnexion = DateTime.Now;
+                    }
+                }
+                else
                 {
                     client.NbConnexions++;
                     client.DateDerniereConnexion = DateTime.Now;
-                }
+                }            
 
                 try
                 {
@@ -149,17 +158,19 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
                 message = new MailMessage("ppuces@gmail.com", vendeur.AdresseEmail);
                 message.Subject = "Mot de passe oublié Les Petites Puces";
-                message.Body = string.Format("Bonjour,\n\n" +
-                                             "Suite à votre demande, nous vous envoyons vos informations de connexion.\n" +
-                                             "Identifiant : {1}\n" +
-                                             "Mot de passe : {2}\n\n" +
-                                             "Merci de faire affaire avec nous,\n" +
+                message.IsBodyHtml = true;
+                message.Body = string.Format("Bonjour,<br /><br />" +
+                                             "Suite à votre demande, nous vous envoyons vos informations de connexion.<br /><br />" +
+                                             "Identifiant : {0}<br />" +
+                                             "Mot de passe : {1}<br /><br />" +
+                                             "Vous pouvez suivre ce lien pour vous connecter à nouveau : <a href=\"http://424s.cgodin.qc.ca/Pages/Connexion.aspx\">http://424s.cgodin.qc.ca/Pages/Connexion.aspx</a>.<br /><br />" +
+                                             "Merci de faire affaire avec nous,<br />" +
                                              "Les Petites Puces",
                                              vendeur.AdresseEmail,
                                              vendeur.MotDePasse);
             }
 
-            if (LibrairieCourriel.envoyerCourriel(message))
+            /*if (LibrairieCourriel.envoyerCourriel(message))
             {
                 lblMessage.Text = "Nous vous avons envoyé vos informations de connexion par courriel.";
                 divMessage.CssClass = "alert alert-success alert-margins";
@@ -168,9 +179,17 @@ public partial class Pages_Connexion : System.Web.UI.Page
             {
                 lblMessage.Text = "Nous n'avons pas pu vous envoyer vos informations de connexion par courriel.";
                 divMessage.CssClass = "alert alert-danger alert-margins";
-            }
+            }*/
 
+            lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
+            divMessage.CssClass = "alert alert-success alert-margins";
             divMessage.Visible = true;
+
+            tbExpediteur.Text = message.From.ToString();
+            tbDestinataire.Text = message.To.ToString();
+            tbSujet.Text = message.Subject;
+            divCorps.InnerHtml = message.Body;
+            divCourriel.Visible = true;
 
             ScriptManager.RegisterClientScriptBlock(Page, GetType(), "cacherModal", "$('#modalMotDePasseOublie').modal('hide');", true);
         }
