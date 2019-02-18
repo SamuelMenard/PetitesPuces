@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class Pages_BoiteMessagerie : System.Web.UI.Page
@@ -162,29 +160,6 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
         }
         else
         {
-            // envoyer courriel
-            foreach (CheckBox cb in lstCbVendeurs)
-            {
-                if (cb.Checked)
-                {
-                    String id = cb.ID.Replace("cbVendeur_", "");
-                    PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(long.Parse(id));
-                    LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", vendeur.AdresseEmail, tbObjet.Text, tbMessage.Value);
-
-                }
-            }
-
-            foreach (CheckBox cb in lstCbClients)
-            {
-                if (cb.Checked)
-                {
-                    String id = cb.ID.Replace("cbClient_", "");
-                    PPClients client = LibrairieLINQ.getFicheInformationsClient(long.Parse(id));
-                    LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", client.AdresseEmail, tbObjet.Text, tbMessage.Value);
-
-                }
-            }
-
             divMessageErreurCourriel.Visible = false;
             divEnvoieSucces.Visible = true;
             //afficherTableaux();

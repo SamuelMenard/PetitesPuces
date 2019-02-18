@@ -170,17 +170,6 @@ public partial class Pages_Connexion : System.Web.UI.Page
                                              vendeur.MotDePasse);
             }
 
-            /*if (LibrairieCourriel.envoyerCourriel(message))
-            {
-                lblMessage.Text = "Nous vous avons envoyé vos informations de connexion par courriel.";
-                divMessage.CssClass = "alert alert-success alert-margins";
-            }
-            else
-            {
-                lblMessage.Text = "Nous n'avons pas pu vous envoyer vos informations de connexion par courriel.";
-                divMessage.CssClass = "alert alert-danger alert-margins";
-            }*/
-
             lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
             divMessage.CssClass = "alert alert-success alert-margins";
             divMessage.Visible = true;

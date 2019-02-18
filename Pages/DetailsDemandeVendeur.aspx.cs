@@ -263,7 +263,6 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         {
             PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
             LibrairieLINQ.accepterOuDeleteDemandeVendeur(this.noVendeur, true, this.redevance);
-            LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", vendeur.AdresseEmail, this.objet.Text, this.message.Value);
             String url = "~/Pages/DemandesVendeur.aspx?Notification=accepte";
             Response.Redirect(url, true);
         }
@@ -282,7 +281,6 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         {
             PPVendeurs vendeur = LibrairieLINQ.getInfosVendeur(this.noVendeur);
             LibrairieLINQ.accepterOuDeleteDemandeVendeur(this.noVendeur, false, "");
-            LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", vendeur.AdresseEmail, this.objet.Text, this.message.Value);
             String url = "~/Pages/DemandesVendeur.aspx?Notification=refuse";
             Response.Redirect(url, true);
         }
