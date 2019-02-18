@@ -25,6 +25,17 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        string url = null;
+        if (Session["TypeUtilisateur"] == null)
+            url = "~/Pages/AccueilInternaute.aspx?";
+        else if (Session["TypeUtilisateur"].ToString() != "V")
+            if (Session["TypeUtilisateur"].ToString() == "C")
+                url = "~/Pages/AccueilClient.aspx?";
+            else
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+        if (url != null)
+            Response.Redirect(url, true);
+
         if (!IsPostBack)
         {
             chargerListeDeroulante();
@@ -32,70 +43,86 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
             if (Request.QueryString["Operation"] != null)
             {
-                long noProduit = long.Parse(Request.QueryString["NoProduit"]);
-                long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
-                if (dbContext.PPProduits.Where(p => p.NoProduit == noProduit && p.NoVendeur == noVendeur).Any())
+                string operation = Request.QueryString["Operation"].ToString();
+                if (operation == "Afficher" || operation == "Modifier" || operation == "Supprimer")
                 {
-                    PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
-                    ddlCategorie.SelectedValue = produit.NoCategorie.ToString();
-                    tbNom.Text = produit.Nom;
-                    tbPrixDemande.Text = produit.PrixDemande.ToString()
-                                                            .Remove(produit.PrixDemande.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
-                                                            .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
-                    tbDescription.Text = produit.Description;
-                    tbNbItems.Text = produit.NombreItems.ToString();
-                    tbPrixVente.Text = produit.PrixVente.ToString()
-                                                        .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
-                                                        .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
-                    tbDateVente.Text = produit.DateVente.Value.ToShortDateString();
-                    tbPoids.Text = produit.Poids.ToString().Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
-                    if (!(bool)produit.Disponibilité)
+                    if (Request.QueryString["NoProduit"] != null)
                     {
-                        btnOui.CssClass = "btn Orange notActive";
-                        btnNon.CssClass = "btn Orange active";
-                    }
-                    rbDisponibilite.Value = (bool)produit.Disponibilité ? "O" : "N";
-                    imgTeleverse.ImageUrl = "~/static/images/" + produit.Photo;
+                        if (Regex.IsMatch(Request.QueryString["NoProduit"].ToString(), "^\\d{7}$"))
+                        {
+                            long noProduit = long.Parse(Request.QueryString["NoProduit"]);
+                            long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+                            if (dbContext.PPProduits.Where(p => p.NoProduit == noProduit && p.NoVendeur == noVendeur).Any())
+                            {
+                                PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
+                                ddlCategorie.SelectedValue = produit.NoCategorie.ToString();
+                                tbNom.Text = produit.Nom;
+                                tbPrixDemande.Text = produit.PrixDemande.ToString()
+                                                                        .Remove(produit.PrixDemande.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
+                                                                        .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+                                tbDescription.Text = produit.Description;
+                                tbNbItems.Text = produit.NombreItems.ToString();
+                                tbPrixVente.Text = produit.PrixVente.ToString()
+                                                                    .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
+                                                                    .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+                                tbDateVente.Text = produit.DateVente.Value.ToShortDateString();
+                                tbPoids.Text = produit.Poids.ToString().Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+                                if (!(bool)produit.Disponibilité)
+                                {
+                                    btnOui.CssClass = "btn Orange notActive";
+                                    btnNon.CssClass = "btn Orange active";
+                                }
+                                rbDisponibilite.Value = (bool)produit.Disponibilité ? "O" : "N";
+                                imgTeleverse.ImageUrl = "~/static/images/" + produit.Photo;
 
-                    if (Request.QueryString["Operation"] == "Afficher" || Request.QueryString["Operation"] == "Supprimer")
-                    {
-                        ddlCategorie.Enabled = false;
-                        errCategorie.Visible = false;
-                        tbNom.Enabled = false;
-                        errNom.Visible = false;
-                        tbPrixDemande.Enabled = false;
-                        errPrixDemande.Visible = false;
-                        tbDescription.Enabled = false;
-                        errDescription.Visible = false;
-                        fImage.Visible = false;
-                        errImage.Visible = false;
-                        btnSelectionnerImage.Visible = false;
-                        btnTeleverserImage.Visible = false;
-                        tbNbItems.Enabled = false;
-                        errNbItems.Visible = false;
-                        tbPrixVente.Enabled = false;
-                        errPrixVente.Visible = false;
-                        tbDateVente.Enabled = false;
-                        errDateVente.Visible = false;
-                        tbPoids.Enabled = false;
-                        errPoids.Visible = false;
-                    }
+                                if (operation == "Afficher" || operation == "Supprimer")
+                                {
+                                    ddlCategorie.Enabled = false;
+                                    errCategorie.Visible = false;
+                                    tbNom.Enabled = false;
+                                    errNom.Visible = false;
+                                    tbPrixDemande.Enabled = false;
+                                    errPrixDemande.Visible = false;
+                                    tbDescription.Enabled = false;
+                                    errDescription.Visible = false;
+                                    fImage.Visible = false;
+                                    errImage.Visible = false;
+                                    btnSelectionnerImage.Visible = false;
+                                    btnTeleverserImage.Visible = false;
+                                    tbNbItems.Enabled = false;
+                                    errNbItems.Visible = false;
+                                    tbPrixVente.Enabled = false;
+                                    errPrixVente.Visible = false;
+                                    tbDateVente.Enabled = false;
+                                    errDateVente.Visible = false;
+                                    tbPoids.Enabled = false;
+                                    errPoids.Visible = false;
+                                }
 
-                    if (Request.QueryString["Operation"] == "Afficher")
-                        btnRetour.Visible = true;
-                    else if (Request.QueryString["Operation"] == "Modifier")
-                    {
-                        btnChangerImage.Visible = true;
-                        btnModifier.Visible = true;
-                    }
-                    else if (Request.QueryString["Operation"] == "Supprimer")
-                    {
-                        if (dbContext.PPArticlesEnPanier.Where(a => a.NoProduit == noProduit).Count() > 0)
-                            btnSupprimer.OnClientClick = "if (!confirm('Ce produit a été déposé dans un panier. Voulez-vous vraiment le supprimer?')) { return false; }";
+                                if (operation == "Afficher")
+                                    btnRetour.Visible = true;
+                                else if (operation == "Modifier")
+                                {
+                                    btnChangerImage.Visible = true;
+                                    btnModifier.Visible = true;
+                                }
+                                else if (operation == "Supprimer")
+                                {
+                                    if (dbContext.PPArticlesEnPanier.Where(a => a.NoProduit == noProduit).Count() > 0)
+                                        btnSupprimer.OnClientClick = "if (!confirm('Ce produit a été déposé dans un panier. Voulez-vous vraiment le supprimer?')) { return false; }";
+                                    else
+                                        btnSupprimer.OnClientClick = "if (!confirm('Voulez-vous vraiment supprimer ce produit?')) { return false; }";
+                                    btnSupprimer.Visible = true;
+                                }
+                            }
+                            else
+                                Response.Redirect("~/Pages/SuppressionProduit.aspx?");
+                        }
                         else
-                            btnSupprimer.OnClientClick = "if (!confirm('Voulez-vous vraiment supprimer ce produit?')) { return false; }";
-                        btnSupprimer.Visible = true;
+                            Response.Redirect("~/Pages/SuppressionProduit.aspx?");
                     }
+                    else
+                        Response.Redirect("~/Pages/SuppressionProduit.aspx?");
                 }
                 else
                     Response.Redirect("~/Pages/SuppressionProduit.aspx?");

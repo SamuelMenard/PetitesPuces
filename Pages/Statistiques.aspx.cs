@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -9,6 +10,7 @@ public partial class Pages_Statistiques : System.Web.UI.Page
 {
     private long noVendeurSelectionne;
     private long noClientSelectionne;
+    private long noVendeurStats;
 
     public int mois1;
     public int mois3;
@@ -53,7 +55,15 @@ public partial class Pages_Statistiques : System.Web.UI.Page
 
     public string nbTotalVendeurs_value { get { return nbTotalVendeurs_value; } }
 
-    
+
+    public int clientsActifsVendeurs;
+    public int clientsPotentielsVendeurs;
+    public int clientsVisiteursVendeurs;
+    public int ClientsActifsVendeurs { get { return this.clientsActifsVendeurs; } set { this.clientsActifsVendeurs = value; } }
+    public int ClientsPotentielsVendeurs { get { return this.clientsPotentielsVendeurs; } set { this.clientsPotentielsVendeurs = value; } }
+    public int ClientsVisiteursVendeurs { get { return this.clientsVisiteursVendeurs; } set { this.clientsVisiteursVendeurs = value; } }
+
+
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -61,6 +71,7 @@ public partial class Pages_Statistiques : System.Web.UI.Page
 
         getNoVendeur();
         getNoClient();
+        getNoVendeurStats();
 
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
         var tableVendeur = dataContext.PPVendeurs;
@@ -82,13 +93,15 @@ public partial class Pages_Statistiques : System.Web.UI.Page
 
         DateTime d12 = DateTime.Now.AddMonths(-12);
         mois12 = (from v1 in tableVendeur where v1.DateCreation <= d12 select v1).Count();
-        
+
         moisToujours = (from v1 in tableVendeur select v1).Count();
 
         // 3) Nombre total de clients
         clientsActifs = (from client in tableClients where client.PPCommandes.Count > 0 select client).Count();
         clientsPotentiels = (from client in tableClients where client.PPCommandes.Count == 0 && client.PPArticlesEnPanier.Count() > 0 select client).Count();
         clientsVisiteurs = (from client in tableClients where client.PPCommandes.Count == 0 && client.PPArticlesEnPanier.Count() == 0 select client).Count();
+        
+
 
         // 4) Nombre de visites d'un client pour un vendeur
         // populer liste des vendeurs
@@ -97,7 +110,7 @@ public partial class Pages_Statistiques : System.Web.UI.Page
         {
             ddlVendeurs.Items.Add(new ListItem(vendeur.NomAffaires, vendeur.NoVendeur.ToString()));
         }
-        
+
         // populer liste des clients
         List<PPClients> lstClients = (from client in tableClients where client.Statut == 1 select client).ToList();
 
@@ -114,7 +127,7 @@ public partial class Pages_Statistiques : System.Web.UI.Page
         else
         {
             PPVendeurs vendeur = (this.noVendeurSelectionne != -1) ? (from v in tableVendeur where v.NoVendeur == this.noVendeurSelectionne select v).First() : lstVendeurs.First();
-            PPClients client = (this.noClientSelectionne != -1) ? (from c in tableClients where c.NoClient == this.noClientSelectionne select c).First():lstClients.First();
+            PPClients client = (this.noClientSelectionne != -1) ? (from c in tableClients where c.NoClient == this.noClientSelectionne select c).First() : lstClients.First();
             nbVisitesClientVendeur = (from v in client.PPVendeursClients where v.NoVendeur == vendeur.NoVendeur select v).Count().ToString();
         }
 
@@ -132,32 +145,168 @@ public partial class Pages_Statistiques : System.Web.UI.Page
         mois12Client = (from c in tableClients where c.DateCreation <= d12C select c).Count();
 
         // 6) Nombre connexions clients
-        foreach(PPClients client in tableClients)
+        foreach (PPClients client in tableClients)
         {
             tabClients.Add(client.AdresseEmail);
             tabNbConnexions.Add((short)client.NbConnexions);
         }
 
+        // 7) Liste des 10,20,30 dernières connexions clients
+        string strMax = dataContext.PPClients.Where(c=> c.DateDerniereConnexion != null).OrderByDescending(c => c.DateDerniereConnexion).Count().ToString();
+            
+        nbConnexions.Attributes.Add("max", strMax);
+        List<PPClients> lstClientsVendeurs = dataContext.PPClients.Where(c => c.DateDerniereConnexion != null).OrderByDescending(c => c.DateDerniereConnexion)
+            .Take(Convert.ToInt32(nbConnexions.Text)).ToList();
+
+
+
+        TableRow rowClients;
+        TableCell cellValeurs;
+                     
+        foreach (PPClients clients in lstClientsVendeurs)
+        {
+            rowClients = new TableRow();
+            long noClient = clients.NoClient;
+            cellValeurs = new TableCell();
+            cellValeurs.Text = clients.DateDerniereConnexion.ToString();
+            rowClients.Cells.Add(cellValeurs);
+            cellValeurs = new TableCell();
+            cellValeurs.Text = noClient.ToString();
+            rowClients.Cells.Add(cellValeurs);
+            cellValeurs = new TableCell();
+            if (clients.Nom != "" && clients.Prenom != "" && clients.Nom != null && clients.Prenom != null)
+                cellValeurs.Text = clients.Nom + ", " + clients.Prenom;
+            else
+                cellValeurs.Text = "";
+            rowClients.Cells.Add(cellValeurs);
+            cellValeurs = new TableCell();            
+            cellValeurs.Text = clients.NbConnexions.ToString();
+            rowClients.Cells.Add(cellValeurs);
+            tConnexions.Rows.Add(rowClients);
+        }
+       
+        
+
+        // 8) Total des commandes d'un client par vendeur
+        var commandesParClient = from commande in dataContext.PPCommandes
+                                 orderby commande.NoClient
+                                 group commande by commande.PPClients;
+
+        foreach (var commandesClient in commandesParClient)
+        {
+            PPClients client = commandesClient.Key;
+            var commandesParVendeur = from commande in commandesClient
+                                      orderby commande.NoVendeur
+                                      group commande by commande.PPVendeurs;
+
+            bool premierVendeur = true;
+            foreach (var commandesVendeur in commandesParVendeur)
+            {
+                PPVendeurs vendeur = commandesVendeur.Key;
+                decimal montantTotalCommandes = 0;
+                DateTime dateDeniereCommande = DateTime.MinValue;
+                foreach (PPCommandes commande in commandesVendeur)
+                {
+                    montantTotalCommandes += (decimal)(commande.MontantTotAvantTaxes + commande.CoutLivraison + commande.TPS + commande.TVQ);
+                    if (commande.DateCommande > dateDeniereCommande)
+                        dateDeniereCommande = (DateTime)commande.DateCommande;
+                }
+
+                TableRow row = new TableRow();
+                TableCell cell;
+                if (premierVendeur)
+                {
+                    cell = new TableCell();
+                    cell.RowSpan = commandesParVendeur.Count();
+                    cell.Text = client.NoClient.ToString();
+                    row.Cells.Add(cell);
+                    cell = new TableCell();
+                    cell.RowSpan = commandesParVendeur.Count();
+                    cell.Text = client.Prenom + " " + client.Nom;
+                    row.Cells.Add(cell);
+                }
+                cell = new TableCell();
+                cell.Text = vendeur.NoVendeur.ToString();
+                row.Cells.Add(cell);
+                cell = new TableCell();
+                cell.Text = vendeur.Prenom + " " + vendeur.Nom;
+                row.Cells.Add(cell);
+                cell = new TableCell();
+                cell.HorizontalAlign = HorizontalAlign.Right;
+                cell.Text = montantTotalCommandes.ToString("C", CultureInfo.CurrentCulture);
+                row.Cells.Add(cell);
+                cell = new TableCell();
+                cell.HorizontalAlign = HorizontalAlign.Right;
+                cell.Text = dateDeniereCommande.ToString("yyyy'-'MM'-'dd HH':'mm");
+                row.Cells.Add(cell);
+                tabTotalCommandesClientsParVendeur.Rows.Add(row);
+
+                premierVendeur = false;               
+            }
+        }
+        //9 Nombre clients par vendeur
+        List<PPVendeurs> lstVendeursStats = dataContext.PPVendeurs.Where(c => c.Statut.Value.Equals(1)).ToList();
+        foreach (PPVendeurs leVendeur in lstVendeurs)
+        {
+            ddlVendeursStats.Items.Add(new ListItem(leVendeur.NomAffaires, leVendeur.NoVendeur.ToString()));
+        }
+        clientsActifsVendeurs = dataContext.PPClients.Where(c => (c.PPCommandes.Count() > 0) && (c.PPCommandes.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() > 0 ) ).Count();
+        clientsPotentielsVendeurs = dataContext.PPClients.Where(c => (c.PPCommandes.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() == 0) && (c.PPArticlesEnPanier.Count() > 0) &&
+        (c.PPArticlesEnPanier.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() > 0)).Count();
+        clientsVisiteursVendeurs = dataContext.PPClients.Where(c => (c.PPCommandes.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() == 0) &&
+        (c.PPArticlesEnPanier.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() == 0) && (c.PPVendeursClients.Where(v => v.NoVendeur.Equals(noVendeurStats)).Count() > 0)).Count();
+    }
+
+    protected void ddlVendeurIndex(object sender, EventArgs e)
+    {       
+        String url = "~/Pages/Statistiques.aspx?NoVendeurStats="+ddlVendeursStats.SelectedValue + (this.noClientSelectionne != -1 ? "&NoClient=" + this.noClientSelectionne : "") + (this.noVendeurSelectionne != -1 ? "&NoVendeur=" + this.noVendeurSelectionne : "");
+        Response.Redirect(url, true);
     }
 
     protected void Page_LoadComplete(object sender, EventArgs e)
     {
-        ddlVendeurs.SelectedValue = this.noVendeurSelectionne.ToString();
-        ddlClients.SelectedValue = this.noClientSelectionne.ToString();
+        if (this.noVendeurSelectionne != -1)
+            ddlVendeurs.SelectedValue = this.noVendeurSelectionne.ToString();
+        if (this.noClientSelectionne != -1)
+            ddlClients.SelectedValue = this.noClientSelectionne.ToString();
+        if (this.noVendeurStats != -1)
+            ddlVendeursStats.SelectedValue = this.noVendeurStats.ToString();
     }
 
     public void ddlVendeurs_onChanged(Object sender, EventArgs e)
     {
-        String url = "~/Pages/Statistiques.aspx?NoVendeur=" + ddlVendeurs.SelectedValue + (this.noClientSelectionne != -1?"&NoClient=" + this.noClientSelectionne:"");
+        String url = "~/Pages/Statistiques.aspx?NoVendeur=" + ddlVendeurs.SelectedValue + (this.noClientSelectionne != -1 ? "&NoClient=" + this.noClientSelectionne : "") + (this.noVendeurStats != -1 ? "&NoVendeurStats=" + this.noVendeurStats : "");
         Response.Redirect(url, true);
     }
 
     public void ddlClients_onChanged(Object sender, EventArgs e)
     {
-        String url = "~/Pages/Statistiques.aspx?NoClient=" + ddlClients.SelectedValue + (this.noVendeurSelectionne != -1 ? "&NoVendeur=" + this.noVendeurSelectionne : "");
+        String url = "~/Pages/Statistiques.aspx?NoClient=" + ddlClients.SelectedValue + (this.noVendeurSelectionne != -1 ? "&NoVendeur=" + this.noVendeurSelectionne : "") + (this.noVendeurStats != -1 ? "&NoVendeurStats=" + this.noVendeurStats : "");
         Response.Redirect(url, true);
     }
 
+    private void getNoVendeurStats()
+    {
+        BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+        var tableVendeurs = dataContext.PPVendeurs;
+        long n;
+        if (Request.QueryString["NoVendeurStats"] == null || !long.TryParse(Request.QueryString["NoVendeurStats"], out n))
+        {
+            this.noVendeurStats = -1;
+        }
+        else
+        {
+            if ((from vendeur in tableVendeurs where vendeur.NoVendeur == n select vendeur).Count() > 0)
+            {
+                this.noVendeurStats = n;
+            }
+            else
+            {
+                this.noVendeurStats = -1;
+            }
+
+        }
+    }
     private void getNoVendeur()
     {
         BD6B8_424SEntities dataContext = new BD6B8_424SEntities();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 public partial class Pages_AccueilClient : System.Web.UI.Page
 {
@@ -222,8 +223,11 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
                     row.Style.Add("margin-bottom", "20 px");
                 }
 
+                XDocument document = XDocument.Load(Server.MapPath("\\static\\xml\\" + vendeur.Configuration));
+                XElement configuration = document.Element("configuration");
+
                 String nomEntreprise = vendeur.NomAffaires;
-                String urlImg = "../static/images/videotron.png";
+                String urlImg = "~/static/images/" + configuration.Descendants("urlImage").Single().Value;
 
                 // rajouter les colonnes (entreprises)
                 Panel col = LibrairieControlesDynamique.divDYN(row, "", "col-md-2");

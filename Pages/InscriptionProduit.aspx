@@ -274,7 +274,8 @@
             binPageValide = false;
          }
          else {
-            $('#contentBody_imgTeleverse').removeClass('border-danger').addClass('border-success');
+            if ($('#contentBody_btnInscription').length)
+               $('#contentBody_imgTeleverse').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errImage').text('').addClass('hidden');
          }
          if ($('#contentBody_tbNbItems').val() == '' || !exprNbItems.test($('#contentBody_tbNbItems').val()) || $('#contentBody_tbNbItems').val() > 32767) {
@@ -306,7 +307,7 @@
             $('#contentBody_errDateVente').text('La date d\'expiration du prix de vente doit être supérieure à la date d\'aujourd\'hui').removeClass('hidden');
             binPageValide = false;
          }
-         else
+         else if ($('#contentBody_btnInscription').length)
             $('#contentBody_tbDateVente').removeClass('border-danger').addClass('border-success');
          if ($('#contentBody_tbPoids').val() == '' || !exprPoids.test($('#contentBody_tbPoids').val())) {
             $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');

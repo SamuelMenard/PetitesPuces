@@ -11,6 +11,17 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        string url = null;
+        if (Session["TypeUtilisateur"] == null)
+            url = "~/Pages/AccueilInternaute.aspx?";
+        else if (Session["TypeUtilisateur"].ToString() != "C")
+            if (Session["TypeUtilisateur"].ToString() == "V")
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            else
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+        if (url != null)
+            Response.Redirect(url, true);
+
         if (!IsPostBack)
         {
             long noClient = Convert.ToInt64(Session["NoClient"]);

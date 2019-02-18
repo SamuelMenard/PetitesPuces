@@ -14,6 +14,7 @@
             graphTotalClients();
             graphNouveauxClients();
             graphNbConnexionsClients();
+            graphNombreClientsVendeur();
         };
 
         function graphNouveauxVendeurs() {
@@ -63,6 +64,13 @@
                   ]
                 },
                 options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {                                
+                                beginAtZero: true
+                            }
+                        }]
+                    },
                   legend: { display: false },
                   title: {
                     display: true,
@@ -146,6 +154,42 @@
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
+        }
+
+
+        function graphNombreClientsVendeur() {
+            var cActifs = <%= new JavaScriptSerializer().Serialize(clientsActifsVendeurs) %>;
+            var cPotentiels = <%= new JavaScriptSerializer().Serialize(clientsPotentielsVendeurs) %>;
+            var cVisiteurs = <%= new JavaScriptSerializer().Serialize(clientsVisiteursVendeurs) %>;
+
+            // Bar chart
+            new Chart(document.getElementById("canvasTotalClientsVendeurs"), {
+                type: 'bar',
+                data: {
+                  labels: ["Actif", "Potentiels", "Visiteurs"],
+                  datasets: [
+                    {
+                      label: "Clients",
+                          backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                          data: [cActifs, cPotentiels, cVisiteurs]
+                    }
+                  ]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {                                
+                                beginAtZero: true
+                            }
+                        }]
+                    },
+                  legend: { display: false },
+                  title: {
+                    display: true,
+                    text: 'Quantité totale de clients par vendeur'
+                  }
+                }
+            });
         }
         
         
@@ -241,6 +285,61 @@
                         </div>
                 </div>
             </div>
+        </div>
+
+         <div class="row">
+            <div class="col-sm-12 mb-3 table-responsive">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Liste des dernières connexions clients</h3>
+                        Nombre de clients : <asp:TextBox TextMode="Number" ID="nbConnexions" runat="server" min="1" max="20" step="1" Text="10"/>
+                        <asp:Button runat="server" ID="btnConfirmer" Text="Modifier" />
+                        <hr/>
+                        <asp:Table ID="tConnexions" runat="server" CssClass="table table-bordered table-condensed">
+                            <asp:TableHeaderRow>
+                                <asp:TableHeaderCell>Date</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Numéro du client</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Nom complet</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Nombre de connexions</asp:TableHeaderCell>                                 
+                            </asp:TableHeaderRow>
+                        </asp:Table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 mb-3 table-responsive">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>Montant total des commandes d'un client par vendeur</h3>
+                        <asp:Table ID="tabTotalCommandesClientsParVendeur" runat="server" CssClass="table table-bordered table-condensed">
+                            <asp:TableHeaderRow>
+                                <asp:TableHeaderCell>Numéro de client</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Nom complet du client</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Numéro de vendeur</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Nom complet du vendeur</asp:TableHeaderCell> 
+                                <asp:TableHeaderCell>Montant total des commandes</asp:TableHeaderCell>
+                                <asp:TableHeaderCell>Date de la dernière commande</asp:TableHeaderCell>
+                            </asp:TableHeaderRow>
+                        </asp:Table>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="row">
+             <div class="col-md-3">               
+             </div>
+            <div class="col-md-6">Choisissez un vendeur :
+                <asp:DropDownList runat="server" AutoPostBack="true" ID="ddlVendeursStats"  OnSelectedIndexChanged="ddlVendeurIndex"></asp:DropDownList>
+                <br/>
+                <br/>
+                <div class="panel panel-default">
+                        <div class="panel-body">
+                            <canvas id="canvasTotalClientsVendeurs" width="200" height="200"></canvas>
+                        </div>
+                </div>
+             </div>
         </div>
     </div>
     
