@@ -19,7 +19,8 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
 
     protected void Page_Load(object sender, EventArgs e)
-    {       
+    {
+        verifierPermissions("V");
         if (Request.QueryString["ResultatModif"] != null)
         {
             string resultat = Request.QueryString["ResultatModif"];
@@ -34,13 +35,66 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
                 lblMessage.Text = "Le produit n'a pas pu être modifié. Réessayez ultérieurement.";
                 divMessage.CssClass = "alert alert-danger alert-margins";
                 divMessage.Visible = true;
+            }            
+        }
+        if (Request.QueryString["ResultatSuppr"] != null)
+        {
+            string resultatSupprimer = Request.QueryString["ResultatSuppr"];
+            if (resultatSupprimer == "OK")
+            {
+                lblMessage.Text = "Le produit a été supprimé.";
+                divMessage.CssClass = "alert alert-success alert-margins";
+                divMessage.Visible = true;
+            }
+            else if (resultatSupprimer == "PasOK")
+            {
+                lblMessage.Text = "Le produit n'a pas pu être supprimé. Réessayez ultérieurement.";
+                divMessage.CssClass = "alert alert-danger alert-margins";
+                divMessage.Visible = true;
             }
         }
-
-        nomVendeur = Session["Courriel"].ToString();
-        nomEntreprise = Session["NomAffaire"].ToString();
-        noVendeur = Convert.ToInt32((Session["NoVendeur"]));
+        PPVendeurs leVendeur;
+        if (Session["NoVendeur"] != null)
+        {
+            noVendeur = Convert.ToInt32((Session["NoVendeur"]));
+            leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur.Equals(noVendeur)).First();
+            nomVendeur = leVendeur.AdresseEmail;
+            nomEntreprise = leVendeur.NomAffaires;
+        }
+           
         creerPage();       
+    }
+    public void verifierPermissions(String typeUtilisateur)
+    {
+        String url = "";
+
+        if (Session["TypeUtilisateur"] == null)
+        {
+            url = "~/Pages/AccueilInternaute.aspx?";
+            Response.Redirect(url, true);
+        }
+        else if (Session["TypeUtilisateur"].ToString() != typeUtilisateur)
+        {
+            String type = Session["TypeUtilisateur"].ToString();
+            if (type == "C")
+            {
+                url = "~/Pages/AccueilClient.aspx?";
+            }
+            else if (type == "V")
+            {
+                url = "~/Pages/ConnexionVendeur.aspx?";
+            }
+            else if (type == "G")
+            {
+                url = "~/Pages/AcceuilGestionnaire.aspx?";
+            }
+            else
+            {
+                url = "~/Pages/AccueilInternaute.aspx?";
+            }
+
+            Response.Redirect(url, true);
+        }
     }
 
     private void creerPage()
@@ -63,7 +117,7 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorder", 30);
 
         // Chercher les produits de la compagnie        
-        List<PPProduits> lesProduits = dbContext.PPProduits.Where(c => c.NoVendeur == noVendeur).ToList();        
+        List<PPProduits> lesProduits = dbContext.PPProduits.Where(c => (c.NoVendeur == noVendeur) && (c.Disponibilité != null) ).ToList();        
       
         // Rajouter les produits dans le panier
         if (lesProduits.Count > 0)
@@ -130,6 +184,13 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
 
             }
+        }
+        else
+        {
+            Panel row = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowPanierVide", "row marginFluid text-center");
+            Panel message = LibrairieControlesDynamique.divDYN(row, nomEntreprise + "_messagePanierVide", "message text-center top15");
+            Panel messageContainer = LibrairieControlesDynamique.divDYN(message, nomEntreprise + "_divMessage", "alert alert-danger alert-margins");
+            LibrairieControlesDynamique.lblDYN(messageContainer, nomEntreprise + "_leMessageLabel", "Vous avez aucun produit dans votre catalogue");           
         }
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorder", 30);
     }

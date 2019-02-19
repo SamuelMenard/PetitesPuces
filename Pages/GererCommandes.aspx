@@ -17,6 +17,14 @@
             /*Scroll Spy*/
             $('body').scrollspy({ target: '#spy', offset: 80 });
         });      
+
+       
+       
+
+        function livraisonConfirm() {
+            return confirm("Êtes-vous certain de vouloir livrer cette commande?");
+            }
+    
     </script>
     <!-- Contenu de la page -->
     <div id="wrapper">

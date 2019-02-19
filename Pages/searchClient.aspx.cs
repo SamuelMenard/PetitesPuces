@@ -80,18 +80,17 @@ public partial class Pages_searchClient : System.Web.UI.Page
     {
         // Nom de l'entreprise
         phDynamique.Controls.Clear();
-        Panel panelHeader = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_header", "panel-heading");
-        Panel rowItemHeader = LibrairieControlesDynamique.divDYN(panelHeader, nomEntreprise + "_rowHeader_", "row valign");
-        Panel colEntreprise = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colEntreprise_", "col-sm-6");
+        
+        Panel colEntreprise = LibrairieControlesDynamique.divDYN(_rowHeader_, nomEntreprise + "_colEntreprise_", "col-sm-6");
         LibrairieControlesDynamique.lblDYN(colEntreprise, nomEntreprise + "_nom", nomEntreprise, "nom-entreprise");
-        Panel colVendeurs = LibrairieControlesDynamique.divDYN(rowItemHeader, nomEntreprise + "_colDdlVendeur_", "col-sm-6 text-right prix_item");
+        Panel colVendeurs = LibrairieControlesDynamique.divDYN(_rowHeader_, nomEntreprise + "_colDdlVendeur_", "col-sm-6 text-right prix_item");
         LibrairieControlesDynamique.lblDYN(colVendeurs, nomEntreprise + "_lblDDLVendeur", "Choisir un vendeur : ", "");
         DropDownList ddlVendeurs = LibrairieControlesDynamique.ddlDYN(colVendeurs, "lesVendeurs", "");
         ddlVendeurs.Items.Clear();
         ddlVendeurs.AutoPostBack = true;
         ddlVendeurs.EnableViewState = true;
         ddlVendeurs.Items.Insert(0, new ListItem("", ""));
-        List<PPVendeurs> lesVendeurs = dbContext.PPVendeurs.ToList();
+        List<PPVendeurs> lesVendeurs = dbContext.PPVendeurs.Where( c => c.Statut.Value.Equals(1) && (c.PPProduits.Count() > 0)).ToList();
         for (int i = 0; i < lesVendeurs.Count; i++)
         {
             long leNoVendeur = lesVendeurs[i].NoVendeur;
@@ -114,17 +113,17 @@ public partial class Pages_searchClient : System.Web.UI.Page
 
             int laCategorieDDL = Convert.ToInt32(ddlCategorie.SelectedValue);
             Dictionary<string, List<PPProduits>> getProduitsSearch;
-            if (Convert.ToBoolean(Session["booTriNumeroStart"]))
+            if (laCategorieDDL != 1)
             {
-                getProduitsSearch = getProduitsParNumero(_tbsearchText.Text.Trim());
+                getProduitsSearch = getProduitsUneCategorie(_tbsearchText.Text.Trim());                
             }
             else if (Convert.ToBoolean(Session["booTriDateStart"]))
             {
                 getProduitsSearch = getProduitsParDate(_tbsearchText.Text.Trim());
             }
-            else if (laCategorieDDL != 1)
+            else if (Convert.ToBoolean(Session["booTriNumeroStart"]))
             {
-                getProduitsSearch = getProduitsUneCategorie(_tbsearchText.Text.Trim());
+                getProduitsSearch = getProduitsParNumero(_tbsearchText.Text.Trim());
             }
             else
             {
@@ -176,7 +175,9 @@ public partial class Pages_searchClient : System.Web.UI.Page
 
                     // Categorie
                     Panel colCat = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCategorie_" + idItem, "col-sm-2");
-                    LibrairieControlesDynamique.lblDYN(colCat, nomEntreprise + "_categorie_" + idItem, categorie, "cat_item");
+                    LibrairieControlesDynamique.lblDYN(colCat, nomEntreprise + "_categorie_" + idItem, categorie +"<br>" , "cat_item");
+                    LinkButton entreprise = LibrairieControlesDynamique.lbDYN(colCat, "_nomEntrepriseLB_" + idItem + "idEntreprise-" + produitCat.PPVendeurs.NoVendeur, produitCat.PPVendeurs.NomAffaires, lbVendeur); 
+                    
 
                     // Prix item
                     Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-1 text-right");
@@ -185,7 +186,7 @@ public partial class Pages_searchClient : System.Web.UI.Page
                     LibrairieControlesDynamique.lblDYN(colPrix, "lblRabais" + idItem, (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
 
                     // Quantité restant
-                    colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-2 text-center");
+                    colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-2 text-left");
 
                     TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem, (produitCat.NombreItems < 1) ? "0" : "1"
                     , (produitCat.NombreItems < 1) ? "0" : produitCat.NombreItems.ToString(), "form-control border-quantite");
@@ -227,6 +228,19 @@ public partial class Pages_searchClient : System.Web.UI.Page
         }
     }
 
+    private void lbVendeur(object sender, EventArgs e)
+    {
+        LinkButton lbVendeur = (LinkButton)sender;
+        if (lbVendeur.Text != "")
+        {
+            String[] strValeurs = lbVendeur.ID.Split('-');
+            Session["NoVendeurCatalogue"] = strValeurs[1];
+            System.Diagnostics.Debug.WriteLine(" SESSION NOVENDEURCAT = " + Session["NoVendeurCatalogue"]);
+            String url = "~/Pages/ConsultationCatalogueProduitVendeur.aspx?";
+            Response.Redirect(url, true);
+        }
+    }
+
     private void btnAjouter_click(object sender, EventArgs e)
     {
         Button btnAjout = (Button)sender;
@@ -249,24 +263,33 @@ public partial class Pages_searchClient : System.Web.UI.Page
             dbContext.PPVendeursClients.Add(modVisite);
         }
 
-        if (articleExistants.Any())
+        if (articleExistants.Count > 0)
         {
-            nouvelArticle = articleExistants.First();
+            PPArticlesEnPanier articleExistant = articleExistants.First();
+            articleExistant.DateCreation = DateTime.Now;
+            articleExistant.NbItems = nbItems;
         }
         else
-        {       
+        {
             nouvelArticle.NoPanier = dbContext.PPArticlesEnPanier.Max(c => c.NoPanier) + 1;
-        }       
-        nouvelArticle.NoClient = noClient;
-        nouvelArticle.NoVendeur = noVendeur;
-        nouvelArticle.NoProduit = noProduit;
-        nouvelArticle.DateCreation = DateTime.Now;
-        nouvelArticle.NbItems = nbItems;
-        dbContext.PPArticlesEnPanier.Add(nouvelArticle);
+            nouvelArticle.NoClient = noClient;
+            nouvelArticle.NoVendeur = noVendeur;
+            nouvelArticle.NoProduit = noProduit;
+            nouvelArticle.DateCreation = DateTime.Now;
+            nouvelArticle.NbItems = nbItems;
+            dbContext.PPArticlesEnPanier.Add(nouvelArticle);
+        }
 
         try
         {
             dbContext.SaveChanges();
+            Panel row = LibrairieControlesDynamique.divDYN(messageAction, nomEntreprise + "_rowPanierVide", "row marginFluid text-center");
+            Panel message = LibrairieControlesDynamique.divDYN(row, nomEntreprise + "_messagePanierVide", "message text-center top15");
+            Panel messageContainer = LibrairieControlesDynamique.divDYN(message, nomEntreprise + "_divMessage", "alert alert-success alert-margins");
+            string strMessage = "Le produit a été ajouté au panier";
+            if (nbItems > 1)
+                strMessage = "Les produits ont été ajoutés au panier";
+            LibrairieControlesDynamique.lblDYN(messageContainer, nomEntreprise + "_leMessageLabel", strMessage);
         } catch (Exception ex) { }
     }
 
@@ -322,6 +345,7 @@ public partial class Pages_searchClient : System.Web.UI.Page
         }
 
         ulPages.Controls.Clear();
+        ulPagesTop.Controls.Clear();
         decimal decPages = Convert.ToDecimal(nbProduits) / Convert.ToDecimal(intNbPage);
         noPage = noPage > Math.Ceiling(decPages) ? 1 : noPage;
         int maximumIndex = (Math.Ceiling(decPages) >= (noPage + 2)) ? (noPage + 2) : (Math.Ceiling(decPages) >= (noPage + 1)) ? (noPage + 1) : noPage;
@@ -330,12 +354,14 @@ public partial class Pages_searchClient : System.Web.UI.Page
         for (int i = indexPages; i < maximumIndex; i++)
         {
             if ((i + 1) == noPage)
-            {
+            {                
                 LibrairieControlesDynamique.liDYN(ulPages, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
+                LibrairieControlesDynamique.liDYN(ulPagesTop, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
             }
             else
             {
                 LibrairieControlesDynamique.liDYN(ulPages, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
+                LibrairieControlesDynamique.liDYN(ulPagesTop, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
             }
 
         }
@@ -428,6 +454,41 @@ public partial class Pages_searchClient : System.Web.UI.Page
                        select listeProduits;
 
 
+        if (Convert.ToBoolean(Session["booTriDateStart"]))
+        {
+            if (!booTriDate)
+            {
+                produits = from produit in tableProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) && (c.NoCategorie == laCategorieDDL)).OrderByDescending(c => c.DateCreation).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+                           group produit by new { produit.NoCategorie }
+                                             into listeProduits
+                           select listeProduits;
+            }
+            else if (booTriDate)
+            {
+                produits = from produit in tableProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) && (c.NoCategorie == laCategorieDDL)).OrderBy(c => c.DateCreation).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+                           group produit by new { produit.NoCategorie }
+                                             into listeProduits
+                           select listeProduits;
+            }
+        }
+        else if (Convert.ToBoolean(Session["booTriNumeroStart"]))
+        {
+            if (!booTriNumero)
+            {
+                produits = from produit in tableProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) && (c.NoCategorie == laCategorieDDL)).OrderByDescending(c => c.NoProduit).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+                           group produit by new { produit.NoCategorie }
+                                             into listeProduits
+                           select listeProduits;
+            }
+            else if (booTriNumero)
+            {
+                produits = from produit in tableProduits.Where(c => (c.Nom.Contains(strSearch)) && (c.Disponibilité == true) && (c.NoCategorie == laCategorieDDL)).OrderBy(c => c.NoProduit).Skip(intNbPage * (noPage - 1)).Take(intNbPage)
+                           group produit by new { produit.NoCategorie }
+                                             into listeProduits
+                           select listeProduits;
+            }
+        }
+
 
         foreach (var articlesProduits in produits)
         {
@@ -498,8 +559,8 @@ public partial class Pages_searchClient : System.Web.UI.Page
         Session["booTriNumeroStart"] = false;
         Session["booTriDate"] = !Convert.ToBoolean(Session["booTriDate"]);
         booTriDate = Convert.ToBoolean(Session["booTriDate"]);
-        ddlCategorie.SelectedIndex = 0;
-        Session["ddlCategorie"] = 1;
+        //ddlCategorie.SelectedIndex = 0;
+        //Session["ddlCategorie"] = 1;
         string url = "~/Pages/searchClient.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
     }
@@ -515,8 +576,8 @@ public partial class Pages_searchClient : System.Web.UI.Page
         Session["booTriDateStart"] = false;
         Session["booTri"] = !Convert.ToBoolean(Session["booTri"]);
         booTriNumero = Convert.ToBoolean(Session["booTri"]);
-        ddlCategorie.SelectedIndex = 0;
-        Session["ddlCategorie"] = 1;
+        //ddlCategorie.SelectedIndex = 0;
+        //Session["ddlCategorie"] = 1;
         string url = "~/Pages/searchClient.aspx?&NoPage=" + noPage + "&search=" + _tbsearchText.Text.Trim();
         Response.Redirect(url);
     }

@@ -26,7 +26,7 @@
         }
     </script>
     <!-- Contenu de la page -->
-    <div class="container">
+    <div class="container-fluid marginFluid">
        <div class="row">
           <div class="message text-center">
              <asp:Panel ID="divMessage" runat="server" Visible="False">

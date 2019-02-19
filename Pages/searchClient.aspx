@@ -7,6 +7,9 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">    
      <!-- Contenu de la page -->
     <asp:Panel runat="server" ID="_base" CssClass="panel panel-default container">
+            <asp:Panel runat="server" ID="messageAction" >
+
+    </asp:Panel>
          <asp:Panel runat="server" ID="_searchFilter_" CssClass="clearfix topBotPad center">
              <asp:Panel runat="server" ID="_colFullRow_" CssClass="col-sm-12">
                  <asp:TextBox runat="server" ID="_tbsearchText" CssClass="left15"></asp:TextBox>
@@ -47,12 +50,22 @@
            
                 </asp:Panel>
              </asp:Panel>
+          <asp:Panel runat="server" ID="_header" CssClass="panel-heading">
+        <asp:Panel runat="server" ID="_rowHeader_" CssClass="row valign">   
+       
+            </asp:Panel>
+             </asp:Panel>
+             <asp:Panel runat="server" CssClass="row text-center">
+        <asp:Panel runat="server" aria-label="Page navigation example col-md-12">         
+        <ul runat="server" class="pagination" id="ulPagesTop">                
+        </ul>
+
+      </asp:Panel>
+      </asp:Panel>
     <asp:PlaceHolder id="phDynamique" runat="server" />
         <asp:Panel runat="server" CssClass="row text-center">
-        <asp:Panel runat="server" aria-label="Page navigation example col-md-12">
-         
-        <ul runat="server" class="pagination" id="ulPages">    
-            
+        <asp:Panel runat="server" aria-label="Page navigation example col-md-12">         
+        <ul runat="server" class="pagination" id="ulPages">                
         </ul>
 
       </asp:Panel>

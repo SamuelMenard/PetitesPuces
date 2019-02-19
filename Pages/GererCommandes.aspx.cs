@@ -20,8 +20,8 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        Page.MaintainScrollPositionOnPostBack = true;
-        verifierPermissions("C");
+        verifierPermissions("V");
+        Page.MaintainScrollPositionOnPostBack = true;        
         if(Session["NoVendeur"] != null)
         noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
@@ -146,7 +146,8 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
 
             Panel colLivrer = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colLivrer" + idItem, "col-sm-1 text-center");
-            LibrairieControlesDynamique.htmlbtnDYN(colLivrer, "btnLivre" + idItem, "btn btn-default Orange", "Livrer", "glyphicon glyphicon-send", btnLivre);
+            Button btnLivrer = LibrairieControlesDynamique.btnDYN(colLivrer, "btnLivre" + idItem, "btn btn-default OrangeButton", "Livrer", btnLivre);          
+            btnLivrer.OnClientClick = "if( !livraisonConfirm()) return false;";
 
             //   LibrairieControlesDynamique.hrDYN(panelBody);
         }
@@ -160,7 +161,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
 
 
-        List<PPCommandes> lstCommandesLivre = dbContext.PPCommandes.Where(c => c.Statut.Equals("1")).OrderByDescending(c => c.DateCommande).ToList();
+        List<PPCommandes> lstCommandesLivre = dbContext.PPCommandes.Where(c => !c.Statut.Equals("0")).OrderByDescending(c => c.DateCommande).ToList();
         // Rajouter les produits dans le panier        
 
         for (int i = 0; i < lstCommandesLivre.Count; i++)
@@ -239,15 +240,14 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         string fileName = btn.ID.Replace("btnFacture2", "");
         if (File.Exists(Server.MapPath("~/static/pdf/" + fileName + ".pdf")))
         {
-            string url = "../static/pdf/" + fileName + ".pdf";
-            System.Diagnostics.Debug.WriteLine(" VOICI LE NOM DU FICHIER " + "../static/pdf/" + fileName + ".pdf");
+            string url = "../static/pdf/" + fileName + ".pdf";            
             Response.Write("<script>window.open ('" + url + "','_blank');</script>");
         }
     }
 
     private void btnLivre(object sender, EventArgs e)
     {
-        HtmlButton btn = (HtmlButton)sender;
+        Button btn = (Button)sender;
         long idCommande = long.Parse(btn.ID.Replace("btnLivre", "").ToString());
         PPCommandes commandeLivre = dbContext.PPCommandes.Where(c => c.NoCommande == idCommande).First();
         commandeLivre.Statut = "1";
@@ -269,17 +269,8 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         string fileName = btn.ID.Replace("btnFactures", "");
         if (File.Exists(Server.MapPath("~/static/pdf/" + fileName + ".pdf")))
         {
-            string url = "../static/pdf/" + fileName + ".pdf";
-            System.Diagnostics.Debug.WriteLine(" VOICI LE NOM DU FICHIER " + "../static/pdf/" + fileName + ".pdf");
+            string url = "../static/pdf/" + fileName + ".pdf";            
             Response.Write("<script>window.open ('" + url + "','_blank');</script>");
         }
-    }
-
-    protected void link_ProduitDetail(object sender, EventArgs e)
-    {
-        LinkButton linkProduit = (LinkButton)sender;
-        //Response.Write(linkProduit.ID);
-        Response.Redirect("~/Pages/AffichageProduitDetaille.aspx?productId=" + 10000001);
-        //linkProduit.PostBackUrl = "~/Pages/AffichageProduitDetaille.aspx?productId=" + 1;
-    }
+    }  
 }

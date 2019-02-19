@@ -189,8 +189,15 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
         Panel colInactif = LibrairieControlesDynamique.divDYN(rowInactif, nomEntreprise + "_colInactif2_", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colInactif, nomEntreprise + "_nom2", nomEntreprise + " - " + leVendeur.AdresseEmail, "nom-entreprise");
         panelBody2 = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_PanelBody2", "panel-body");
-        
-        List<PPArticlesEnPanier> lstPaniersEntreprise = dbContext.PPArticlesEnPanier.Where(c => c.NoVendeur == noVendeur).ToList();      
+
+        List<PPArticlesEnPanier> lstPaniersEntreprise = new List<PPArticlesEnPanier>();
+        List<PPArticlesEnPanier> lstArticles = dbContext.PPArticlesEnPanier.GroupBy(x => x.NoClient).Select(t => t.OrderBy(c => c.DateCreation).FirstOrDefault()).ToList();
+        foreach (PPArticlesEnPanier lesArticles in lstArticles)
+        {
+             lstPaniersEntreprise.AddRange(dbContext.PPArticlesEnPanier.Where(c => (c.NoVendeur == noVendeur) && (c.NoClient == lesArticles.NoClient)).OrderBy(C => C.DateCreation).ToList());
+        }
+
+            
         panelBody2.Controls.Clear();
         Panel panCategorie = LibrairieControlesDynamique.divDYN(panelBody2, nomEntreprise + "_pretLivraison2_", "row text-center");
         Panel colCatAfficher = LibrairieControlesDynamique.divDYN(panCategorie, nomEntreprise + "_colLabelPretLivraison2", "col-sm-12");
@@ -228,7 +235,8 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
                     LibrairieControlesDynamique.lblDYN(colGlyph, nomEntreprise + "_GlyphPanier_" + idItem, "", "glyphicon glyphicon-shopping-cart text-left");
                     //Nom Client
                     Panel colNomClient = LibrairieControlesDynamique.divDYN(rowClient, nomEntreprise + "_colClient2_" + idItem, "col-sm-4 text-left");
-                    LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, "Client : " + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
+                    string nomClient = (leClient.Nom != null && leClient.Nom != "") ? "Client : " + leClient.Prenom + " " + leClient.Nom : "Client : " + leClient.AdresseEmail ;
+                    LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, nomClient, "nomClient prix_item");
                     // Nb Visites du client
                     Panel colClientVisites = LibrairieControlesDynamique.divDYN(rowClient, nomEntreprise + "_colVisites_" + idItem, "col-sm-4 text-left");
                     LibrairieControlesDynamique.lblDYN(colClientVisites, nomEntreprise + "_VisiteClient_" + idItem, " Nombre de visites : " + NbVisites, "nomClient prix_item");
@@ -294,7 +302,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     {
         LinkButton lb = (LinkButton)sender;
         string strNoProduit = lb.ID.Replace(nomEntreprise + "_nom2_", "");
-        String url = "~/Pages/AffichageProduitDetaille.aspx?NoProduit="+ strNoProduit;
+        String url = "~/Pages/InscriptionProduit.aspx?NoProduit=" + strNoProduit+"&Operation=Afficher";
         Response.Redirect(url, true);     
     }
 }
