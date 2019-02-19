@@ -310,20 +310,6 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
                                                  client.AdresseEmail,
                                                  client.MotDePasse);
 
-                    /*if (LibrairieCourriel.envoyerCourriel(message))
-                    {
-                        lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
-                        divMessage.CssClass = "alert alert-success alert-margins";
-                    }
-                    else
-                    {
-                        dbContext.PPClients.Remove(client);
-                        dbContext.SaveChanges();
-
-                        lblMessage.Text = "Votre profil n'a pas pu être créé. Assurez-vous que vous avez saisi correctement votre courriel et que celui-ci existe vraiment.";
-                        divMessage.CssClass = "alert alert-danger alert-margins";
-                    }*/
-
                     tbExpediteur.Text = message.From.ToString();
                     tbDestinataire.Text = message.To.ToString();
                     tbSujet.Text = message.Subject;
@@ -333,11 +319,6 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
                     lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
                     divMessage.CssClass = "alert alert-success alert-margins";
                 }
-                /*else
-                {
-                    lblMessage.Text = "Votre profil n'a pas pu être créé. Réessayez ultérieurement.";
-                    divMessage.CssClass = "alert alert-danger alert-margins";
-                }*/
             }
 
             foreach (Control controle in Page.Form.Controls)
@@ -349,6 +330,7 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
                     if (controle is TextBox)
                             ((TextBox)controle).Text = "";
             divMessage.Visible = true;
+            divInscription.Visible = false;
         }
         else
             afficherErreurs();

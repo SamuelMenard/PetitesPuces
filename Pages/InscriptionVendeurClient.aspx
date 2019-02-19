@@ -42,83 +42,85 @@
          </asp:Panel>
       </div>
    </div>
-   <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
-   <div class="form-group">
-      <asp:TextBox ID="tbNomEntreprise" runat="server" CssClass="form-control" placeholder="Nom de l'entreprise" MaxLength="50" />
-      <asp:Label ID="errNomEntreprise" runat="server" CssClass="text-danger hidden" />
-   </div> 
-   <div class="row">
-      <div class="form-group col-sm-6">
-         <asp:TextBox ID="tbPrenom" runat="server" CssClass="form-control" placeholder="Prénom" MaxLength="50" />
-         <asp:Label ID="errPrenom" runat="server" CssClass="text-danger hidden" />
+   <asp:Panel ID="divInscription" runat="server">
+      <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer vos informations</h1>
+      <div class="form-group">
+         <asp:TextBox ID="tbNomEntreprise" runat="server" CssClass="form-control" placeholder="Nom de l'entreprise" MaxLength="50" />
+         <asp:Label ID="errNomEntreprise" runat="server" CssClass="text-danger hidden" />
+      </div> 
+      <div class="row">
+         <div class="form-group col-sm-6">
+            <asp:TextBox ID="tbPrenom" runat="server" CssClass="form-control" placeholder="Prénom" MaxLength="50" />
+            <asp:Label ID="errPrenom" runat="server" CssClass="text-danger hidden" />
+         </div>
+         <div class="form-group col-sm-6">
+            <asp:TextBox ID="tbNom" runat="server" CssClass="form-control" placeholder="Nom" MaxLength="50" />
+            <asp:Label ID="errNom" runat="server" CssClass="text-danger hidden" />
+         </div>
       </div>
-      <div class="form-group col-sm-6">
-         <asp:TextBox ID="tbNom" runat="server" CssClass="form-control" placeholder="Nom" MaxLength="50" />
-         <asp:Label ID="errNom" runat="server" CssClass="text-danger hidden" />
+      <div class="form-group">
+         <asp:TextBox ID="tbAdresse" runat="server" CssClass="form-control" placeholder="Adresse" MaxLength="50" />
+         <asp:Label ID="errAdresse" runat="server" CssClass="text-danger hidden" />
       </div>
-   </div>
-   <div class="form-group">
-      <asp:TextBox ID="tbAdresse" runat="server" CssClass="form-control" placeholder="Adresse" MaxLength="50" />
-      <asp:Label ID="errAdresse" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <asp:TextBox ID="tbVille" runat="server" CssClass="form-control" placeholder="Ville" MaxLength="50" />
-      <asp:Label ID="errVille" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">  
-      <asp:DropDownList Id="ddlProvince" CssClass="form-control" runat="server">
-         <asp:ListItem Value="">Sélectionnez la province</asp:ListItem>
-         <asp:ListItem Value="QC"> Québec </asp:ListItem>
-         <asp:ListItem Value="ON"> Ontario </asp:ListItem>
-         <asp:ListItem Value="NB"> Nouveau-Brunswick </asp:ListItem>
-      </asp:DropDownList>
-      <asp:Label ID="errProvince" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <asp:TextBox ID="tbCodePostal" runat="server" CssClass="form-control" placeholder="Code Postal" MaxLength="7" />
-      <asp:Label ID="errCodePostal" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <select class="form-control" disabled>
-         <option value="">Canada</option>
-      </select>
-   </div>
-   <div class="form-group">
-      <asp:TextBox ID="tbTelephone1" runat="server" CssClass="form-control" placeholder="Téléphone 1" MaxLength="20" />
-      <asp:Label ID="errTelephone1" runat="server" CssClass="text-danger hidden" />
-      <asp:TextBox ID="tbTelephone2" runat="server" CssClass="form-control" placeholder="Téléphone 2 (facultatif)" MaxLength="20" />
-      <asp:Label ID="errTelephone2" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" />
-      <asp:Label ID="errCourriel" runat="server" CssClass="text-danger hidden" />
-      <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" MaxLength="100" />
-      <asp:Label ID="errConfirmationCourriel" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <asp:TextBox ID="tbMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Mot de passe" MaxLength="50" />
-      <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger hidden" />
-      <asp:TextBox ID="tbConfirmationMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Confimation mot de passe" MaxLength="50" />
-      <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <div class="input-group">
-         <asp:TextBox ID="tbPoidsMaxLivraison" runat="server" TextMode="Number" CssClass="form-control" placeholder="Poids de livraison maximum" />
-         <span class="input-group-addon">lbs</span>
+      <div class="form-group">
+         <asp:TextBox ID="tbVille" runat="server" CssClass="form-control" placeholder="Ville" MaxLength="50" />
+         <asp:Label ID="errVille" runat="server" CssClass="text-danger hidden" />
       </div>
-      <asp:Label ID="errPoidsMaxLivraison" runat="server" CssClass="text-danger hidden" />
-   </div>
-   <div class="form-group">
-      <div class="input-group">
-         <asp:TextBox ID="tbLivraisonGratuite" runat="server" TextMode="Number" step="0.01" CssClass="form-control" placeholder="Montant pour avoir la livraison gratuite" />
-         <span class="input-group-addon">$</span>
+      <div class="form-group">  
+         <asp:DropDownList Id="ddlProvince" CssClass="form-control" runat="server">
+            <asp:ListItem Value="">Sélectionnez la province</asp:ListItem>
+            <asp:ListItem Value="QC"> Québec </asp:ListItem>
+            <asp:ListItem Value="ON"> Ontario </asp:ListItem>
+            <asp:ListItem Value="NB"> Nouveau-Brunswick </asp:ListItem>
+         </asp:DropDownList>
+         <asp:Label ID="errProvince" runat="server" CssClass="text-danger hidden" />
       </div>
-      <asp:Label ID="errLivraisonGratuite" runat="server" CssClass="text-danger hidden" /> 
-   </div>
-   <div class="form-group text-center">
-      <label class="checkbox-inline"><asp:CheckBox ID="cbTaxes" runat="server" />Exemption taxes</label>
-   </div> 
-   <asp:Button ID="btnEnvoyerDemande" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Envoyer la demande d'inscription" OnClick="btnEnvoyerDemande_Click" />
+      <div class="form-group">
+         <asp:TextBox ID="tbCodePostal" runat="server" CssClass="form-control" placeholder="Code Postal" MaxLength="7" />
+         <asp:Label ID="errCodePostal" runat="server" CssClass="text-danger hidden" />
+      </div>
+      <div class="form-group">
+         <select class="form-control" disabled>
+            <option value="">Canada</option>
+         </select>
+      </div>
+      <div class="form-group">
+         <asp:TextBox ID="tbTelephone1" runat="server" CssClass="form-control" placeholder="Téléphone 1" MaxLength="20" />
+         <asp:Label ID="errTelephone1" runat="server" CssClass="text-danger hidden" />
+         <asp:TextBox ID="tbTelephone2" runat="server" CssClass="form-control" placeholder="Téléphone 2 (facultatif)" MaxLength="20" />
+         <asp:Label ID="errTelephone2" runat="server" CssClass="text-danger hidden" />
+      </div>
+      <div class="form-group">
+         <asp:TextBox ID="tbCourriel" runat="server" CssClass="form-control" placeholder="Courriel" MaxLength="100" />
+         <asp:Label ID="errCourriel" runat="server" CssClass="text-danger hidden" />
+         <asp:TextBox ID="tbConfirmationCourriel" runat="server" CssClass="form-control" placeholder="Confimation courriel" MaxLength="100" />
+         <asp:Label ID="errConfirmationCourriel" runat="server" CssClass="text-danger hidden" />
+      </div>
+      <div class="form-group">
+         <asp:TextBox ID="tbMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Mot de passe" MaxLength="50" />
+         <asp:Label ID="errMotPasse" runat="server" CssClass="text-danger hidden" />
+         <asp:TextBox ID="tbConfirmationMotPasse" runat="server" TextMode="Password" CssClass="form-control" placeholder="Confimation mot de passe" MaxLength="50" />
+         <asp:Label ID="errConfirmationMotPasse" runat="server" CssClass="text-danger hidden" />
+      </div>
+      <div class="form-group">
+         <div class="input-group">
+            <asp:TextBox ID="tbPoidsMaxLivraison" runat="server" TextMode="Number" CssClass="form-control" placeholder="Poids de livraison maximum" />
+            <span class="input-group-addon">lbs</span>
+         </div>
+         <asp:Label ID="errPoidsMaxLivraison" runat="server" CssClass="text-danger hidden" />
+      </div>
+      <div class="form-group">
+         <div class="input-group">
+            <asp:TextBox ID="tbLivraisonGratuite" runat="server" TextMode="Number" step="0.01" CssClass="form-control" placeholder="Montant pour avoir la livraison gratuite" />
+            <span class="input-group-addon">$</span>
+         </div>
+         <asp:Label ID="errLivraisonGratuite" runat="server" CssClass="text-danger hidden" /> 
+      </div>
+      <div class="form-group text-center">
+         <label class="checkbox-inline"><asp:CheckBox ID="cbTaxes" runat="server" />Exemption taxes</label>
+      </div> 
+      <asp:Button ID="btnEnvoyerDemande" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Envoyer la demande d'inscription" OnClick="btnEnvoyerDemande_Click" />
+   </asp:Panel>
 </div>
 <script>
    $(document).ready(function () {

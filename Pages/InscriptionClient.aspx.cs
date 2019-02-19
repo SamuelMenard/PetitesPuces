@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web.UI;
@@ -17,21 +16,9 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
     protected bool validerPage()
     {
-        Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
-        Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
-        Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
-        return tbNom.Text != "" && exprNomOuPrenom.IsMatch(tbNom.Text) &&
-               tbPrenom.Text != "" && exprNomOuPrenom.IsMatch(tbPrenom.Text) &&
-               tbAdresse.Text != "" && exprAdresse.IsMatch(tbAdresse.Text) &&
-               tbVille.Text != "" && exprNomOuPrenom.IsMatch(tbVille.Text) &&
-               ddlProvince.SelectedValue != "" &&
-               tbCodePostal.Text != "" && exprCodePostal.IsMatch(tbCodePostal.Text) &&
-               tbTelephone1.Text != "" && exprTelephone.IsMatch(tbTelephone1.Text) &&
-               (tbTelephone2.Text == "" || exprTelephone.IsMatch(tbTelephone2.Text)) &&
-               tbCourriel.Text != "" && exprCourriel.IsMatch(tbCourriel.Text) &&
+        return tbCourriel.Text != "" && exprCourriel.IsMatch(tbCourriel.Text) &&
                tbConfirmationCourriel.Text != "" && exprCourriel.IsMatch(tbConfirmationCourriel.Text) && tbConfirmationCourriel.Text == tbCourriel.Text &&
                tbMotPasse.Text != "" && exprMotPasse.IsMatch(tbMotPasse.Text) &&
                tbConfirmationMotPasse.Text != "" && tbConfirmationMotPasse.Text == tbMotPasse.Text;
@@ -39,126 +26,8 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
 
     protected void afficherErreurs()
     {
-        Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
-        Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
-        Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
-        if (tbNom.Text == "" || !exprNomOuPrenom.IsMatch(tbNom.Text))
-        {
-            tbNom.CssClass = "form-control border-danger";
-            if (tbNom.Text == "")
-                errNom.Text = "Le nom ne peut pas être vide";
-            else
-                errNom.Text = "Le nom n'est pas dans un format valide";
-            errNom.CssClass = "text-danger";
-        }
-        else
-        {
-            tbNom.CssClass = "form-control border-success";
-            errNom.Text = "";
-            errNom.CssClass = "text-danger d-none";
-        }
-        if (tbPrenom.Text == "" || !exprNomOuPrenom.IsMatch(tbPrenom.Text))
-        {
-            tbPrenom.CssClass = "form-control border-danger";
-            if (tbPrenom.Text == "")
-                errPrenom.Text = "Le prénom ne peut pas être vide";
-            else
-                errPrenom.Text = "Le prénom n'est pas dans un format valide";
-            errPrenom.CssClass = "text-danger";
-        }
-        else
-        {
-            tbPrenom.CssClass = "form-control border-success";
-            errPrenom.Text = "";
-            errPrenom.CssClass = "text-danger d-none";
-        }
-        if (tbAdresse.Text == "" || !exprAdresse.IsMatch(tbAdresse.Text))
-        {
-            tbAdresse.CssClass = "form-control border-danger";
-            if (tbAdresse.Text == "")
-                errAdresse.Text = "L'adresse ne peut pas être vide";
-            else
-                errAdresse.Text = "L'adresse n'est pas dans un format valide";
-            errAdresse.CssClass = "text-danger";
-        }
-        else
-        {
-            tbAdresse.CssClass = "form-control border-success";
-            errAdresse.Text = "";
-            errAdresse.CssClass = "text-danger d-none";
-        }
-        if (tbVille.Text == "" || !exprNomOuPrenom.IsMatch(tbVille.Text))
-        {
-            tbVille.CssClass = "form-control border-danger";
-            if (tbVille.Text == "")
-                errVille.Text = "La ville ne peut pas être vide";
-            else
-                errVille.Text = "La ville n'est pas dans un format valide";
-            errVille.CssClass = "text-danger";
-        }
-        else
-        {
-            tbVille.CssClass = "form-control border-success";
-            errVille.Text = "";
-            errVille.CssClass = "text-danger d-none";
-        }
-        if (ddlProvince.SelectedValue == "")
-        {
-            ddlProvince.CssClass = "form-control border-danger";
-            errProvince.Text = "Vous devez sélectionner une province";
-            errProvince.CssClass = "text-danger";
-        }
-        else
-        {
-            ddlProvince.CssClass = "form-control border-success";
-            errProvince.Text = "";
-            errProvince.CssClass = "text-danger d-none";
-        }
-        if (tbCodePostal.Text == "" || !exprCodePostal.IsMatch(tbCodePostal.Text))
-        {
-            tbCodePostal.CssClass = "form-control border-danger";
-            if (tbCodePostal.Text == "")
-                errCodePostal.Text = "Le code postal ne peut pas être vide";
-            else
-                errCodePostal.Text = "Le code postal n'est pas dans un format valide";
-            errCodePostal.CssClass = "text-danger";
-        }
-        else
-        {
-            tbCodePostal.CssClass = "form-control border-success";
-            errCodePostal.Text = "";
-            errCodePostal.CssClass = "text-danger d-none";
-        }
-        if (tbTelephone1.Text == "" || !exprTelephone.IsMatch(tbTelephone1.Text))
-        {
-            tbTelephone1.CssClass = "form-control border-danger";
-            if (tbTelephone1.Text == "")
-                errTelephone1.Text = "Le téléphone 1 ne peut pas être vide";
-            else
-                errTelephone1.Text = "Le téléphone 1 n'est pas dans un format valide";
-            errTelephone1.CssClass = "text-danger";
-        }
-        else
-        {
-            tbTelephone1.CssClass = "form-control border-success";
-            errTelephone1.Text = "";
-            errTelephone1.CssClass = "text-danger d-none";
-        }
-        if (tbTelephone2.Text != "" && !exprTelephone.IsMatch(tbTelephone2.Text))
-        {
-            tbTelephone2.CssClass = "form-control border-danger";
-            errTelephone2.Text = "Le téléphone 2 n'est pas dans un format valide";
-            errTelephone2.CssClass = "text-danger";
-        }
-        else
-        {
-            tbTelephone2.CssClass = "form-control border-success";
-            errTelephone2.Text = "";
-            errTelephone2.CssClass = "text-danger d-none";
-        }
         if (tbCourriel.Text == "" || !exprCourriel.IsMatch(tbCourriel.Text))
         {
             tbCourriel.CssClass = "form-control border-danger";
@@ -244,16 +113,6 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
             {
                 PPClients client = new PPClients();
                 client.NoClient = dbContext.PPClients.Max(c => c.NoClient) + 1;
-                client.Nom = tbNom.Text;
-                client.Prenom = tbPrenom.Text;
-                client.Rue = tbAdresse.Text;
-                client.Ville = tbVille.Text;
-                client.Province = ddlProvince.SelectedValue;
-                client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "");
-                client.Pays = "Canada";
-                client.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
-                if (!string.IsNullOrEmpty(tbTelephone2.Text))
-                    client.Tel2 = tbTelephone2.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                 client.AdresseEmail = tbCourriel.Text;
                 client.MotDePasse = tbMotPasse.Text;
                 client.DateCreation = DateTime.Now;
@@ -286,20 +145,6 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
                                                  client.NoClient,
                                                  client.AdresseEmail,
                                                  client.MotDePasse);
-
-                    /*if (LibrairieCourriel.envoyerCourriel(message))
-                    {
-                        lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
-                        divMessage.CssClass = "alert alert-success alert-margins";
-                    }
-                    else
-                    {
-                        dbContext.PPClients.Remove(client);
-                        dbContext.SaveChanges();
-
-                        lblMessage.Text = "Votre profil n'a pas pu être créé. Assurez-vous que vous avez saisi correctement votre courriel et que celui-ci existe vraiment.";
-                        divMessage.CssClass = "alert alert-danger alert-margins";
-                    }*/
 
                     tbExpediteur.Text = message.From.ToString();
                     tbDestinataire.Text = message.To.ToString();
