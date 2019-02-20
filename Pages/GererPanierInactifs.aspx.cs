@@ -135,7 +135,8 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
                     LibrairieControlesDynamique.lblDYN(colGlyph, nomEntreprise + "_GlyphPanier_" + idItem, "", "glyphicon glyphicon-shopping-cart text-left");
                     //Nom Client
                     Panel colNomClient = LibrairieControlesDynamique.divDYN(rowClient, nomEntreprise + "_colClient2_" + idItem, "col-sm-2 text-left");
-                    LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, "Client : " + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
+                    string nomClient = (leClient.Nom != null && leClient.Nom != "") ? "Client : " + leClient.Prenom + " " + leClient.Nom : "Client : " + leClient.AdresseEmail;
+                    LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, nomClient, "nomClient prix_item");
                     // Nb Visites du client
                     Panel colClientVisites = LibrairieControlesDynamique.divDYN(rowClient, nomEntreprise + "_colVisites_" + idItem, "col-sm-2 text-left");
                     LibrairieControlesDynamique.lblDYN(colClientVisites, nomEntreprise + "_VisiteClient_" + idItem, " Nombre de visites : " + NbVisites, "nomClient prix_item");
@@ -215,7 +216,10 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
 
     private void descriptionProduit(object sender, EventArgs e)
     {
-        //throw new NotImplementedException();
+        LinkButton lb = (LinkButton)sender;
+        string strNoProduit = lb.ID.Replace(nomEntreprise + "_nom2_", "");
+        String url = "~/Pages/InscriptionProduit.aspx?NoProduit=" + strNoProduit + "&Operation=Afficher";
+        Response.Redirect(url, true);
     }
 
     private void btnSupprimer_click(object sender, EventArgs e)

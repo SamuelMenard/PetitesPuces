@@ -128,7 +128,6 @@ public partial class Pages_GestionRedevances : System.Web.UI.Page
         if (objet.Text != "" && message.Value != "")
         {
             LibrairieLINQ.modifierRedevanceVendeur(this.vendeur.NoVendeur, taux);
-            LibrairieCourriel.envoyerCourriel("ppuces@gmail.com", vendeur.AdresseEmail, this.objet.Text, this.message.Value);
             String url = "~/Pages/GestionRedevances.aspx?Email=OK";
             Response.Redirect(url, true);
         }

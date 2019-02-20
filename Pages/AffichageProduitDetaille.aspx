@@ -6,5 +6,10 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="contentBody" Runat="Server">    
      <!-- Contenu de la page -->
+      <asp:Panel runat="server" ID="_base" CssClass="marginFluid">
+     <asp:Panel runat="server" ID="messageAction" >
+
+    </asp:Panel>
     <asp:PlaceHolder id="phDynamique" runat="server" />
+  </asp:Panel>
 </asp:Content>

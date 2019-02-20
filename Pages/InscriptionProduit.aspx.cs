@@ -38,6 +38,11 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
         if (!IsPostBack)
         {
+            
+            if (Request.UrlReferrer != null)
+            {
+                ViewState["RefUrl"] = Request.UrlReferrer.ToString();
+            }            
             chargerListeDeroulante();
             initialiserDate();
 
@@ -116,16 +121,41 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                                 }
                             }
                             else
+                            {
+                                object refUrl = ViewState["RefUrl"];
+                                if (refUrl != null)
+                                    Response.Redirect((string)refUrl);
+                                else
+                                    Response.Redirect("~/Pages/SuppressionProduit.aspx?");
+                            }
+                                
+                        }
+                        else
+                        {
+                            object refUrl = ViewState["RefUrl"];
+                            if (refUrl != null)
+                                Response.Redirect((string)refUrl);
+                            else
                                 Response.Redirect("~/Pages/SuppressionProduit.aspx?");
                         }
+                    }
+                    else
+                    {
+                        object refUrl = ViewState["RefUrl"];
+                        if (refUrl != null)
+                            Response.Redirect((string)refUrl);
                         else
                             Response.Redirect("~/Pages/SuppressionProduit.aspx?");
                     }
+                }
+                else
+                {
+                    object refUrl = ViewState["RefUrl"];
+                    if (refUrl != null)
+                        Response.Redirect((string)refUrl);
                     else
                         Response.Redirect("~/Pages/SuppressionProduit.aspx?");
                 }
-                else
-                    Response.Redirect("~/Pages/SuppressionProduit.aspx?");
             }
             else
             {
@@ -550,7 +580,13 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
     protected void btnRetour_Click(object sender, EventArgs e)
     {
-        Response.Redirect("~/Pages/SuppressionProduit.aspx?");
+        
+            object refUrl = ViewState["RefUrl"];
+            if (refUrl != null)
+                Response.Redirect((string)refUrl);
+            else
+                Response.Redirect("~/Pages/SuppressionProduit.aspx?");
+        
     }
 
     protected void btnModifier_Click(object sender, EventArgs e)
@@ -624,9 +660,9 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 if (lesProduitsNonDispo.Count > 0)
                 {
                     foreach (PPProduits produit in lesProduitsNonDispo)
-                    {
-                        produit.NombreItems = 0;
-                        produit.Disponibilité = false;
+                    {                       
+                        produit.NombreItems = 0;                       
+                         produit.Disponibilité = null;                       
                         dbContext.SaveChanges();
                     }
                 }
