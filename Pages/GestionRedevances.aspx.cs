@@ -73,7 +73,7 @@ public partial class Pages_GestionRedevances : System.Web.UI.Page
             HtmlButton btnNon = LibrairieControlesDynamique.htmlbtnDYN(colBtn, "btnConfirmer_" + idVendeur, "btn btn-success", "", "glyphicon glyphicon-ok", btnConfirmer_click);
             Panel div = LibrairieControlesDynamique.divDYN(colTB, "", "input-group");
             LibrairieControlesDynamique.lblDYN(div, "", "%", "input-group-addon");
-            TextBox tb = LibrairieControlesDynamique.numericUpDownDYN(div, "", Decimal.Round((Decimal)vendeur.Pourcentage, 0).ToString(), "0", "100", "form-control");
+            TextBox tb = LibrairieControlesDynamique.numericUpDownDYN(div, "", Decimal.Round((Decimal)vendeur.Pourcentage, 0).ToString(), "0", "99", "form-control");
             tb.MaxLength = 3;
             lstRedevances.Add(idVendeur, tb);
         }
@@ -147,7 +147,7 @@ public partial class Pages_GestionRedevances : System.Web.UI.Page
         TextBox tb = new TextBox();
 
         Decimal n;
-        if (lstRedevances.TryGetValue(long.Parse(id), out tb) && Decimal.TryParse(tb.Text, out n) && n >= 0 && n <= 100)
+        if (lstRedevances.TryGetValue(long.Parse(id), out tb) && Decimal.TryParse(tb.Text, out n) && n >= 0 && n <= 99)
         {
             // faire requête qui change le pourcentage de redevance
             tb.CssClass = "form-control";
@@ -212,11 +212,17 @@ public partial class Pages_GestionRedevances : System.Web.UI.Page
         }
         else
         {
-            if (t < 0 || t > 100) { this.taux = -1; }
+            if (t < 0 || t > 99) { this.taux = -1; }
             else
             {
                 this.taux = int.Parse(Request.QueryString["Taux"]);
             }
+        }
+
+        if (this.taux == -1)
+        {
+            String url = "~/Pages/GestionRedevances.aspx?";
+            Response.Redirect(url, true);
         }
     }
 

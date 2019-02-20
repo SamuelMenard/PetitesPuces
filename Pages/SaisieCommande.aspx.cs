@@ -963,8 +963,25 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             province.SelectedValue = ficheClient.Province.Trim();
         }
 
-        tel.Text = (ficheClient.Tel1 != null) ? ficheClient.Tel1.Trim() : "";
-        cell.Text = (ficheClient.Tel2 != null) ? ficheClient.Tel2.Trim() : "";
+        if (ficheClient.Tel1 != null)
+        {
+            String num = "(" + ficheClient.Tel1.Substring(0, 3) + ")" + ficheClient.Tel1.Substring(3, 3) + "-" + ficheClient.Tel1.Substring(6);
+            tel.Text = num;
+        }
+        else
+        {
+            tel.Text = "";
+        }
+
+        if (ficheClient.Tel2 != null)
+        {
+            String num = "(" + ficheClient.Tel2.Substring(0, 3) + ")" + ficheClient.Tel2.Substring(3, 3) + "-" + ficheClient.Tel2.Substring(6);
+            cell.Text = num;
+        }
+        else
+        {
+            cell.Text = "";
+        }
     }
 
     public Decimal getPrixLivraisonSelonPoids(Decimal poids, long noVendeur)
@@ -1159,8 +1176,11 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                     client.Ville = ville.Text;
                     client.CodePostal = codepostal.Text;
                     client.Rue = noCivique.Text + " " + rue.Text;
-                    client.Tel1 = tel.Text;
-                    client.Tel2 = (cell.Text != "") ? cell.Text : null;
+
+                    String num = tel.Text.Replace("(", "").Replace(")", "").Replace("-", "");
+                    client.Tel1 = num;
+
+                    client.Tel2 = (cell.Text != "") ? cell.Text.Replace("(", "").Replace(")", "").Replace("-", "") : null;
                     client.Province = province.SelectedValue;
                     dataContext.SaveChanges();
                     dbTransaction.Commit();

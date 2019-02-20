@@ -57,7 +57,7 @@
                 </div>
                 <div class="col-sm-3 mb-3">
                     <label for="codepostal">Code postal</label>
-                    <asp:TextBox ID="codepostal" Text="" CssClass="form-control" runat="server" ToolTip="Format: A9A 9A9"/>
+                    <asp:TextBox ID="codepostal" Text="" CssClass="form-control" runat="server" ToolTip="Format: A9A9A9"/>
                 </div>
                 <div class="col-sm-2 mb-3">
                     <label for="noCivique">No Civique</label>
@@ -147,14 +147,14 @@
                      runat="server"/>
             <asp:RegularExpressionValidator id="reVille" 
                      ControlToValidate="ville"
-                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     ValidationExpression="^[A-Za-zÀ-ÿ]+[ |-]{0,1}[A-Za-zÀ-ÿ]+$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"
                      runat="server"/>
             <asp:RegularExpressionValidator id="reCodePostal" 
                      ControlToValidate="codepostal"
-                     ValidationExpression="^[A-Z]\d[A-Z][ ]\d[A-Z]\d$"
+                     ValidationExpression="^[A-Z]\d[A-Z]\d[A-Z]\d$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"

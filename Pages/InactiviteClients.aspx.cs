@@ -47,8 +47,8 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
             Image img = LibrairieControlesDynamique.imgDYN(mediaLeft, "img_" + idClient, urlImg, "media-object");
             img.Style.Add("width", "75px");
             Panel mediaBody = LibrairieControlesDynamique.divDYN(media, "mediaBody_" + idClient, "media-body");
-            LibrairieControlesDynamique.h4DYN(mediaBody, "h4_" + idClient, nomclient);
-            LibrairieControlesDynamique.pDYN(mediaBody, client.AdresseEmail);
+            LibrairieControlesDynamique.h4DYN(mediaBody, "h4_" + idClient, client.AdresseEmail);
+            LibrairieControlesDynamique.pDYN(mediaBody, "Date création: " + client.DateCreation);
 
 
             // btn non
