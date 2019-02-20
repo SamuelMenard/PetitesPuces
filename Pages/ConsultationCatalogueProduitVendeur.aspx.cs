@@ -390,13 +390,13 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         {
             if ((i + 1) == noPage)
             {
-                LibrairieControlesDynamique.liDYN(ulPages, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
-                LibrairieControlesDynamique.liDYN(ulPagesTop, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
+                LibrairieControlesDynamique.liDYN(ulPages, "ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
+                LibrairieControlesDynamique.liDYN(ulPagesTop, "ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageSelected btn right5");
             }
             else
             {
-                LibrairieControlesDynamique.liDYN(ulPages, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
-                LibrairieControlesDynamique.liDYN(ulPagesTop, "searchClient.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
+                LibrairieControlesDynamique.liDYN(ulPages, "ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
+                LibrairieControlesDynamique.liDYN(ulPagesTop, "ConsultationCatalogueProduitVendeur.aspx?&NoPage=" + (i + 1).ToString() + "&search=" + _tbsearchText.Text.Trim(), (i + 1).ToString(), "btnPageOrange btn right5");
             }
 
         }
