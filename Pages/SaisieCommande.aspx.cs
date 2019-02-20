@@ -22,10 +22,24 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         Page.MaintainScrollPositionOnPostBack = true;
 
         // Aller chercher les valeurs en GET
-        getIdEntreprise();
+        String url = "";
+
+        bool redIdEntreprise = getIdEntreprise();
         getEtapeCommande();
-        getTypeLiv();
+        bool redTypeLiv = getTypeLiv();
         getErreur();
+
+        if (redIdEntreprise)
+        {
+            url = "~/Pages/GestionPanierCommande.aspx?";
+        }
+        else if (redTypeLiv)
+        {
+            url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
+            Session["EtapePaiement"] = "livraison";
+        }
+
+        if (url != "") { Response.Redirect(url, true); }
 
         switch (etape)
         {
@@ -584,17 +598,20 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 long noCommande = creerCommande(date, frais);
 
                 String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=bon&Commande=" + noCommande;
+                Session["EtapePaiement"] = "bon";
                 Response.Redirect(url, true);
             }
             else
             {
                 String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + this.typeLivraison + "&Erreur=" + noAutorisation;
+                Session["EtapePaiement"] = "paiement";
                 Response.Redirect(url, true);
             }
         }
         else
         {
             String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + this.typeLivraison;
+            Session["EtapePaiement"] = "paiement";
             Response.Redirect(url, true);
         }
     }
@@ -1058,6 +1075,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         if (!depassePoids && !rupture)
         {
             String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=perso";
+            Session["EtapePaiement"] = "perso";
             Response.Redirect(url, true);
         }
     }
@@ -1192,6 +1210,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 
             }
             String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
+            Session["EtapePaiement"] = "livraison";
             Response.Redirect(url, true);
         }
 
@@ -1201,18 +1220,21 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     {
         System.Diagnostics.Debug.WriteLine("Retour");
         String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise;
+        Session["EtapePaiement"] = null;
         Response.Redirect(url, true);
     }
 
     public void retourInfosPerso_click(Object sender, EventArgs e)
     {
         String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=perso";
+        Session["EtapePaiement"] = "perso";
         Response.Redirect(url, true);
     }
 
     public void retourLivraison_click(Object sender, EventArgs e)
     {
-        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison" + "&TypeLivraison=" + this.typeLivraison;
+        String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=livraison";
+        Session["EtapePaiement"] = "livraison";
         Response.Redirect(url, true);
     }
 
@@ -1246,6 +1268,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             else if (rbCompagnie.Checked) { typeLiv = 403; }
             //afficherPaiement();
             String url = "~/Pages/SaisieCommande.aspx?IDEntreprise=" + this.idEntreprise + "&Etape=paiement" + "&TypeLivraison=" + typeLiv;
+            Session["EtapePaiement"] = "paiement";
             Response.Redirect(url, true);
         }
         else
@@ -1285,29 +1308,50 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         }
     }
 
-    private void getIdEntreprise()
+    private bool getIdEntreprise()
     {
+        bool rediriger = false;
+
         int n;
         if (Request.QueryString["IDEntreprise"] == null || !int.TryParse(Request.QueryString["IDEntreprise"], out n))
         {
-            String url = "~/Pages/GestionPanierCommande.aspx?";
-            Response.Redirect(url, true);
+            rediriger = true;
         }
         else
         {
-            this.idEntreprise = n;
+            BD6B8_424SEntities dataContext = new BD6B8_424SEntities();
+            var tableVendeurs = dataContext.PPVendeurs;
+
+            if ((from v in tableVendeurs where v.NoVendeur == n select v).Count() == 0)
+            {
+                rediriger = true;
+            }
+            else
+            {
+                this.idEntreprise = n;
+            }
         }
+        return rediriger;
     }
 
     private void getEtapeCommande()
     {
-        if (Request.QueryString["Etape"] == null)
+        if (Session["EtapePaiement"] == null)
         {
             this.etape = "panier";
+            Session["EtapePaiement"] = "panier";
         }
         else
         {
-            this.etape = Request.QueryString["Etape"];
+            if (Request.QueryString["Etape"] == "confirmation" && Session["EtapePaiement"].ToString() == "paiement")
+            {
+                this.etape = "confirmation";
+                Session["EtapePaiement"] = "confirmation";
+            }
+            else
+            {
+                this.etape = Session["EtapePaiement"].ToString();
+            }
         }
     }
 
@@ -1324,17 +1368,29 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         }
     }
 
-    private void getTypeLiv()
+    private bool getTypeLiv()
     {
+        bool rediriger = false;
+
         short n;
         if (Request.QueryString["TypeLivraison"] == null || !short.TryParse(Request.QueryString["TypeLivraison"], out n))
         {
-            this.typeLivraison = -1;
+            if (this.etape == "paiement") { rediriger = true; }
+            else
+            {
+                this.typeLivraison = -1;
+            }
         }
         else
         {
+            if (!(n >= 401 && n <= 403))
+            {
+                rediriger = true;
+            }
             this.typeLivraison = n;
         }
+
+        return rediriger;
     }
 
     private void getErreur()
