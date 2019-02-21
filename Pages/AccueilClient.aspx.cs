@@ -274,6 +274,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
     public void commander_click(Object sender, EventArgs e)
     {
+        Session["EtapePaiement"] = null;
         Button btn = (Button)sender;
         String entrepriseID = btn.ID.Replace("_btnCommander", "");
         System.Diagnostics.Debug.WriteLine(entrepriseID);

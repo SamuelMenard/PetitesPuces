@@ -509,6 +509,11 @@ public static class LibrairieLINQ
                     inactifCommande = true;
                 }
 
+                System.Diagnostics.Debug.WriteLine("Client no: " + client.NoClient);
+                System.Diagnostics.Debug.WriteLine("Articles en panier inactif: " + inactifPanier);
+                System.Diagnostics.Debug.WriteLine("Commande inactif: " + inactifCommande);
+                System.Diagnostics.Debug.WriteLine("\n\n");
+
                 if (inactifCommande && inactifPanier) { lstClientsInactifs.Add(client); }
             }
 
@@ -611,16 +616,17 @@ public static class LibrairieLINQ
 
         foreach(PPProduits produit in vendeur.PPProduits.ToList())
         {
+            foreach (PPArticlesEnPanier ap in produit.PPArticlesEnPanier.ToList())
+            {
+                dataContext.PPArticlesEnPanier.Remove(ap);
+            }
+
             if (produit.PPDetailsCommandes.Count() == 0)
             {
                 dataContext.PPProduits.Remove(produit);
             }
             else
             {
-                foreach(PPArticlesEnPanier ap in produit.PPArticlesEnPanier.ToList())
-                {
-                    dataContext.PPArticlesEnPanier.Remove(ap);
-                }
                 produit.Disponibilité = false;
             }
         }
