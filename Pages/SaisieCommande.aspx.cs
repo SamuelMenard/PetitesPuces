@@ -966,14 +966,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         nomfamille.Text = (ficheClient.Nom != null) ? ficheClient.Nom.Trim() : "";
         email.Text = (ficheClient.AdresseEmail != null) ? ficheClient.AdresseEmail.Trim() : "";
         ville.Text = (ficheClient.Ville != null) ? ficheClient.Ville.Trim() : "";
-        codepostal.Text = (ficheClient.CodePostal != null) ? ficheClient.CodePostal.Trim() : "";
-        String[] tabCiviqueRue = ((ficheClient.Rue != null) ? ficheClient.Rue : "").Split(' ');
-
-        if (tabCiviqueRue.Length == 2)
-        {
-            noCivique.Text = tabCiviqueRue[0].Trim();
-            rue.Text = tabCiviqueRue[1].Trim();
-        }
+        codepostal.Text = (ficheClient.CodePostal != null) ? ficheClient.CodePostal.Substring(0, 3) + " " + ficheClient.CodePostal.Substring(3, 3) : "";
+        adresse.Text = (ficheClient.Rue != null) ? ficheClient.Rue : "";
 
         if (ficheClient.Province != null)
         {
@@ -982,7 +976,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         if (ficheClient.Tel1 != null)
         {
-            String num = "(" + ficheClient.Tel1.Substring(0, 3) + ")" + ficheClient.Tel1.Substring(3, 3) + "-" + ficheClient.Tel1.Substring(6);
+            String num = "(" + ficheClient.Tel1.Substring(0, 3) + ") " + ficheClient.Tel1.Substring(3, 3) + "-" + ficheClient.Tel1.Substring(6);
             tel.Text = num;
         }
         else
@@ -992,7 +986,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         if (ficheClient.Tel2 != null)
         {
-            String num = "(" + ficheClient.Tel2.Substring(0, 3) + ")" + ficheClient.Tel2.Substring(3, 3) + "-" + ficheClient.Tel2.Substring(6);
+            String num = "(" + ficheClient.Tel2.Substring(0, 3) + ") " + ficheClient.Tel2.Substring(3, 3) + "-" + ficheClient.Tel2.Substring(6);
             cell.Text = num;
         }
         else
@@ -1133,24 +1127,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             codepostal.CssClass = "form-control";
         }
 
-        if (!rfvNoCivique.IsValid || !reNoCivique.IsValid)
+        if (!rfvAdresse.IsValid || !reAdresse.IsValid)
         {
-            noCivique.CssClass = "form-control erreur";
+            adresse.CssClass = "form-control erreur";
             valide = false;
         }
         else
         {
-            noCivique.CssClass = "form-control";
-        }
-
-        if (!rfvRue.IsValid || !reRue.IsValid)
-        {
-            rue.CssClass = "form-control erreur";
-            valide = false;
-        }
-        else
-        {
-            rue.CssClass = "form-control";
+            adresse.CssClass = "form-control";
         }
 
         if (!rfvTel.IsValid || !reTel.IsValid)
@@ -1192,13 +1176,13 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                     client.Prenom = prenom.Text;
                     client.Nom = nomfamille.Text;
                     client.Ville = ville.Text;
-                    client.CodePostal = codepostal.Text;
-                    client.Rue = noCivique.Text + " " + rue.Text;
+                    client.CodePostal = codepostal.Text.ToUpper().Replace(" ", "").Replace("-", "");
+                    client.Rue = adresse.Text;
 
-                    String num = tel.Text.Replace("(", "").Replace(")", "").Replace("-", "");
+                    String num = tel.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                     client.Tel1 = num;
 
-                    client.Tel2 = (cell.Text != "") ? cell.Text.Replace("(", "").Replace(")", "").Replace("-", "") : null;
+                    client.Tel2 = (cell.Text != "") ? cell.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "") : null;
                     client.Province = province.SelectedValue;
                     dataContext.SaveChanges();
                     dbTransaction.Commit();

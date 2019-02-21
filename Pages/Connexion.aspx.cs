@@ -170,7 +170,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
                                              vendeur.MotDePasse);
             }
 
-            lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
+            lblMessage.Text = "Votre mot de passe vous a été envoyé par courriel.";
             divMessage.CssClass = "alert alert-success alert-margins";
             divMessage.Visible = true;
 

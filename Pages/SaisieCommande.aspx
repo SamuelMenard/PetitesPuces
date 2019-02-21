@@ -51,21 +51,17 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-3 mb-3">
+                <div class="col-sm-4 mb-3">
+                    <label for="adresse">Adresse</label>
+                    <asp:TextBox ID="adresse" Text="" CssClass="form-control" runat="server"/>
+                </div>
+               <div class="col-sm-5 mb-3">
                     <label for="ville">Ville</label>
                     <asp:TextBox ID="ville" Text="" CssClass="form-control" runat="server"/>
                 </div>
                 <div class="col-sm-3 mb-3">
                     <label for="codepostal">Code postal</label>
                     <asp:TextBox ID="codepostal" Text="" CssClass="form-control" runat="server" ToolTip="Format: A9A9A9"/>
-                </div>
-                <div class="col-sm-2 mb-3">
-                    <label for="noCivique">No Civique</label>
-                    <asp:TextBox ID="noCivique" Text="" CssClass="form-control" runat="server"/>
-                </div>
-                <div class="col-sm-3 mb-3">
-                    <label for="rue">Rue</label>
-                    <asp:TextBox ID="rue" Text="" CssClass="form-control" runat="server"/>
                 </div>
             </div>
 
@@ -111,14 +107,8 @@
                 ValidationGroup="grInfosPerso"
                 EnableClientScript="False" 
                     runat="server"/>
-            <asp:RequiredFieldValidator id="rfvNoCivique"
-                    ControlToValidate="noCivique"
-                    Display="None"
-                ValidationGroup="grInfosPerso"
-                EnableClientScript="False" 
-                    runat="server"/>
-            <asp:RequiredFieldValidator id="rfvRue"
-                    ControlToValidate="rue"
+            <asp:RequiredFieldValidator id="rfvAdresse"
+                    ControlToValidate="adresse"
                     Display="None"
                 ValidationGroup="grInfosPerso"
                 EnableClientScript="False" 
@@ -133,56 +123,49 @@
             <!-- validation controls: Reg ex -->
             <asp:RegularExpressionValidator id="rePrenom" 
                      ControlToValidate="prenom"
-                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     ValidationExpression="^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"
                      runat="server"/>
             <asp:RegularExpressionValidator id="reNom" 
                      ControlToValidate="nomfamille"
-                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     ValidationExpression="^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"
                      runat="server"/>
             <asp:RegularExpressionValidator id="reVille" 
                      ControlToValidate="ville"
-                     ValidationExpression="^[A-Za-zÀ-ÿ]+[ |-]{0,1}[A-Za-zÀ-ÿ]+$"
+                     ValidationExpression="^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"
                      runat="server"/>
             <asp:RegularExpressionValidator id="reCodePostal" 
                      ControlToValidate="codepostal"
-                     ValidationExpression="^[A-Z]\d[A-Z]\d[A-Z]\d$"
+                     ValidationExpression="^[A-Z]\d[A-Z][\s-]?\d[A-Z]\d$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"
                      runat="server"/>
-            <asp:RegularExpressionValidator id="reNoCivique" 
-                     ControlToValidate="noCivique"
-                     ValidationExpression="^\d{1,}$"
-                     Display="None"
-                     EnableClientScript="False" 
-                ValidationGroup="grInfosPerso"
-                     runat="server"/>
-            <asp:RegularExpressionValidator id="reRue" 
-                     ControlToValidate="Rue"
-                     ValidationExpression="^[A-Za-zÀ-ÿ]+['|-]{0,1}[A-Za-zÀ-ÿ]+$"
+            <asp:RegularExpressionValidator id="reAdresse" 
+                     ControlToValidate="adresse"
+                     ValidationExpression="^(\d+-)?\d+([a-zA-Z]|\s\d/\d)?\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"
                      runat="server"/>
             <asp:RegularExpressionValidator id="reTel" 
                      ControlToValidate="tel"
-                     ValidationExpression="^\(\d{3}\)\d{3}-\d{4}$"
+                     ValidationExpression="^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"
                      runat="server"/>
             <asp:RegularExpressionValidator id="reCell" 
                      ControlToValidate="cell"
-                     ValidationExpression="^\(\d{3}\)\d{3}-\d{4}$"
+                     ValidationExpression="^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$"
                      Display="None"
                      EnableClientScript="False" 
                 ValidationGroup="grInfosPerso"

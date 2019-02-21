@@ -69,7 +69,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
     {
         Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
+        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z][\\s-]?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
@@ -88,7 +88,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
     {
         Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
+        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z][\\s-]?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
@@ -105,7 +105,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             tbNom.CssClass = "form-control border-success";
             errNom.Text = "";
-            errNom.CssClass = "text-danger d-none";
+            errNom.CssClass = "text-danger hidden";
         }
         if (tbPrenom.Text == "" || !exprNomOuPrenom.IsMatch(tbPrenom.Text))
         {
@@ -120,7 +120,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             tbPrenom.CssClass = "form-control border-success";
             errPrenom.Text = "";
-            errPrenom.CssClass = "text-danger d-none";
+            errPrenom.CssClass = "text-danger hidden";
         }
         if (tbAdresse.Text == "" || !exprAdresse.IsMatch(tbAdresse.Text))
         {
@@ -128,14 +128,14 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             if (tbAdresse.Text == "")
                 errAdresse.Text = "L'adresse ne peut pas être vide";
             else
-                errAdresse.Text = "L'adresse n'est pas dans un format valide";
+                errAdresse.Text = "L'adresse n'est pas dans un format valide. Référez-vous aux directives d'adressage de Poste Canada à l'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041";
             errAdresse.CssClass = "text-danger";
         }
         else
         {
             tbAdresse.CssClass = "form-control border-success";
             errAdresse.Text = "";
-            errAdresse.CssClass = "text-danger d-none";
+            errAdresse.CssClass = "text-danger hidden";
         }
         if (tbVille.Text == "" || !exprNomOuPrenom.IsMatch(tbVille.Text))
         {
@@ -150,7 +150,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             tbVille.CssClass = "form-control border-success";
             errVille.Text = "";
-            errVille.CssClass = "text-danger d-none";
+            errVille.CssClass = "text-danger hidden";
         }
         if (ddlProvince.SelectedValue == "")
         {
@@ -162,7 +162,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             ddlProvince.CssClass = "form-control border-success";
             errProvince.Text = "";
-            errProvince.CssClass = "text-danger d-none";
+            errProvince.CssClass = "text-danger hidden";
         }
         if (tbCodePostal.Text == "" || !exprCodePostal.IsMatch(tbCodePostal.Text))
         {
@@ -177,7 +177,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             tbCodePostal.CssClass = "form-control border-success";
             errCodePostal.Text = "";
-            errCodePostal.CssClass = "text-danger d-none";
+            errCodePostal.CssClass = "text-danger hidden";
         }
         if (tbTelephone1.Text == "" || !exprTelephone.IsMatch(tbTelephone1.Text))
         {
@@ -192,7 +192,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             tbTelephone1.CssClass = "form-control border-success";
             errTelephone1.Text = "";
-            errTelephone1.CssClass = "text-danger d-none";
+            errTelephone1.CssClass = "text-danger hidden";
         }
         if (tbTelephone2.Text != "" && !exprTelephone.IsMatch(tbTelephone2.Text))
         {
@@ -204,7 +204,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             tbTelephone2.CssClass = "form-control border-success";
             errTelephone2.Text = "";
-            errTelephone2.CssClass = "text-danger d-none";
+            errTelephone2.CssClass = "text-danger hidden";
         }       
     }
 
@@ -220,7 +220,7 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             client.Rue = tbAdresse.Text.Trim();
             client.Ville = tbVille.Text.Trim();
             client.Province = ddlProvince.SelectedValue;
-            client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "").Trim();
+            client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "").Replace("-", "").Trim();
             client.Pays = "Canada";
             client.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
             if (!string.IsNullOrEmpty(tbTelephone2.Text))
