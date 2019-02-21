@@ -31,8 +31,10 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             tbAdresse.Text = client.Rue;
             tbVille.Text = client.Ville;
             ddlProvince.SelectedValue = client.Province;
-            tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
-            tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
+            if (client.CodePostal != null)
+                tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
+            if (client.Tel1 != null)
+                tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
             if (client.Tel2 != null)
                 tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
         }
@@ -48,7 +50,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
         Regex exprPoids = new Regex("^\\d+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         return tbNomEntreprise.Text != "" && exprNomEntreprise.IsMatch(tbNomEntreprise.Text) &&
                tbNom.Text != "" && exprNomOuPrenom.IsMatch(tbNom.Text) &&
                tbPrenom.Text != "" && exprNomOuPrenom.IsMatch(tbPrenom.Text) &&
@@ -62,7 +64,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
                tbConfirmationCourriel.Text != "" && exprCourriel.IsMatch(tbConfirmationCourriel.Text) && tbConfirmationCourriel.Text == tbCourriel.Text &&
                tbMotPasse.Text != "" && exprMotPasse.IsMatch(tbMotPasse.Text) &&
                tbConfirmationMotPasse.Text != "" && tbConfirmationMotPasse.Text == tbMotPasse.Text &&
-               tbPoidsMaxLivraison.Text != "" && exprPoids.IsMatch(tbPoidsMaxLivraison.Text) &&
+               tbPoidsMaxLivraison.Text != "" && exprPoids.IsMatch(tbPoidsMaxLivraison.Text) && int.Parse(tbPoidsMaxLivraison.Text) <= 2147483647 &&
                tbLivraisonGratuite.Text != "" && exprMontant.IsMatch(tbLivraisonGratuite.Text) && double.Parse(tbLivraisonGratuite.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36;
     }
 
@@ -76,7 +78,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
         Regex exprPoids = new Regex("^\\d+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         if (tbNomEntreprise.Text == "" || !exprNomEntreprise.IsMatch(tbNomEntreprise.Text))
         {
             tbNomEntreprise.CssClass = "form-control border-danger";
@@ -268,13 +270,15 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             errConfirmationMotPasse.Text = "";
             errConfirmationMotPasse.CssClass = "text-danger hidden";
         }
-        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
+        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 2147483647)
         {
             tbPoidsMaxLivraison.CssClass = "form-control border-danger";
             if (tbPoidsMaxLivraison.Text == "")
                 errPoidsMaxLivraison.Text = "Le poids de livraison maximum ne peut pas être vide";
+            else if (!exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
+                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être un entier positif";
             else
-                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être un entier";
+                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs";
             errPoidsMaxLivraison.CssClass = "text-danger";
         }
         else
@@ -289,7 +293,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbLivraisonGratuite.Text == "")
                 errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite ne peut pas être vide";
             else if (!exprMontant.IsMatch(tbLivraisonGratuite.Text))
-                errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule";
+                errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être un nombre positif";
             else
                 errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $";
             errLivraisonGratuite.CssClass = "text-danger";

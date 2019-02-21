@@ -191,7 +191,7 @@
             var exprCourriel = /^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\.[a-z]+$/;
             var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
             var exprPoids = /^\d+$/;
-            var exprMontant = /^\d+\.\d{2}$/;
+            var exprMontant = /^\d+(\.\d{2})?$/;
             $("#tbNomEntreprise").focusout(function () {
                if ($("#tbNomEntreprise").val() == '') {
                   $("#tbNomEntreprise").removeClass("border-success").addClass("border-danger");
@@ -369,7 +369,10 @@
                   $("#errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('d-none');
                } else if (!exprPoids.test($("#tbPoidsMaxLivraison").val())) {
                   $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-                  $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('d-none');
+                  $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier positif').removeClass('d-none');
+               } else if ($('#tbPoidsMaxLivraison').val() > 2147483647) {
+                  $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
+                  $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('d-none');
                } else {
                   $("#tbPoidsMaxLivraison").removeClass("border-danger").addClass("border-success");
                   $("#errPoidsMaxLivraison").text('').addClass('d-none');
@@ -381,7 +384,7 @@
                   $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('d-none');
                } else if (!exprMontant.test($("#tbLivraisonGratuite").val())) {
                   $("#tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-                  $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('d-none');
+                  $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('d-none');
                } else if ($("#tbLivraisonGratuite").val() > 214748.36) {
                   $("#tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
                   $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('d-none');
@@ -492,12 +495,14 @@
                      $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#tbPoidsMaxLivraison").val())) {
+               if ($("#tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#tbPoidsMaxLivraison").val()) || $('#tbPoidsMaxLivraison').val() > 2147483647) {
                   $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
                   if ($("#tbPoidsMaxLivraison").val() == '')
                      $("#errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('d-none');
+                  else if (!exprPoids.test($("#tbPoidsMaxLivraison").val()))
+                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier positif').removeClass('d-none');
                   else
-                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('d-none');
+                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('d-none');    
                   binPageValide = false;
                }
                if ($("#tbLivraisonGratuite").val() == '' || !exprMontant.test($("#tbLivraisonGratuite").val()) || $("#tbLivraisonGratuite").val() > 214748.36) {
@@ -505,7 +510,7 @@
                   if ($("#tbLivraisonGratuite").val() == '')
                      $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('d-none');
                   else if (!exprMontant.test($("#tbLivraisonGratuite").val()))
-                     $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('d-none');
+                     $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('d-none');
                   else
                      $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('d-none');
                   binPageValide = false;

@@ -63,7 +63,7 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
         Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprPoids = new Regex("^\\d+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         return tbNomEntreprise.Text != "" && exprNomEntreprise.IsMatch(tbNomEntreprise.Text) &&
                tbNom.Text != "" && exprNomOuPrenom.IsMatch(tbNom.Text) &&
                tbPrenom.Text != "" && exprNomOuPrenom.IsMatch(tbPrenom.Text) &&
@@ -73,7 +73,7 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
                tbCodePostal.Text != "" && exprCodePostal.IsMatch(tbCodePostal.Text) &&
                tbTelephone1.Text != "" && exprTelephone.IsMatch(tbTelephone1.Text) &&
                (tbTelephone2.Text == "" || exprTelephone.IsMatch(tbTelephone2.Text)) &&
-               tbPoidsMaxLivraison.Text != "" && exprPoids.IsMatch(tbPoidsMaxLivraison.Text) &&
+               tbPoidsMaxLivraison.Text != "" && exprPoids.IsMatch(tbPoidsMaxLivraison.Text) && int.Parse(tbPoidsMaxLivraison.Text) <= 2147483647 &&
                tbLivraisonGratuite.Text != "" && exprMontant.IsMatch(tbLivraisonGratuite.Text) && double.Parse(tbLivraisonGratuite.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36;
     }
 
@@ -85,7 +85,7 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
         Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprPoids = new Regex("^\\d+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         if (tbNomEntreprise.Text == "" || !exprNomEntreprise.IsMatch(tbNomEntreprise.Text))
         {
             tbNomEntreprise.CssClass = "form-control border-danger";
@@ -215,13 +215,15 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
             errTelephone2.Text = "";
             errTelephone2.CssClass = "text-danger hidden";
         }
-        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
+        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 2147483647)
         {
             tbPoidsMaxLivraison.CssClass = "form-control border-danger";
             if (tbPoidsMaxLivraison.Text == "")
                 errPoidsMaxLivraison.Text = "Le poids de livraison maximum ne peut pas être vide";
+            else if (!exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
+                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être un entier positif";
             else
-                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être un entier";
+                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs";
             errPoidsMaxLivraison.CssClass = "text-danger";
         }
         else
@@ -236,7 +238,7 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
             if (tbLivraisonGratuite.Text == "")
                 errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite ne peut pas être vide";
             else if (!exprMontant.IsMatch(tbLivraisonGratuite.Text))
-                errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule";
+                errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être un nombre positif";
             else
                 errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $";
             errLivraisonGratuite.CssClass = "text-danger";
