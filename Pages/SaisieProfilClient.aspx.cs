@@ -23,9 +23,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             tbPrenom.Text = client.Prenom;
             tbAdresse.Text = client.Rue;
             tbVille.Text = client.Ville;
-            ddlProvince.SelectedValue = client.Province;
-            tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
-            tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
+            ddlProvince.SelectedValue = client.Province;    
+            tbCodePostal.Text = client.CodePostal != null ? client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3) : "";
+            tbTelephone1.Text = client.Tel1 != null ? "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6) : "";
             if (client.Tel2 != null)
                 tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
             tbCourriel.Text = client.AdresseEmail;
