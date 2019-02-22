@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using System.Xml.Linq;
 
-public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
+public partial class Pages_ReintialiserBD : System.Web.UI.Page
 {
     private BD6B8_424SEntities dbContext = new BD6B8_424SEntities();
 
@@ -61,9 +61,20 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        string url = null;
+        if (Session["TypeUtilisateur"] == null)
+            url = "~/Pages/AccueilInternaute.aspx?";
+        else if (Session["TypeUtilisateur"].ToString() != "G")
+            if (Session["TypeUtilisateur"].ToString() == "C")
+                url = "~/Pages/AccueilClient.aspx?";
+            else
+                url = "~/Pages/ConnexionVendeur.aspx?";
+        if (url != null)
+            Response.Redirect(url, true);
+
         if (!IsPostBack)
         {
-           remplirTableau(false);
+            remplirTableau(false);
 
             if (!dbContext.PPArticlesEnPanier.Any() && !dbContext.PPCategories.Any() &&
                 !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
@@ -85,49 +96,68 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
 
     protected void btnViderBD_Click(object sender, EventArgs e)
     {
-        dbContext.PPGestionnaires.RemoveRange(dbContext.PPGestionnaires);
-        dbContext.PPTaxeFederale.RemoveRange(dbContext.PPTaxeFederale);
-        dbContext.PPTaxeProvinciale.RemoveRange(dbContext.PPTaxeProvinciale);         
-        dbContext.PPHistoriquePaiements.RemoveRange(dbContext.PPHistoriquePaiements);
-        dbContext.PPVendeursClients.RemoveRange(dbContext.PPVendeursClients);
-        dbContext.PPDetailsCommandes.RemoveRange(dbContext.PPDetailsCommandes);
-        dbContext.PPCommandes.RemoveRange(dbContext.PPCommandes);
-        dbContext.PPPoidsLivraisons.RemoveRange(dbContext.PPPoidsLivraisons);
-        dbContext.PPTypesLivraison.RemoveRange(dbContext.PPTypesLivraison);
-        dbContext.PPTypesPoids.RemoveRange(dbContext.PPTypesPoids);
-        dbContext.PPArticlesEnPanier.RemoveRange(dbContext.PPArticlesEnPanier);
-        dbContext.PPProduits.RemoveRange(dbContext.PPProduits);
-        dbContext.PPCategories.RemoveRange(dbContext.PPCategories);
-        dbContext.PPClients.RemoveRange(dbContext.PPClients);
-        dbContext.PPVendeurs.RemoveRange(dbContext.PPVendeurs);
+        bool binOK = true;
+        using (var transaction = dbContext.Database.BeginTransaction())
+        {
+            try
+            {
+                dbContext.PPGestionnaires.RemoveRange(dbContext.PPGestionnaires);
+                dbContext.PPTaxeFederale.RemoveRange(dbContext.PPTaxeFederale);
+                dbContext.PPTaxeProvinciale.RemoveRange(dbContext.PPTaxeProvinciale);
+                dbContext.PPHistoriquePaiements.RemoveRange(dbContext.PPHistoriquePaiements);
+                dbContext.PPVendeursClients.RemoveRange(dbContext.PPVendeursClients);
+                dbContext.PPDetailsCommandes.RemoveRange(dbContext.PPDetailsCommandes);
+                dbContext.PPCommandes.RemoveRange(dbContext.PPCommandes);
+                dbContext.PPPoidsLivraisons.RemoveRange(dbContext.PPPoidsLivraisons);
+                dbContext.PPTypesLivraison.RemoveRange(dbContext.PPTypesLivraison);
+                dbContext.PPTypesPoids.RemoveRange(dbContext.PPTypesPoids);
+                dbContext.PPArticlesEnPanier.RemoveRange(dbContext.PPArticlesEnPanier);
+                dbContext.PPProduits.RemoveRange(dbContext.PPProduits);
+                dbContext.PPCategories.RemoveRange(dbContext.PPCategories);
+                dbContext.PPClients.RemoveRange(dbContext.PPClients);
+                dbContext.PPVendeurs.RemoveRange(dbContext.PPVendeurs);
 
-        dbContext.SaveChanges();
+                dbContext.SaveChanges();
+                transaction.Commit();
 
-        lblResultatImportation.Visible = false;
+                lblMessage.Text = "La base de données a été vidée.";
+                divMessage.CssClass = "alert alert-success alert-margins";
+            }
+            catch (DbUpdateException ex)
+            {
+                transaction.Rollback();
+
+                if (ex.InnerException is UpdateException && ex.InnerException.InnerException is SqlException)
+                    lblMessage.Text = "Une erreur s'est produite lors de la suppression des données. Les données n'ont pas été supprimées. Voici l'erreur : " + ex.InnerException.InnerException.Message;
+                else
+                    lblMessage.Text = "Une erreur s'est produite lors de la suppression des données. Les données n'ont pas été supprimées. Voici l'erreur : " + ex.Message;
+                divMessage.CssClass = "alert alert-danger alert-margins";
+                binOK = false;
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+
+                lblMessage.Text = "Une erreur s'est produite lors de la suppression des données. Les données n'ont pas été supprimées. Voici l'erreur : " + ex.Message;
+                divMessage.CssClass = "alert alert-danger alert-margins";
+                binOK = false;
+            }
+        }
+
+        divMessage.Visible = true;
 
         remplirTableau(false);
 
-        if (!dbContext.PPArticlesEnPanier.Any() && !dbContext.PPCategories.Any() &&
-        !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
-        !dbContext.PPDetailsCommandes.Any() && !dbContext.PPGestionnaires.Any() &&
-        !dbContext.PPHistoriquePaiements.Any() && !dbContext.PPPoidsLivraisons.Any() &&
-        !dbContext.PPProduits.Any() && !dbContext.PPTaxeFederale.Any() &&
-        !dbContext.PPTaxeProvinciale.Any() && !dbContext.PPTypesLivraison.Any() &&
-        !dbContext.PPTypesPoids.Any() && !dbContext.PPVendeurs.Any() &&
-        !dbContext.PPVendeursClients.Any())
+        if (binOK)
         {
             btnViderBD.Visible = false;
             btnImporterDonnees.Visible = true;
-        }
-        else
-        {
-            btnImporterDonnees.Visible = false;
-            btnViderBD.Visible = true;
         }
     }
 
     protected void btnImporterDonnees_Click(object sender, EventArgs e)
     {
+        bool binOK = true;
         using (var transaction = dbContext.Database.BeginTransaction())
         {
             try
@@ -243,8 +273,14 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
                     produit.PrixDemande = decimal.Parse(element.Descendants("PrixDemande").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
                     produit.NombreItems = short.Parse(element.Descendants("NombreItems").Single().Value);
                     produit.Disponibilité = element.Descendants("Disponibilit_").Single().Value == "1" ? true : false;
-                    produit.DateVente = DateTime.Parse(element.Descendants("DateVente").Single().Value);
-                    produit.PrixVente = decimal.Parse(element.Descendants("PrixVente").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+                    if (element.Descendants("DateVente").Single().Value == "NULL")
+                        produit.DateVente = null;
+                    else
+                        produit.DateVente = DateTime.Parse(element.Descendants("DateVente").Single().Value);
+                    if (element.Descendants("PrixVente").Single().Value == "NULL")
+                        produit.PrixVente = null;
+                    else
+                        produit.PrixVente = decimal.Parse(element.Descendants("PrixVente").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
                     produit.Poids = decimal.Parse(element.Descendants("Poids").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
                     produit.DateCreation = DateTime.Parse(element.Descendants("DateCreation").Single().Value);
                     if (element.Descendants("DateMAJ").Single().Value == "NULL")
@@ -412,42 +448,35 @@ public partial class Pages_ImportationJeuEssai : System.Web.UI.Page
                 dbContext.SaveChanges();
                 transaction.Commit();
 
-                lblResultatImportation.Text = "Les données du jeu d'essai ont été importées.";
+                lblMessage.Text = "Les données du jeu d'essai ont été importées.";
+                divMessage.CssClass = "alert alert-success alert-margins";
             }
             catch (DbUpdateException ex)
             {
                 transaction.Rollback();
 
                 if (ex.InnerException is UpdateException && ex.InnerException.InnerException is SqlException)
-                    lblResultatImportation.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.InnerException.InnerException.Message;
+                    lblMessage.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.InnerException.InnerException.Message;
                 else
-                    lblResultatImportation.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.Message;
+                    lblMessage.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.Message;
+                divMessage.CssClass = "alert alert-danger alert-margins";
+                binOK = false;
             }
             catch (Exception ex)
             {
                 transaction.Rollback();
 
-                lblResultatImportation.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.Message;
+                lblMessage.Text = "Une erreur s'est produite lors de l'importation du jeu d'essai. Les données n'ont pas été importées. Voici l'erreur : " + ex.Message;
+                divMessage.CssClass = "alert alert-danger alert-margins";
+                binOK = false;
             }
         }
 
-        lblResultatImportation.Visible = true;
+        divMessage.Visible = true;
 
         remplirTableau(true);
 
-        if (!dbContext.PPArticlesEnPanier.Any() && !dbContext.PPCategories.Any() &&
-            !dbContext.PPClients.Any() && !dbContext.PPCommandes.Any() &&
-            !dbContext.PPDetailsCommandes.Any() && !dbContext.PPGestionnaires.Any() &&
-            !dbContext.PPHistoriquePaiements.Any() && !dbContext.PPPoidsLivraisons.Any() &&
-            !dbContext.PPProduits.Any() && !dbContext.PPTaxeFederale.Any() &&
-            !dbContext.PPTaxeProvinciale.Any() && !dbContext.PPTypesLivraison.Any() &&
-            !dbContext.PPTypesPoids.Any() && !dbContext.PPVendeurs.Any() &&
-            !dbContext.PPVendeursClients.Any())
-        {
-            btnViderBD.Visible = false;
-            btnImporterDonnees.Visible = true;
-        }
-        else
+        if (binOK)
         {
             btnImporterDonnees.Visible = false;
             btnViderBD.Visible = true;

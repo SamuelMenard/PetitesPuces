@@ -63,6 +63,8 @@
                     <span class="glyphicon glyphicon-cog nav-color"></span> Gestion des produits</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbRechercheDetaillee" CssClass="nav-color" runat="server" OnClick="rechercheDetaillee_click" Visible="false">
                     <span class="glyphicon glyphicon-search nav-color"></span> Recherche détaillée</asp:LinkButton></li>
+                <li><asp:LinkButton ID="lbReintialiserBD" CssClass="nav-color" runat="server" OnClick="reintialiserBD_Click" Visible="false">
+                    <span class="glyphicon glyphicon-refresh nav-color"></span> Réintialiser la base de données</asp:LinkButton></li>
             </ul>
             </div>
         </nav>
