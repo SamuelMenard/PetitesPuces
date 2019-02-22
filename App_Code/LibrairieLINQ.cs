@@ -38,13 +38,15 @@ public static class LibrairieLINQ
                 var client = from c in clients where c.AdresseEmail == courriel && c.MotDePasse == mdp select c;
 
                 if (client.Count() == 0) { codeErreur = 401; }
-                else if (client.First().Statut != 1) { codeErreur = 402; }
+                else if (client.First().Statut == 0) { codeErreur = 402; }
+                else if (client.First().Statut == null) { codeErreur = 403; }
                 else { codeErreur = 400; }
                 break;
             case "V":
                 var vendeur = from v in vendeurs where v.AdresseEmail == courriel && v.MotDePasse == mdp select v;
                 if (vendeur.Count() == 0) { codeErreur = 401; }
-                else if (vendeur.First().Statut != 1) { codeErreur = 402; }
+                else if (vendeur.First().Statut == 0) { codeErreur = 402; }
+                else if (vendeur.First().Statut == null) { codeErreur = 403; }
                 else { codeErreur = 400; }
                 break;
             case "G":

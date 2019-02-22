@@ -32,7 +32,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
             }           
           
         }
-        nbMois = Convert.ToInt32(Session["ddlMoisInactif"]);
+        nbMois = Session["ddlMoisInactif"] != null && Convert.ToInt32(Session["ddlMoisInactif"]) != 0 ? Convert.ToInt32(Session["ddlMoisInactif"]) : 1;
         if(Session["NoVendeur"] != null)
             noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
@@ -89,6 +89,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
 
         DateTime dateParMois = DateTime.Now.AddMonths(-nbMois);      
         DateTime dateParMoisMax = DateTime.Now.AddMonths(-(nbMois+1));
+        System.Diagnostics.Debug.WriteLine(" LE NBMOIS = " + nbMois + " dateParMois = " + dateParMois + " dateParMoisMAx = " + dateParMoisMax);
         if (nbMois == 7)
         {
             dateParMoisMax = DateTime.MinValue;

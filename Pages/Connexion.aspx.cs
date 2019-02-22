@@ -124,7 +124,8 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
             alert_erreur.Visible = true;
             if (codeErreur == 401) { lblMessageErreur.Text = "Courriel ou mot de passe incorrect"; }
-            else if (codeErreur == 402) { lblMessageErreur.Text = "Le compte a été désactivé"; }
+            else if (codeErreur == 402) { lblMessageErreur.Text = "Impossible d'établir une connexion"; }
+            else if (codeErreur == 403) { lblMessageErreur.Text = "Demande en attente d'acceptation"; }
         }
     }
 
