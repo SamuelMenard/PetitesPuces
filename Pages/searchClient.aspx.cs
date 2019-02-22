@@ -193,6 +193,7 @@ public partial class Pages_searchClient : System.Web.UI.Page
 
                     Panel colAjout = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colAjout_" + idItem, "col-sm-2 text-right");
                     Button btnAjout = LibrairieControlesDynamique.btnDYN(colAjout, "btnAjouter_" + idItem+"-"+produitCat.NoVendeur, "btn valignMessage btnPageOrange", "Ajouter au panier", btnAjouter_click);
+                    btnAjout.UseSubmitBehavior = false;
 
                     if (produitCat.NombreItems < 1)
                     {
