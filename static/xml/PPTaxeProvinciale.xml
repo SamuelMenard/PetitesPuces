@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes"?>
 <dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
-<PPTaxeProvinciale><NoTVQ>101</NoTVQ><DateEffectiveTVQ>1/1/2005&#160;0:00</DateEffectiveTVQ><TauxTVQ>7.500</TauxTVQ></PPTaxeProvinciale>
-<PPTaxeProvinciale><NoTVQ>102</NoTVQ><DateEffectiveTVQ>1/1/2011&#160;0:00</DateEffectiveTVQ><TauxTVQ>8.500</TauxTVQ></PPTaxeProvinciale>
-<PPTaxeProvinciale><NoTVQ>103</NoTVQ><DateEffectiveTVQ>1/1/2012&#160;0:00</DateEffectiveTVQ><TauxTVQ>9.500</TauxTVQ></PPTaxeProvinciale>
-<PPTaxeProvinciale><NoTVQ>104</NoTVQ><DateEffectiveTVQ>1/1/2013&#160;0:00</DateEffectiveTVQ><TauxTVQ>9.975</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale><NoTVQ>101</NoTVQ><DateEffectiveTVQ>2005-01-01&#160;00:00</DateEffectiveTVQ><TauxTVQ>7.500</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale><NoTVQ>102</NoTVQ><DateEffectiveTVQ>2011-01-01&#160;00:00</DateEffectiveTVQ><TauxTVQ>8.500</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale><NoTVQ>103</NoTVQ><DateEffectiveTVQ>2012-01-01&#160;00:00</DateEffectiveTVQ><TauxTVQ>9.500</TauxTVQ></PPTaxeProvinciale>
+<PPTaxeProvinciale><NoTVQ>104</NoTVQ><DateEffectiveTVQ>2013-01-01&#160;00:00</DateEffectiveTVQ><TauxTVQ>9.975</TauxTVQ></PPTaxeProvinciale>
 </dataroot>

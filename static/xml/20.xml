@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <urlImage>image_magasin.jpg</urlImage>
+  <couleurFond>#ffffff</couleurFond>
+  <couleurTexte>#000000</couleurTexte>
+</configuration>

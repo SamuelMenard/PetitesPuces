@@ -273,8 +273,14 @@ public partial class Pages_ReintialiserBD : System.Web.UI.Page
                     produit.PrixDemande = decimal.Parse(element.Descendants("PrixDemande").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
                     produit.NombreItems = short.Parse(element.Descendants("NombreItems").Single().Value);
                     produit.Disponibilité = element.Descendants("Disponibilit_").Single().Value == "1" ? true : false;
-                    produit.DateVente = DateTime.Parse(element.Descendants("DateVente").Single().Value);
-                    produit.PrixVente = decimal.Parse(element.Descendants("PrixVente").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+                    if (element.Descendants("DateVente").Single().Value == "NULL")
+                        produit.DateVente = null;
+                    else
+                        produit.DateVente = DateTime.Parse(element.Descendants("DateVente").Single().Value);
+                    if (element.Descendants("PrixVente").Single().Value == "NULL")
+                        produit.PrixVente = null;
+                    else
+                        produit.PrixVente = decimal.Parse(element.Descendants("PrixVente").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
                     produit.Poids = decimal.Parse(element.Descendants("Poids").Single().Value.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
                     produit.DateCreation = DateTime.Parse(element.Descendants("DateCreation").Single().Value);
                     if (element.Descendants("DateMAJ").Single().Value == "NULL")
