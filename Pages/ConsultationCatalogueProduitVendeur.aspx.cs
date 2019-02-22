@@ -234,6 +234,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
 
                     Panel colAjout = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colAjout_" + idItem, "col-sm-2 text-right");
                     Button btnAjout = LibrairieControlesDynamique.btnDYN(colAjout, "btnAjouter_" + idItem, "btn valignMessage btnPageOrange", "Ajouter au panier", btnAjouter_click);
+                    btnAjout.UseSubmitBehavior = false;
 
                     if (produitCat.NombreItems < 1)
                     {
