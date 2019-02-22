@@ -56,6 +56,7 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
     public void affichageGestionnaire()
     {
         lbDeconnexion.Visible = true;
+        lbReintialiserBD.Visible = true;
     }
 
     public void connexion_click(Object sender, EventArgs e)
@@ -144,6 +145,12 @@ public partial class PageMaster_MasterPage : System.Web.UI.MasterPage
         String url = "~/Pages/searchClient.aspx?";
         Session["NoVendeurCatalogue"] = "";
        Response.Redirect(url, true);
+    }
+
+    public void reintialiserBD_Click(Object sender, EventArgs e)
+    {
+        String url = "~/Pages/ReintialiserBD.aspx?";
+        Response.Redirect(url, true);
     }
 
     public void accueil_click(Object sender, EventArgs e)
