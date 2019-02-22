@@ -152,14 +152,9 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
                     tbCorps.Text = message.Body;
                     divCourriel.Visible = true;
 
-                    lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
+                    lblMessage.Text = "Votre profil a été créé. Vos informations de connexion vous ont été envoyées par courriel.";
                     divMessage.CssClass = "alert alert-success alert-margins";
                 }
-                /*else
-                {
-                    lblMessage.Text = "Votre profil n'a pas pu être créé. Réessayez ultérieurement.";
-                    divMessage.CssClass = "alert alert-danger alert-margins";
-                }*/
             }
 
             foreach (Control controle in Page.Form.Controls)

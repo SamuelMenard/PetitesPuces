@@ -156,13 +156,13 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
                 if (montantRabais > 0)
                 {
-                    LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix-item-avant-rabais");
+                    LibrairieControlesDynamique.lblDYN(colPrix, "", Decimal.Round((Decimal)prixAvecQuantites, 2).ToString() + "$", "prix-item-avant-rabais");
                     LibrairieControlesDynamique.brDYN(colPrix);
                 }
 
-                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantitesAvecRabais, 2).ToString(), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", Decimal.Round((Decimal)prixAvecQuantitesAvecRabais, 2).ToString() + "$", "prix_item");
                 LibrairieControlesDynamique.brDYN(colPrix);
-                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de " + Decimal.Round((Decimal)montantRabais, 2).ToString() + "$" : "", "rabais");
 
 
                 // Bouton retirer
@@ -178,7 +178,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             LibrairieControlesDynamique.lblDYN(colLabelSousTotal, "", "Sous total: ", "infos-payage");
 
             Panel colMontantSousTotal = LibrairieControlesDynamique.divDYN(rowSousTotal, "", "col-sm-2 text-right");
-            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, "", "$" + Decimal.Round((Decimal)sousTotal, 2).ToString(), "infos-payage");
+            LibrairieControlesDynamique.lblDYN(colMontantSousTotal, "", Decimal.Round((Decimal)sousTotal, 2).ToString() + "$", "infos-payage");
 
             LibrairieControlesDynamique.hrDYN(panelBody);
 
@@ -197,7 +197,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 LibrairieControlesDynamique.lblDYN(colLabelTPS, "", "TPS: ", "infos-payage");
 
                 Panel colMontantTPS = LibrairieControlesDynamique.divDYN(rowTPS, "", "col-sm-2 text-right");
-                LibrairieControlesDynamique.lblDYN(colMontantTPS, "", "$" + Decimal.Round((Decimal)TPS, 2).ToString(), "infos-payage");
+                LibrairieControlesDynamique.lblDYN(colMontantTPS, "", Decimal.Round((Decimal)TPS, 2).ToString() + "$", "infos-payage");
 
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
@@ -212,7 +212,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 LibrairieControlesDynamique.lblDYN(colLabelTVQ, "", "TVQ: ", "infos-payage");
 
                 Panel colMontantTVQ = LibrairieControlesDynamique.divDYN(rowTVQ, "", "col-sm-2 text-right");
-                LibrairieControlesDynamique.lblDYN(colMontantTVQ, "", "$" + Decimal.Round((Decimal)TVQ, 2).ToString(), "infos-payage");
+                LibrairieControlesDynamique.lblDYN(colMontantTVQ, "", Decimal.Round((Decimal)TVQ, 2).ToString() + "$", "infos-payage");
 
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
@@ -367,13 +367,13 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
                 if (montantRabais > 0)
                 {
-                    LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantites, 2).ToString(), "prix-item-avant-rabais");
+                    LibrairieControlesDynamique.lblDYN(colPrix, "", Decimal.Round((Decimal)prixAvecQuantites, 2).ToString() + "$", "prix-item-avant-rabais");
                     LibrairieControlesDynamique.brDYN(colPrix);
                 }
                 
-                LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + Decimal.Round((Decimal)prixAvecQuantitesAvecRabais, 2).ToString(), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", Decimal.Round((Decimal)prixAvecQuantitesAvecRabais, 2).ToString() + "$", "prix_item");
                 LibrairieControlesDynamique.brDYN(colPrix);
-                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de $" + Decimal.Round((Decimal)montantRabais, 2).ToString() : "", "rabais");
+                LibrairieControlesDynamique.lblDYN(colPrix, "", (montantRabais > 0) ? "Rabais de " + Decimal.Round((Decimal)montantRabais, 2).ToString() + "$" : "", "rabais");
 
                 LibrairieControlesDynamique.hrDYN(panelBody);
             }
@@ -474,14 +474,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         Decimal TVQ = Math.Round((sousTotal + prixLivraisonStandard) * TVQPourcentage, 2);
 
         // afficher les autres infos
-        lblSousTotalLiv.Text = "$" + sousTotal.ToString();
-        if (TPSPourcentage != 0) { lblTPSLiv.Text = "$" + TPS.ToString(); }
+        lblSousTotalLiv.Text = sousTotal.ToString() + "$";
+        if (TPSPourcentage != 0) { lblTPSLiv.Text = TPS.ToString() + "$"; }
         else { divTPSLiv.Visible = false; }
 
-        if (TVQPourcentage != 0) { lblTVQLiv.Text = "$" + TVQ.ToString(); }
+        if (TVQPourcentage != 0) { lblTVQLiv.Text = TVQ.ToString() + "$"; }
         else { divTVQLiv.Visible = false; }
 
-        lblTotalLiv.Text = "$"+ (sousTotal + TPS + TVQ + prixLivraisonStandard).ToString();
+        lblTotalLiv.Text = (sousTotal + TPS + TVQ + prixLivraisonStandard).ToString() + "$";
 
         // rendre visible la div livraison
         divLiv.Visible = true;
@@ -522,7 +522,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         }
         else
         {
-            lblFraisTransportPaiement.Text = "$" + prixLivraisonStandard.ToString();
+            lblFraisTransportPaiement.Text = prixLivraisonStandard.ToString() + "$";
         }
 
         // get sous total avec rabais
@@ -535,15 +535,15 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         Decimal TVQ = Math.Round((sousTotal + prixLivraisonStandard) * TVQPourcentage, 2);
 
         // afficher les autres infos
-        lblSousTotalPaiement.Text = "$" + sousTotal.ToString();
+        lblSousTotalPaiement.Text = sousTotal.ToString() + "$";
 
-        if (TPSPourcentage != 0) { lblTPSPaiement.Text = "$" + TPS.ToString(); }
+        if (TPSPourcentage != 0) { lblTPSPaiement.Text = TPS.ToString() + "$"; }
         else { divTPSPaiement.Visible = false; }
 
-        if (TVQPourcentage != 0) { lblTVQPaiement.Text = "$" + TVQ.ToString(); }
+        if (TVQPourcentage != 0) { lblTVQPaiement.Text = TVQ.ToString() + "$"; }
         else { divTVQPaiement.Visible = false; }
 
-        lblTotalPaiement.Text = "$" + (sousTotal + TPS + TVQ + prixLivraisonStandard).ToString();
+        lblTotalPaiement.Text = (sousTotal + TPS + TVQ + prixLivraisonStandard).ToString() + "$";
 
         // afficher resume paiement
         //btnLESi.Visible = afficherResumePanier();
@@ -876,7 +876,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             flux += "</td>";
 
             flux += "<td>";
-            flux += "$" + Decimal.Round((decimal)detail.PPProduits.PrixVente, 2);
+            flux += Decimal.Round((decimal)detail.PPProduits.PrixVente, 2) + "$";
             flux += "</td>";
 
             flux += "<td>";
@@ -884,7 +884,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             flux += "</td>";
 
             flux += "<td>";
-            flux += "$" + Decimal.Round((decimal)(detail.PPProduits.PrixVente * detail.Quantité), 2);
+            flux += Decimal.Round((decimal)(detail.PPProduits.PrixVente * detail.Quantité), 2) + "$";
             flux += "</td>";
 
             flux += "</tr>";
@@ -903,7 +903,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "Sous total";
         flux += "</th>";
         flux += "<td>";
-        flux += "$" + Decimal.Round((decimal)commande.MontantTotAvantTaxes, 2);
+        flux += Decimal.Round((decimal)commande.MontantTotAvantTaxes, 2) + "$";
         flux += "</td>";
         flux += "</tr>";
 
@@ -912,7 +912,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "Frais livraison";
         flux += "</th>";
         flux += "<td>";
-        flux += "$" + Decimal.Round((decimal)commande.CoutLivraison, 2);
+        flux += Decimal.Round((decimal)commande.CoutLivraison, 2) + "$";
         flux += "</td>";
         flux += "</tr>";
 
@@ -921,7 +921,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "TPS";
         flux += "</th>";
         flux += "<td>";
-        flux += "$" + Decimal.Round((decimal)commande.TPS, 2);
+        flux += Decimal.Round((decimal)commande.TPS, 2) + "$";
         flux += "</td>";
         flux += "</tr>";
 
@@ -930,7 +930,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "TVQ";
         flux += "</th>";
         flux += "<td>";
-        flux += "$" + Decimal.Round((decimal)commande.TVQ, 2);
+        flux += Decimal.Round((decimal)commande.TVQ, 2) + "$";
         flux += "</td>";
         flux += "</tr>";
 
@@ -939,7 +939,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         flux += "Total";
         flux += "</th>";
         flux += "<td>";
-        flux += "$" + Decimal.Round((decimal)(commande.MontantTotAvantTaxes + commande.CoutLivraison + commande.TPS + commande.TVQ), 2);
+        flux += Decimal.Round((decimal)(commande.MontantTotAvantTaxes + commande.CoutLivraison + commande.TPS + commande.TVQ), 2) + "$";
         flux += "</td>";
         flux += "</tr>";
 
@@ -966,14 +966,8 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         nomfamille.Text = (ficheClient.Nom != null) ? ficheClient.Nom.Trim() : "";
         email.Text = (ficheClient.AdresseEmail != null) ? ficheClient.AdresseEmail.Trim() : "";
         ville.Text = (ficheClient.Ville != null) ? ficheClient.Ville.Trim() : "";
-        codepostal.Text = (ficheClient.CodePostal != null) ? ficheClient.CodePostal.Trim() : "";
-        String[] tabCiviqueRue = ((ficheClient.Rue != null) ? ficheClient.Rue : "").Split(' ');
-
-        if (tabCiviqueRue.Length == 2)
-        {
-            noCivique.Text = tabCiviqueRue[0].Trim();
-            rue.Text = tabCiviqueRue[1].Trim();
-        }
+        codepostal.Text = (ficheClient.CodePostal != null) ? ficheClient.CodePostal.Substring(0, 3) + " " + ficheClient.CodePostal.Substring(3, 3) : "";
+        adresse.Text = (ficheClient.Rue != null) ? ficheClient.Rue : "";
 
         if (ficheClient.Province != null)
         {
@@ -982,7 +976,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         if (ficheClient.Tel1 != null)
         {
-            String num = "(" + ficheClient.Tel1.Substring(0, 3) + ")" + ficheClient.Tel1.Substring(3, 3) + "-" + ficheClient.Tel1.Substring(6);
+            String num = "(" + ficheClient.Tel1.Substring(0, 3) + ") " + ficheClient.Tel1.Substring(3, 3) + "-" + ficheClient.Tel1.Substring(6);
             tel.Text = num;
         }
         else
@@ -992,7 +986,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
 
         if (ficheClient.Tel2 != null)
         {
-            String num = "(" + ficheClient.Tel2.Substring(0, 3) + ")" + ficheClient.Tel2.Substring(3, 3) + "-" + ficheClient.Tel2.Substring(6);
+            String num = "(" + ficheClient.Tel2.Substring(0, 3) + ") " + ficheClient.Tel2.Substring(3, 3) + "-" + ficheClient.Tel2.Substring(6);
             cell.Text = num;
         }
         else
@@ -1133,24 +1127,14 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             codepostal.CssClass = "form-control";
         }
 
-        if (!rfvNoCivique.IsValid || !reNoCivique.IsValid)
+        if (!rfvAdresse.IsValid || !reAdresse.IsValid)
         {
-            noCivique.CssClass = "form-control erreur";
+            adresse.CssClass = "form-control erreur";
             valide = false;
         }
         else
         {
-            noCivique.CssClass = "form-control";
-        }
-
-        if (!rfvRue.IsValid || !reRue.IsValid)
-        {
-            rue.CssClass = "form-control erreur";
-            valide = false;
-        }
-        else
-        {
-            rue.CssClass = "form-control";
+            adresse.CssClass = "form-control";
         }
 
         if (!rfvTel.IsValid || !reTel.IsValid)
@@ -1192,13 +1176,13 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                     client.Prenom = prenom.Text;
                     client.Nom = nomfamille.Text;
                     client.Ville = ville.Text;
-                    client.CodePostal = codepostal.Text;
-                    client.Rue = noCivique.Text + " " + rue.Text;
+                    client.CodePostal = codepostal.Text.ToUpper().Replace(" ", "").Replace("-", "");
+                    client.Rue = adresse.Text;
 
-                    String num = tel.Text.Replace("(", "").Replace(")", "").Replace("-", "");
+                    String num = tel.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                     client.Tel1 = num;
 
-                    client.Tel2 = (cell.Text != "") ? cell.Text.Replace("(", "").Replace(")", "").Replace("-", "") : null;
+                    client.Tel2 = (cell.Text != "") ? cell.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "") : null;
                     client.Province = province.SelectedValue;
                     dataContext.SaveChanges();
                     dbTransaction.Commit();
@@ -1304,7 +1288,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
         }
         else
         {
-            fraisTransport.Text = "$" + prixLivraison.ToString();
+            fraisTransport.Text = prixLivraison.ToString() + "$";
         }
     }
 

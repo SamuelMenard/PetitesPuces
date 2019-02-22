@@ -31,8 +31,10 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             tbAdresse.Text = client.Rue;
             tbVille.Text = client.Ville;
             ddlProvince.SelectedValue = client.Province;
-            tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
-            tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
+            if (client.CodePostal != null)
+                tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
+            if (client.Tel1 != null)
+                tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
             if (client.Tel2 != null)
                 tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
         }
@@ -43,12 +45,12 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         Regex exprNomEntreprise = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
         Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
+        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z][\\s-]?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
         Regex exprPoids = new Regex("^\\d+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         return tbNomEntreprise.Text != "" && exprNomEntreprise.IsMatch(tbNomEntreprise.Text) &&
                tbNom.Text != "" && exprNomOuPrenom.IsMatch(tbNom.Text) &&
                tbPrenom.Text != "" && exprNomOuPrenom.IsMatch(tbPrenom.Text) &&
@@ -62,7 +64,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
                tbConfirmationCourriel.Text != "" && exprCourriel.IsMatch(tbConfirmationCourriel.Text) && tbConfirmationCourriel.Text == tbCourriel.Text &&
                tbMotPasse.Text != "" && exprMotPasse.IsMatch(tbMotPasse.Text) &&
                tbConfirmationMotPasse.Text != "" && tbConfirmationMotPasse.Text == tbMotPasse.Text &&
-               tbPoidsMaxLivraison.Text != "" && exprPoids.IsMatch(tbPoidsMaxLivraison.Text) &&
+               tbPoidsMaxLivraison.Text != "" && exprPoids.IsMatch(tbPoidsMaxLivraison.Text) && int.Parse(tbPoidsMaxLivraison.Text) <= 2147483647 &&
                tbLivraisonGratuite.Text != "" && exprMontant.IsMatch(tbLivraisonGratuite.Text) && double.Parse(tbLivraisonGratuite.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36;
     }
 
@@ -71,12 +73,12 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         Regex exprNomEntreprise = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
         Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
+        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z][\\s-]?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
         Regex exprPoids = new Regex("^\\d+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         if (tbNomEntreprise.Text == "" || !exprNomEntreprise.IsMatch(tbNomEntreprise.Text))
         {
             tbNomEntreprise.CssClass = "form-control border-danger";
@@ -128,7 +130,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbAdresse.Text == "")
                 errAdresse.Text = "L'adresse ne peut pas être vide";
             else
-                errAdresse.Text = "L'adresse n'est pas dans un format valide";
+                errAdresse.Text = "L'adresse n'est pas dans un format valide. Référez-vous aux directives d'adressage de Poste Canada à l'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041";
             errAdresse.CssClass = "text-danger";
         }
         else
@@ -268,13 +270,15 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             errConfirmationMotPasse.Text = "";
             errConfirmationMotPasse.CssClass = "text-danger hidden";
         }
-        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
+        if (tbPoidsMaxLivraison.Text == "" || !exprPoids.IsMatch(tbPoidsMaxLivraison.Text) || int.Parse(tbPoidsMaxLivraison.Text) > 2147483647)
         {
             tbPoidsMaxLivraison.CssClass = "form-control border-danger";
             if (tbPoidsMaxLivraison.Text == "")
                 errPoidsMaxLivraison.Text = "Le poids de livraison maximum ne peut pas être vide";
+            else if (!exprPoids.IsMatch(tbPoidsMaxLivraison.Text))
+                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être un entier positif";
             else
-                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être un entier";
+                errPoidsMaxLivraison.Text = "Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs";
             errPoidsMaxLivraison.CssClass = "text-danger";
         }
         else
@@ -289,7 +293,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbLivraisonGratuite.Text == "")
                 errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite ne peut pas être vide";
             else if (!exprMontant.IsMatch(tbLivraisonGratuite.Text))
-                errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule";
+                errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être un nombre positif";
             else
                 errLivraisonGratuite.Text = "Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $";
             errLivraisonGratuite.CssClass = "text-danger";
@@ -328,7 +332,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
                 vendeur.Rue = tbAdresse.Text;
                 vendeur.Ville = tbVille.Text;
                 vendeur.Province = ddlProvince.SelectedValue;
-                vendeur.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "");
+                vendeur.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "").Replace("-", "");
                 vendeur.Pays = "Canada";
                 vendeur.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                 if (!string.IsNullOrEmpty(tbTelephone2.Text))

@@ -42,7 +42,7 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
     {
         Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
+        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z][\\s-]?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
@@ -64,7 +64,7 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
     {
         Regex exprNomOuPrenom = new Regex("^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$");
         Regex exprAdresse = new Regex("^(\\d+-)?\\d+([a-zA-Z]|\\s\\d/\\d)?\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$");
-        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z]\\s?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
+        Regex exprCodePostal = new Regex("^[A-Z]\\d[A-Z][\\s-]?\\d[A-Z]\\d$", RegexOptions.IgnoreCase);
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
@@ -104,7 +104,7 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
             if (tbAdresse.Text == "")
                 errAdresse.Text = "L'adresse ne peut pas être vide";
             else
-                errAdresse.Text = "L'adresse n'est pas dans un format valide";
+                errAdresse.Text = "L'adresse n'est pas dans un format valide. Référez-vous aux directives d'adressage de Poste Canada à l'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041";
             errAdresse.CssClass = "text-danger";
         }
         else
@@ -272,7 +272,7 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
                 client.Rue = tbAdresse.Text;
                 client.Ville = tbVille.Text;
                 client.Province = ddlProvince.SelectedValue;
-                client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "");
+                client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "").Replace("-", "");
                 client.Pays = "Canada";
                 client.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
                 if (!string.IsNullOrEmpty(tbTelephone2.Text))
@@ -316,7 +316,7 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
                     tbCorps.Text = message.Body;
                     divCourriel.Visible = true;
 
-                    lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
+                    lblMessage.Text = "Votre profil a été créé. Vos informations de connexion vous ont été envoyées par courriel.";
                     divMessage.CssClass = "alert alert-success alert-margins";
                 }
             }

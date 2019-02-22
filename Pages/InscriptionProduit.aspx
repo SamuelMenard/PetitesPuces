@@ -43,6 +43,9 @@
    </div>
    <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer les informations d'un produit</h1>
    <div class="form-group">
+      <asp:TextBox ID="tbNo" runat="server" CssClass="form-control" Enabled="false" />
+   </div>
+   <div class="form-group">
       <asp:DropDownList Id="ddlCategorie" CssClass="form-control" runat="server">
          <asp:ListItem Value="">Sélectionnez la catégorie</asp:ListItem>
       </asp:DropDownList>
@@ -74,6 +77,9 @@
          <input id="btnChangerImage" type="button" class="btn btn-block Orange" value="Changer l'image" runat="server" visible="false" />
          <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
       </div>
+   </div>
+   <div class="form-group">
+      <asp:TextBox ID="tbDateCreation" runat="server" CssClass="form-control" Enabled="false" Visible="false" />
    </div>
    <div class="row">
       <div class="form-group col-sm-6">
@@ -121,7 +127,7 @@
 <script type="text/javascript">
    $(document).ready(function () {
       var exprTexte = /^[\w\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF\s!"$%?&()\-;:«»°,'.]+$/;
-      var exprMontant = /^\d+\.\d{2}$/;
+      var exprMontant = /^\d+(\.\d{2})?$/;
       var exprNbItems = /^\d+$/;
       var dateAujourdhui = new Date();
       dateAujourdhui.setHours(0, 0, 0, 0);
@@ -153,7 +159,7 @@
             $('#contentBody_errPrixDemande').text('Le prix demandé ne peut pas être vide').removeClass('hidden');
          } else if (!exprMontant.test($('#contentBody_tbPrixDemande').val())) {
             $('#contentBody_tbPrixDemande').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errPrixDemande').text('Le prix demandé doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
+            $('#contentBody_errPrixDemande').text('Le prix demandé doit être un nombre positif').removeClass('hidden');
          } else if ($('#contentBody_tbPrixDemande').val() > 214748.36) {
             $('#contentBody_tbPrixDemande').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPrixDemande').text('Le prix demandé doit être inférieur à 214 748,37 $').removeClass('hidden');
@@ -201,7 +207,7 @@
             $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être vide').removeClass('hidden');
          } else if (!exprMontant.test($('#contentBody_tbPrixVente').val())) {
             $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
+            $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
          } else if ($('#contentBody_tbPrixVente').val() > 214748.36) {
             $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
@@ -254,7 +260,7 @@
             if ($('#contentBody_tbPrixDemande').val() == '')
                $('#contentBody_errPrixDemande').text('Le prix demandé ne peut pas être vide').removeClass('hidden');
             else if (!exprMontant.test($('#contentBody_tbPrixDemande').val()))
-               $('#contentBody_errPrixDemande').text('Le prix demandé doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
+               $('#contentBody_errPrixDemande').text('Le prix demandé doit être un nombre positif').removeClass('hidden');
             else
                $('#contentBody_errPrixDemande').text('Le prix demandé doit être inférieur à 214 748,37 $').removeClass('hidden');
             binPageValide = false;
@@ -293,7 +299,7 @@
             if ($('#contentBody_tbPrixVente').val() == '')
                $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être vide').removeClass('hidden');
             else if (!exprMontant.test($('#contentBody_tbPrixVente').val()))
-               $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
+               $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
             else
                $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
             binPageValide = false;

@@ -127,12 +127,12 @@
       var exprNomEntreprise = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
       var exprNomOuPrenom = /^[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF])*$/;
       var exprAdresse = /^(\d+-)?\d+([a-zA-Z]|\s\d\/\d)?\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*\s[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9]+(([-'\s][a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])|[a-zA-Z\u00C0-\u00D6\u00D9-\u00F6\u00F9-\u00FF0-9])*$/;
-      var exprCodePostal = /^[A-Z]\d[A-Z]\s?\d[A-Z]\d$/i;
+      var exprCodePostal = /^[A-Z]\d[A-Z][\s-]?\d[A-Z]\d$/i;
       var exprTelephone = /^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
       var exprCourriel = /^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\.[a-z]+$/;
       var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
       var exprPoids = /^\d+$/;
-      var exprMontant = /^\d+\.\d{2}$/;
+      var exprMontant = /^\d+(\.\d{2})?$/;
       $("#contentBody_tbNomEntreprise").focusout(function () {
          if ($("#contentBody_tbNomEntreprise").val() == '') {
             $("#contentBody_tbNomEntreprise").removeClass("border-success").addClass("border-danger");
@@ -175,7 +175,7 @@
             $("#contentBody_errAdresse").text('L\'adresse ne peut pas être vide').removeClass('hidden');
          } else if (!exprAdresse.test($("#contentBody_tbAdresse").val())) {
             $("#contentBody_tbAdresse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errAdresse").text('L\'adresse n\'est pas dans un format valide').removeClass('hidden');
+            $("#contentBody_errAdresse").text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041').removeClass('hidden');
          } else {
             $("#contentBody_tbAdresse").removeClass("border-danger").addClass("border-success");
             $("#contentBody_errAdresse").text('').addClass('hidden');
@@ -310,7 +310,10 @@
             $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('hidden');
          } else if (!exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val())) {
             $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('hidden');
+            $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier positif').removeClass('hidden');
+         } else if ($('#contentBody_tbPoidsMaxLivraison').val() > 2147483647) {
+            $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
+            $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('hidden');
          } else {
             $("#contentBody_tbPoidsMaxLivraison").removeClass("border-danger").addClass("border-success");
             $("#contentBody_errPoidsMaxLivraison").text('').addClass('hidden');
@@ -322,7 +325,7 @@
             $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('hidden');
          } else if (!exprMontant.test($("#contentBody_tbLivraisonGratuite").val())) {
             $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
+            $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('hidden');
          } else if ($("#contentBody_tbLivraisonGratuite").val() > 214748.36) {
             $("#contentBody_tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
             $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('hidden');
@@ -362,7 +365,7 @@
             if ($("#contentBody_tbAdresse").val() == '')
                $("#contentBody_errAdresse").text('L\'adresse ne peut pas être vide').removeClass('hidden');
             else
-               $("#contentBody_errAdresse").text('L\'adresse n\'est pas dans un format valide').removeClass('hidden');
+               $("#contentBody_errAdresse").text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041').removeClass('hidden');
             binPageValide = false;
          }
          if ($("#contentBody_tbVille").val() == '' || !exprNomOuPrenom.test($("#contentBody_tbVille").val())) {
@@ -433,12 +436,14 @@
                $("#contentBody_errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('hidden');
             binPageValide = false;
          }
-         if ($("#contentBody_tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val())) {
+         if ($("#contentBody_tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val()) || $('#contentBody_tbPoidsMaxLivraison').val() > 2147483647) {
             $("#contentBody_tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
             if ($("#contentBody_tbPoidsMaxLivraison").val() == '')
                $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('hidden');
+            else if (!exprPoids.test($("#contentBody_tbPoidsMaxLivraison").val()))
+               $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier positif').removeClass('hidden');
             else
-               $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier').removeClass('hidden');
+               $("#contentBody_errPoidsMaxLivraison").text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('hidden');
             binPageValide = false;
          }
          if ($("#contentBody_tbLivraisonGratuite").val() == '' || !exprMontant.test($("#contentBody_tbLivraisonGratuite").val()) || $("#contentBody_tbLivraisonGratuite").val() > 214748.36) {
@@ -446,7 +451,7 @@
             if ($("#contentBody_tbLivraisonGratuite").val() == '')
                $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('hidden');
             else if (!exprMontant.test($("#contentBody_tbLivraisonGratuite").val()))
-               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre décimal avec deux chiffres après la virgule').removeClass('hidden');
+               $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('hidden');
             else
                $("#contentBody_errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('hidden');
             binPageValide = false;

@@ -124,7 +124,8 @@ public partial class Pages_Connexion : System.Web.UI.Page
 
             alert_erreur.Visible = true;
             if (codeErreur == 401) { lblMessageErreur.Text = "Courriel ou mot de passe incorrect"; }
-            else if (codeErreur == 402) { lblMessageErreur.Text = "Le compte a été désactivé"; }
+            else if (codeErreur == 402) { lblMessageErreur.Text = "Impossible d'établir une connexion"; }
+            else if (codeErreur == 403) { lblMessageErreur.Text = "Demande en attente d'acceptation"; }
         }
     }
 
@@ -170,7 +171,7 @@ public partial class Pages_Connexion : System.Web.UI.Page
                                              vendeur.MotDePasse);
             }
 
-            lblMessage.Text = "Votre profil à été créé. Vos informations de connexion vous ont été envoyées par courriel.";
+            lblMessage.Text = "Votre mot de passe vous a été envoyé par courriel.";
             divMessage.CssClass = "alert alert-success alert-margins";
             divMessage.Visible = true;
 

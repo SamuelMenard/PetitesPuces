@@ -60,12 +60,14 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                             if (dbContext.PPProduits.Where(p => p.NoProduit == noProduit && p.NoVendeur == noVendeur).Any())
                             {
                                 PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).Single();
+                                tbNo.Text = produit.NoProduit.ToString();
                                 ddlCategorie.SelectedValue = produit.NoCategorie.ToString();
                                 tbNom.Text = produit.Nom;
                                 tbPrixDemande.Text = produit.PrixDemande.ToString()
                                                                         .Remove(produit.PrixDemande.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
                                                                         .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
                                 tbDescription.Text = produit.Description;
+                                tbDateCreation.Text = produit.DateCreation.Value.ToShortDateString();
                                 tbNbItems.Text = produit.NombreItems.ToString();
                                 tbPrixVente.Text = produit.PrixVente.ToString()
                                                                     .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
@@ -119,6 +121,8 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                                         btnSupprimer.OnClientClick = "if (!confirm('Voulez-vous vraiment supprimer ce produit?')) { return false; }";
                                     btnSupprimer.Visible = true;
                                 }
+
+                                tbDateCreation.Visible = true;
                             }
                             else
                             {
@@ -159,6 +163,12 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             }
             else
             {
+                long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
+                long nbProduit = 0;
+                foreach (PPProduits produit in dbContext.PPProduits.Where(p => p.NoVendeur == noVendeur))
+                    if (long.Parse(produit.NoProduit.ToString().Substring(2)) > nbProduit)
+                        nbProduit = long.Parse(produit.NoProduit.ToString().Substring(2));
+                tbNo.Text = string.Format("{0}{1:D5}", noVendeur, nbProduit + 1);
                 btnSelectionnerImage.Visible = true;
                 btnInscription.Visible = true;
             }  
@@ -184,7 +194,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
     protected bool validerPage()
     {
         Regex exprTexte = new Regex("^[\\w\\s!\"$%?&()\\-;:«»°,'.]+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         Regex exprNbItems = new Regex("^\\d+$");
         Regex exprPoids = new Regex("^\\d+(\\.\\d)?$");
         bool dateExpirationValide = false;
@@ -205,7 +215,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
     protected void afficherErreurs()
     {
         Regex exprTexte = new Regex("^[\\w\\s!\"$%?&()\\-;:«»°,'.]+$");
-        Regex exprMontant = new Regex("^\\d+\\.\\d{2}$");
+        Regex exprMontant = new Regex("^\\d+(\\.\\d{2})?$");
         Regex exprNbItems = new Regex("^\\d+$");
         Regex exprPoids = new Regex("^\\d+(\\.\\d)?$");
         if (ddlCategorie.SelectedValue == "")
@@ -241,7 +251,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             if (tbPrixDemande.Text == "")
                 errPrixDemande.Text = "Le prix demandé ne peut pas être vide";
             else if (!exprMontant.IsMatch(tbPrixDemande.Text))
-                errPrixDemande.Text = "Le prix demandé doit être un nombre décimal avec deux chiffres après la virgule";
+                errPrixDemande.Text = "Le prix demandé doit être un nombre positif";
             else
                 errPrixDemande.Text = "Le prix demandé doit être inférieur à 214 748,37 $";
             errPrixDemande.CssClass = "text-danger";
@@ -303,7 +313,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             if (tbPrixVente.Text == "")
                 errPrixVente.Text = "Le prix de vente ne peut pas être vide";
             else if (!exprMontant.IsMatch(tbPrixVente.Text))
-                errPrixVente.Text = "Le prix de vente doit être un nombre décimal avec deux chiffres après la virgule";
+                errPrixVente.Text = "Le prix de vente doit être un nombre positif";
             else
                 errPrixVente.Text = "Le prix de vente doit être inférieur à 214 748,37 $";
             errPrixVente.CssClass = "text-danger";

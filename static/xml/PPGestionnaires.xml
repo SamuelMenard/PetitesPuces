@@ -1,4 +1,5 @@
 <?xml version="1.0" standalone="yes"?>
 <dataroot xmlns:od="urn:schemas-microsoft-com:officedata">
 <PPGestionnaires><ID>1</ID><courriel>gestionnaire1@gmail.com</courriel><motDePasse>Secret123</motDePasse></PPGestionnaires>
+<PPGestionnaires><ID>2</ID><courriel>pl@gmail.com</courriel><motDePasse>1234</motDePasse></PPGestionnaires>
 </dataroot>
