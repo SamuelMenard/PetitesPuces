@@ -14,7 +14,7 @@ function lesiForm() {
     var DateExpirationCarteCredit = document.getElementById('contentBody_tbDate').value;
     var NoSecuriteCarteCredit = document.getElementById('contentBody_tbCVV').value;
 
-    var MontantPaiement = document.getElementById('contentBody_lblTotalPaiement').innerHTML.replace("$", "");
+    var MontantPaiement = document.getElementById('contentBody_lblTotalPaiement').innerHTML.replace("$", "").trim();
     MontantPaiement = MontantPaiement.replace(/,/g, ".");
 
     var NomPageRetour = url.replace("paiement", "confirmation");

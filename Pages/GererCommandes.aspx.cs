@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -142,7 +143,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
             // Total avant taxes
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total<br>(sans taxes)<br>$" + prix.ToString("N"), "prix_item");
+            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total<br>(sans taxes)<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
 
             Panel colLivrer = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colLivrer" + idItem, "col-sm-1 text-center");
@@ -224,7 +225,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
             // Total avant taxes
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix2_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Total (sans taxes)<br>$" + prix.ToString("N"), "prix_item");
+            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Total (sans taxes)<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
             //   LibrairieControlesDynamique.hrDYN(panelBody);
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -54,7 +55,7 @@ public partial class Pages_NouveauxProduits : System.Web.UI.Page
 
             // Prix item
             Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, "", "col-sm-2");
-            LibrairieControlesDynamique.lblDYN(colPrix, "", "$" + prix.ToString(), "prix_item");
+            LibrairieControlesDynamique.lblDYN(colPrix, "", prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
             LibrairieControlesDynamique.spaceDYN(colPrix);
             LibrairieControlesDynamique.spaceDYN(colPrix);
             LibrairieControlesDynamique.imgDYN(colPrix, "", urlNouveau, "img-size-new");

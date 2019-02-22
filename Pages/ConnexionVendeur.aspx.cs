@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -138,7 +139,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
                 // Total avant taxes
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-center");
-                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total avant taxes<br>$" + prix.ToString("N"), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total avant taxes<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
                 //   LibrairieControlesDynamique.hrDYN(panelBody);
             }
@@ -252,7 +253,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
                         }
                     }
                     Panel colSousTotal = LibrairieControlesDynamique.divDYN(rowClient, nomEntreprise + "_colSousTotalPanier_" + idItem, "col-sm-2 text-center");
-                    LibrairieControlesDynamique.lblDYN(colSousTotal, nomEntreprise + "_SousTotalPanier_" + idItem, "$" + sousTotalPanier.ToString("N"), "nomClient prix_item");
+                    LibrairieControlesDynamique.lblDYN(colSousTotal, nomEntreprise + "_SousTotalPanier_" + idItem, sousTotalPanier.ToString("C", CultureInfo.CurrentCulture), "nomClient prix_item");
 
                     //Panneau Accordeon
                     PanelCollapse = LibrairieControlesDynamique.divDYN(panelBody2, nomEntreprise + "_PanelCollapse" + i, "panel panelAccord");
@@ -281,7 +282,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPri2x_" + idItem, "col-sm-2 text-center");
-                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Prix Unitaire<br> $" + prix.ToString("N"), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Prix Unitaire<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
                 ancienID = idClient;
             }

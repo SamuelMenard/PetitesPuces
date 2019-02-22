@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -110,7 +111,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
         Panel colLBLLivGratuite = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-4");
         LibrairieControlesDynamique.lblDYN(colLBLLivGratuite, "", "Livraison gratuite:", "autres-infos");
         Panel colLivGratuite = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-8");
-        LibrairieControlesDynamique.lblDYN(colLivGratuite, "", (vendeur.LivraisonGratuite != null) ? Decimal.Round((decimal)vendeur.LivraisonGratuite, 2).ToString() : "", "autres-infos");
+        LibrairieControlesDynamique.lblDYN(colLivGratuite, "", (vendeur.LivraisonGratuite != null) ? Decimal.Round((decimal)vendeur.LivraisonGratuite, 2).ToString("C", CultureInfo.CurrentCulture) : "", "autres-infos");
 
         Panel colLBLTaxes = LibrairieControlesDynamique.divDYN(rowAutresInfos, "", "col-md-4");
         LibrairieControlesDynamique.lblDYN(colLBLTaxes, "", "Taxes:", "autres-infos");

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.UI.WebControls;
 
@@ -98,8 +99,8 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
             TableRow tr = LibrairieControlesDynamique.trDYN(table);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.AdresseEmail);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.NomAffaires);
-            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.DateCreation.ToString());
-            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", Decimal.Round((Decimal)lstHisto.Sum(histo => histo.MontantVenteAvantLivraison), 2).ToString() + "$");
+            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.DateCreation.Value.ToString("yyyy'-'MM'-'dd HH':'mm"));
+            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", Decimal.Round((Decimal)lstHisto.Sum(histo => histo.MontantVenteAvantLivraison), 2).ToString("C", CultureInfo.CurrentCulture));
             lstCbVendeurs.Add(LibrairieControlesDynamique.cb(LibrairieControlesDynamique.tdDYN(tr, "", ""), "cbVendeur_" + vendeur.NoVendeur, ""));
         }
     }
@@ -117,7 +118,7 @@ public partial class Pages_BoiteMessagerie : System.Web.UI.Page
         {
             TableRow tr = LibrairieControlesDynamique.trDYN(table);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", client.AdresseEmail);
-            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", client.DateCreation.ToString());
+            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", client.DateCreation.Value.ToString("yyyy'-'MM'-'dd HH':'mm"));
             lstCbClients.Add(LibrairieControlesDynamique.cb(LibrairieControlesDynamique.tdDYN(tr, "", ""), "cbClient_" + client.NoClient, ""));
         }
     }

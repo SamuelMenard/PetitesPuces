@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -158,7 +159,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
                         }
                     }
                     Panel colSousTotal = LibrairieControlesDynamique.divDYN(rowClient, nomEntreprise + "_colSousTotalPanier_" + idItem, "col-sm-2 text-center");
-                    LibrairieControlesDynamique.lblDYN(colSousTotal, nomEntreprise + "_SousTotalPanier_" + idItem, "$" + sousTotalPanier.ToString("N"), "nomClient prix_item");
+                    LibrairieControlesDynamique.lblDYN(colSousTotal, nomEntreprise + "_SousTotalPanier_" + idItem, sousTotalPanier.ToString("C", CultureInfo.CurrentCulture), "nomClient prix_item");
 
                     if (nbMois == 7)
                     {
@@ -196,7 +197,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPri2x_" + idItem, "col-sm-2 text-center");
-                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Prix Unitaire<br> $" + prix.ToString("N"), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Prix Unitaire<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
                
 

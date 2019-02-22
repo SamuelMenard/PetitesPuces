@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -41,9 +42,9 @@ public partial class Pages_VisualiserRedevances : System.Web.UI.Page
             TableRow tr = LibrairieControlesDynamique.trDYN(table);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.AdresseEmail);
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.NomAffaires);
-            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.DateCreation.ToString());
+            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", vendeur.DateCreation.Value.ToString("yyyy'-'MM'-'dd HH':'mm"));
             LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", (vendeur.Pourcentage*100).ToString() + "%");
-            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", (Decimal.Round((Decimal)vendeur.PPCommandes.Where(c => c.Statut.Equals("1")).Sum(c => c.MontantTotAvantTaxes * vendeur.Pourcentage), 2)).ToString() + "$");
+            LibrairieControlesDynamique.lblDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "", Decimal.Round((Decimal)vendeur.PPCommandes.Where(c => c.Statut.Equals("1")).Sum(c => c.MontantTotAvantTaxes * vendeur.Pourcentage), 2).ToString("C", CultureInfo.CurrentCulture));
             LibrairieControlesDynamique.btnDYN(LibrairieControlesDynamique.tdDYN(tr, "", ""), "btnEncaisser_" + vendeur.NoVendeur, "btn btn-success", "Encaisser", encaisser_click);
         }
     }
