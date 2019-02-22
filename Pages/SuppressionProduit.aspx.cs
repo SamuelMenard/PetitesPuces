@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -165,12 +166,17 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
 
                 // Prix item
                 Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-right");
-                if(lesProduits[i].DateVente > DateTime.Now)
-                    LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : $" + prixVente.ToString() + "<br>", "prix_item");
+                if (lesProduits[i].PrixVente != null)
+                {
+                    if (lesProduits[i].DateVente > DateTime.Now)
+                        LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : " + prixVente.ToString("C", CultureInfo.CurrentCulture) + "<br>", "prix_item");
+                    else
+                        LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : " + prixVente.ToString("C", CultureInfo.CurrentCulture) + "<br>", "prix_item produitNonVente");
+                }
                 else
-                    LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : $" + prixVente.ToString() + "<br>", "prix_item produitNonVente");
+                    LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixVente_" + idItem, "Prix de vente : N/A" + "<br>", "prix_item");
 
-                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixDemande_" + idItem, "Prix demandé : $" + prix.ToString(), "prix_item");
+                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prixDemande_" + idItem, "Prix demandé : " + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
                // Panel rowDel = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowDel_", "row text-right");
                 Panel colDel = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDel_"+idItem, "col-sm-2 text-center");         

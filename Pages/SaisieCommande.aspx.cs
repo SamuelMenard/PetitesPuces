@@ -100,7 +100,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = (article.PPProduits.PrixDemande - article.PPProduits.PrixVente) * quantiteSelectionne;
 
-                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
+                if (article.PPProduits.PrixVente == null || article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
 
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
@@ -312,7 +312,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
                 decimal? prixAvecQuantitesAvecRabais = article.PPProduits.PrixVente * article.NbItems;
                 decimal? montantRabais = article.PPProduits.PrixDemande - article.PPProduits.PrixVente;
 
-                if (article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
+                if (article.PPProduits.PrixVente == null || article.PPProduits.DateVente < DateTime.Now) { montantRabais = 0; prixAvecQuantitesAvecRabais = prixAvecQuantites; }
 
                 decimal? poids = article.PPProduits.Poids;
                 poidsTotal += (Decimal)(poids * quantiteSelectionne);
@@ -876,7 +876,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             flux += "</td>";
 
             flux += "<td>";
-            flux += Decimal.Round((decimal)detail.PPProduits.PrixVente, 2) + "$";
+            flux += (detail.PPProduits.PrixVente != null ? Decimal.Round((decimal)detail.PPProduits.PrixVente, 2) : Decimal.Round((decimal)detail.PPProduits.PrixDemande, 2)) + "$";
             flux += "</td>";
 
             flux += "<td>";
@@ -884,7 +884,7 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
             flux += "</td>";
 
             flux += "<td>";
-            flux += Decimal.Round((decimal)(detail.PPProduits.PrixVente * detail.Quantité), 2) + "$";
+            flux += (detail.PPProduits.PrixVente != null ? Decimal.Round((decimal)(detail.PPProduits.PrixVente * detail.Quantité), 2) : Decimal.Round((decimal)(detail.PPProduits.PrixDemande * detail.Quantité), 2)) + "$";
             flux += "</td>";
 
             flux += "</tr>";

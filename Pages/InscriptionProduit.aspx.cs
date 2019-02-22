@@ -69,10 +69,13 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                                 tbDescription.Text = produit.Description;
                                 tbDateCreation.Text = produit.DateCreation.Value.ToShortDateString();
                                 tbNbItems.Text = produit.NombreItems.ToString();
-                                tbPrixVente.Text = produit.PrixVente.ToString()
-                                                                    .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
-                                                                    .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
-                                tbDateVente.Text = produit.DateVente.Value.ToShortDateString();
+                                if (produit.PrixVente != null)
+                                {
+                                    tbPrixVente.Text = produit.PrixVente.ToString()
+                                                                        .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
+                                                                        .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
+                                    tbDateVente.Text = produit.DateVente.Value.ToShortDateString();
+                                }
                                 tbPoids.Text = produit.Poids.ToString().Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
                                 if (!(bool)produit.Disponibilité)
                                 {
@@ -207,8 +210,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                tbDescription.Text != "" && exprTexte.IsMatch(tbDescription.Text) &&
                imgTeleverse.ImageUrl != "~/static/images/image_placeholder.png" &&
                tbNbItems.Text != "" && exprNbItems.IsMatch(tbNbItems.Text) && int.Parse(tbNbItems.Text) <= 32767 &&
-               tbPrixVente.Text != "" && exprMontant.IsMatch(tbPrixVente.Text) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 &&
-               dateExpirationValide &&
+               (tbPrixVente.Text == "" || (tbPrixVente.Text != "" && exprMontant.IsMatch(tbPrixVente.Text) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 && dateExpirationValide)) &&
                tbPoids.Text != "" && exprPoids.IsMatch(tbPoids.Text);
     }
 
@@ -307,40 +309,47 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             errNbItems.Text = "";
             errNbItems.CssClass = "text-danger hidden";
         }
-        if (tbPrixVente.Text == "" || !exprMontant.IsMatch(tbPrixVente.Text) || double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36)
+        if (tbPrixVente.Text != "")
         {
-            tbPrixVente.CssClass = "form-control border-danger";
-            if (tbPrixVente.Text == "")
-                errPrixVente.Text = "Le prix de vente ne peut pas être vide";
-            else if (!exprMontant.IsMatch(tbPrixVente.Text))
-                errPrixVente.Text = "Le prix de vente doit être un nombre positif";
+            if (!exprMontant.IsMatch(tbPrixVente.Text) || double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36)
+            {
+                tbPrixVente.CssClass = "form-control border-danger";
+                if (!exprMontant.IsMatch(tbPrixVente.Text))
+                    errPrixVente.Text = "Le prix de vente doit être un nombre positif";
+                else
+                    errPrixVente.Text = "Le prix de vente doit être inférieur à 214 748,37 $";
+                errPrixVente.CssClass = "text-danger";
+            }
             else
-                errPrixVente.Text = "Le prix de vente doit être inférieur à 214 748,37 $";
-            errPrixVente.CssClass = "text-danger";
+            {
+                tbPrixVente.CssClass = "form-control border-success";
+                errPrixVente.Text = "";
+                errPrixVente.CssClass = "text-danger hidden";
+            }
+            if (tbDateVente.Text == "")
+            {
+                tbDateVente.CssClass = "form-control border-danger";
+                errDateVente.Text = "Vous devez sélectionner une date d'expiration du prix de vente";
+                errDateVente.CssClass = "text-danger";
+            }
+            else if (Convert.ToDateTime(tbDateVente.Text).Date <= DateTime.Now.Date)
+            {
+                tbDateVente.CssClass = "form-control border-danger";
+                errDateVente.Text = "La date d'expiration du prix de vente doit être supérieure à la date d'aujourd'hui";
+                errDateVente.CssClass = "text-danger";
+            }
+            else
+            {
+                tbDateVente.CssClass = "form-control border-success";
+                errDateVente.Text = "";
+                errDateVente.CssClass = "text-danger hidden";
+            }
         }
         else
         {
             tbPrixVente.CssClass = "form-control border-success";
             errPrixVente.Text = "";
             errPrixVente.CssClass = "text-danger hidden";
-        }
-        if (tbDateVente.Text == "")
-        {
-            tbDateVente.CssClass = "form-control border-danger";
-            errDateVente.Text = "Vous devez sélectionner une date d'expiration du prix de vente";
-            errDateVente.CssClass = "text-danger";
-        }
-        else if (Convert.ToDateTime(tbDateVente.Text).Date <= DateTime.Now.Date)
-        {
-            tbDateVente.CssClass = "form-control border-danger";
-            errDateVente.Text = "La date d'expiration du prix de vente doit être supérieure à la date d'aujourd'hui";
-            errDateVente.CssClass = "text-danger";
-        }
-        else
-        {
-            tbDateVente.CssClass = "form-control border-success";
-            errDateVente.Text = "";
-            errDateVente.CssClass = "text-danger hidden";
         }
         if (tbPoids.Text == "" || !exprPoids.IsMatch(tbPoids.Text))
         {
@@ -523,8 +532,16 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             nouveauProduit.PrixDemande = decimal.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
             nouveauProduit.NombreItems = short.Parse(tbNbItems.Text);
             nouveauProduit.Disponibilité = rbDisponibilite.Value == "O" ? true : false;
-            nouveauProduit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
-            nouveauProduit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            if (tbPrixVente.Text == "")
+            {
+                nouveauProduit.DateVente = null;
+                nouveauProduit.PrixVente = null;
+            }
+            else
+            {
+                nouveauProduit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
+                nouveauProduit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            }
             nouveauProduit.Poids = decimal.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
             nouveauProduit.DateCreation = DateTime.Now;
 
@@ -612,8 +629,16 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             produit.PrixDemande = decimal.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
             produit.NombreItems = short.Parse(tbNbItems.Text);
             produit.Disponibilité = rbDisponibilite.Value == "O" ? true : false;
-            produit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
-            produit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            if (tbPrixVente.Text == "")
+            {
+                produit.DateVente = null;
+                produit.PrixVente = null;
+            }
+            else
+            {
+                produit.DateVente = Convert.ToDateTime(tbDateVente.Text + " 00:00:00");
+                produit.PrixVente = decimal.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
+            }
             produit.Poids = decimal.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator));
             produit.DateMAJ = DateTime.Now;
 

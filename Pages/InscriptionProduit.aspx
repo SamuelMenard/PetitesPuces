@@ -94,7 +94,7 @@
          <asp:Label ID="errPrixVente" runat="server" CssClass="text-danger hidden" />
       </div>
    </div>
-   <div class="form-group">
+   <div id="divDateVente" class="form-group hidden">
       <label for="tbDateVente">Sélectionnez une date d’expiration du prix de vente</label>
       <asp:TextBox ID="tbDateVente" runat="server" TextMode="Date" CssClass="form-control" />
       <asp:Label ID="errDateVente" runat="server" CssClass="text-danger hidden" />
@@ -202,19 +202,30 @@
          }
       });
       $('#contentBody_tbPrixVente').focusout(function () {
-         if ($('#contentBody_tbPrixVente').val() == '') {
-            $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être vide').removeClass('hidden');
-         } else if (!exprMontant.test($('#contentBody_tbPrixVente').val())) {
-            $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
-         } else if ($('#contentBody_tbPrixVente').val() > 214748.36) {
-            $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
+         if ($('#contentBody_tbPrixVente').val() != '') {
+            if (!exprMontant.test($('#contentBody_tbPrixVente').val())) {
+               $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
+               $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
+            } else if ($('#contentBody_tbPrixVente').val() > 214748.36) {
+               $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
+               $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
+            } else {
+               $('#contentBody_tbPrixVente').removeClass('border-danger').addClass('border-success');
+               $('#contentBody_errPrixVente').text('').addClass('hidden');
+            }
          } else {
             $('#contentBody_tbPrixVente').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errPrixVente').text('').addClass('hidden');
          }
+      });
+      $('#contentBody_tbPrixVente').change(function () {
+         if ($('#contentBody_tbPrixVente').val() == '') {
+            $('#contentBody_tbDateVente').removeClass('border-danger').removeClass('border-success');
+            $('#contentBody_errDateVente').text('').addClass('hidden');
+            $('#divDateVente').addClass('hidden');
+         }  
+         else
+            $('#divDateVente').removeClass('hidden');
       });
       $('#contentBody_tbDateVente').focusout(function () {
          if ($('#contentBody_tbDateVente').val() == '') {
@@ -294,27 +305,27 @@
                $('#contentBody_errNbItems').text('La quantité ne peut pas dépasser 32 767 items').removeClass('hidden');
             binPageValide = false;
          }
-         if ($('#contentBody_tbPrixVente').val() == '' || !exprMontant.test($('#contentBody_tbPrixVente').val()) || $('#contentBody_tbPrixVente').val() > 214748.36) {
-            $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
-            if ($('#contentBody_tbPrixVente').val() == '')
-               $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être vide').removeClass('hidden');
-            else if (!exprMontant.test($('#contentBody_tbPrixVente').val()))
-               $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
-            else
-               $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
-            binPageValide = false;
+         if ($('#contentBody_tbPrixVente').val() != '') {
+            if (!exprMontant.test($('#contentBody_tbPrixVente').val()) || $('#contentBody_tbPrixVente').val() > 214748.36) {
+               $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
+               if (!exprMontant.test($('#contentBody_tbPrixVente').val()))
+                  $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
+               else
+                  $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
+               binPageValide = false;
+            }
+            if ($('#contentBody_tbDateVente').val() == '') {
+               $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
+               $('#contentBody_errDateVente').text('Vous devez sélectionner une date d\'expiration du prix de vente').removeClass('hidden');
+               binPageValide = false;
+            } else if (new Date($('#contentBody_tbDateVente').val() + ' 00:00:00') <= dateAujourdhui) {
+               $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
+               $('#contentBody_errDateVente').text('La date d\'expiration du prix de vente doit être supérieure à la date d\'aujourd\'hui').removeClass('hidden');
+               binPageValide = false;
+            }
+            else if ($('#contentBody_btnInscription').length)
+               $('#contentBody_tbDateVente').removeClass('border-danger').addClass('border-success');
          }
-         if ($('#contentBody_tbDateVente').val() == '') {
-            $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errDateVente').text('Vous devez sélectionner une date d\'expiration du prix de vente').removeClass('hidden');
-            binPageValide = false;
-         } else if (new Date($('#contentBody_tbDateVente').val() + ' 00:00:00') <= dateAujourdhui) {
-            $('#contentBody_tbDateVente').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errDateVente').text('La date d\'expiration du prix de vente doit être supérieure à la date d\'aujourd\'hui').removeClass('hidden');
-            binPageValide = false;
-         }
-         else if ($('#contentBody_btnInscription').length)
-            $('#contentBody_tbDateVente').removeClass('border-danger').addClass('border-success');
          if ($('#contentBody_tbPoids').val() == '' || !exprPoids.test($('#contentBody_tbPoids').val())) {
             $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');
             if ($('#contentBody_tbPoids').val() == '')

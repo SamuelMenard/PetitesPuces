@@ -120,7 +120,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
                 long idClient = lstPaniersEntreprise[i].NoClient.Value;
                 int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
                 PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
-                decimal prix = leProduit.PrixVente.Value;
+                decimal prix = leProduit.PrixDemande.Value;
                 String nomProduit = leProduit.Nom.ToString();
                 String urlImage = "../static/images/" + leProduit.Photo.ToString();
 
@@ -152,7 +152,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
                         if (lstPaniersEntreprise[j].NoClient == leClient.NoClient)
                         {
                             long idItem2 = lstPaniersEntreprise[j].NoProduit.Value;
-                            decimal calculSousTotal = (decimal)dbContext.PPProduits.Where(c => c.NoProduit == idItem2).First().PrixVente;
+                            decimal calculSousTotal = (decimal)dbContext.PPProduits.Where(c => c.NoProduit == idItem2).First().PrixDemande;
                             sousTotalPanier += calculSousTotal * lstPaniersEntreprise[j].NbItems.Value;
                         }
                     }
