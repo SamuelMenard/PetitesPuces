@@ -61,18 +61,18 @@
                 </div>
                 <div class="col-sm-3 mb-3">
                     <label for="codepostal">Code postal</label>
-                    <asp:TextBox ID="codepostal" Text="" CssClass="form-control" runat="server" ToolTip="Format: A9A9A9"/>
+                    <asp:TextBox ID="codepostal" Text="" CssClass="form-control" runat="server" ToolTip="Format: A9A9A9 ou A9A 9A9 ou A9A-9A9"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-sm-3 mb-3">
                     <label for="tel">Téléphone</label>
-                    <asp:TextBox ID="tel" Text="" CssClass="form-control" runat="server" ToolTip="Format: (999)999-9999"/>
+                    <asp:TextBox ID="tel" Text="" CssClass="form-control" runat="server" ToolTip="Format: 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999"/>
                 </div>
                 <div class="col-sm-3 mb-3">
                     <label for="cell">Cellulaire</label>
-                    <asp:TextBox ID="cell" Text="" CssClass="form-control" runat="server" ToolTip="Format: (999)999-9999"/>
+                    <asp:TextBox ID="cell" Text="" CssClass="form-control" runat="server" ToolTip="Format: 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999"/>
                 </div>
             </div>
 

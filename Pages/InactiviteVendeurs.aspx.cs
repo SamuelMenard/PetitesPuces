@@ -15,7 +15,7 @@ public partial class Pages_InactiviteVendeurs : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Gérer l'inactivité des vendeurs";
+        Page.Title = "Vendeurs inactifs";
 
         getNbMois();
         afficherVendeursInactifs();

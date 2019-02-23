@@ -87,7 +87,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbNomEntreprise.Text == "")
                 errNomEntreprise.Text = "Le nom de l'entreprise ne peut pas être vide";
             else
-                errNomEntreprise.Text = "Le nom de l'entreprise n'est pas dans un format valide";
+                errNomEntreprise.Text = "Le nom de l'entreprise n'est pas valide";
             errNomEntreprise.CssClass = "text-danger";
         }
         else
@@ -102,7 +102,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbNom.Text == "")
                 errNom.Text = "Le nom ne peut pas être vide";
             else
-                errNom.Text = "Le nom n'est pas dans un format valide";
+                errNom.Text = "Le nom n'est pas valide";
             errNom.CssClass = "text-danger";
         }
         else
@@ -117,7 +117,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbPrenom.Text == "")
                 errPrenom.Text = "Le prénom ne peut pas être vide";
             else
-                errPrenom.Text = "Le prénom n'est pas dans un format valide";
+                errPrenom.Text = "Le prénom n'est pas valide";
             errPrenom.CssClass = "text-danger";
         }
         else
@@ -147,7 +147,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbVille.Text == "")
                 errVille.Text = "La ville ne peut pas être vide";
             else
-                errVille.Text = "La ville n'est pas dans un format valide";
+                errVille.Text = "La ville n'est pas valide";
             errVille.CssClass = "text-danger";
         }
         else
@@ -174,7 +174,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbCodePostal.Text == "")
                 errCodePostal.Text = "Le code postal ne peut pas être vide";
             else
-                errCodePostal.Text = "Le code postal n'est pas dans un format valide";
+                errCodePostal.Text = "Le code postal n'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9";
             errCodePostal.CssClass = "text-danger";
         }
         else
@@ -189,7 +189,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbTelephone1.Text == "")
                 errTelephone1.Text = "Le téléphone 1 ne peut pas être vide";
             else
-                errTelephone1.Text = "Le téléphone 1 n'est pas dans un format valide";
+                errTelephone1.Text = "Le téléphone 1 n'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999";
             errTelephone1.CssClass = "text-danger";
         }
         else
@@ -201,7 +201,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
         if (tbTelephone2.Text != "" && !exprTelephone.IsMatch(tbTelephone2.Text))
         {
             tbTelephone2.CssClass = "form-control border-danger";
-            errTelephone2.Text = "Le téléphone 2 n'est pas dans un format valide";
+            errTelephone2.Text = "Le téléphone 2 n'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999";
             errTelephone2.CssClass = "text-danger";
         }
         else
@@ -216,7 +216,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbCourriel.Text == "")
                 errCourriel.Text = "Le courriel ne peut pas être vide";
             else
-                errCourriel.Text = "Le courriel n'est pas dans un format valide";
+                errCourriel.Text = "Le courriel n'est pas valide";
             errCourriel.CssClass = "text-danger";
         }
         else
@@ -231,7 +231,7 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             if (tbConfirmationCourriel.Text == "")
                 errConfirmationCourriel.Text = "La confirmation du courriel ne peut pas être vide";
             else if (!exprCourriel.IsMatch(tbConfirmationCourriel.Text))
-                errConfirmationCourriel.Text = "La confirmation du courriel n'est pas dans un format valide";
+                errConfirmationCourriel.Text = "La confirmation du courriel n'est pas valide";
             else
                 errConfirmationCourriel.Text = "La confirmation du courriel ne correspond pas au courriel";
             errConfirmationCourriel.CssClass = "text-danger";

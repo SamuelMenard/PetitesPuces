@@ -16,7 +16,7 @@ public partial class Pages_InactiviteClients : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Gérer l'inactivité des clients";
+        Page.Title = "Clients inactifs";
 
         getNbMois();
         afficherClientsInactifs();

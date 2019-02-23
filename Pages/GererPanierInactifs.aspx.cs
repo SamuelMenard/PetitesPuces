@@ -23,7 +23,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
     {
         verifierPermissions("V");
 
-        Page.Title = "Gérer les paniers";
+        Page.Title = "Gestion des paniers inactifs";
 
         if (Session["ddlMoisInactif"] != null && !IsPostBack)
         {

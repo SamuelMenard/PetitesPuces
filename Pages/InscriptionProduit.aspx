@@ -143,8 +143,13 @@
       var dateAujourdhui = new Date();
       dateAujourdhui.setHours(0, 0, 0, 0);
       var exprPoids = /^\d+(\.\d)?$/;
-      if ($('#contentBody_btnInscription').length == 0) {
+      if ($('#contentBody_btnModifier').length) {
+         $('#contentBody_tbNom').removeAttr('placeholder');
+         $('#contentBody_tbPrixDemande').removeAttr('placeholder');
+         $('#contentBody_tbDescription').removeAttr('placeholder');
+         $('#contentBody_tbNbItems').removeAttr('placeholder');
          $('#contentBody_tbPrixVente').removeAttr('placeholder');
+         $('#contentBody_tbPoids').removeAttr('placeholder');
       }
       $('#contentBody_ddlCategorie').focusout(function () {
          if ($('#contentBody_ddlCategorie').val() == '') {
@@ -194,11 +199,11 @@
             $('#contentBody_errDescription').text('').addClass('hidden');
          }
       });
-      $("#contentBody_fImage").change(function () {
-         $("#contentBody_btnTeleverserImage").click();
+      $('#contentBody_fImage').change(function () {
+         $('#contentBody_btnTeleverserImage').click();
       });
-      $("#contentBody_btnSelectionnerImage,#contentBody_btnChangerImage").click(function () {
-         $("#contentBody_fImage").click();
+      $('#contentBody_btnSelectionnerImage,#contentBody_btnChangerImage').click(function () {
+         $('#contentBody_fImage').click();
       });
       $('#contentBody_tbNbItems').focusout(function () {
          if ($('#contentBody_tbNbItems').val() == '') {

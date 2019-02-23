@@ -68,69 +68,69 @@
       if ($('#contentBody_hidConfirmationNouveauMotPasse').val() != '')
          $('#contentBody_tbConfirmationNouveauMotPasse').val($('#contentBody_hidConfirmationNouveauMotPasse').val());
       var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
-      $("#contentBody_tbMotPasseActuel").focusout(function () {
-         if ($("#contentBody_tbMotPasseActuel").val() == '') {
-            $("#contentBody_tbMotPasseActuel").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errMotPasseActuel").text('Vous n\'avez pas tapé votre mot de passe').removeClass('hidden');
+      $('#contentBody_tbMotPasseActuel').focusout(function () {
+         if ($('#contentBody_tbMotPasseActuel').val() == '') {
+            $('#contentBody_tbMotPasseActuel').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errMotPasseActuel').text('Vous n\'avez pas tapé votre mot de passe').removeClass('hidden');
          } else {
-            $("#contentBody_tbMotPasseActuel").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errMotPasseActuel").text('').addClass('hidden');
+            $('#contentBody_tbMotPasseActuel').removeClass('border-danger').addClass('border-success');
+            $('#contentBody_errMotPasseActuel').text('').addClass('hidden');
          }
       });
-      $("#contentBody_tbNouveauMotPasse").focusout(function () {
-         if ($("#contentBody_tbNouveauMotPasse").val() == '') {
-            $("#contentBody_tbNouveauMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errNouveauMotPasse").text('Le nouveau mot de passe ne peut pas être vide').removeClass('hidden');
-         } else if (!exprMotPasse.test($("#contentBody_tbNouveauMotPasse").val())) {
-            $("#contentBody_tbNouveauMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errNouveauMotPasse").text('Le nouveau mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('hidden');
+      $('#contentBody_tbNouveauMotPasse').focusout(function () {
+         if ($('#contentBody_tbNouveauMotPasse').val() == '') {
+            $('#contentBody_tbNouveauMotPasse').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errNouveauMotPasse').text('Le nouveau mot de passe ne peut pas être vide').removeClass('hidden');
+         } else if (!exprMotPasse.test($('#contentBody_tbNouveauMotPasse').val())) {
+            $('#contentBody_tbNouveauMotPasse').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errNouveauMotPasse').text('Le nouveau mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('hidden');
          } else {
-            $("#contentBody_tbNouveauMotPasse").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errNouveauMotPasse").text('').addClass('hidden');
-            if ($("#contentBody_tbConfirmationNouveauMotPasse").val() != '') {
-               if ($("#contentBody_tbConfirmationNouveauMotPasse").val() != $("#contentBody_tbNouveauMotPasse").val()) {
-                  $("#contentBody_tbConfirmationNouveauMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#contentBody_errConfirmationNouveauMotPasse").text('La confirmation du nouveau mot de passe ne correspond pas au mot de passe').removeClass('hidden');
+            $('#contentBody_tbNouveauMotPasse').removeClass('border-danger').addClass('border-success');
+            $('#contentBody_errNouveauMotPasse').text('').addClass('hidden');
+            if ($('#contentBody_tbConfirmationNouveauMotPasse').val() != '') {
+               if ($('#contentBody_tbConfirmationNouveauMotPasse').val() != $('#contentBody_tbNouveauMotPasse').val()) {
+                  $('#contentBody_tbConfirmationNouveauMotPasse').removeClass('border-success').addClass('border-danger');
+                  $('#contentBody_errConfirmationNouveauMotPasse').text('La confirmation du nouveau mot de passe ne correspond pas au mot de passe').removeClass('hidden');
                } else {
-                  $("#contentBody_tbConfirmationNouveauMotPasse").removeClass("border-danger").addClass("border-success");
-                  $("#contentBody_errConfirmationNouveauMotPasse").text('').addClass('hidden');
+                  $('#contentBody_tbConfirmationNouveauMotPasse').removeClass('border-danger').addClass('border-success');
+                  $('#contentBody_errConfirmationNouveauMotPasse').text('').addClass('hidden');
                }
             }
          }
       });
-      $("#contentBody_tbConfirmationNouveauMotPasse").focusout(function () {
-         if ($("#contentBody_tbConfirmationNouveauMotPasse").val() == '') {
-            $("#contentBody_tbConfirmationNouveauMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errConfirmationNouveauMotPasse").text('La confirmation du nouveau mot de passe ne peut pas être vide').removeClass('hidden');
-         } else if ($("#contentBody_tbConfirmationNouveauMotPasse").val() != $("#contentBody_tbNouveauMotPasse").val()) {
-            $("#contentBody_tbConfirmationNouveauMotPasse").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errConfirmationNouveauMotPasse").text('La confirmation du nouveau mot de passe ne correspond pas au mot de passe').removeClass('hidden');
+      $('#contentBody_tbConfirmationNouveauMotPasse').focusout(function () {
+         if ($('#contentBody_tbConfirmationNouveauMotPasse').val() == '') {
+            $('#contentBody_tbConfirmationNouveauMotPasse').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errConfirmationNouveauMotPasse').text('La confirmation du nouveau mot de passe ne peut pas être vide').removeClass('hidden');
+         } else if ($('#contentBody_tbConfirmationNouveauMotPasse').val() != $('#contentBody_tbNouveauMotPasse').val()) {
+            $('#contentBody_tbConfirmationNouveauMotPasse').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errConfirmationNouveauMotPasse').text('La confirmation du nouveau mot de passe ne correspond pas au mot de passe').removeClass('hidden');
          } else {
-            $("#contentBody_tbConfirmationNouveauMotPasse").removeClass("border-danger").addClass("border-success");
-            $("#contentBody_errConfirmationNouveauMotPasse").text('').addClass('hidden');
+            $('#contentBody_tbConfirmationNouveauMotPasse').removeClass('border-danger').addClass('border-success');
+            $('#contentBody_errConfirmationNouveauMotPasse').text('').addClass('hidden');
          }
       });
       $('#contentBody_btnModifierMotPasse').click(function () {
          var binPageValide = true;
-         if ($("#contentBody_tbMotPasseActuel").val() == '') {
-            $("#contentBody_tbMotPasseActuel").removeClass("border-success").addClass("border-danger");
-            $("#contentBody_errMotPasseActuel").text('Vous n\'avez pas tapé votre mot de passe').removeClass('hidden');
+         if ($('#contentBody_tbMotPasseActuel').val() == '') {
+            $('#contentBody_tbMotPasseActuel').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errMotPasseActuel').text('Vous n\'avez pas tapé votre mot de passe').removeClass('hidden');
             binPageValide = false;
          }
-         if ($("#contentBody_tbNouveauMotPasse").val() == '' || !exprMotPasse.test($("#contentBody_tbNouveauMotPasse").val())) {
-            $("#contentBody_tbNouveauMotPasse").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbNouveauMotPasse").val() == '')
-               $("#contentBody_errNouveauMotPasse").text('Le nouveau mot de passe ne peut pas être vide').removeClass('hidden');
+         if ($('#contentBody_tbNouveauMotPasse').val() == '' || !exprMotPasse.test($('#contentBody_tbNouveauMotPasse').val())) {
+            $('#contentBody_tbNouveauMotPasse').removeClass('border-success').addClass('border-danger');
+            if ($('#contentBody_tbNouveauMotPasse').val() == '')
+               $('#contentBody_errNouveauMotPasse').text('Le nouveau mot de passe ne peut pas être vide').removeClass('hidden');
             else
-               $("#contentBody_errNouveauMotPasse").text('Le nouveau mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('hidden');
+               $('#contentBody_errNouveauMotPasse').text('Le nouveau mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('hidden');
             binPageValide = false;
          }
-         if ($("#contentBody_tbConfirmationNouveauMotPasse").val() == '' || $("#contentBody_tbConfirmationNouveauMotPasse").val() != $("#contentBody_tbNouveauMotPasse").val()) {
-            $("#contentBody_tbConfirmationNouveauMotPasse").removeClass("border-success").addClass("border-danger");
-            if ($("#contentBody_tbConfirmationNouveauMotPasse").val() == '')
-               $("#contentBody_errConfirmationNouveauMotPasse").text('La confirmation du nouveau mot de passe ne peut pas être vide').removeClass('hidden');
+         if ($('#contentBody_tbConfirmationNouveauMotPasse').val() == '' || $('#contentBody_tbConfirmationNouveauMotPasse').val() != $('#contentBody_tbNouveauMotPasse').val()) {
+            $('#contentBody_tbConfirmationNouveauMotPasse').removeClass('border-success').addClass('border-danger');
+            if ($('#contentBody_tbConfirmationNouveauMotPasse').val() == '')
+               $('#contentBody_errConfirmationNouveauMotPasse').text('La confirmation du nouveau mot de passe ne peut pas être vide').removeClass('hidden');
             else
-               $("#contentBody_errConfirmationNouveauMotPasse").text('La confirmation du nouveau mot de passe ne correspond pas au mot de passe').removeClass('hidden');
+               $('#contentBody_errConfirmationNouveauMotPasse').text('La confirmation du nouveau mot de passe ne correspond pas au mot de passe').removeClass('hidden');
             binPageValide = false;
          }
          return binPageValide;

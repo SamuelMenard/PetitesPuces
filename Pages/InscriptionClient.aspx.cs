@@ -34,7 +34,7 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
             if (tbCourriel.Text == "")
                 errCourriel.Text = "Le courriel ne peut pas être vide";
             else
-                errCourriel.Text = "Le courriel n'est pas dans un format valide";
+                errCourriel.Text = "Le courriel n'est pas valide";
             errCourriel.CssClass = "text-danger";
         }
         else
@@ -49,7 +49,7 @@ public partial class Pages_InscriptionClient : System.Web.UI.Page
             if (tbConfirmationCourriel.Text == "")
                 errConfirmationCourriel.Text = "La confirmation du courriel ne peut pas être vide";
             else if (!exprCourriel.IsMatch(tbConfirmationCourriel.Text))
-                errConfirmationCourriel.Text = "La confirmation du courriel n'est pas dans un format valide";
+                errConfirmationCourriel.Text = "La confirmation du courriel n'est pas valide";
             else
                 errConfirmationCourriel.Text = "La confirmation du courriel ne correspond pas au courriel";
             errConfirmationCourriel.CssClass = "text-danger";

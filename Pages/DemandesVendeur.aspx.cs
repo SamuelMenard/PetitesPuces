@@ -15,7 +15,7 @@ public partial class Pages_DemandesVendeur : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Gérer les nouvelles demandes de vendeur";
+        Page.Title = "Demandes de vendeurs";
 
         Page.MaintainScrollPositionOnPostBack = true;
         getNotification();

@@ -5,7 +5,7 @@
 <head>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   <title>S'inscrire comme vendeur - Les Petites Puces</title>
+   <title>Inscription vendeur - Les Petites Puces</title>
 
    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
    <link rel="shortcut icon" type="image/x-icon" href="/static/images/logo.png" />
@@ -193,327 +193,327 @@
             var exprMotPasse = /(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)/;
             var exprPoids = /^\d+$/;
             var exprMontant = /^\d+(\.\d{2})?$/;
-            $("#tbNomEntreprise").focusout(function () {
-               if ($("#tbNomEntreprise").val() == '') {
-                  $("#tbNomEntreprise").removeClass("border-success").addClass("border-danger");
-                  $("#errNomEntreprise").text('Le nom de l\'entreprise ne peut pas être vide').removeClass('d-none');
-               } else if (!exprNomEntreprise.test($("#tbNomEntreprise").val())) {
-                  $("#tbNomEntreprise").removeClass("border-success").addClass("border-danger");
-                  $("#errNomEntreprise").text('Le nom de l\'entreprise n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbNomEntreprise').focusout(function () {
+               if ($('#tbNomEntreprise').val() == '') {
+                  $('#tbNomEntreprise').removeClass('border-success').addClass('border-danger');
+                  $('#errNomEntreprise').text('Le nom de l\'entreprise ne peut pas être vide').removeClass('d-none');
+               } else if (!exprNomEntreprise.test($('#tbNomEntreprise').val())) {
+                  $('#tbNomEntreprise').removeClass('border-success').addClass('border-danger');
+                  $('#errNomEntreprise').text('Le nom de l\'entreprise n\'est pas valide').removeClass('d-none');
                } else {
-                  $("#tbNomEntreprise").removeClass("border-danger").addClass("border-success");
-                  $("#errNomEntreprise").text('').addClass('d-none');
+                  $('#tbNomEntreprise').removeClass('border-danger').addClass('border-success');
+                  $('#errNomEntreprise').text('').addClass('d-none');
                }
             });
-            $("#tbNom").focusout(function () {
-               if ($("#tbNom").val() == '') {
-                  $("#tbNom").removeClass("border-success").addClass("border-danger");
-                  $("#errNom").text('Le nom ne peut pas être vide').removeClass('d-none');
-               } else if (!exprNomOuPrenom.test($("#tbNom").val())) {
-                  $("#tbNom").removeClass("border-success").addClass("border-danger");
-                  $("#errNom").text('Le nom n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbNom').focusout(function () {
+               if ($('#tbNom').val() == '') {
+                  $('#tbNom').removeClass('border-success').addClass('border-danger');
+                  $('#errNom').text('Le nom ne peut pas être vide').removeClass('d-none');
+               } else if (!exprNomOuPrenom.test($('#tbNom').val())) {
+                  $('#tbNom').removeClass('border-success').addClass('border-danger');
+                  $('#errNom').text('Le nom n\'est pas valide').removeClass('d-none');
                } else {
-                  $("#tbNom").removeClass("border-danger").addClass("border-success");
-                  $("#errNom").text('').addClass('d-none');
+                  $('#tbNom').removeClass('border-danger').addClass('border-success');
+                  $('#errNom').text('').addClass('d-none');
                }
             });
-            $("#tbPrenom").focusout(function () {
-               if ($("#tbPrenom").val() == '') {
-                  $("#tbPrenom").removeClass("border-success").addClass("border-danger");
-                  $("#errPrenom").text('Le prénom ne peut pas être vide').removeClass('d-none');
-               } else if (!exprNomOuPrenom.test($("#tbPrenom").val())) {
-                  $("#tbPrenom").removeClass("border-success").addClass("border-danger");
-                  $("#errPrenom").text('Le prénom n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbPrenom').focusout(function () {
+               if ($('#tbPrenom').val() == '') {
+                  $('#tbPrenom').removeClass('border-success').addClass('border-danger');
+                  $('#errPrenom').text('Le prénom ne peut pas être vide').removeClass('d-none');
+               } else if (!exprNomOuPrenom.test($('#tbPrenom').val())) {
+                  $('#tbPrenom').removeClass('border-success').addClass('border-danger');
+                  $('#errPrenom').text('Le prénom n\'est pas valide').removeClass('d-none');
                } else {
-                  $("#tbPrenom").removeClass("border-danger").addClass("border-success");
-                  $("#errPrenom").text('').addClass('d-none');
+                  $('#tbPrenom').removeClass('border-danger').addClass('border-success');
+                  $('#errPrenom').text('').addClass('d-none');
                }
             });
-            $("#tbAdresse").focusout(function () {
-               if ($("#tbAdresse").val() == '') {
-                  $("#tbAdresse").removeClass("border-success").addClass("border-danger");
-                  $("#errAdresse").text('L\'adresse ne peut pas être vide').removeClass('d-none');
-               } else if (!exprAdresse.test($("#tbAdresse").val())) {
-                  $("#tbAdresse").removeClass("border-success").addClass("border-danger");
-                  $("#errAdresse").text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041').removeClass('d-none');
+            $('#tbAdresse').focusout(function () {
+               if ($('#tbAdresse').val() == '') {
+                  $('#tbAdresse').removeClass('border-success').addClass('border-danger');
+                  $('#errAdresse').text('L\'adresse ne peut pas être vide').removeClass('d-none');
+               } else if (!exprAdresse.test($('#tbAdresse').val())) {
+                  $('#tbAdresse').removeClass('border-success').addClass('border-danger');
+                  $('#errAdresse').text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041').removeClass('d-none');
                } else {
-                  $("#tbAdresse").removeClass("border-danger").addClass("border-success");
-                  $("#errAdresse").text('').addClass('d-none');
+                  $('#tbAdresse').removeClass('border-danger').addClass('border-success');
+                  $('#errAdresse').text('').addClass('d-none');
                }
             });
-            $("#tbVille").focusout(function () {
-               if ($("#tbVille").val() == '') {
-                  $("#tbVille").removeClass("border-success").addClass("border-danger");
-                  $("#errVille").text('La ville ne peut pas être vide').removeClass('d-none');
-               } else if (!exprNomOuPrenom.test($("#tbVille").val())) {
-                  $("#tbVille").removeClass("border-success").addClass("border-danger");
-                  $("#errVille").text('La ville n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbVille').focusout(function () {
+               if ($('#tbVille').val() == '') {
+                  $('#tbVille').removeClass('border-success').addClass('border-danger');
+                  $('#errVille').text('La ville ne peut pas être vide').removeClass('d-none');
+               } else if (!exprNomOuPrenom.test($('#tbVille').val())) {
+                  $('#tbVille').removeClass('border-success').addClass('border-danger');
+                  $('#errVille').text('La ville n\'est pas valide').removeClass('d-none');
                } else {
-                  $("#tbVille").removeClass("border-danger").addClass("border-success");
-                  $("#errVille").text('').addClass('d-none');
+                  $('#tbVille').removeClass('border-danger').addClass('border-success');
+                  $('#errVille').text('').addClass('d-none');
                }
             });
-            $("#ddlProvince").focusout(function () {
-               if ($("#ddlProvince").val() == '') {
-                  $("#ddlProvince").removeClass("border-success").addClass("border-danger");
-                  $("#errProvince").text('Vous devez sélectionner une province').removeClass('d-none');
+            $('#ddlProvince').focusout(function () {
+               if ($('#ddlProvince').val() == '') {
+                  $('#ddlProvince').removeClass('border-success').addClass('border-danger');
+                  $('#errProvince').text('Vous devez sélectionner une province').removeClass('d-none');
                } else {
-                  $("#ddlProvince").removeClass("border-danger").addClass("border-success");
-                  $("#errProvince").text('').addClass('d-none');
+                  $('#ddlProvince').removeClass('border-danger').addClass('border-success');
+                  $('#errProvince').text('').addClass('d-none');
                }
             });
-            $("#tbCodePostal").focusout(function () {
-               if ($("#tbCodePostal").val() == '') {
-                  $("#tbCodePostal").removeClass("border-success").addClass("border-danger");
-                  $("#errCodePostal").text('Le code postal ne peut pas être vide').removeClass('d-none');
-               } else if (!exprCodePostal.test($("#tbCodePostal").val())) {
-                  $("#tbCodePostal").removeClass("border-success").addClass("border-danger");
-                  $("#errCodePostal").text('Le code postal n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbCodePostal').focusout(function () {
+               if ($('#tbCodePostal').val() == '') {
+                  $('#tbCodePostal').removeClass('border-success').addClass('border-danger');
+                  $('#errCodePostal').text('Le code postal ne peut pas être vide').removeClass('d-none');
+               } else if (!exprCodePostal.test($('#tbCodePostal').val())) {
+                  $('#tbCodePostal').removeClass('border-success').addClass('border-danger');
+                  $('#errCodePostal').text('Le code postal n\'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9').removeClass('d-none');
                } else {
-                  $("#tbCodePostal").removeClass("border-danger").addClass("border-success");
-                  $("#errCodePostal").text('').addClass('d-none');
+                  $('#tbCodePostal').removeClass('border-danger').addClass('border-success');
+                  $('#errCodePostal').text('').addClass('d-none');
                }
             });
-            $("#tbTelephone1").focusout(function () {
-               if ($("#tbTelephone1").val() == '') {
-                  $("#tbTelephone1").removeClass("border-success").addClass("border-danger");
-                  $("#errTelephone1").text('Le téléphone 1 ne peut pas être vide').removeClass('d-none');
-               } else if (!exprTelephone.test($("#tbTelephone1").val())) {
-                  $("#tbTelephone1").removeClass("border-success").addClass("border-danger");
-                  $("#errTelephone1").text('Le téléphone 1 n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbTelephone1').focusout(function () {
+               if ($('#tbTelephone1').val() == '') {
+                  $('#tbTelephone1').removeClass('border-success').addClass('border-danger');
+                  $('#errTelephone1').text('Le téléphone 1 ne peut pas être vide').removeClass('d-none');
+               } else if (!exprTelephone.test($('#tbTelephone1').val())) {
+                  $('#tbTelephone1').removeClass('border-success').addClass('border-danger');
+                  $('#errTelephone1').text('Le téléphone 1 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('d-none');
                } else {
-                  $("#tbTelephone1").removeClass("border-danger").addClass("border-success");
-                  $("#errTelephone1").text('').addClass('d-none');
+                  $('#tbTelephone1').removeClass('border-danger').addClass('border-success');
+                  $('#errTelephone1').text('').addClass('d-none');
                }
             });
-            $("#tbTelephone2").focusout(function () {
-               if ($("#tbTelephone2").val() != '' && !exprTelephone.test($("#tbTelephone2").val())) {
-                  $("#tbTelephone2").removeClass("border-success").addClass("border-danger");
-                  $("#errTelephone2").text('Le téléphone 2 n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbTelephone2').focusout(function () {
+               if ($('#tbTelephone2').val() != '' && !exprTelephone.test($('#tbTelephone2').val())) {
+                  $('#tbTelephone2').removeClass('border-success').addClass('border-danger');
+                  $('#errTelephone2').text('Le téléphone 2 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('d-none');
                } else {
-                  $("#tbTelephone2").removeClass("border-danger").addClass("border-success");
-                  $("#errTelephone2").text('').addClass('d-none');
+                  $('#tbTelephone2').removeClass('border-danger').addClass('border-success');
+                  $('#errTelephone2').text('').addClass('d-none');
                }
             });
-            $("#tbCourriel").focusout(function () {
-               if ($("#tbCourriel").val() == '') {
-                  $("#tbCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errCourriel").text('Le courriel ne peut pas être vide').removeClass('d-none');
-               } else if (!exprCourriel.test($("#tbCourriel").val())) {
-                  $("#tbCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errCourriel").text('Le courriel n\'est pas dans un format valide').removeClass('d-none');
+            $('#tbCourriel').focusout(function () {
+               if ($('#tbCourriel').val() == '') {
+                  $('#tbCourriel').removeClass('border-success').addClass('border-danger');
+                  $('#errCourriel').text('Le courriel ne peut pas être vide').removeClass('d-none');
+               } else if (!exprCourriel.test($('#tbCourriel').val())) {
+                  $('#tbCourriel').removeClass('border-success').addClass('border-danger');
+                  $('#errCourriel').text('Le courriel n\'est pas valide').removeClass('d-none');
                } else {
-                  $("#tbCourriel").removeClass("border-danger").addClass("border-success");
-                  $("#errCourriel").text('').addClass('d-none');
-                  if ($("#tbConfirmationCourriel").val() != '' && exprCourriel.test($("#tbConfirmationCourriel").val())) {
-                     if ($("#tbConfirmationCourriel").val() != $("#tbCourriel").val()) {
-                        $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                        $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');
+                  $('#tbCourriel').removeClass('border-danger').addClass('border-success');
+                  $('#errCourriel').text('').addClass('d-none');
+                  if ($('#tbConfirmationCourriel').val() != '' && exprCourriel.test($('#tbConfirmationCourriel').val())) {
+                     if ($('#tbConfirmationCourriel').val() != $('#tbCourriel').val()) {
+                        $('#tbConfirmationCourriel').removeClass('border-success').addClass('border-danger');
+                        $('#errConfirmationCourriel').text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');
                      } else {
-                        $("#tbConfirmationCourriel").removeClass("border-danger").addClass("border-success");
-                        $("#errConfirmationCourriel").text('').addClass('d-none');
+                        $('#tbConfirmationCourriel').removeClass('border-danger').addClass('border-success');
+                        $('#errConfirmationCourriel').text('').addClass('d-none');
                      }
                   }
                }
             });
-            $("#tbConfirmationCourriel").focusout(function () {
-               if ($("#tbConfirmationCourriel").val() == '') {
-                  $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').removeClass('d-none');
-               } else if (!exprCourriel.test($("#tbConfirmationCourriel").val())) {
-                  $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').removeClass('d-none');
-               } else if ($("#tbConfirmationCourriel").val() != $("#tbCourriel").val()) {
-                  $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');
+            $('#tbConfirmationCourriel').focusout(function () {
+               if ($('#tbConfirmationCourriel').val() == '') {
+                  $('#tbConfirmationCourriel').removeClass('border-success').addClass('border-danger');
+                  $('#errConfirmationCourriel').text('La confirmation du courriel ne peut pas être vide').removeClass('d-none');
+               } else if (!exprCourriel.test($('#tbConfirmationCourriel').val())) {
+                  $('#tbConfirmationCourriel').removeClass('border-success').addClass('border-danger');
+                  $('#errConfirmationCourriel').text('La confirmation du courriel n\'est pas valide').removeClass('d-none');
+               } else if ($('#tbConfirmationCourriel').val() != $('#tbCourriel').val()) {
+                  $('#tbConfirmationCourriel').removeClass('border-success').addClass('border-danger');
+                  $('#errConfirmationCourriel').text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');
                } else {
-                  $("#tbConfirmationCourriel").removeClass("border-danger").addClass("border-success");
-                  $("#errConfirmationCourriel").text('').addClass('d-none');
+                  $('#tbConfirmationCourriel').removeClass('border-danger').addClass('border-success');
+                  $('#errConfirmationCourriel').text('').addClass('d-none');
                }
             });
-            $("#tbMotPasse").focusout(function () {
-               if ($("#tbMotPasse").val() == '') {
-                  $("#tbMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errMotPasse").text('Le mot de passe ne peut pas être vide').removeClass('d-none');
-               } else if (!exprMotPasse.test($("#tbMotPasse").val())) {
-                  $("#tbMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('d-none');
+            $('#tbMotPasse').focusout(function () {
+               if ($('#tbMotPasse').val() == '') {
+                  $('#tbMotPasse').removeClass('border-success').addClass('border-danger');
+                  $('#errMotPasse').text('Le mot de passe ne peut pas être vide').removeClass('d-none');
+               } else if (!exprMotPasse.test($('#tbMotPasse').val())) {
+                  $('#tbMotPasse').removeClass('border-success').addClass('border-danger');
+                  $('#errMotPasse').text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('d-none');
                } else {
-                  $("#tbMotPasse").removeClass("border-danger").addClass("border-success");
-                  $("#errMotPasse").text('').addClass('d-none');
-                  if ($("#tbConfirmationMotPasse").val() != '') {
-                     if ($("#tbConfirmationMotPasse").val() != $("#tbMotPasse").val()) {
-                        $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                        $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
+                  $('#tbMotPasse').removeClass('border-danger').addClass('border-success');
+                  $('#errMotPasse').text('').addClass('d-none');
+                  if ($('#tbConfirmationMotPasse').val() != '') {
+                     if ($('#tbConfirmationMotPasse').val() != $('#tbMotPasse').val()) {
+                        $('#tbConfirmationMotPasse').removeClass('border-success').addClass('border-danger');
+                        $('#errConfirmationMotPasse').text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                      } else {
-                        $("#tbConfirmationMotPasse").removeClass("border-danger").addClass("border-success");
-                        $("#errConfirmationMotPasse").text('').addClass('d-none');
+                        $('#tbConfirmationMotPasse').removeClass('border-danger').addClass('border-success');
+                        $('#errConfirmationMotPasse').text('').addClass('d-none');
                      }
                   }
                }
             });
-            $("#tbConfirmationMotPasse").focusout(function () {
-               if ($("#tbConfirmationMotPasse").val() == '') {
-                  $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').removeClass('d-none');
-               } else if ($("#tbConfirmationMotPasse").val() != $("#tbMotPasse").val()) {
-                  $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                  $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
+            $('#tbConfirmationMotPasse').focusout(function () {
+               if ($('#tbConfirmationMotPasse').val() == '') {
+                  $('#tbConfirmationMotPasse').removeClass('border-success').addClass('border-danger');
+                  $('#errConfirmationMotPasse').text('La confirmation du mot de passe ne peut pas être vide').removeClass('d-none');
+               } else if ($('#tbConfirmationMotPasse').val() != $('#tbMotPasse').val()) {
+                  $('#tbConfirmationMotPasse').removeClass('border-success').addClass('border-danger');
+                  $('#errConfirmationMotPasse').text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                } else {
-                  $("#tbConfirmationMotPasse").removeClass("border-danger").addClass("border-success");
-                  $("#errConfirmationMotPasse").text('').addClass('d-none');
+                  $('#tbConfirmationMotPasse').removeClass('border-danger').addClass('border-success');
+                  $('#errConfirmationMotPasse').text('').addClass('d-none');
                }
             });
-            $("#tbPoidsMaxLivraison").focusout(function () {
-               if ($("#tbPoidsMaxLivraison").val() == '') {
-                  $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-                  $("#errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('d-none');
-               } else if (!exprPoids.test($("#tbPoidsMaxLivraison").val())) {
-                  $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-                  $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier positif').removeClass('d-none');
+            $('#tbPoidsMaxLivraison').focusout(function () {
+               if ($('#tbPoidsMaxLivraison').val() == '') {
+                  $('#tbPoidsMaxLivraison').removeClass('border-success').addClass('border-danger');
+                  $('#errPoidsMaxLivraison').text('Le poids de livraison maximum ne peut pas être vide').removeClass('d-none');
+               } else if (!exprPoids.test($('#tbPoidsMaxLivraison').val())) {
+                  $('#tbPoidsMaxLivraison').removeClass('border-success').addClass('border-danger');
+                  $('#errPoidsMaxLivraison').text('Le poids de livraison maximum doit être un entier positif').removeClass('d-none');
                } else if ($('#tbPoidsMaxLivraison').val() > 2147483647) {
-                  $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-                  $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('d-none');
+                  $('#tbPoidsMaxLivraison').removeClass('border-success').addClass('border-danger');
+                  $('#errPoidsMaxLivraison').text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('d-none');
                } else {
-                  $("#tbPoidsMaxLivraison").removeClass("border-danger").addClass("border-success");
-                  $("#errPoidsMaxLivraison").text('').addClass('d-none');
+                  $('#tbPoidsMaxLivraison').removeClass('border-danger').addClass('border-success');
+                  $('#errPoidsMaxLivraison').text('').addClass('d-none');
                }
             });
-            $("#tbLivraisonGratuite").focusout(function () {
-               if ($("#tbLivraisonGratuite").val() == '') {
-                  $("#tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-                  $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('d-none');
-               } else if (!exprMontant.test($("#tbLivraisonGratuite").val())) {
-                  $("#tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-                  $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('d-none');
-               } else if ($("#tbLivraisonGratuite").val() > 214748.36) {
-                  $("#tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-                  $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('d-none');
+            $('#tbLivraisonGratuite').focusout(function () {
+               if ($('#tbLivraisonGratuite').val() == '') {
+                  $('#tbLivraisonGratuite').removeClass('border-success').addClass('border-danger');
+                  $('#errLivraisonGratuite').text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('d-none');
+               } else if (!exprMontant.test($('#tbLivraisonGratuite').val())) {
+                  $('#tbLivraisonGratuite').removeClass('border-success').addClass('border-danger');
+                  $('#errLivraisonGratuite').text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('d-none');
+               } else if ($('#tbLivraisonGratuite').val() > 214748.36) {
+                  $('#tbLivraisonGratuite').removeClass('border-success').addClass('border-danger');
+                  $('#errLivraisonGratuite').text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('d-none');
                } else {
-                  $("#tbLivraisonGratuite").removeClass("border-danger").addClass("border-success");
-                  $("#errLivraisonGratuite").text('').addClass('d-none');
+                  $('#tbLivraisonGratuite').removeClass('border-danger').addClass('border-success');
+                  $('#errLivraisonGratuite').text('').addClass('d-none');
                }
             });
-            $("#btnEnvoyerDemande").click(function () {
+            $('#btnEnvoyerDemande').click(function () {
                var binPageValide = true;
-               if ($("#tbNomEntreprise").val() == '' || !exprNomEntreprise.test($("#tbNomEntreprise").val())) {
-                  $("#tbNomEntreprise").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbNomEntreprise").val() == '')
-                     $("#errNomEntreprise").text('Le nom de l\'entreprise ne peut pas être vide').removeClass('d-none');
+               if ($('#tbNomEntreprise').val() == '' || !exprNomEntreprise.test($('#tbNomEntreprise').val())) {
+                  $('#tbNomEntreprise').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbNomEntreprise').val() == '')
+                     $('#errNomEntreprise').text('Le nom de l\'entreprise ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errNomEntreprise").text('Le nom de l\'entreprise n\'est pas dans un format valide').removeClass('d-none');
+                     $('#errNomEntreprise').text('Le nom de l\'entreprise n\'est pas valide').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbNom").val() == '' || !exprNomOuPrenom.test($("#tbNom").val())) {
-                  $("#tbNom").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbNom").val() == '')
-                     $("#errNom").text('Le nom ne peut pas être vide').removeClass('d-none');
+               if ($('#tbNom').val() == '' || !exprNomOuPrenom.test($('#tbNom').val())) {
+                  $('#tbNom').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbNom').val() == '')
+                     $('#errNom').text('Le nom ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errNom").text('Le nom n\'est pas dans un format valide').removeClass('d-none');
+                     $('#errNom').text('Le nom n\'est pas valide').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbPrenom").val() == '' || !exprNomOuPrenom.test($("#tbPrenom").val())) {
-                  $("#tbPrenom").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbPrenom").val() == '')
-                     $("#errPrenom").text('Le prénom ne peut pas être vide').removeClass('d-none');
+               if ($('#tbPrenom').val() == '' || !exprNomOuPrenom.test($('#tbPrenom').val())) {
+                  $('#tbPrenom').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbPrenom').val() == '')
+                     $('#errPrenom').text('Le prénom ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errPrenom").text('Le prénom n\'est pas dans un format valide').removeClass('d-none');
+                     $('#errPrenom').text('Le prénom n\'est pas valide').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbAdresse").val() == '' || !exprAdresse.test($("#tbAdresse").val())) {
-                  $("#tbAdresse").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbAdresse").val() == '')
-                     $("#errAdresse").text('L\'adresse ne peut pas être vide').removeClass('d-none');
+               if ($('#tbAdresse').val() == '' || !exprAdresse.test($('#tbAdresse').val())) {
+                  $('#tbAdresse').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbAdresse').val() == '')
+                     $('#errAdresse').text('L\'adresse ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errAdresse").text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041').removeClass('d-none');
+                     $('#errAdresse').text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbVille").val() == '' || !exprNomOuPrenom.test($("#tbVille").val())) {
-                  $("#tbVille").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbVille").val() == '')
-                     $("#errVille").text('La ville ne peut pas être vide').removeClass('d-none');
+               if ($('#tbVille').val() == '' || !exprNomOuPrenom.test($('#tbVille').val())) {
+                  $('#tbVille').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbVille').val() == '')
+                     $('#errVille').text('La ville ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errVille").text('La ville n\'est pas dans un format valide').removeClass('d-none');
+                     $('#errVille').text('La ville n\'est pas valide').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#ddlProvince").val() == '') {
-                  $("#ddlProvince").removeClass("border-success").addClass("border-danger");
-                  $("#errProvince").text('Vous devez sélectionner une province').removeClass('d-none');
+               if ($('#ddlProvince').val() == '') {
+                  $('#ddlProvince').removeClass('border-success').addClass('border-danger');
+                  $('#errProvince').text('Vous devez sélectionner une province').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbCodePostal").val() == '' || !exprCodePostal.test($("#tbCodePostal").val())) {
-                  $("#tbCodePostal").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbCodePostal").val() == '')
-                     $("#errCodePostal").text('Le code postal ne peut pas être vide').removeClass('d-none');
+               if ($('#tbCodePostal').val() == '' || !exprCodePostal.test($('#tbCodePostal').val())) {
+                  $('#tbCodePostal').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbCodePostal').val() == '')
+                     $('#errCodePostal').text('Le code postal ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errCodePostal").text('Le code postal n\'est pas dans un format valide').removeClass('d-none');
+                     $('#errCodePostal').text('Le code postal n\'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbTelephone1").val() == '' || !exprTelephone.test($("#tbTelephone1").val())) {
-                  $("#tbTelephone1").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbTelephone1").val() == '')
-                     $("#errTelephone1").text('Le téléphone 1 ne peut pas être vide').removeClass('d-none');
+               if ($('#tbTelephone1').val() == '' || !exprTelephone.test($('#tbTelephone1').val())) {
+                  $('#tbTelephone1').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbTelephone1').val() == '')
+                     $('#errTelephone1').text('Le téléphone 1 ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errTelephone1").text('Le téléphone 1 n\'est pas dans un format valide').removeClass('d-none');
+                     $('#errTelephone1').text('Le téléphone 1 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbTelephone2").val() != '' && !exprTelephone.test($("#tbTelephone2").val())) {
-                  $("#tbTelephone2").removeClass("border-success").addClass("border-danger");
-                  $("#errTelephone2").text('Le téléphone 2 n\'est pas dans un format valide').removeClass('d-none');
+               if ($('#tbTelephone2').val() != '' && !exprTelephone.test($('#tbTelephone2').val())) {
+                  $('#tbTelephone2').removeClass('border-success').addClass('border-danger');
+                  $('#errTelephone2').text('Le téléphone 2 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbCourriel").val() == '' || !exprCourriel.test($("#tbCourriel").val())) {
-                  $("#tbCourriel").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbCourriel").val() == '')
-                     $("#errCourriel").text('Le courriel ne peut pas être vide').removeClass('d-none');
+               if ($('#tbCourriel').val() == '' || !exprCourriel.test($('#tbCourriel').val())) {
+                  $('#tbCourriel').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbCourriel').val() == '')
+                     $('#errCourriel').text('Le courriel ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errCourriel").text('Le courriel n\'est pas dans un format valide').removeClass('d-none');
+                     $('#errCourriel').text('Le courriel n\'est pas valide').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbConfirmationCourriel").val() == '' || !exprCourriel.test($("#tbConfirmationCourriel").val()) || $("#tbConfirmationCourriel").val() != $("#tbCourriel").val()) {
-                  $("#tbConfirmationCourriel").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbConfirmationCourriel").val() == '')
-                     $("#errConfirmationCourriel").text('La confirmation du courriel ne peut pas être vide').removeClass('d-none');
-                  else if (!exprCourriel.test($("#tbConfirmationCourriel").val()))
-                     $("#errConfirmationCourriel").text('La confirmation du courriel n\'est pas dans un format valide').removeClass('d-none');
+               if ($('#tbConfirmationCourriel').val() == '' || !exprCourriel.test($('#tbConfirmationCourriel').val()) || $('#tbConfirmationCourriel').val() != $('#tbCourriel').val()) {
+                  $('#tbConfirmationCourriel').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbConfirmationCourriel').val() == '')
+                     $('#errConfirmationCourriel').text('La confirmation du courriel ne peut pas être vide').removeClass('d-none');
+                  else if (!exprCourriel.test($('#tbConfirmationCourriel').val()))
+                     $('#errConfirmationCourriel').text('La confirmation du courriel n\'est pas valide').removeClass('d-none');
                   else
-                     $("#errConfirmationCourriel").text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');                                   
+                     $('#errConfirmationCourriel').text('La confirmation du courriel ne correspond pas au courriel').removeClass('d-none');                                   
                   binPageValide = false;
                }
-               if ($("#tbMotPasse").val() == '' || !exprMotPasse.test($("#tbMotPasse").val())) {
-                  $("#tbMotPasse").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbMotPasse").val() == '')
-                     $("#errMotPasse").text('Le mot de passe ne peut pas être vide').removeClass('d-none');
+               if ($('#tbMotPasse').val() == '' || !exprMotPasse.test($('#tbMotPasse').val())) {
+                  $('#tbMotPasse').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbMotPasse').val() == '')
+                     $('#errMotPasse').text('Le mot de passe ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errMotPasse").text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('d-none');
+                     $('#errMotPasse').text('Le mot de passe doit contenir au moins 8 charactères dont une lettre minuscule, une lettre majuscule et un chiffre').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbConfirmationMotPasse").val() == '' || $("#tbConfirmationMotPasse").val() != $("#tbMotPasse").val()) {
-                  $("#tbConfirmationMotPasse").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbConfirmationMotPasse").val() == '')
-                     $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne peut pas être vide').removeClass('d-none');
+               if ($('#tbConfirmationMotPasse').val() == '' || $('#tbConfirmationMotPasse').val() != $('#tbMotPasse').val()) {
+                  $('#tbConfirmationMotPasse').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbConfirmationMotPasse').val() == '')
+                     $('#errConfirmationMotPasse').text('La confirmation du mot de passe ne peut pas être vide').removeClass('d-none');
                   else
-                     $("#errConfirmationMotPasse").text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
+                     $('#errConfirmationMotPasse').text('La confirmation du mot de passe ne correspond pas au mot de passe').removeClass('d-none');
                   binPageValide = false;
                }
-               if ($("#tbPoidsMaxLivraison").val() == '' || !exprPoids.test($("#tbPoidsMaxLivraison").val()) || $('#tbPoidsMaxLivraison').val() > 2147483647) {
-                  $("#tbPoidsMaxLivraison").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbPoidsMaxLivraison").val() == '')
-                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum ne peut pas être vide').removeClass('d-none');
-                  else if (!exprPoids.test($("#tbPoidsMaxLivraison").val()))
-                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être un entier positif').removeClass('d-none');
+               if ($('#tbPoidsMaxLivraison').val() == '' || !exprPoids.test($('#tbPoidsMaxLivraison').val()) || $('#tbPoidsMaxLivraison').val() > 2147483647) {
+                  $('#tbPoidsMaxLivraison').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbPoidsMaxLivraison').val() == '')
+                     $('#errPoidsMaxLivraison').text('Le poids de livraison maximum ne peut pas être vide').removeClass('d-none');
+                  else if (!exprPoids.test($('#tbPoidsMaxLivraison').val()))
+                     $('#errPoidsMaxLivraison').text('Le poids de livraison maximum doit être un entier positif').removeClass('d-none');
                   else
-                     $("#errPoidsMaxLivraison").text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('d-none');    
+                     $('#errPoidsMaxLivraison').text('Le poids de livraison maximum doit être inférieur à 2 147 483 647 lbs').removeClass('d-none');    
                   binPageValide = false;
                }
-               if ($("#tbLivraisonGratuite").val() == '' || !exprMontant.test($("#tbLivraisonGratuite").val()) || $("#tbLivraisonGratuite").val() > 214748.36) {
-                  $("#tbLivraisonGratuite").removeClass("border-success").addClass("border-danger");
-                  if ($("#tbLivraisonGratuite").val() == '')
-                     $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('d-none');
-                  else if (!exprMontant.test($("#tbLivraisonGratuite").val()))
-                     $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('d-none');
+               if ($('#tbLivraisonGratuite').val() == '' || !exprMontant.test($('#tbLivraisonGratuite').val()) || $('#tbLivraisonGratuite').val() > 214748.36) {
+                  $('#tbLivraisonGratuite').removeClass('border-success').addClass('border-danger');
+                  if ($('#tbLivraisonGratuite').val() == '')
+                     $('#errLivraisonGratuite').text('Le montant pour avoir la livraison gratuite ne peut pas être vide').removeClass('d-none');
+                  else if (!exprMontant.test($('#tbLivraisonGratuite').val()))
+                     $('#errLivraisonGratuite').text('Le montant pour avoir la livraison gratuite doit être un nombre positif').removeClass('d-none');
                   else
-                     $("#errLivraisonGratuite").text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('d-none');
+                     $('#errLivraisonGratuite').text('Le montant pour avoir la livraison gratuite doit être inférieur à 214 748,37 $').removeClass('d-none');
                   binPageValide = false;
                }
                return binPageValide;

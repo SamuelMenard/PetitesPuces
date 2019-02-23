@@ -21,7 +21,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     {
         verifierPermissions("V");
 
-        Page.Title = "Accueil";
+        Page.Title = "Page d'accueil";
 
         if (Session["NoVendeur"] != null)
             noVendeur = Convert.ToInt32((Session["NoVendeur"]));

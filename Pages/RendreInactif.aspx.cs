@@ -14,7 +14,7 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Rendre inactif un client ou un vendeur";
+        Page.Title = "Désactiver un compte client ou vendeur";
 
         getTypeUtilisateur();
 

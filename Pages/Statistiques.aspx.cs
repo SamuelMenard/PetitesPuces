@@ -69,7 +69,7 @@ public partial class Pages_Statistiques : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Visualiser les statistiques";
+        Page.Title = "Visualisation des statistiques";
 
         getNoVendeur();
         getNoClient();

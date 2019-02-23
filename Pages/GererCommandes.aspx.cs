@@ -23,7 +23,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
     {
         verifierPermissions("V");
 
-        Page.Title = "Gérer commandes";
+        Page.Title = "Gestion des commandes";
 
         Page.MaintainScrollPositionOnPostBack = true;        
         if(Session["NoVendeur"] != null)

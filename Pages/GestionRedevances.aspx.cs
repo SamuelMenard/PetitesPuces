@@ -21,7 +21,7 @@ public partial class Pages_GestionRedevances : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Gestion des redevances";
+        Page.Title = "Gestion des redevances des vendeurs";
 
         getEtape();
         
