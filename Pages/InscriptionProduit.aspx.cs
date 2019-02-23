@@ -77,6 +77,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                                                                         .Remove(produit.PrixVente.ToString().IndexOf(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator) + 3)
                                                                         .Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
                                     tbDateVente.Text = produit.DateVente.Value.ToShortDateString();
+                                    divDateVente.CssClass = "form-group";
                                 }
                                 tbPoids.Text = produit.Poids.ToString().Replace(System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator, ".");
                                 if (!(bool)produit.Disponibilité)
@@ -89,6 +90,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
                                 if (operation == "Afficher" || operation == "Supprimer")
                                 {
+                                    
                                     ddlCategorie.Enabled = false;
                                     errCategorie.Visible = false;
                                     tbNom.Enabled = false;
@@ -97,19 +99,42 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                                     errPrixDemande.Visible = false;
                                     tbDescription.Enabled = false;
                                     errDescription.Visible = false;
+                                    lblImage.Visible = true;
                                     fImage.Visible = false;
                                     errImage.Visible = false;
                                     btnSelectionnerImage.Visible = false;
                                     btnTeleverserImage.Visible = false;
                                     tbNbItems.Enabled = false;
                                     errNbItems.Visible = false;
-                                    tbPrixVente.Enabled = false;
-                                    errPrixVente.Visible = false;
-                                    tbDateVente.Enabled = false;
-                                    errDateVente.Visible = false;
+                                    if (produit.PrixVente != null)
+                                    {
+                                        tbPrixVente.Enabled = false;
+                                        errPrixVente.Visible = false;
+                                        tbDateVente.Enabled = false;
+                                        errDateVente.Visible = false;
+                                    }
+                                    else
+                                    {
+                                        divNbItems.CssClass = "form-group col-sm-12";
+                                        divPrixVente.Visible = false;
+                                        divDateVente.Visible = false;
+                                    }
                                     tbPoids.Enabled = false;
                                     errPoids.Visible = false;
                                 }
+
+                                lblCategorie.Visible = true;
+                                lblNom.Visible = true;
+                                lblPrixDemande.Visible = true;
+                                lblDescription.Visible = true;
+                                divDateCreation.Visible = true;
+                                lblNbItems.Visible = true;
+                                lblPrixVente.Visible = true;
+                                if (produit.PrixVente != null)
+                                    lblDateVente.InnerText = "Date d’expiration du prix de vente";
+                                lblPoids.Visible = true;
+                                lblDisponibilite.Visible = true;
+                                lblDisponibiliteAjout.Visible = false;
 
                                 if (operation == "Afficher")
                                 {
@@ -134,8 +159,6 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                                         btnSupprimer.OnClientClick = "if (!confirm('Voulez-vous vraiment supprimer ce produit?')) { return false; }";
                                     btnSupprimer.Visible = true;
                                 }
-
-                                tbDateCreation.Visible = true;
                             }
                             else
                             {
@@ -250,7 +273,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             if (tbNom.Text == "")
                 errNom.Text = "Le nom ne peut pas être vide";
             else
-                errNom.Text = "Le nom n'est pas dans un format valide";
+                errNom.Text = "Le nom n'est pas valide";
             errNom.CssClass = "text-danger";
         }
         else
@@ -282,7 +305,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             if (tbDescription.Text == "")
                 errDescription.Text = "La description ne peut pas être vide";
             else
-                errDescription.Text = "La description n'est pas dans un format valide";
+                errDescription.Text = "La description n'est pas valide";
             errDescription.CssClass = "text-danger";
         }
         else
@@ -580,7 +603,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                 lblMessage.Text = "Le produit n'a pas pu être créé. Réessayez ultérieurement.";
                 divMessage.CssClass = "alert alert-danger alert-margins";
             }
-
+            
             foreach (Control controle in Page.Form.Controls)
                 if (controle.HasControls())
                     foreach (Control controleEnfant in controle.Controls)
@@ -592,8 +615,12 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                     if (controle is TextBox)
                         ((TextBox)controle).Text = "";
                     else if (controle is DropDownList)
-                        ((DropDownList)controle).ClearSelection();
+                        ((DropDownList)controle).ClearSelection();          
+            tbNo.Text = (nouveauProduit.NoProduit + 1).ToString();
             imgTeleverse.ImageUrl = "~/static/images/image_placeholder.png";
+            btnSelectionnerImage.Visible = true;
+            btnChangerImage.Visible = false;
+            tbNbItems.Text = "";
             initialiserDate();
             btnOui.CssClass = "btn Orange active";
             btnNon.CssClass = "btn Orange notActive";
@@ -689,40 +716,26 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
 
     protected void btnSupprimer_Click(object sender, EventArgs e)
     {
-        List<PPProduits> lesProduitsDelete = new List<PPProduits>();
-        List<PPProduits> lesProduitsNonDispo = new List<PPProduits>();
-        List<PPArticlesEnPanier> lesProduitsEnPaniers = new List<PPArticlesEnPanier>();
         long noProduit = long.Parse(Request.QueryString["NoProduit"]);
-
-        if (dbContext.PPDetailsCommandes.Where(c => c.NoProduit == noProduit).Count() > 0)
-            lesProduitsNonDispo.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());
-        else
-            lesProduitsDelete.Add(dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First());
-        lesProduitsEnPaniers.AddRange(dbContext.PPArticlesEnPanier.Where(c => c.NoProduit == noProduit).ToList());
+        PPProduits produit = dbContext.PPProduits.Where(p => p.NoProduit == noProduit).First();
 
         using (var dbContextTransaction = dbContext.Database.BeginTransaction())
         {
             try
             {
-                if (lesProduitsNonDispo.Count > 0)
-                {
-                    foreach (PPProduits produit in lesProduitsNonDispo)
-                    {                       
-                        produit.NombreItems = 0;                       
-                         produit.Disponibilité = null;                       
-                        dbContext.SaveChanges();
-                    }
+                if (dbContext.PPArticlesEnPanier.Where(a => a.NoProduit == noProduit).Any())
+                    dbContext.PPArticlesEnPanier.RemoveRange(dbContext.PPArticlesEnPanier.Where(a => a.NoProduit == noProduit));
+                if (dbContext.PPDetailsCommandes.Where(d => d.NoProduit == noProduit).Any())
+                {             
+                    produit.NombreItems = 0;                       
+                    produit.Disponibilité = null;
                 }
-                if (lesProduitsEnPaniers.Count > 0)
+                else
                 {
-                    dbContext.PPArticlesEnPanier.RemoveRange(lesProduitsEnPaniers);
-                    dbContext.SaveChanges();
+                    File.Delete(Server.MapPath("~/static/images/") + produit.Photo);
+                    dbContext.PPProduits.Remove(produit);
                 }
-                if (lesProduitsDelete.Count > 0)
-                {
-                    dbContext.PPProduits.RemoveRange(lesProduitsDelete);
-                    dbContext.SaveChanges();
-                }
+                dbContext.SaveChanges();
                 dbContextTransaction.Commit();
                 string url = "~/Pages/SuppressionProduit.aspx?ResultatSuppr=OK";
                 Response.Redirect(url, false);

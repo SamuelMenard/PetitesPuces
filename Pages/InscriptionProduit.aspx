@@ -43,9 +43,11 @@
    </div>
    <h1 class="h3 mb-3 font-weight-normal">Veuillez entrer les informations d'un produit</h1>
    <div class="form-group">
+      <label for="tbNo">Numéro</label>
       <asp:TextBox ID="tbNo" runat="server" CssClass="form-control" Enabled="false" />
    </div>
    <div class="form-group">
+      <label id="lblCategorie" for="ddlCategorie" runat="server" visible="false">Catégorie</label>
       <asp:DropDownList Id="ddlCategorie" CssClass="form-control" runat="server">
          <asp:ListItem Value="">Sélectionnez la catégorie</asp:ListItem>
       </asp:DropDownList>
@@ -53,10 +55,12 @@
    </div>
    <div class="row">
       <div class="form-group col-sm-6">
+         <label id="lblNom" for="tbNom" runat="server" visible="false">Nom</label>
          <asp:TextBox ID="tbNom" runat="server" CssClass="form-control" placeholder="Nom" MaxLength="50" />
          <asp:Label ID="errNom" runat="server" CssClass="text-danger hidden" />
       </div>
       <div class="form-group col-sm-6">
+         <label id="lblPrixDemande" for="tbPrixDemande" runat="server" visible="false">Prix demandé</label>
          <div class="input-group">
             <asp:TextBox ID="tbPrixDemande" runat="server" TextMode="Number" step="0.01" CssClass="form-control" placeholder="Prix demandé" />
             <span class="input-group-addon">$</span>
@@ -65,11 +69,13 @@
       </div>
    </div>
    <div class="form-group">
+      <label id="lblDescription" for="tbDescription" runat="server" visible="false">Description</label>
       <asp:TextBox ID="tbDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="5" placeholder="Description" />
       <asp:Label ID="errDescription" runat="server" CssClass="text-danger hidden" />
    </div>
    <div class="form-group">
       <div class="input-group">
+         <label id="lblImage" for="imgTeleverse" runat="server" visible="false">Image</label>
          <asp:Image ID="imgTeleverse" runat="server" CssClass="thumbnail img-responsive" style="max-width: 200px" ImageUrl="~/static/images/image_placeholder.png" />
          <asp:FileUpload ID="fImage" runat="server" CssClass="hidden" accept="image/png, image/jpeg" />
          <asp:Label ID="errImage" runat="server" CssClass="text-danger hidden" />
@@ -78,29 +84,33 @@
          <asp:Button ID="btnTeleverserImage" runat="server" CssClass="hidden" OnClick="btnTeleverserImage_Click" />
       </div>
    </div>
-   <div class="form-group">
-      <asp:TextBox ID="tbDateCreation" runat="server" CssClass="form-control" Enabled="false" Visible="false" />
-   </div>
+   <asp:Panel ID="divDateCreation" runat="server" CssClass="form-group" Visible="false">
+      <label for="tbDateCreation">Date de création</label>
+      <asp:TextBox ID="tbDateCreation" runat="server" CssClass="form-control" Enabled="false" />
+   </asp:Panel>
    <div class="row">
-      <div class="form-group col-sm-6">
+      <asp:Panel ID="divNbItems" runat="server" CssClass="form-group col-sm-6">
+         <label id="lblNbItems" for="tbNbItems" runat="server" visible="false">Quantité</label>
          <asp:TextBox ID="tbNbItems" runat="server" TextMode="Number" CssClass="form-control" placeholder="Quantité" />
          <asp:Label ID="errNbItems" runat="server" CssClass="text-danger hidden" />
-      </div>
-      <div class="form-group col-sm-6">
+      </asp:Panel>
+      <asp:Panel ID="divPrixVente" runat="server" CssClass="form-group col-sm-6">
+         <label id="lblPrixVente" for="tbPrixVente" runat="server" visible="false">Prix de vente</label>
          <div class="input-group">
             <asp:TextBox ID="tbPrixVente" runat="server" TextMode="Number" step="0.01" CssClass="form-control" placeholder="Prix de vente" />
             <span class="input-group-addon">$</span>
          </div>
          <asp:Label ID="errPrixVente" runat="server" CssClass="text-danger hidden" />
-      </div>
+      </asp:Panel>
    </div>
-   <div id="divDateVente" class="form-group hidden">
-      <label for="tbDateVente">Sélectionnez une date d’expiration du prix de vente</label>
+   <asp:Panel ID="divDateVente" runat="server" CssClass="form-group hidden">
+      <label id="lblDateVente" for="tbDateVente" runat="server">Sélectionnez une date d’expiration du prix de vente</label>
       <asp:TextBox ID="tbDateVente" runat="server" TextMode="Date" CssClass="form-control" />
       <asp:Label ID="errDateVente" runat="server" CssClass="text-danger hidden" />
-   </div>
+   </asp:Panel>
    <div class="row">
       <div class="form-group col-sm-6">
+         <label id="lblPoids" for="tbPoids" runat="server" visible="false">Poids</label>
          <div class="input-group">
             <asp:TextBox ID="tbPoids" runat="server" TextMode="Number" step="0.1" CssClass="form-control" placeholder="Poids" />
             <span class="input-group-addon">lbs</span>
@@ -108,8 +118,9 @@
          <asp:Label ID="errPoids" runat="server" CssClass="text-danger hidden" />
       </div>
       <div class="form-group col-sm-6"> 
+         <label id="lblDisponibilite" for="radioBtn" runat="server" visible="false">Disponibilité</label>
          <div class="input-group">
-    	      <label>Disponibilité</label>&nbsp
+    	      <label id="lblDisponibiliteAjout" runat="server">Disponibilité&nbsp</label>
             <div id="radioBtn" class="btn-group">
     		      <asp:HyperLink ID="btnOui" runat="server" CssClass="btn Orange active" Text="Oui" data-toggle="rbDisponibilite" data-title="O" />
     			   <asp:HyperLink ID="btnNon" runat="server" CssClass="btn Orange notActive" Text="Non" data-toggle="rbDisponibilite" data-title="N" />
@@ -132,6 +143,9 @@
       var dateAujourdhui = new Date();
       dateAujourdhui.setHours(0, 0, 0, 0);
       var exprPoids = /^\d+(\.\d)?$/;
+      if ($('#contentBody_btnInscription').length == 0) {
+         $('#contentBody_tbPrixVente').removeAttr('placeholder');
+      }
       $('#contentBody_ddlCategorie').focusout(function () {
          if ($('#contentBody_ddlCategorie').val() == '') {
             $('#contentBody_ddlCategorie').removeClass('border-success').addClass('border-danger');
@@ -147,7 +161,7 @@
             $('#contentBody_errNom').text('Le nom ne peut pas être vide').removeClass('hidden');
          } else if (!exprTexte.test($('#contentBody_tbNom').val())) {
             $('#contentBody_tbNom').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errNom').text('Le nom n\'est pas dans un format valide').removeClass('hidden');
+            $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
          } else {
             $('#contentBody_tbNom').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errNom').text('').addClass('hidden');
@@ -174,7 +188,7 @@
             $('#contentBody_errDescription').text('La description ne peut pas être vide').removeClass('hidden');
          } else if (!exprTexte.test($('#contentBody_tbDescription').val())) {
             $('#contentBody_tbDescription').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errDescription').text('La description n\'est pas dans un format valide').removeClass('hidden');
+            $('#contentBody_errDescription').text('La description n\'est pas valide').removeClass('hidden');
          } else {
             $('#contentBody_tbDescription').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errDescription').text('').addClass('hidden');
@@ -222,10 +236,10 @@
          if ($('#contentBody_tbPrixVente').val() == '') {
             $('#contentBody_tbDateVente').removeClass('border-danger').removeClass('border-success');
             $('#contentBody_errDateVente').text('').addClass('hidden');
-            $('#divDateVente').addClass('hidden');
+            $('#contentBody_divDateVente').addClass('hidden');
          }  
          else
-            $('#divDateVente').removeClass('hidden');
+            $('#contentBody_divDateVente').removeClass('hidden');
       });
       $('#contentBody_tbDateVente').focusout(function () {
          if ($('#contentBody_tbDateVente').val() == '') {
@@ -263,7 +277,7 @@
             if ($('#contentBody_tbNom').val() == '')
                $('#contentBody_errNom').text('Le nom ne peut pas être vide').removeClass('hidden');
             else
-               $('#contentBody_errNom').text('Le nom n\'est pas dans un format valide').removeClass('hidden');
+               $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbPrixDemande').val() == '' || !exprMontant.test($('#contentBody_tbPrixDemande').val()) || $('#contentBody_tbPrixDemande').val() > 214748.36) {
@@ -281,7 +295,7 @@
             if ($('#contentBody_tbDescription').val() == '')
                $('#contentBody_errDescription').text('La description ne peut pas être vide').removeClass('hidden');
             else
-               $('#contentBody_errDescription').text('La description n\'est pas dans un format valide').removeClass('hidden');
+               $('#contentBody_errDescription').text('La description n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_imgTeleverse').attr('src') == '../static/images/image_placeholder.png') {

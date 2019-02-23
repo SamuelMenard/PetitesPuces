@@ -94,7 +94,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
         //LibrairieControlesDynamique.hrDYN(panelBody);
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
-        List<PPCommandes> lstCommandes = dbContext.PPCommandes.Where(c => c.Statut.Equals("0")).OrderByDescending(c => c.DateCommande).ToList();
+        List<PPCommandes> lstCommandes = dbContext.PPCommandes.Where(c => c.Statut.Equals("0") && c.NoVendeur == noVendeur).OrderByDescending(c => c.DateCommande).ToList();
         // Rajouter les produits dans le panier        
 
         for (int i = 0; i < lstCommandes.Count; i++)
@@ -165,7 +165,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
 
 
-        List<PPCommandes> lstCommandesLivre = dbContext.PPCommandes.Where(c => !c.Statut.Equals("0")).OrderByDescending(c => c.DateCommande).ToList();
+        List<PPCommandes> lstCommandesLivre = dbContext.PPCommandes.Where(c => !c.Statut.Equals("0") && c.NoVendeur == noVendeur).OrderByDescending(c => c.DateCommande).ToList();
         // Rajouter les produits dans le panier        
 
         for (int i = 0; i < lstCommandesLivre.Count; i++)

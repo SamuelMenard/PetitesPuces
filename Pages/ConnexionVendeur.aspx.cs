@@ -88,7 +88,7 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
         LibrairieControlesDynamique.liDYN(ulSideBar, "#contentBody_" + nomEntreprise + "_labelCategorie", "Prêt pour livraison", "");
 
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
-        List<PPCommandes> lstCommandes = dbContext.PPCommandes.Where(c => c.Statut.Equals("0")).ToList();
+        List<PPCommandes> lstCommandes = dbContext.PPCommandes.Where(c => c.Statut.Equals("0") && c.NoVendeur == noVendeur).ToList();
 
         if (lstCommandes.Count > 0)
         {
