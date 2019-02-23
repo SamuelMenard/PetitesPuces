@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="ModificationMotDePasse.aspx.cs" Inherits="Pages_ModificationMotDePasse" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="ModificationMotDePasse.aspx.cs" Inherits="Pages_ModificationMotDePasse" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 <style>

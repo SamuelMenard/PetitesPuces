@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="ModificationProfilVendeur.aspx.cs" Inherits="Pages_ModificationProfilVendeur" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/PageMaster/MasterPage.master" AutoEventWireup="true" CodeFile="ModificationProfilVendeur.aspx.cs" Inherits="Pages_ModificationProfilVendeur" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 <style>

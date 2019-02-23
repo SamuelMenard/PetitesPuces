@@ -21,7 +21,7 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Détail de la demande";
+        Page.Title = "Détails du vendeur";
 
         getEtape();
         getNoVendeur();
