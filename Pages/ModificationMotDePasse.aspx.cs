@@ -15,6 +15,8 @@ public partial class Pages_ModificationMotDePasse : System.Web.UI.Page
             url = "~/Pages/AcceuilGestionnaire.aspx?";
         if (url != null)
             Response.Redirect(url, true);
+
+        Page.Title = "Changer mon mot de passe";
     }
 
     protected void btnModifierMotPasse_Click(object sender, EventArgs e)

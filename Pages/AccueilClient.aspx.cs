@@ -14,6 +14,8 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
         verifierPermissions("C");
         Page.MaintainScrollPositionOnPostBack = true;
 
+        Page.Title = "Accueil";
+
         // Afficher message accueil avec nom
 
         afficherMessageAccueil();

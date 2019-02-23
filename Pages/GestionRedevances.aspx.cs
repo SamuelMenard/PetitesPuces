@@ -20,6 +20,9 @@ public partial class Pages_GestionRedevances : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("G");
+
+        Page.Title = "Gestion des redevances";
+
         getEtape();
         
 

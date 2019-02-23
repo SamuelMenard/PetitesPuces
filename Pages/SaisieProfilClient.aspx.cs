@@ -14,6 +14,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         if (!IsPostBack)
         {
             verifierPermissions("C");
+
+            Page.Title = "Gérer mon profil";
+
             long noClient = 0;
             if(Session["NoClient"] != null)
                  noClient = Convert.ToInt64(Session["NoClient"]);

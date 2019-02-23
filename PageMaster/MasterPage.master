@@ -38,7 +38,7 @@
                     </ul>
                 </li>
                 <li><asp:LinkButton ID="lbConnexion" CssClass="nav-color" runat="server" OnClick="connexion_click" Visible="false">
-                    <span class="glyphicon glyphicon-log-in nav-color"></span> Se connecter</asp:LinkButton></li>
+                    <span class="glyphicon glyphicon-log-in nav-color"></span> Ouvrir une session</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbDeconnexion" CssClass="nav-color" runat="server" OnClick="deconnexion_click" Visible="false">
                     <span class="glyphicon glyphicon-log-out nav-color"></span> Se déconnecter</asp:LinkButton></li>
                 <li><asp:LinkButton ID="lbInscriptionClient" CssClass="nav-color" runat="server" OnClick="inscriptionClient_click" Visible="false">

@@ -10,6 +10,8 @@ public partial class Pages_AcceuilGestionnaire : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("G");
+
+        Page.Title = "Accueil";
     }
 
     public void nouvellesDemandes_click(Object sender, EventArgs e)

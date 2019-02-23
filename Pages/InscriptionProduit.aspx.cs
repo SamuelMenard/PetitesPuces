@@ -46,6 +46,8 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             chargerListeDeroulante();
             initialiserDate();
 
+            Page.Title = "S'inscrire comme client";
+
             if (Request.QueryString["Operation"] != null)
             {
                 string operation = Request.QueryString["Operation"].ToString();
@@ -110,14 +112,22 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                                 }
 
                                 if (operation == "Afficher")
+                                {
+                                    Page.Title = produit.Nom;
+
                                     btnRetour.Visible = true;
+                                }    
                                 else if (operation == "Modifier")
                                 {
+                                    Page.Title = "Modification produit";
+
                                     btnChangerImage.Visible = true;
                                     btnModifier.Visible = true;
                                 }
                                 else if (operation == "Supprimer")
                                 {
+                                    Page.Title = "Suppression produit";
+
                                     if (dbContext.PPArticlesEnPanier.Where(a => a.NoProduit == noProduit).Count() > 0)
                                         btnSupprimer.OnClientClick = "if (!confirm('Ce produit a été déposé dans un panier. Voulez-vous vraiment le supprimer?')) { return false; }";
                                     else
@@ -166,6 +176,8 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             }
             else
             {
+                Page.Title = "Ajout produit";
+
                 long noVendeur = Convert.ToInt64(Session["NoVendeur"]);
                 long nbProduit = 0;
                 foreach (PPProduits produit in dbContext.PPProduits.Where(p => p.NoVendeur == noVendeur))

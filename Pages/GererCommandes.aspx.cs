@@ -22,6 +22,9 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("V");
+
+        Page.Title = "Gérer commandes";
+
         Page.MaintainScrollPositionOnPostBack = true;        
         if(Session["NoVendeur"] != null)
         noVendeur = Convert.ToInt32((Session["NoVendeur"]));

@@ -7,7 +7,7 @@
     <!-- Contenu de la page -->
     <div class="container">
             <div class="jumbotron">
-                <h1>Boîte de méssagerie</h1> 
+                <h1>Boîte de messagerie</h1> 
                 <p>Sélectionnez des destinataires en cochant leur nom</p> 
           </div>
 

@@ -22,6 +22,9 @@ public partial class Pages_SuppressionProduit : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("V");
+
+        Page.Title = "Gestion des produits";
+
         if (Request.QueryString["ResultatModif"] != null)
         {
             string resultat = Request.QueryString["ResultatModif"];

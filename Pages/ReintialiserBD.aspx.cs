@@ -72,6 +72,8 @@ public partial class Pages_ReintialiserBD : System.Web.UI.Page
         if (url != null)
             Response.Redirect(url, true);
 
+        Page.Title = "Réintialiser la base de données";
+
         if (!IsPostBack)
         {
             remplirTableau(false);

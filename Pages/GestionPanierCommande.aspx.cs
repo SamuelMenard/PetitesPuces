@@ -10,6 +10,9 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("C");
+
+        Page.Title = "Panier";
+
         Page.MaintainScrollPositionOnPostBack = true;
 
         // Afficher message accueil avec nom

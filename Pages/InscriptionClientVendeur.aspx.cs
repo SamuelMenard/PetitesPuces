@@ -22,6 +22,8 @@ public partial class Pages_InscriptionClientVendeur : System.Web.UI.Page
         if (url != null)
             Response.Redirect(url, true);
 
+        Page.Title = "Devenir client";
+
         if (!IsPostBack)
         {
             long noVendeur = Convert.ToInt64(Session["NoVendeur"]);

@@ -126,7 +126,7 @@
                                 <img src="../static/images/email-logo.png" alt="LOGO" class="img-responsive">
                             </div>
                             <div class="panel-footer">
-                                <h4>Boîte de méssagerie</h4>
+                                <h4>Boîte de messagerie</h4>
                                 <br />
                             </div>
                         </div>

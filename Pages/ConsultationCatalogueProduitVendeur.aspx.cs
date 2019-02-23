@@ -57,7 +57,7 @@ public partial class Pages_ConsultationCatalogueProduitVendeur : System.Web.UI.P
         else
             intNbPage = int.MaxValue;
 
-        nomEntreprise = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First().NomAffaires;
+        Page.Title = nomEntreprise = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First().NomAffaires;
 
         if (!IsPostBack)
         {

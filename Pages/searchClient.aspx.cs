@@ -30,7 +30,9 @@ public partial class Pages_searchClient : System.Web.UI.Page
 
         verifierPermissions("C");
 
-        if(Session["NoClient"] != null)
+        Page.Title = "Recherche détaillée";
+
+        if (Session["NoClient"] != null)
             noClient = long.Parse(Session["NoClient"].ToString());
 
         if (Request.QueryString["NoPage"] != null)        

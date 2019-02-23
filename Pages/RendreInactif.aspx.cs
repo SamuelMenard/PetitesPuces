@@ -13,6 +13,9 @@ public partial class Pages_RendreInactif : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("G");
+
+        Page.Title = "Rendre inactif un client ou un vendeur";
+
         getTypeUtilisateur();
 
         afficherUtilisateurs();

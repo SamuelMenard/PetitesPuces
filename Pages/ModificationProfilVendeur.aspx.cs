@@ -21,6 +21,8 @@ public partial class Pages_ModificationProfilVendeur : System.Web.UI.Page
         if (url != null)
             Response.Redirect(url, true);
 
+        Page.Title = "Gérer mon profil";
+
         if (!IsPostBack)
         {
             long noVendeur = Convert.ToInt64(Session["NoVendeur"]);

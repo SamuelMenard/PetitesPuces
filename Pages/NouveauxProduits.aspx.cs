@@ -10,6 +10,8 @@ public partial class Pages_NouveauxProduits : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        Page.Title = "Nouveaux produits";
+
         afficherNouveauxProduits();
     }
 

@@ -20,7 +20,10 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("V");
-        if(Session["NoVendeur"] != null)
+
+        Page.Title = "Accueil";
+
+        if (Session["NoVendeur"] != null)
             noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
         nomEntreprise = leVendeur.NomAffaires;       

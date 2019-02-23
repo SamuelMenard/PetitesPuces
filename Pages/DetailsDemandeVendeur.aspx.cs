@@ -20,6 +20,9 @@ public partial class Pages_DetailsDemandeVendeur : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("G");
+
+        Page.Title = "Détail de la demande";
+
         getEtape();
         getNoVendeur();
         getRedevance();

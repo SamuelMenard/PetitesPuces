@@ -20,6 +20,9 @@ public partial class Pages_SaisieCommande : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("C");
+
+        Page.Title = "Passer commande";
+
         Page.MaintainScrollPositionOnPostBack = true;
 
         // Aller chercher les valeurs en GET

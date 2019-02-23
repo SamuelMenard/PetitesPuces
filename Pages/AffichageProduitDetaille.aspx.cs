@@ -36,6 +36,7 @@ public partial class Pages_AffichageProduitDetaille : System.Web.UI.Page
     {
        
         verifierPermissions("C");
+
         getNbMois();        
         long parseNoClient;
         if (Session["NoClient"] != null && long.TryParse(Session["NoClient"].ToString(), out parseNoClient))
@@ -59,9 +60,11 @@ public partial class Pages_AffichageProduitDetaille : System.Web.UI.Page
             }
         }
       
-        PPProduits produitAfficher = dbContext.PPProduits.Where( c => c.NoProduit == noProduit).First();     
+        PPProduits produitAfficher = dbContext.PPProduits.Where( c => c.NoProduit == noProduit).First();
 
-          nomEntreprise = dbContext.PPVendeurs.Where( c => c.NoVendeur == produitAfficher.NoVendeur).First().NomAffaires;
+        Page.Title = produitAfficher.Nom;
+
+        nomEntreprise = dbContext.PPVendeurs.Where( c => c.NoVendeur == produitAfficher.NoVendeur).First().NomAffaires;
           
 
             // Créer le panier du vendeur X

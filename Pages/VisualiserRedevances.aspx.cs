@@ -13,6 +13,9 @@ public partial class Pages_VisualiserRedevances : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         verifierPermissions("G");
+
+        Page.Title = "Encaisser les redevances";
+
         getTrieVendeur();
         remplirTableau();
     }
