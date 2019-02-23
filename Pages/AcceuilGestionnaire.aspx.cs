@@ -11,7 +11,7 @@ public partial class Pages_AcceuilGestionnaire : System.Web.UI.Page
     {
         verifierPermissions("G");
 
-        Page.Title = "Accueil";
+        Page.Title = "Tableau de bord du gestionnaire";
     }
 
     public void nouvellesDemandes_click(Object sender, EventArgs e)

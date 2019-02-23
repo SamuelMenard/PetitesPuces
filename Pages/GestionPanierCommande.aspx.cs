@@ -11,7 +11,7 @@ public partial class Pages_GestionPanierCommande : System.Web.UI.Page
     {
         verifierPermissions("C");
 
-        Page.Title = "Panier";
+        Page.Title = "Mes paniers";
 
         Page.MaintainScrollPositionOnPostBack = true;
 
