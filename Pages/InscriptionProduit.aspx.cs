@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -245,7 +244,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                tbDescription.Text != "" && exprTexte.IsMatch(tbDescription.Text) &&
                imgTeleverse.ImageUrl != "~/static/images/image_placeholder.png" &&
                tbNbItems.Text != "" && exprNbItems.IsMatch(tbNbItems.Text) && int.Parse(tbNbItems.Text) <= 32767 &&
-               (tbPrixVente.Text == "" || (tbPrixVente.Text != "" && exprMontant.IsMatch(tbPrixVente.Text) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 && dateExpirationValide)) &&
+               (tbPrixVente.Text == "" || (tbPrixVente.Text != "" && exprMontant.IsMatch(tbPrixVente.Text) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= double.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 && dateExpirationValide)) &&
                tbPoids.Text != "" && exprPoids.IsMatch(tbPoids.Text);
     }
 
@@ -346,11 +345,13 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
         }
         if (tbPrixVente.Text != "")
         {
-            if (!exprMontant.IsMatch(tbPrixVente.Text) || double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36)
+            if (!exprMontant.IsMatch(tbPrixVente.Text) || double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > double.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) || double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 214748.36)
             {
                 tbPrixVente.CssClass = "form-control border-danger";
                 if (!exprMontant.IsMatch(tbPrixVente.Text))
                     errPrixVente.Text = "Le prix de vente doit être un nombre positif";
+                else if (double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > double.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)))
+                    errPrixVente.Text = "Le prix de vente ne peut pas être supérieur au prix demandé";
                 else
                     errPrixVente.Text = "Le prix de vente doit être inférieur à 214 748,37 $";
                 errPrixVente.CssClass = "text-danger";
