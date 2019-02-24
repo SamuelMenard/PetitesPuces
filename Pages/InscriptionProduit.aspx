@@ -133,7 +133,6 @@
    <asp:Button ID="btnRetour" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Retour" Visible="false" OnClick="btnRetour_Click" />
    <asp:Button ID="btnModifier" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Modifier le produit" Visible="false" OnClick="btnModifier_Click" />
    <asp:Button ID="btnSupprimer" runat="server" CssClass="btn btn-lg Orange btn-block" Text="Supprimer le produit" Visible="false" OnClick="btnSupprimer_Click" />
-   
 </div>
 <script type="text/javascript">
    $(document).ready(function () {
@@ -225,6 +224,9 @@
             if (!exprMontant.test($('#contentBody_tbPrixVente').val())) {
                $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
                $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
+            } else if ($('#contentBody_tbPrixVente').val() > $('#contentBody_tbPrixDemande').val()) {
+               $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
+               $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être supérieur au prix demandé').removeClass('hidden');
             } else if ($('#contentBody_tbPrixVente').val() > 214748.36) {
                $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
                $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
@@ -325,10 +327,12 @@
             binPageValide = false;
          }
          if ($('#contentBody_tbPrixVente').val() != '') {
-            if (!exprMontant.test($('#contentBody_tbPrixVente').val()) || $('#contentBody_tbPrixVente').val() > 214748.36) {
+            if (!exprMontant.test($('#contentBody_tbPrixVente').val()) || $('#contentBody_tbPrixVente').val() > $('#contentBody_tbPrixDemande').val() || $('#contentBody_tbPrixVente').val() > 214748.36) {
                $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
                if (!exprMontant.test($('#contentBody_tbPrixVente').val()))
                   $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
+               else if ($('#contentBody_tbPrixVente').val() > $('#contentBody_tbPrixDemande').val())
+                  $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être supérieur au prix demandé').removeClass('hidden');
                else
                   $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
                binPageValide = false;
