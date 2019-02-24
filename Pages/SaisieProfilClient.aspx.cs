@@ -27,9 +27,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             tbAdresse.Text = client.Rue;
             tbVille.Text = client.Ville;
             ddlProvince.SelectedValue = client.Province;    
-            tbCodePostal.Text = client.CodePostal != null ? client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3) : "";
-            tbTelephone1.Text = client.Tel1 != null ? "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6) : "";
-            if (client.Tel2 != null)
+            tbCodePostal.Text = client.CodePostal != null && client.CodePostal != "" ? client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3) : "";
+            tbTelephone1.Text = client.Tel1 != null && client.Tel1 != "" ? "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6) : "";
+            if (client.Tel2 != null && client.Tel2 != "")
                 tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
             tbCourriel.Text = client.AdresseEmail;
         }
@@ -76,15 +76,14 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
-        return tbNom.Text != "" && exprNomOuPrenom.IsMatch(tbNom.Text) &&
-               tbPrenom.Text != "" && exprNomOuPrenom.IsMatch(tbPrenom.Text) &&
-               tbAdresse.Text != "" && exprAdresse.IsMatch(tbAdresse.Text) &&
-               tbVille.Text != "" && exprNomOuPrenom.IsMatch(tbVille.Text) &&
-               ddlProvince.SelectedValue != "" &&
-               tbCodePostal.Text != "" && exprCodePostal.IsMatch(tbCodePostal.Text) &&
-               tbTelephone1.Text != "" && exprTelephone.IsMatch(tbTelephone1.Text) &&
+        return (tbNom.Text == "" || exprNomOuPrenom.IsMatch(tbNom.Text)) &&
+                (tbPrenom.Text == "" || exprNomOuPrenom.IsMatch(tbPrenom.Text)) &&
+                (tbAdresse.Text == "" || exprAdresse.IsMatch(tbAdresse.Text)) &&
+                (tbVille.Text == "" || exprNomOuPrenom.IsMatch(tbVille.Text) )&&
+               (tbCodePostal.Text == "" || exprCodePostal.IsMatch(tbCodePostal.Text)) &&
+                 (tbTelephone1.Text == "" || exprTelephone.IsMatch(tbTelephone1.Text)) &&
                (tbTelephone2.Text == "" || exprTelephone.IsMatch(tbTelephone2.Text)) &&
-               tbCourriel.Text != "" && exprCourriel.IsMatch(tbCourriel.Text) ;
+               (tbCourriel.Text == "" || exprCourriel.IsMatch(tbCourriel.Text)) ;
     }
 
     protected void afficherErreurs()
@@ -95,12 +94,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         Regex exprTelephone = new Regex("^((\\([0-9]{3}\\)\\s|[0-9]{3}[\\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$");
         Regex exprCourriel = new Regex("^[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-._][a-zA-Z0-9]+)*\\.[a-z]+$");
         Regex exprMotPasse = new Regex("(?=^[a-zA-Z0-9]*[a-z])(?=^[a-zA-Z0-9]*[A-Z])(?=^[a-zA-Z0-9]*[0-9])(?=^[a-zA-Z0-9]{8,}$)");
-        if (tbNom.Text == "" || !exprNomOuPrenom.IsMatch(tbNom.Text))
+        if (tbNom.Text != "" && !exprNomOuPrenom.IsMatch(tbNom.Text))
         {
-            tbNom.CssClass = "form-control border-danger";
-            if (tbNom.Text == "")
-                errNom.Text = "Le nom ne peut pas être vide";
-            else
+            tbNom.CssClass = "form-control border-danger";           
                 errNom.Text = "Le nom n'est pas valide";
             errNom.CssClass = "text-danger";
         }
@@ -110,12 +106,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             errNom.Text = "";
             errNom.CssClass = "text-danger hidden";
         }
-        if (tbPrenom.Text == "" || !exprNomOuPrenom.IsMatch(tbPrenom.Text))
+        if (tbPrenom.Text != "" && !exprNomOuPrenom.IsMatch(tbPrenom.Text))
         {
-            tbPrenom.CssClass = "form-control border-danger";
-            if (tbPrenom.Text == "")
-                errPrenom.Text = "Le prénom ne peut pas être vide";
-            else
+            tbPrenom.CssClass = "form-control border-danger";         
                 errPrenom.Text = "Le prénom n'est pas valide";
             errPrenom.CssClass = "text-danger";
         }
@@ -125,12 +118,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             errPrenom.Text = "";
             errPrenom.CssClass = "text-danger hidden";
         }
-        if (tbAdresse.Text == "" || !exprAdresse.IsMatch(tbAdresse.Text))
+        if (tbAdresse.Text != "" && !exprAdresse.IsMatch(tbAdresse.Text))
         {
-            tbAdresse.CssClass = "form-control border-danger";
-            if (tbAdresse.Text == "")
-                errAdresse.Text = "L'adresse ne peut pas être vide";
-            else
+            tbAdresse.CssClass = "form-control border-danger";          
                 errAdresse.Text = "L'adresse n'est pas dans un format valide. Référez-vous aux directives d'adressage de Poste Canada à l'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#1437041";
             errAdresse.CssClass = "text-danger";
         }
@@ -140,12 +130,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             errAdresse.Text = "";
             errAdresse.CssClass = "text-danger hidden";
         }
-        if (tbVille.Text == "" || !exprNomOuPrenom.IsMatch(tbVille.Text))
+        if (tbVille.Text != "" && !exprNomOuPrenom.IsMatch(tbVille.Text))
         {
-            tbVille.CssClass = "form-control border-danger";
-            if (tbVille.Text == "")
-                errVille.Text = "La ville ne peut pas être vide";
-            else
+            tbVille.CssClass = "form-control border-danger";          
                 errVille.Text = "La ville n'est pas valide";
             errVille.CssClass = "text-danger";
         }
@@ -154,25 +141,10 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             tbVille.CssClass = "form-control border-success";
             errVille.Text = "";
             errVille.CssClass = "text-danger hidden";
-        }
-        if (ddlProvince.SelectedValue == "")
+        }       
+        if (tbCodePostal.Text != "" && !exprCodePostal.IsMatch(tbCodePostal.Text))
         {
-            ddlProvince.CssClass = "form-control border-danger";
-            errProvince.Text = "Vous devez sélectionner une province";
-            errProvince.CssClass = "text-danger";
-        }
-        else
-        {
-            ddlProvince.CssClass = "form-control border-success";
-            errProvince.Text = "";
-            errProvince.CssClass = "text-danger hidden";
-        }
-        if (tbCodePostal.Text == "" || !exprCodePostal.IsMatch(tbCodePostal.Text))
-        {
-            tbCodePostal.CssClass = "form-control border-danger";
-            if (tbCodePostal.Text == "")
-                errCodePostal.Text = "Le code postal ne peut pas être vide";
-            else
+            tbCodePostal.CssClass = "form-control border-danger";          
                 errCodePostal.Text = "Le code postal n'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9";
             errCodePostal.CssClass = "text-danger";
         }
@@ -182,12 +154,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             errCodePostal.Text = "";
             errCodePostal.CssClass = "text-danger hidden";
         }
-        if (tbTelephone1.Text == "" || !exprTelephone.IsMatch(tbTelephone1.Text))
+        if (tbTelephone1.Text != "" && !exprTelephone.IsMatch(tbTelephone1.Text))
         {
-            tbTelephone1.CssClass = "form-control border-danger";
-            if (tbTelephone1.Text == "")
-                errTelephone1.Text = "Le téléphone 1 ne peut pas être vide";
-            else
+            tbTelephone1.CssClass = "form-control border-danger";          
                 errTelephone1.Text = "Le téléphone 1 n'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999";
             errTelephone1.CssClass = "text-danger";
         }

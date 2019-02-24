@@ -109,10 +109,7 @@
       var exprCodePostal = /^[A-Z]\d[A-Z][\s-]?\d[A-Z]\d$/i;
       var exprTelephone = /^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
       $('#contentBody_tbNom').focusout(function () {
-         if ($('#contentBody_tbNom').val() == '') {
-            $('#contentBody_tbNom').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errNom').text('Le nom ne peut pas être vide').removeClass('hidden');
-         } else if (!exprNomOuPrenom.test($('#contentBody_tbNom').val())) {
+        if ($('#contentBody_tbNom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbNom').val())) {
             $('#contentBody_tbNom').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
          } else {
@@ -121,10 +118,7 @@
          }
       });
       $('#contentBody_tbPrenom').focusout(function () {
-         if ($('#contentBody_tbPrenom').val() == '') {
-            $('#contentBody_tbPrenom').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errPrenom').text('Le prénom ne peut pas être vide').removeClass('hidden');
-         } else if (!exprNomOuPrenom.test($('#contentBody_tbPrenom').val())) {
+          if ($('#contentBody_tbPrenom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbPrenom').val())) {
             $('#contentBody_tbPrenom').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPrenom').text('Le prénom n\'est pas valide').removeClass('hidden');
          } else {
@@ -133,10 +127,7 @@
          }
       });
       $('#contentBody_tbAdresse').focusout(function () {
-         if ($('#contentBody_tbAdresse').val() == '') {
-            $('#contentBody_tbAdresse').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errAdresse').text('L\'adresse ne peut pas être vide').removeClass('hidden');
-         } else if (!exprAdresse.test($('#contentBody_tbAdresse').val())) {
+         if ($('#contentBody_tbAdresse').val() != '' && !exprAdresse.test($('#contentBody_tbAdresse').val())) {
             $('#contentBody_tbAdresse').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errAdresse').text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#contentBody_1437041').removeClass('hidden');
          } else {
@@ -145,10 +136,7 @@
          }
       });
       $('#contentBody_tbVille').focusout(function () {
-         if ($('#contentBody_tbVille').val() == '') {
-            $('#contentBody_tbVille').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errVille').text('La ville ne peut pas être vide').removeClass('hidden');
-         } else if (!exprNomOuPrenom.test($('#contentBody_tbVille').val())) {
+        if ($('#contentBody_tbVille').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbVille').val())) {
             $('#contentBody_tbVille').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errVille').text('La ville n\'est pas valide').removeClass('hidden');
          } else {
@@ -156,20 +144,8 @@
             $('#contentBody_errVille').text('').addClass('hidden');
          }
       });
-      $('#contentBody_ddlProvince').focusout(function () {
-         if ($('#contentBody_ddlProvince').val() == '') {
-            $('#contentBody_ddlProvince').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errProvince').text('Vous devez sélectionner une province').removeClass('hidden');
-         } else {
-            $('#contentBody_ddlProvince').removeClass('border-danger').addClass('border-success');
-            $('#contentBody_errProvince').text('').addClass('hidden');
-         }
-      });
       $('#contentBody_tbCodePostal').focusout(function () {
-         if ($('#contentBody_tbCodePostal').val() == '') {
-            $('#contentBody_tbCodePostal').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errCodePostal').text('Le code postal ne peut pas être vide').removeClass('hidden');
-         } else if (!exprCodePostal.test($('#contentBody_tbCodePostal').val())) {
+        if ($('#contentBody_tbCodePostal').val() != '' && !exprCodePostal.test($('#contentBody_tbCodePostal').val())) {
             $('#contentBody_tbCodePostal').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errCodePostal').text('Le code postal n\'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9').removeClass('hidden');
          } else {
@@ -178,10 +154,7 @@
          }
       });
       $('#contentBody_tbTelephone1').focusout(function () {
-         if ($('#contentBody_tbTelephone1').val() == '') {
-            $('#contentBody_tbTelephone1').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errTelephone1').text('Le téléphone 1 ne peut pas être vide').removeClass('hidden');
-         } else if (!exprTelephone.test($('#contentBody_tbTelephone1').val())) {
+         if ($('#contentBody_tbTelephone1').val() != '' && !exprTelephone.test($('#contentBody_tbTelephone1').val())) {
             $('#contentBody_tbTelephone1').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errTelephone1').text('Le téléphone 1 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('hidden');
          } else {
@@ -200,56 +173,33 @@
       });
       $('#contentBody_btnInscription').click(function () {
          var binPageValide = true;
-         if ($('#contentBody_tbNom').val() == '' || !exprNomOuPrenom.test($('#contentBody_tbNom').val())) {
-            $('#contentBody_tbNom').removeClass('border-success').addClass('border-danger');
-            if ($('#contentBody_tbNom').val() == '')
-               $('#contentBody_errNom').text('Le nom ne peut pas être vide').removeClass('hidden');
-            else
+         if ($('#contentBody_tbNom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbNom').val())) {
+            $('#contentBody_tbNom').removeClass('border-success').addClass('border-danger');           
                $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }
-         if ($('#contentBody_tbPrenom').val() == '' || !exprNomOuPrenom.test($('#contentBody_tbPrenom').val())) {
-            $('#contentBody_tbPrenom').removeClass('border-success').addClass('border-danger');
-            if ($('#contentBody_tbPrenom').val() == '')
-               $('#contentBody_errPrenom').text('Le prénom ne peut pas être vide').removeClass('hidden');
-            else
+         if ($('#contentBody_tbPrenom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbPrenom').val())) {
+            $('#contentBody_tbPrenom').removeClass('border-success').addClass('border-danger');          
                $('#contentBody_errPrenom').text('Le prénom n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }
-         if ($('#contentBody_tbAdresse').val() == '' || !exprAdresse.test($('#contentBody_tbAdresse').val())) {
-            $('#contentBody_tbAdresse').removeClass('border-success').addClass('border-danger');
-            if ($('#contentBody_tbAdresse').val() == '')
-               $('#contentBody_errAdresse').text('L\'adresse ne peut pas être vide').removeClass('hidden');
-            else
+         if ($('#contentBody_tbAdresse').val() != '' && !exprAdresse.test($('#contentBody_tbAdresse').val())) {
+            $('#contentBody_tbAdresse').removeClass('border-success').addClass('border-danger');           
                $('#contentBody_errAdresse').text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#contentBody_1437041').removeClass('hidden');
             binPageValide = false;
          }
-         if ($('#contentBody_tbVille').val() == '' || !exprNomOuPrenom.test($('#contentBody_tbVille').val())) {
-            $('#contentBody_tbVille').removeClass('border-success').addClass('border-danger');
-            if ($('#contentBody_tbVille').val() == '')
-               $('#contentBody_errVille').text('La ville ne peut pas être vide').removeClass('hidden');
-            else
+         if ($('#contentBody_tbVille').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbVille').val())) {
+            $('#contentBody_tbVille').removeClass('border-success').addClass('border-danger');          
                $('#contentBody_errVille').text('La ville n\'est pas valide').removeClass('hidden');
             binPageValide = false;
-         }
-         if ($('#contentBody_ddlProvince').val() == '') {
-            $('#contentBody_ddlProvince').removeClass('border-success').addClass('border-danger');
-            $('#contentBody_errProvince').text('Vous devez sélectionner une province').removeClass('hidden');
-            binPageValide = false;
-         }
-         if ($('#contentBody_tbCodePostal').val() == '' || !exprCodePostal.test($('#contentBody_tbCodePostal').val())) {
-            $('#contentBody_tbCodePostal').removeClass('border-success').addClass('border-danger');
-            if ($('#contentBody_tbCodePostal').val() == '')
-               $('#contentBody_errCodePostal').text('Le code postal ne peut pas être vide').removeClass('hidden');
-            else
+         }         
+         if ($('#contentBody_tbCodePostal').val() != '' && !exprCodePostal.test($('#contentBody_tbCodePostal').val())) {
+            $('#contentBody_tbCodePostal').removeClass('border-success').addClass('border-danger');          
                $('#contentBody_errCodePostal').text('Le code postal n\'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9').removeClass('hidden');
             binPageValide = false;
          }
-         if ($('#contentBody_tbTelephone1').val() == '' || !exprTelephone.test($('#contentBody_tbTelephone1').val())) {
-            $('#contentBody_tbTelephone1').removeClass('border-success').addClass('border-danger');
-            if ($('#contentBody_tbTelephone1').val() == '')
-               $('#contentBody_errTelephone1').text('Le téléphone 1 ne peut pas être vide').removeClass('hidden');
-            else
+         if ($('#contentBody_tbTelephone1').val() != '' && !exprTelephone.test($('#contentBody_tbTelephone1').val())) {
+            $('#contentBody_tbTelephone1').removeClass('border-success').addClass('border-danger');          
                $('#contentBody_errTelephone1').text('Le téléphone 1 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('hidden');
             binPageValide = false;
          }
