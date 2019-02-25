@@ -178,7 +178,7 @@
          } else if (!exprMontant.test($('#contentBody_tbPrixDemande').val())) {
             $('#contentBody_tbPrixDemande').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPrixDemande').text('Le prix demandé doit être un nombre positif').removeClass('hidden');
-         } else if ($('#contentBody_tbPrixDemande').val() > 214748.36) {
+         } else if (parseFloat($('#contentBody_tbPrixDemande').val()) > 214748.36) {
             $('#contentBody_tbPrixDemande').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPrixDemande').text('Le prix demandé doit être inférieur à 214 748,37 $').removeClass('hidden');
          } else {
@@ -211,7 +211,7 @@
          } else if (!exprNbItems.test($('#contentBody_tbNbItems').val())) {
             $('#contentBody_tbNbItems').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errNbItems').text('La quantité doit être un entier').removeClass('hidden');
-         } else if ($('#contentBody_tbNbItems').val() > 32767) {
+         } else if (parseInt($('#contentBody_tbNbItems').val()) > 32767) {
             $('#contentBody_tbNbItems').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errNbItems').text('La quantité ne peut pas dépasser 32 767 items').removeClass('hidden');
          } else {
@@ -224,10 +224,10 @@
             if (!exprMontant.test($('#contentBody_tbPrixVente').val())) {
                $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
                $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
-            } else if ($('#contentBody_tbPrixVente').val() > $('#contentBody_tbPrixDemande').val()) {
+            } else if (parseFloat($('#contentBody_tbPrixVente').val()) > parseFloat($('#contentBody_tbPrixDemande').val())) {
                $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
                $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être supérieur au prix demandé').removeClass('hidden');
-            } else if ($('#contentBody_tbPrixVente').val() > 214748.36) {
+            } else if (parseFloat($('#contentBody_tbPrixVente').val()) > 214748.36) {
                $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
                $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
             } else {
@@ -267,6 +267,9 @@
          } else if (!exprPoids.test($('#contentBody_tbPoids').val())) {
             $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPoids').text('Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule').removeClass('hidden');
+         } else if (parseFloat($('#contentBody_tbPoids').val()) > 9999999.9) {
+            $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');
+            $('#contentBody_errPoids').text('Le poids doit être inférieur à 10 000 000 lbs').removeClass('hidden');
          } else {
             $('#contentBody_tbPoids').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errPoids').text('').addClass('hidden');
@@ -287,7 +290,7 @@
                $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }
-         if ($('#contentBody_tbPrixDemande').val() == '' || !exprMontant.test($('#contentBody_tbPrixDemande').val()) || $('#contentBody_tbPrixDemande').val() > 214748.36) {
+         if ($('#contentBody_tbPrixDemande').val() == '' || !exprMontant.test($('#contentBody_tbPrixDemande').val()) || parseFloat($('#contentBody_tbPrixDemande').val()) > 214748.36) {
             $('#contentBody_tbPrixDemande').removeClass('border-success').addClass('border-danger');
             if ($('#contentBody_tbPrixDemande').val() == '')
                $('#contentBody_errPrixDemande').text('Le prix demandé ne peut pas être vide').removeClass('hidden');
@@ -316,7 +319,7 @@
                $('#contentBody_imgTeleverse').removeClass('border-danger').addClass('border-success');
             $('#contentBody_errImage').text('').addClass('hidden');
          }
-         if ($('#contentBody_tbNbItems').val() == '' || !exprNbItems.test($('#contentBody_tbNbItems').val()) || $('#contentBody_tbNbItems').val() > 32767) {
+         if ($('#contentBody_tbNbItems').val() == '' || !exprNbItems.test($('#contentBody_tbNbItems').val()) || parseInt($('#contentBody_tbNbItems').val()) > 32767) {
             $('#contentBody_tbNbItems').removeClass('border-success').addClass('border-danger');
             if ($('#contentBody_tbNbItems').val() == '')
                $('#contentBody_errNbItems').text('La quantité ne peut pas être vide').removeClass('hidden');
@@ -327,11 +330,11 @@
             binPageValide = false;
          }
          if ($('#contentBody_tbPrixVente').val() != '') {
-            if (!exprMontant.test($('#contentBody_tbPrixVente').val()) || $('#contentBody_tbPrixVente').val() > $('#contentBody_tbPrixDemande').val() || $('#contentBody_tbPrixVente').val() > 214748.36) {
+            if (!exprMontant.test($('#contentBody_tbPrixVente').val()) || parseFloat($('#contentBody_tbPrixVente').val()) > parseFloat($('#contentBody_tbPrixDemande').val()) || parseFloat($('#contentBody_tbPrixVente').val()) > 214748.36) {
                $('#contentBody_tbPrixVente').removeClass('border-success').addClass('border-danger');
                if (!exprMontant.test($('#contentBody_tbPrixVente').val()))
                   $('#contentBody_errPrixVente').text('Le prix de vente doit être un nombre positif').removeClass('hidden');
-               else if ($('#contentBody_tbPrixVente').val() > $('#contentBody_tbPrixDemande').val())
+               else if (parseFloat($('#contentBody_tbPrixVente').val()) > parseFloat($('#contentBody_tbPrixDemande').val()))
                   $('#contentBody_errPrixVente').text('Le prix de vente ne peut pas être supérieur au prix demandé').removeClass('hidden');
                else
                   $('#contentBody_errPrixVente').text('Le prix de vente doit être inférieur à 214 748,37 $').removeClass('hidden');
@@ -349,12 +352,14 @@
             else if ($('#contentBody_btnInscription').length)
                $('#contentBody_tbDateVente').removeClass('border-danger').addClass('border-success');
          }
-         if ($('#contentBody_tbPoids').val() == '' || !exprPoids.test($('#contentBody_tbPoids').val())) {
+         if ($('#contentBody_tbPoids').val() == '' || !exprPoids.test($('#contentBody_tbPoids').val()) || parseFloat($('#contentBody_tbPoids').val()) > 9999999.9) {
             $('#contentBody_tbPoids').removeClass('border-success').addClass('border-danger');
             if ($('#contentBody_tbPoids').val() == '')
                $('#contentBody_errPoids').text('Le poids ne peut pas être vide').removeClass('hidden');
-            else
+            else if (!exprPoids.test($('#contentBody_tbPoids').val()))
                $('#contentBody_errPoids').text('Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule').removeClass('hidden');
+            else
+               $('#contentBody_errPoids').text('Le poids doit être inférieur à 10 000 000 lbs').removeClass('hidden');
             binPageValide = false;
          }
          return binPageValide;
