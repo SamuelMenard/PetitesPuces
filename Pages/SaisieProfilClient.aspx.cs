@@ -176,22 +176,22 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
         {
             long noClient = Convert.ToInt64(Session["NoClient"]);
             PPClients client = dbContext.PPClients.Where(v => v.NoClient == noClient).Single();
-            if (tbNom.Text != "")
+           
                 client.Nom = tbNom.Text.Trim();
-            if (tbPrenom.Text != "")
+            
                 client.Prenom = tbPrenom.Text.Trim();
-            if (tbAdresse.Text != "")
+            
                 client.Rue = tbAdresse.Text.Trim();
-            if (tbVille.Text != "")
+            
                 client.Ville = tbVille.Text.Trim();
-            if (ddlProvince.SelectedValue != "")
+           
                 client.Province = ddlProvince.SelectedValue;
-            if (tbCodePostal.Text != "")
+            
                 client.CodePostal = tbCodePostal.Text.ToUpper().Replace(" ", "").Replace("-", "").Trim();
-            client.Pays = "Canada";
-            if (tbTelephone1.Text != "")
+                client.Pays = "Canada";
+            
                 client.Tel1 = tbTelephone1.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
-            if (tbTelephone2.Text != "")
+ 
                 client.Tel2 = tbTelephone2.Text.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "");
             client.AdresseEmail = client.AdresseEmail;
             client.MotDePasse = client.MotDePasse;
