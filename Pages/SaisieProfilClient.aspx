@@ -109,7 +109,7 @@
       var exprCodePostal = /^[A-Z]\d[A-Z][\s-]?\d[A-Z]\d$/i;
       var exprTelephone = /^((\([0-9]{3}\)\s|[0-9]{3}[\s-])[0-9]{3}-[0-9]{4}|[0-9]{10})$/;
       $('#contentBody_tbNom').focusout(function () {
-        if ($('#contentBody_tbNom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbNom').val())) {
+         if ($('#contentBody_tbNom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbNom').val())) {
             $('#contentBody_tbNom').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
          } else {
@@ -118,7 +118,7 @@
          }
       });
       $('#contentBody_tbPrenom').focusout(function () {
-          if ($('#contentBody_tbPrenom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbPrenom').val())) {
+         if ($('#contentBody_tbPrenom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbPrenom').val())) {
             $('#contentBody_tbPrenom').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errPrenom').text('Le prénom n\'est pas valide').removeClass('hidden');
          } else {
@@ -136,7 +136,7 @@
          }
       });
       $('#contentBody_tbVille').focusout(function () {
-        if ($('#contentBody_tbVille').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbVille').val())) {
+         if ($('#contentBody_tbVille').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbVille').val())) {
             $('#contentBody_tbVille').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errVille').text('La ville n\'est pas valide').removeClass('hidden');
          } else {
@@ -145,7 +145,7 @@
          }
       });
       $('#contentBody_tbCodePostal').focusout(function () {
-        if ($('#contentBody_tbCodePostal').val() != '' && !exprCodePostal.test($('#contentBody_tbCodePostal').val())) {
+         if ($('#contentBody_tbCodePostal').val() != '' && !exprCodePostal.test($('#contentBody_tbCodePostal').val())) {
             $('#contentBody_tbCodePostal').removeClass('border-success').addClass('border-danger');
             $('#contentBody_errCodePostal').text('Le code postal n\'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9').removeClass('hidden');
          } else {
@@ -175,32 +175,32 @@
          var binPageValide = true;
          if ($('#contentBody_tbNom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbNom').val())) {
             $('#contentBody_tbNom').removeClass('border-success').addClass('border-danger');           
-               $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
+            $('#contentBody_errNom').text('Le nom n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbPrenom').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbPrenom').val())) {
             $('#contentBody_tbPrenom').removeClass('border-success').addClass('border-danger');          
-               $('#contentBody_errPrenom').text('Le prénom n\'est pas valide').removeClass('hidden');
+            $('#contentBody_errPrenom').text('Le prénom n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbAdresse').val() != '' && !exprAdresse.test($('#contentBody_tbAdresse').val())) {
             $('#contentBody_tbAdresse').removeClass('border-success').addClass('border-danger');           
-               $('#contentBody_errAdresse').text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#contentBody_1437041').removeClass('hidden');
+            $('#contentBody_errAdresse').text('L\'adresse n\'est pas dans un format valide. Référez-vous aux directives d\'adressage de Poste Canada à l\'adresse : https://www.canadapost.ca/tools/pg/manual/PGaddress-f.asp?ecid=murl10006450#contentBody_1437041').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbVille').val() != '' && !exprNomOuPrenom.test($('#contentBody_tbVille').val())) {
             $('#contentBody_tbVille').removeClass('border-success').addClass('border-danger');          
-               $('#contentBody_errVille').text('La ville n\'est pas valide').removeClass('hidden');
+            $('#contentBody_errVille').text('La ville n\'est pas valide').removeClass('hidden');
             binPageValide = false;
          }         
          if ($('#contentBody_tbCodePostal').val() != '' && !exprCodePostal.test($('#contentBody_tbCodePostal').val())) {
             $('#contentBody_tbCodePostal').removeClass('border-success').addClass('border-danger');          
-               $('#contentBody_errCodePostal').text('Le code postal n\'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9').removeClass('hidden');
+            $('#contentBody_errCodePostal').text('Le code postal n\'est pas dans un format valide. Les formats acceptés sont A9A9A9 ou A9A 9A9 ou A9A-9A9').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbTelephone1').val() != '' && !exprTelephone.test($('#contentBody_tbTelephone1').val())) {
             $('#contentBody_tbTelephone1').removeClass('border-success').addClass('border-danger');          
-               $('#contentBody_errTelephone1').text('Le téléphone 1 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('hidden');
+            $('#contentBody_errTelephone1').text('Le téléphone 1 n\'est pas dans un format valide. Les formats acceptés sont 9999999999 ou (999) 999-9999 ou 999 999-9999 ou 999-999-9999').removeClass('hidden');
             binPageValide = false;
          }
          if ($('#contentBody_tbTelephone2').val() != '' && !exprTelephone.test($('#contentBody_tbTelephone2').val())) {
