@@ -252,6 +252,7 @@ public partial class Pages_Statistiques : System.Web.UI.Page
         {
             ddlVendeursStats.Items.Add(new ListItem(leVendeur.NomAffaires, leVendeur.NoVendeur.ToString()));
         }
+        if (ddlVendeursStats.Items.Count > 1 && noVendeurStats == -1) noVendeurStats =  long.Parse(ddlVendeursStats.Items[0].Value);
         clientsActifsVendeurs = dataContext.PPClients.Where(c => (c.PPCommandes.Count() > 0) && (c.PPCommandes.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() > 0 ) ).Count();
         clientsPotentielsVendeurs = dataContext.PPClients.Where(c => (c.PPCommandes.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() == 0) && (c.PPArticlesEnPanier.Count() > 0) &&
         (c.PPArticlesEnPanier.Where(v => v.NoVendeur.Value.Equals(noVendeurStats)).Count() > 0)).Count();

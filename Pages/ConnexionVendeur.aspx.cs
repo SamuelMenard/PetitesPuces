@@ -67,10 +67,13 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     private void creerSectionPretLivraison()
     {
 
-        
-        
-    
+
+
+
         // Créer le panier du vendeur X
+        Panel panNbVisites = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_panNbVisiste_", "row text-center marginFluid");
+        int nbVisitesTotal = dbContext.PPVendeursClients.Where(c => c.NoVendeur == noVendeur).Count();
+        LibrairieControlesDynamique.lblDYN(panNbVisites, nomEntreprise + "_nombreVisiteTotal",  "Nombre de visites clients : "+ nbVisitesTotal, "nom-entreprise OrangeTitle");
         Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluid");
         Panel panelBase = LibrairieControlesDynamique.divDYN(panelGroup, nomEntreprise + "_base", "panel panel-default");
         
@@ -195,9 +198,11 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
         panelBody2 = LibrairieControlesDynamique.divDYN(panelBase, nomEntreprise + "_PanelBody2", "panel-body");
 
         List<PPArticlesEnPanier> lstPaniersEntreprise = new List<PPArticlesEnPanier>();
-        List<PPArticlesEnPanier> lstArticles = dbContext.PPArticlesEnPanier.GroupBy(x => x.NoClient).Select(t => t.OrderBy(c => c.DateCreation).FirstOrDefault()).ToList();
+        List<PPArticlesEnPanier> lstArticles = dbContext.PPArticlesEnPanier.Where(c => (c.NoVendeur == noVendeur)).GroupBy(x => x.NoClient).Select(t => t.OrderByDescending(c => c.DateCreation).FirstOrDefault()).OrderByDescending(c =>c.DateCreation).ToList();
+        //lstArticles = lstArticles.OrderByDescending(c => c.DateCreation).ToList();
         foreach (PPArticlesEnPanier lesArticles in lstArticles)
         {
+            System.Diagnostics.Debug.WriteLine(" LE NO CLIENT = " + lesArticles.NoClient + " NOM = " + lesArticles.PPClients.Nom + " Date = " + lesArticles.DateCreation);
              lstPaniersEntreprise.AddRange(dbContext.PPArticlesEnPanier.Where(c => (c.NoVendeur == noVendeur) && (c.NoClient == lesArticles.NoClient)).OrderBy(C => C.DateCreation).ToList());
         }
 
@@ -266,26 +271,26 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
                 Panel rowItem = LibrairieControlesDynamique.divDYN(PanelCollapse, nomEntreprise + "_rowItem2_" + idItem, "row valign top15");
 
                 // ajouter l'image
-                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg2_" + idItem, "col-sm-2 ");
-                LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img2_" + idItem, urlImage, "img-size center-block");
-                LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit2_" + idItem, idProduit.ToString(), "caption center-block text-center");
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg2_" + idItem+"_"+ idProduit, "col-sm-2 ");
+                LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img2_" + idItem + "_" + idProduit, urlImage, "img-size center-block");
+                LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit2_" + idItem + "_" + idProduit, idProduit.ToString(), "caption center-block text-center");
 
 
                 // Nom du produit
-                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom2_" + idItem, "col-sm-3 LiensProduits nomClient");
-                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idProduit, nomProduit, descriptionProduit);
+                Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom2_" + idItem + "_" + idProduit, "col-sm-3 LiensProduits nomClient");
+                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idItem + "-" + idProduit, nomProduit, descriptionProduit);
 
                 // Quantité restant
-                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite2_" + idItem, "col-sm-2 text-right");
-                LibrairieControlesDynamique.lblDYN(colQuantite, nomEntreprise + "_quantite2_" + idItem, "Qte : " + lstPaniersEntreprise[i].NbItems, "prix_item");
+                Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite2_" + idItem + "_" + idProduit, "col-sm-2 text-right");
+                LibrairieControlesDynamique.lblDYN(colQuantite, nomEntreprise + "_quantite2_" + idItem + "_" + idProduit, "Qte : " + lstPaniersEntreprise[i].NbItems, "prix_item");
 
                 // Categorie
-                Panel colCat = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCategorie_" + idItem, "col-sm-3 text-right");
-                LibrairieControlesDynamique.lblDYN(colCat, nomEntreprise + "_categorie2_" + idItem, laCategorie.Description.ToString(), "cat_item");
+                Panel colCat = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colCategorie_" + idItem + "_" + idProduit, "col-sm-3 text-right");
+                LibrairieControlesDynamique.lblDYN(colCat, nomEntreprise + "_categorie2_" + idItem + "_" + idProduit, laCategorie.Description.ToString(), "cat_item");
 
                 // Prix item
-                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPri2x_" + idItem, "col-sm-2 text-center");
-                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Prix Unitaire<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPri2x_" + idItem + "_" + idProduit, "col-sm-2 text-center");
+                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem + "_" + idProduit, "Prix Unitaire<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
                 ancienID = idClient;
             }
@@ -304,8 +309,9 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
 
     private void descriptionProduit(object sender, EventArgs e)
     {
-        LinkButton lb = (LinkButton)sender;
-        string strNoProduit = lb.ID.Replace(nomEntreprise + "_nom2_", "");
+        LinkButton lb = (LinkButton)sender;        
+        string [] strValeurs = lb.ID.Split('-');
+        string strNoProduit = strValeurs[1];
         String url = "~/Pages/InscriptionProduit.aspx?NoProduit=" + strNoProduit+"&Operation=Afficher";
         Response.Redirect(url, true);     
     }

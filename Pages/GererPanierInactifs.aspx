@@ -31,8 +31,10 @@
                           <asp:ListItem Value="0">1</asp:ListItem>
                           <asp:ListItem Value="1">2</asp:ListItem>                         
                           <asp:ListItem Value="2">3</asp:ListItem>
-                          <asp:ListItem Value="3">6</asp:ListItem>
-                          <asp:ListItem Value="4">7+</asp:ListItem>                         
+                         <asp:ListItem Value="3">4</asp:ListItem>
+                         <asp:ListItem Value="4">5</asp:ListItem>
+                          <asp:ListItem Value="5">6</asp:ListItem>
+                          <asp:ListItem Value="6">7+</asp:ListItem>                         
                     </asp:DropDownList>
         </div>
     </div>

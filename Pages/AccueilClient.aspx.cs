@@ -94,7 +94,7 @@ public partial class Pages_AccueilClient : System.Web.UI.Page
 
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, idEntreprise + "_colNom_" + idItem, "col-sm-4");
-                LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item");
+                LibrairieControlesDynamique.lblDYN(colNom, idEntreprise + "_nom_" + idItem, nomProduit, "nom-item deux-lignes");
                 LibrairieControlesDynamique.brDYN(colNom);
                 LibrairieControlesDynamique.lblDYN(colNom, "", "Poids: " + poids + " lbs", "prix_unitaire");
                 

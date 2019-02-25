@@ -83,6 +83,10 @@
     margin-left: 5px;
 }
 
+.numUD {
+    display: inline-block !important;
+}
+
 
 .alignDropDown {
   
