@@ -245,7 +245,7 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
                imgTeleverse.ImageUrl != "~/static/images/image_placeholder.png" &&
                tbNbItems.Text != "" && exprNbItems.IsMatch(tbNbItems.Text) && int.Parse(tbNbItems.Text) <= 32767 &&
                (tbPrixVente.Text == "" || (tbPrixVente.Text != "" && exprMontant.IsMatch(tbPrixVente.Text) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= double.Parse(tbPrixDemande.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) && double.Parse(tbPrixVente.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) <= 214748.36 && dateExpirationValide)) &&
-               tbPoids.Text != "" && exprPoids.IsMatch(tbPoids.Text);
+               tbPoids.Text != "" && exprPoids.IsMatch(tbPoids.Text) && double.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) < 10000000;
     }
 
     protected void afficherErreurs()
@@ -387,13 +387,15 @@ public partial class Pages_InscriptionProduit : System.Web.UI.Page
             errPrixVente.Text = "";
             errPrixVente.CssClass = "text-danger hidden";
         }
-        if (tbPoids.Text == "" || !exprPoids.IsMatch(tbPoids.Text))
+        if (tbPoids.Text == "" || !exprPoids.IsMatch(tbPoids.Text) || double.Parse(tbPoids.Text.Replace(".", System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)) > 9999999.9)
         {
             tbPoids.CssClass = "form-control border-danger";
             if (tbPoids.Text == "")
                 errPoids.Text = "Le poids ne peut pas être vide";
-            else
+            else if (!exprPoids.IsMatch(tbPoids.Text))
                 errPoids.Text = "Le poids doit être un entier ou un nombre décimal avec un chiffre après la virgule";
+            else
+                errPoids.Text = "Le poids doit être inférieur à 10 000 000 lbs";
             errPoids.CssClass = "text-danger";
         }
         else
