@@ -33,11 +33,11 @@ public partial class Pages_InscriptionVendeurClient : System.Web.UI.Page
             tbAdresse.Text = client.Rue;
             tbVille.Text = client.Ville;
             ddlProvince.SelectedValue = client.Province;
-            if (client.CodePostal != null)
+            if (client.CodePostal != null && client.CodePostal != "" )
                 tbCodePostal.Text = client.CodePostal.Substring(0, 3) + " " + client.CodePostal.Substring(3, 3);
-            if (client.Tel1 != null)
+            if (client.Tel1 != null && client.Tel1 != "")
                 tbTelephone1.Text = "(" + client.Tel1.Substring(0, 3) + ") " + client.Tel1.Substring(3, 3) + "-" + client.Tel1.Substring(6);
-            if (client.Tel2 != null)
+            if (client.Tel2 != null && client.Tel2 != "")
                 tbTelephone2.Text = "(" + client.Tel2.Substring(0, 3) + ") " + client.Tel2.Substring(3, 3) + "-" + client.Tel2.Substring(6);
         }
     }
