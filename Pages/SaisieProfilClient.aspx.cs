@@ -209,6 +209,9 @@ public partial class Pages_SaisieProfilClient : System.Web.UI.Page
             try
             {
                 dbContext.SaveChanges();
+                lblMessage.Text = "Le profil a été modifié.";
+                divMessage.CssClass = "alert alert-success alert-margins";
+                divMessage.Visible = true;
             }
             catch (Exception)
             {

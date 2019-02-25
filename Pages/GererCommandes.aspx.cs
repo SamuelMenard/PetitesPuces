@@ -25,12 +25,12 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
         Page.Title = "Gestion des commandes";
 
-        Page.MaintainScrollPositionOnPostBack = true;        
-        if(Session["NoVendeur"] != null)
-        noVendeur = Convert.ToInt32((Session["NoVendeur"]));
+        Page.MaintainScrollPositionOnPostBack = true;
+        if (Session["NoVendeur"] != null)
+            noVendeur = Convert.ToInt32((Session["NoVendeur"]));
         leVendeur = dbContext.PPVendeurs.Where(c => c.NoVendeur == noVendeur).First();
         nomEntreprise = leVendeur.NomAffaires;
-        creerPage();       
+        creerPage();
     }
     public void verifierPermissions(String typeUtilisateur)
     {
@@ -67,7 +67,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
     private void creerPage()
     {
-        phDynamique.Controls.Clear();        
+        phDynamique.Controls.Clear();
         ulSideBar.Controls.Clear();
         // Créer le panier du vendeur X
         Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluidSmall");
@@ -89,71 +89,81 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         Panel colCatAfficher = LibrairieControlesDynamique.divDYN(panCategorie, nomEntreprise + "_colLabelPretLivraison", "col-sm-12");
         LibrairieControlesDynamique.lblDYN(colCatAfficher, nomEntreprise + "_labelCategorie", "Prêt pour livraison ", "infos-payage OrangeTitle");
         LibrairieControlesDynamique.liDYN(ulSideBar, "#contentBody_" + nomEntreprise + "_labelCategorie", "Prêt pour livraison", "");
-        
+
 
 
         //LibrairieControlesDynamique.hrDYN(panelBody);
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
         List<PPCommandes> lstCommandes = dbContext.PPCommandes.Where(c => c.Statut.Equals("0") && c.NoVendeur == noVendeur).OrderByDescending(c => c.DateCommande).ToList();
         // Rajouter les produits dans le panier        
-
-        for (int i = 0; i < lstCommandes.Count; i++)
+        if (lstCommandes.Count > 0)
         {
-            long idItem = lstCommandes[i].NoCommande;
 
-            decimal prix = lstCommandes[i].MontantTotAvantTaxes.Value;
-            long idClient = lstCommandes[i].NoClient.Value;
-            PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
-            int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
-
-            Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row valign");
-
-            // ajouter l'image
-            Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg_" + idItem, "col-sm-1");
-            LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img_" + idItem, "../static/images/imageCommande.png", "img-size center-block");
-            LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit_" + idItem, idItem.ToString(), "caption center-block text-center");
-
-
-            // Date de la commande
-            Panel colDate = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDate_" + idItem, "col-sm-2 text-center ");
-            LibrairieControlesDynamique.lblDYN(colDate, nomEntreprise + "_date_" + idItem, "Date de la commande<br>" + lstCommandes[i].DateCommande.Value.ToShortDateString(), "prix_item");
-
-            //Button Facture Commande
-            Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture_" + idItem, "col-sm-2 text-center");
-            if (File.Exists(Server.MapPath("~/static/pdf/" + idItem + ".pdf")))
+            for (int i = 0; i < lstCommandes.Count; i++)
             {
-                LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFactures" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnFacture);
+                long idItem = lstCommandes[i].NoCommande;
+
+                decimal prix = lstCommandes[i].MontantTotAvantTaxes.Value;
+                long idClient = lstCommandes[i].NoClient.Value;
+                PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
+                int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
+
+                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem_" + idItem, "row valign");
+
+                // ajouter l'image
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg_" + idItem, "col-sm-1");
+                LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img_" + idItem, "../static/images/imageCommande.png", "img-size center-block");
+                LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit_" + idItem, idItem.ToString(), "caption center-block text-center");
+
+
+                // Date de la commande
+                Panel colDate = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDate_" + idItem, "col-sm-2 text-center ");
+                LibrairieControlesDynamique.lblDYN(colDate, nomEntreprise + "_date_" + idItem, "Date de la commande<br>" + lstCommandes[i].DateCommande.Value.ToShortDateString(), "prix_item");
+
+                //Button Facture Commande
+                Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture_" + idItem, "col-sm-2 text-center");
+                if (File.Exists(Server.MapPath("~/static/pdf/" + idItem + ".pdf")))
+                {
+                    LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFactures" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnFacture);
+                }
+                else
+                {
+                    HtmlButton btn = LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFactureDisabled" + idItem, "btn btn-default Orange disabled", "Facture", "glyphicon glyphicon-list-alt", btnFacture);
+                    btn.Attributes.Add("disabled", "disabled");
+                }
+
+
+
+                // Pooids total commande
+                Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids_" + idItem, "col-sm-1 text-center");
+                LibrairieControlesDynamique.lblDYN(colPoids, nomEntreprise + "_Poids_" + idItem, "Poids <br>" + lstCommandes[i].PoidsTotal + " lbs", "border-quantite prix_item");
+
+                // Nom du client
+                Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient_" + idItem, "col-sm-2 text-center");
+                LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
+
+                // Visites
+                Panel colVisites = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colVisite_" + idItem, "col-sm-1 text-center");
+                LibrairieControlesDynamique.lblDYN(colVisites, nomEntreprise + "_Visites_" + idItem, "Visite(s)<br>" + NbVisites, "prix_item");
+
+                // Total avant taxes
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-center");
+                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total<br>(sans taxes)<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
+
+
+                Panel colLivrer = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colLivrer" + idItem, "col-sm-1 text-center");
+                Button btnLivrer = LibrairieControlesDynamique.btnDYN(colLivrer, "btnLivre" + idItem, "btn btn-default OrangeButton", "Livrer", btnLivre);
+                btnLivrer.OnClientClick = "if( !livraisonConfirm()) return false;";
+
+                //   LibrairieControlesDynamique.hrDYN(panelBody);
             }
-            else
-            {
-                HtmlButton btn = LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFactureDisabled" + idItem, "btn btn-default Orange disabled", "Facture", "glyphicon glyphicon-list-alt", btnFacture);
-                btn.Attributes.Add("disabled", "disabled");
-            }
-
-
-
-            // Pooids total commande
-            Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids_" + idItem, "col-sm-1 text-center");
-            LibrairieControlesDynamique.lblDYN(colPoids, nomEntreprise + "_Poids_" + idItem, "Poids <br>" + lstCommandes[i].PoidsTotal + " lbs", "border-quantite prix_item");
-
-            // Nom du client
-            Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
-
-            // Visites
-            Panel colVisites = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colVisite_" + idItem, "col-sm-1 text-center");
-            LibrairieControlesDynamique.lblDYN(colVisites, nomEntreprise + "_Visites_" + idItem, "Visite(s)<br>" + NbVisites, "prix_item");
-
-            // Total avant taxes
-            Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix_" + idItem, "Total<br>(sans taxes)<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
-
-
-            Panel colLivrer = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colLivrer" + idItem, "col-sm-1 text-center");
-            Button btnLivrer = LibrairieControlesDynamique.btnDYN(colLivrer, "btnLivre" + idItem, "btn btn-default OrangeButton", "Livrer", btnLivre);          
-            btnLivrer.OnClientClick = "if( !livraisonConfirm()) return false;";
-
-            //   LibrairieControlesDynamique.hrDYN(panelBody);
+        }
+        else
+        {
+            Panel row = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowPretLivraisonVide", "row marginFluid text-center ");
+            Panel message = LibrairieControlesDynamique.divDYN(row, nomEntreprise + "_messagePretLivraisonVide", "message text-center top15");
+            Panel messageContainer = LibrairieControlesDynamique.divDYN(message, nomEntreprise + "_divMessageLivraison", "alert alert-danger alert-margins valignMessage");
+            LibrairieControlesDynamique.lblDYN(messageContainer, nomEntreprise + "_leMessageLabelLivraison", "Vous avez aucune commande prête pour la livraison.");
         }
 
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
@@ -167,75 +177,86 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
 
         List<PPCommandes> lstCommandesLivre = dbContext.PPCommandes.Where(c => !c.Statut.Equals("0") && c.NoVendeur == noVendeur).OrderByDescending(c => c.DateCommande).ToList();
         // Rajouter les produits dans le panier        
-
-        for (int i = 0; i < lstCommandesLivre.Count; i++)
+        if (lstCommandesLivre.Count > 0)
         {
-            long idItem = lstCommandesLivre[i].NoCommande;
-
-            decimal prix = lstCommandesLivre[i].MontantTotAvantTaxes.Value;
-            long idClient = lstCommandesLivre[i].NoClient.Value;
-            PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
-            int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
-
-            Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem2_" + idItem, "row valign");
-
-            // ajouter l'image
-            Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg2_" + idItem, "col-sm-1");
-            LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img2_" + idItem, "../static/images/imageCommande.png", "img-size center-block");
-            LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit2_" + idItem, idItem.ToString(), "caption center-block text-center");
-
-
-            // Date de la commande
-            Panel colDate = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDate2_" + idItem, "col-sm-2 text-center ");
-            LibrairieControlesDynamique.lblDYN(colDate, nomEntreprise + "_date2_" + idItem, "Date de la commande<br>" + lstCommandesLivre[i].DateCommande.Value.ToShortDateString(), "prix_item");
-
-            //Button Facture Commande
-            Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture2_" + idItem, "col-sm-2 text-center");
-            if (File.Exists(Server.MapPath("~/static/pdf/" + idItem + ".pdf")))
+            for (int i = 0; i < lstCommandesLivre.Count; i++)
             {
-                LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnFactures);
-            }
-            else
-            {
-                HtmlButton btn = LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange disabled", "Facture", "glyphicon glyphicon-list-alt", btnFactures);
-                btn.Attributes.Add("disabled", "disabled");
-            }
+                long idItem = lstCommandesLivre[i].NoCommande;
+
+                decimal prix = lstCommandesLivre[i].MontantTotAvantTaxes.Value;
+                long idClient = lstCommandesLivre[i].NoClient.Value;
+                PPClients leClient = dbContext.PPClients.Where(c => c.NoClient == idClient).First();
+                int NbVisites = dbContext.PPVendeursClients.Where(c => (c.NoClient == idClient) && (c.NoVendeur == noVendeur)).Count();
+
+                Panel rowItem = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowItem2_" + idItem, "row valign");
+
+                // ajouter l'image
+                Panel colImg = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colImg2_" + idItem, "col-sm-1");
+                LibrairieControlesDynamique.imgDYN(colImg, nomEntreprise + "_img2_" + idItem, "../static/images/imageCommande.png", "img-size center-block");
+                LibrairieControlesDynamique.lblDYN(colImg, nomEntreprise + "_noproduit2_" + idItem, idItem.ToString(), "caption center-block text-center");
+
+
+                // Date de la commande
+                Panel colDate = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colDate2_" + idItem, "col-sm-2 text-center ");
+                LibrairieControlesDynamique.lblDYN(colDate, nomEntreprise + "_date2_" + idItem, "Date de la commande<br>" + lstCommandesLivre[i].DateCommande.Value.ToShortDateString(), "prix_item");
+
+                //Button Facture Commande
+                Panel colFacture = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colFacture2_" + idItem, "col-sm-2 text-center");
+                if (File.Exists(Server.MapPath("~/static/pdf/" + idItem + ".pdf")))
+                {
+                    LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange", "Facture", "glyphicon glyphicon-list-alt", btnFactures);
+                }
+                else
+                {
+                    HtmlButton btn = LibrairieControlesDynamique.htmlbtnDYN(colFacture, "btnFacture2" + idItem, "btn btn-default Orange disabled", "Facture", "glyphicon glyphicon-list-alt", btnFactures);
+                    btn.Attributes.Add("disabled", "disabled");
+                }
 
 
 
-            // Pooids total commande
-            Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids2_" + idItem, "col-sm-1 text-center");
-            LibrairieControlesDynamique.lblDYN(colPoids, nomEntreprise + "_Poids2_" + idItem, "Poids <br>" + lstCommandesLivre[i].PoidsTotal + " lbs", "border-quantite prix_item");
+                // Pooids total commande
+                Panel colPoids = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPoids2_" + idItem, "col-sm-1 text-center");
+                LibrairieControlesDynamique.lblDYN(colPoids, nomEntreprise + "_Poids2_" + idItem, "Poids <br>" + lstCommandesLivre[i].PoidsTotal + " lbs", "border-quantite prix_item");
 
-            // Nom du client
-            Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient2_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
+                // Nom du client
+                Panel colNomClient = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colClient2_" + idItem, "col-sm-2 text-center");
+                LibrairieControlesDynamique.lblDYN(colNomClient, nomEntreprise + "_NomClient2_" + idItem, "Client<br>" + leClient.Prenom + " " + leClient.Nom, "nomClient prix_item");
 
-            // Visites
-            Panel colVisites = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colVisite_" + idItem, "col-sm-1 text-center");
-            LibrairieControlesDynamique.lblDYN(colVisites, nomEntreprise + "_Visites_" + idItem, "Visite(s)<br>" + NbVisites, "prix_item");
+                // Visites
+                Panel colVisites = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colVisite_" + idItem, "col-sm-1 text-center");
+                LibrairieControlesDynamique.lblDYN(colVisites, nomEntreprise + "_Visites_" + idItem, "Visite(s)<br>" + NbVisites, "prix_item");
 
-            List<PPDetailsCommandes> lstDetailsCommandes = dbContext.PPDetailsCommandes.Where(c => c.NoCommande == idItem).ToList();
-            int nbItems = 0;
-            for (int j = 0; j < lstDetailsCommandes.Count; j++)
-            {
-                nbItems++;
-            }
+                List<PPDetailsCommandes> lstDetailsCommandes = dbContext.PPDetailsCommandes.Where(c => c.NoCommande == idItem).ToList();
+                int nbItems = 0;
+                for (int j = 0; j < lstDetailsCommandes.Count; j++)
+                {
+                    nbItems++;
+                }
 
-            // Nombre items
-            Panel colNbItem = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNbItem_" + idItem, "col-sm-1 text-center");
-            LibrairieControlesDynamique.lblDYN(colNbItem, nomEntreprise + "_nbItems_" + idItem, "Nombres d'items<br>" + nbItems, "nomClient prix_item");
+                // Nombre items
+                Panel colNbItem = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNbItem_" + idItem, "col-sm-1 text-center");
+                LibrairieControlesDynamique.lblDYN(colNbItem, nomEntreprise + "_nbItems_" + idItem, "Nombres d'items<br>" + nbItems, "nomClient prix_item");
 
-            // Total avant taxes
-            Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix2_" + idItem, "col-sm-2 text-center");
-            LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Total (sans taxes)<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
+                // Total avant taxes
+                Panel colPrix = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colPrix2_" + idItem, "col-sm-2 text-center");
+                LibrairieControlesDynamique.lblDYN(colPrix, nomEntreprise + "_prix2_" + idItem, "Total (sans taxes)<br>" + prix.ToString("C", CultureInfo.CurrentCulture), "prix_item");
 
-            //   LibrairieControlesDynamique.hrDYN(panelBody);
+
+            }//   LibrairieControlesDynamique.hrDYN(panelBody);
+
+        }
+
+        else
+        {
+            Panel row = LibrairieControlesDynamique.divDYN(panelBody, nomEntreprise + "_rowCommLivrer", "row marginFluid text-center ");
+            Panel message = LibrairieControlesDynamique.divDYN(row, nomEntreprise + "_messageCommLivrer", "message text-center top15");
+            Panel messageContainer = LibrairieControlesDynamique.divDYN(message, nomEntreprise + "_divCommLivrer", "alert alert-danger alert-margins valignMessage");
+            LibrairieControlesDynamique.lblDYN(messageContainer, nomEntreprise + "_leMessageLabelCommLivrer", "Vous avez aucune commande prête pour la livraison.");
         }
 
 
         LibrairieControlesDynamique.hrDYN(panelBody, "OrangeBorderPanier", 5);
-       
+
     }
 
     private void btnFactures(object sender, EventArgs e)
@@ -244,7 +265,7 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         string fileName = btn.ID.Replace("btnFacture2", "");
         if (File.Exists(Server.MapPath("~/static/pdf/" + fileName + ".pdf")))
         {
-            string url = "../static/pdf/" + fileName + ".pdf";            
+            string url = "../static/pdf/" + fileName + ".pdf";
             Response.Write("<script>window.open ('" + url + "','_blank');</script>");
         }
     }
@@ -260,11 +281,11 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
             dbContext.SaveChanges();
             creerPage();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
 
         }
-       
+
     }
 
     private void btnFacture(object sender, EventArgs e)
@@ -273,8 +294,8 @@ public partial class Pages_GererCommandes : System.Web.UI.Page
         string fileName = btn.ID.Replace("btnFactures", "");
         if (File.Exists(Server.MapPath("~/static/pdf/" + fileName + ".pdf")))
         {
-            string url = "../static/pdf/" + fileName + ".pdf";            
+            string url = "../static/pdf/" + fileName + ".pdf";
             Response.Write("<script>window.open ('" + url + "','_blank');</script>");
         }
-    }  
+    }
 }
