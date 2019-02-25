@@ -188,7 +188,7 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
 
                 // Nom du produit
                 Panel colNom = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colNom2_" + idItem, "col-sm-3 LiensProduits nomClient");
-                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idProduit, nomProduit, descriptionProduit);
+                LibrairieControlesDynamique.lbDYN(colNom, nomEntreprise + "_nom2_" + idItem + "-" + idProduit, nomProduit, descriptionProduit);
 
                 // Quantité restant
                 Panel colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite2_" + idItem, "col-sm-2 text-right");
@@ -222,7 +222,8 @@ public partial class Pages_GererPanierInactifs : System.Web.UI.Page
     private void descriptionProduit(object sender, EventArgs e)
     {
         LinkButton lb = (LinkButton)sender;
-        string strNoProduit = lb.ID.Replace(nomEntreprise + "_nom2_", "");
+        string[] strValeurs = lb.ID.Split('-');
+        string strNoProduit = strValeurs[1];       
         String url = "~/Pages/InscriptionProduit.aspx?NoProduit=" + strNoProduit + "&Operation=Afficher";
         Response.Redirect(url, true);
     }

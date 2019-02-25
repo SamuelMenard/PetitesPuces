@@ -20,6 +20,7 @@ public partial class Pages_searchClient : System.Web.UI.Page
     long noClient;
     Panel panelBody;
     Panel colQuantite;
+    Panel colAjout;
     //protected void Page_
 
     protected void Page_Load(object sender, EventArgs e)
@@ -189,14 +190,23 @@ public partial class Pages_searchClient : System.Web.UI.Page
                     LibrairieControlesDynamique.lblDYN(colPrix, "lblRabais" + idItem, (montantRabais > 0) ? "Rabais de " + Decimal.Round((Decimal)montantRabais, 2).ToString("C", CultureInfo.CurrentCulture) : "", "rabais");
 
                     // Quantité restant
-                    colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-2 text-left");
+                    colQuantite = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colQuantite_" + idItem, "col-sm-2 text-center ");
 
                     TextBox tbQuantite = LibrairieControlesDynamique.numericUpDownDYN(colQuantite, "quantite_" + idItem, (produitCat.NombreItems < 1) ? "0" : "1"
-                    , (produitCat.NombreItems < 1) ? "0" : produitCat.NombreItems.ToString(), "form-control border-quantite");
+                    , (produitCat.NombreItems < 1) ? "0" : produitCat.NombreItems.ToString(), "numUD form-control border-quantite");                    
+                    LibrairieControlesDynamique.lblDYN(colQuantite, nomEntreprise + "_nbQuantiteMax_" + idItem, "<br>Quantité : "+produitCat.NombreItems, "");
 
-                    Panel colAjout = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colAjout_" + idItem, "col-sm-2 text-right");
+
+
+                    colAjout = LibrairieControlesDynamique.divDYN(rowItem, nomEntreprise + "_colAjout_" + idItem, "col-sm-2 text-center");
                     Button btnAjout = LibrairieControlesDynamique.btnDYN(colAjout, "btnAjouter_" + idItem+"-"+produitCat.NoVendeur, "btn valignMessage btnPageOrange", "Ajouter au panier", btnAjouter_click);
                     btnAjout.UseSubmitBehavior = false;
+                    LibrairieControlesDynamique.lblDYN(colAjout, nomEntreprise + "_espaceGlyph_" + idItem, "<br>", "");
+                    long leVendeurProduit = produitCat.NoVendeur.Value;
+                    short nbProduitEnPanier = 0;
+                    if (dbContext.PPArticlesEnPanier.Where(c => (c.NoClient.Value.Equals(noClient)) && (c.NoVendeur.Value.Equals(leVendeurProduit)) && (c.NoProduit.Value.Equals(idItem))).Any())
+                         nbProduitEnPanier = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient.Value.Equals(noClient)) && (c.NoVendeur.Value.Equals(leVendeurProduit)) && (c.NoProduit.Value.Equals(idItem))).First().NbItems.Value;
+                    LibrairieControlesDynamique.lblDYN(colAjout, nomEntreprise + "_nbEnPanier_" + idItem, "("+ nbProduitEnPanier + ")", "glyphicon glyphicon-shopping-cart");
 
                     if (produitCat.NombreItems < 1)
                     {
@@ -256,6 +266,18 @@ public partial class Pages_searchClient : System.Web.UI.Page
         PPArticlesEnPanier nouvelArticle = new PPArticlesEnPanier();
         List<PPArticlesEnPanier> articleExistants = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.NoProduit == noProduit)).ToList();
 
+        if(dbContext.PPProduits.Where(c=>c.NoProduit == noProduit).Any())
+        {
+            if(nbItems > dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First().NombreItems.Value)
+            {
+                nbItems = dbContext.PPProduits.Where(c => c.NoProduit == noProduit).First().NombreItems.Value;
+                TextBox tbQuantite = (TextBox)colQuantite.FindControl("quantite_" + noProduit);
+                tbQuantite.Text = nbItems.ToString();               
+            }
+        }
+
+
+
         DateTime dateNow = DateTime.Now.Date;
         List<PPVendeursClients> nouvelVisite = dbContext.PPVendeursClients.Where(c => (c.NoClient == noClient) && (c.NoVendeur == noVendeur) && (c.DateVisite >= dateNow)).ToList();
         PPVendeursClients modVisite = new PPVendeursClients();
@@ -287,6 +309,12 @@ public partial class Pages_searchClient : System.Web.UI.Page
         try
         {
             dbContext.SaveChanges();
+            Label lblEnPanier = (Label)colAjout.FindControl(nomEntreprise + "_nbEnPanier_" + noProduit);
+            short nbProduitEnPanier = 0;
+            if (dbContext.PPArticlesEnPanier.Where(c => (c.NoClient.Value.Equals(noClient)) && (c.NoVendeur.Value.Equals(noVendeur)) && (c.NoProduit.Value.Equals(noProduit))).Any())
+                nbProduitEnPanier = dbContext.PPArticlesEnPanier.Where(c => (c.NoClient.Value.Equals(noClient)) && (c.NoVendeur.Value.Equals(noVendeur)) && (c.NoProduit.Value.Equals(noProduit))).First().NbItems.Value;
+            lblEnPanier.Text = "(" + nbProduitEnPanier + ")";
+
             Panel row = LibrairieControlesDynamique.divDYN(messageAction, nomEntreprise + "_rowPanierVide", "row marginFluid text-center");
             Panel message = LibrairieControlesDynamique.divDYN(row, nomEntreprise + "_messagePanierVide", "message text-center top15");
             Panel messageContainer = LibrairieControlesDynamique.divDYN(message, nomEntreprise + "_divMessage", "alert alert-success alert-margins");
