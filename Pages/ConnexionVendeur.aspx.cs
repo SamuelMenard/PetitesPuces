@@ -67,10 +67,13 @@ public partial class Pages_ConnexionVendeur : System.Web.UI.Page
     private void creerSectionPretLivraison()
     {
 
-        
-        
-    
+
+
+
         // Créer le panier du vendeur X
+        Panel panNbVisites = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_panNbVisiste_", "row text-center marginFluid");
+        int nbVisitesTotal = dbContext.PPVendeursClients.Where(c => c.NoVendeur == noVendeur).Count();
+        LibrairieControlesDynamique.lblDYN(panNbVisites, nomEntreprise + "_nombreVisiteTotal",  "Nombre de visites clients : "+ nbVisitesTotal, "nom-entreprise OrangeTitle");
         Panel panelGroup = LibrairieControlesDynamique.divDYN(phDynamique, nomEntreprise + "_PanelGroup", "panel-group container-fluid marginFluid");
         Panel panelBase = LibrairieControlesDynamique.divDYN(panelGroup, nomEntreprise + "_base", "panel panel-default");
         
